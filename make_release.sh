@@ -18,6 +18,11 @@ CHLOG="`grep ^Version ChangeLog | head -n 1`"
 # Ignore libmcrypt warnings when running autoconf.
 make QUIET=1 dist 2>&1 | grep -v libmcrypt.m4
 
+# Check for renamed SQL upgrade file
+if [ -f sql/upgrade/upgrade_*SVN.sql ]; then
+	echo "WARNING: SQL upgrade file to an SVN was found, should probably be renamed!"
+fi
+
 cd ..
 
 mv domjudge domjudge-$VERSION
