@@ -13,9 +13,9 @@ SVNURL='https://secure.a-eskwadraat.nl/svn/domjudge/trunk/sql/mysql_db_structure
 MYSQLOPTS='-u domjudge_jury -p'
 DBNAME='domjudge'
 
-DBSTRUCT=` tempfile --prefix db__ --suffix .sql`
-SVNSTRUCT=`tempfile --prefix svn_ --suffix .sql`
-SQLTMP=`tempfile`
+DBSTRUCT=` mktemp /tmp/domjudge-db__sql.XXXXXX`
+SVNSTRUCT=`mktemp /tmp/domjudge-svn_sql.XXXXXX`
+SQLTMP=`   mktemp /tmp/domjudge-tmp_sql.XXXXXX`
 
 if [ $# -ge 1 ]; then
 	LOCALSQL=$1

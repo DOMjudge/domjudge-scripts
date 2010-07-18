@@ -96,7 +96,7 @@ OFS="$IFS"
 IFS='
 '
 
-XSLTTMP=`tempfile`
+XSLTTMP=`mktemp /tmp/domjudge-xslt.XXXXXX`
 cat > $XSLTTMP <<EOF
 <?xml version="1.0" encoding="utf-8"?>
 
