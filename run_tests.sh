@@ -15,6 +15,9 @@ LIVEURLPREFIX='http://domjudge.a-eskwadraat.nl/domjudge/'
 JUDGEUSER=domjudge_jury
 JUDGEPASS=passwordhere
 
+PLUGINUSER=jury
+PLUGINPASS=jury
+
 [ "$DEBUG" ] && set -x
 quiet()
 {
@@ -50,6 +53,8 @@ cd $LIVESYSTEMDIR && svn -q up
 
 URLS='
 .
+plugin/scoreboard.php
+plugin/event.php?fromid=1&toid=50
 public
 public/team.php?id=domjudge
 team
@@ -108,6 +113,14 @@ EOF
 
 for i in $URLS ; do
 	url="$LIVEURLPREFIX$i"
+	# Special-case plugin interface for user/pass and XML output:
+	if [ "${i#plugin/}" != "$i" ]; then
+		output=`wget -q --user=$PLUGINUSER --password=$PLUGINPASS -O - "$url" 2>&1`
+		if ! echo "$output" | head -n 2 | grep '^<root>' 2>&1 >/dev/null ; then
+			echo -e "Errors found in '$url'\n$output"
+		fi
+		continue
+	fi
 	if ! output=`wget -q --user=$JUDGEUSER --password=$JUDGEPASS -O - "$url" 2>&1 | \
 		xsltproc --noout --nowrite --nonet $XSLTTMP - 2>&1` || \
 		[ "$output" ] ; then
