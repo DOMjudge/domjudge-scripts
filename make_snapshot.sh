@@ -27,6 +27,7 @@ rm -rf $PUBDIR/*
 
 svn export -q https://secure.a-eskwadraat.nl/svn/domjudge/trunk domjudge-snapshot-$DATE
 
+find domjudge-snapshot-$DATE -name .gitignore -delete
 quiet make -C domjudge-snapshot-$DATE dist
 tar -cf domjudge-snapshot-$DATE.tar domjudge-snapshot-$DATE
 gzip -9 domjudge-snapshot-$DATE.tar
