@@ -17,6 +17,14 @@ DBSTRUCT=` mktemp /tmp/domjudge-db__sql.XXXXXX`
 SVNSTRUCT=`mktemp /tmp/domjudge-svn_sql.XXXXXX`
 SQLTMP=`   mktemp /tmp/domjudge-tmp_sql.XXXXXX`
 
+# Filter SQL expression for comments and unimportant changes
+# like auto_increment counters:
+sqlfilter()
+{
+	grep -vE '^(/\*|--|$)' | \
+	sed 's/ \(DEFAULT CHARSET\|AUTO_INCREMENT\|ENGINE\)=[^ ]*//g;/_client *= /d'
+}
+
 if [ $# -ge 1 ]; then
 	LOCALSQL=$1
 fi
@@ -25,20 +33,16 @@ if [ $# -ge 2 ]; then
 	DBNAME=$2
 fi
 
-mysqldump $MYSQLOPTS -n -d -Q --skip-add-drop-table "$DBNAME" | grep -vE '^(/\*|--|$)' | \
-	sed 's/ \(DEFAULT CHARSET\|AUTO_INCREMENT\|ENGINE\)=[^ ]*//g' | \
-	sed 's/ default / DEFAULT /;s/ auto_increment / AUTO_INCREMENT /'  | \
-	sed '/_client *= /d' > $DBSTRUCT
+mysqldump $MYSQLOPTS -n -d -Q --skip-add-drop-table "$DBNAME" | \
+	sqlfilter > $DBSTRUCT
 
 if [ -n "$LOCALSQL" ]; then
 	cp "$LOCALSQL" $SQLTMP
 else
 	svn export -q --non-interactive "$SVNURL" $SQLTMP
 fi
-grep -vE '^(/\*|--|$)' $SQLTMP | \
-	sed 's/ \(DEFAULT CHARSET\|AUTO_INCREMENT\|ENGINE\)=[^ ]*//g' | \
-	sed 's/ default / DEFAULT /;s/ auto_increment / AUTO_INCREMENT /' > $SVNSTRUCT
+cat $SQLTMP | sqlfilter > $SVNSTRUCT
 
-diff -bw -u $DBSTRUCT $SVNSTRUCT || true
+diff -ibw -u $DBSTRUCT $SVNSTRUCT || true
 
 rm -f $SQLTMP $DBSTRUCT $SVNSTRUCT
