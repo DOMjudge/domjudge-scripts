@@ -21,6 +21,8 @@ OWD="$PWD"
 
 cd $TEMPDIR/domjudge
 
+find . -name .gitignore -delete
+
 VERSION="`cat README | head -n 1 | sed 's/.*version //'`"
 CHLOG="`grep ^Version ChangeLog | head -n 1`"
 
