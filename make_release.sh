@@ -30,8 +30,6 @@ if [ "${VERSION%SVN}" != "${VERSION}" ]; then
 	echo "WARNING: version string contains 'SVN', should probably be changed!"
 fi
 
-find . -name .gitignore -delete
-
 # Ignore libmcrypt warnings when running autoconf.
 make QUIET=1 dist
 # 2>&1 | grep -v libmcrypt.m4
