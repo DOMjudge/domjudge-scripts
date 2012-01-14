@@ -11,6 +11,7 @@
 
 LIVESYSTEMDIR=~/system
 LIVEURLPREFIX='http://domjudge.a-eskwadraat.nl/domjudge/'
+GITURL='git://a-eskwadraat.nl/git/domjudge.git'
 
 JUDGEUSER=domjudge_jury
 JUDGEPASS=passwordhere
@@ -28,9 +29,9 @@ quiet()
 	fi
 }
 
-# Create an export of fresh svn trunk sources:
+# Create an export of fresh git master sources:
 TEMPDIR=`mktemp -d /tmp/domjudge.XXXXXX`
-svn export -q https://secure.a-eskwadraat.nl/svn/domjudge/trunk $TEMPDIR/system
+git clone -q "$GITURL" $TEMPDIR/system
 cd $TEMPDIR/system
 
 # Test 'make config build docs':
@@ -47,9 +48,9 @@ cd ~
 
 [ "$DEBUG" ] || rm -rf $TEMPDIR
 
-# Validate 'svn up'-ed checkout under http://domjudge.a-eskwadraat.nl/domjudge
+# Validate DOMjudge webpages running from uptodate git checkout
 # (we cannot use a fresh checkout due to missing website config)
-cd $LIVESYSTEMDIR && svn -q up
+cd $LIVESYSTEMDIR && git pull -q
 
 URLS='
 .
