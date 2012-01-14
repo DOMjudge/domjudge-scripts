@@ -7,6 +7,8 @@
 #DEBUG=1
 
 PUBDIR=~/public_html/snapshot
+DJDIR=domjudge-snapshot-`date +%Y%m%d`
+GITURL="file://$HOME/git/domjudge.git"
 
 [ "$DEBUG" ] && set -x
 quiet()
@@ -21,24 +23,21 @@ quiet()
 TEMPDIR=`mktemp -d /tmp/domjudge.XXXXXX`
 cd $TEMPDIR
 
-DATE=`date +%Y%m%d`
+git archive --prefix=$DJDIR/ --format=tar \
+	--remote="$GITURL" refs/heads/master | tar x
+
+find $DJDIR -name .gitignore -delete
+quiet make -C $DJDIR dist
+tar -cf $DJDIR.tar $DJDIR
+gzip -9 $DJDIR.tar
+quiet make -C $DJDIR docs
 
 rm -rf $PUBDIR/*
-
-svn export -q https://secure.a-eskwadraat.nl/svn/domjudge/trunk domjudge-snapshot-$DATE
-
-find domjudge-snapshot-$DATE -name .gitignore -delete
-quiet make -C domjudge-snapshot-$DATE dist
-tar -cf domjudge-snapshot-$DATE.tar domjudge-snapshot-$DATE
-gzip -9 domjudge-snapshot-$DATE.tar
-cp domjudge-snapshot-$DATE.tar.gz    $PUBDIR
-cp domjudge-snapshot-$DATE/ChangeLog $PUBDIR
-
-quiet make -C domjudge-snapshot-$DATE docs
 mkdir -p $PUBDIR/admin-manual $PUBDIR/judge-manual
-cp domjudge-snapshot-$DATE/doc/admin/{admin-manual*.{html,pdf},*.png} $PUBDIR/admin-manual/
-cp domjudge-snapshot-$DATE/doc/judge/judge-manual*.{html,pdf}         $PUBDIR/judge-manual/
-cp domjudge-snapshot-$DATE/doc/team/team-manual.pdf                   $PUBDIR/
+cp $DJDIR/doc/admin/{admin-manual*.{html,pdf},*.png} $PUBDIR/admin-manual/
+cp $DJDIR/doc/judge/judge-manual*.{html,pdf}         $PUBDIR/judge-manual/
+cp $DJDIR/doc/team/team-manual.pdf                   $PUBDIR/
+cp $DJDIR.tar.gz $DJDIR/ChangeLog                    $PUBDIR/
 cd /
 
 [ "$DEBUG" ] || rm -rf $TEMPDIR

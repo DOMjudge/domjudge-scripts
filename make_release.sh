@@ -7,19 +7,20 @@
 set -e
 
 TEMPDIR=`mktemp -d /tmp/domjudge.XXXXXX`
-SVNURL='https://secure.a-eskwadraat.nl/svn/domjudge'
+GITURL="file://$HOME/git/domjudge.git"
 
 if [ -z "$1" ]; then
-	echo "Error: required branch argument missing. Use e.g. 'branches/X.Y' or 'trunk'."
+	echo "Error: missing required release tag argument."
 	exit 1
 fi
-BRANCH="$1" ; shift
-
-svn -q export "$SVNURL/$BRANCH" $TEMPDIR/domjudge
+TAG="$1" ; shift
 
 OWD="$PWD"
+cd $TEMPDIR
 
-cd $TEMPDIR/domjudge
+git archive --prefix=domjudge/ --format=tar --remote="$GITURL" "$TAG" | tar x
+
+cd domjudge
 
 find . -name .gitignore -delete
 
