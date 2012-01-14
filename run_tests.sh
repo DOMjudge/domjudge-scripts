@@ -36,10 +36,12 @@ cd $TEMPDIR/system
 
 # Test 'make config build docs':
 make -k QUIET=1 CONFIGURE_FLAGS='--disable-submitclient' \
+	MAINT_CXFLAGS='-O -Wall -fPIE -Wformat -Wformat-security -ansi' \
 	maintainer-conf 2>&1 | grep -v "^/usr/share/aclocal/" || true
 make -k QUIET=1 build docs 2>&1
 
-# Run DOMjudge internal tests:
+# Run DOMjudge internal tests (remove install-sh script for false positives):
+rm install-sh
 cd tests
 ./syntax
 ./tests -q
