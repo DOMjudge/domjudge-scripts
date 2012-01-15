@@ -1,8 +1,8 @@
 #!/bin/sh
 # $Id$
 #
-# Script public a snapshot package, ChangeLog en admin-manual on the
-# public page at http://domjudge.sourceforge.net/snapshot/.
+# Script to publish a snapshot package, ChangeLog en admin-manual on
+# the public page at http://domjudge.sourceforge.net/snapshot/.
 
 #DEBUG=1
 
@@ -26,7 +26,9 @@ cd $TEMPDIR
 git archive --prefix=$DJDIR/ --format=tar \
 	--remote="$GITURL" refs/heads/master | tar x
 
-find $DJDIR -name .gitignore -delete
+# Add released tag for revision information:
+sed -i "s/PUBLISHED =.*/PUBLISHED = `date +%Y%m%d`/" $DJDIR/paths.mk.in
+
 quiet make -C $DJDIR dist
 tar -cf $DJDIR.tar $DJDIR
 gzip -9 $DJDIR.tar

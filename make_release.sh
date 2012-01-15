@@ -22,14 +22,15 @@ git archive --prefix=domjudge/ --format=tar --remote="$GITURL" "$TAG" | tar x
 
 cd domjudge
 
-find . -name .gitignore -delete
-
 VERSION="`cat README | head -n 1 | sed 's/.*version //'`"
 CHLOG="`grep ^Version ChangeLog | head -n 1`"
 
 if [ "${VERSION%SVN}" != "${VERSION}" ]; then
 	echo "WARNING: version string contains 'SVN', should probably be changed!"
 fi
+
+# Add released tag for revision information:
+sed -i 's/PUBLISHED =.*/PUBLISHED = release/' paths.mk.in
 
 # Ignore libmcrypt warnings when running autoconf.
 make QUIET=1 dist
