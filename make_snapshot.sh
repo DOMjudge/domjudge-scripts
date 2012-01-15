@@ -27,7 +27,7 @@ git archive --prefix=$DJDIR/ --format=tar \
 	--remote="$GITURL" refs/heads/master | tar x
 
 # Add released tag for revision information:
-sed -i "s/PUBLISHED =.*/PUBLISHED = `date +%Y%m%d`/" $DJDIR/paths.mk.in
+sed -i "s/PUBLISHED =.*/PUBLISHED = `date +%Y-%m-%d`/" $DJDIR/paths.mk.in
 
 quiet make -C $DJDIR dist
 tar -cf $DJDIR.tar $DJDIR
