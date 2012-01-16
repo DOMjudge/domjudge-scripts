@@ -1,0 +1,36 @@
+
+<hr />
+
+<table border="0" cellpadding="5"><tr>
+<td><a href="http://sourceforge.net/projects/domjudge"><img
+       src="http://sflogo.sourceforge.net/sflogo.php?group_id=121969&amp;type=15"
+       width="150" height="40" border="0"
+       alt="Get DOMjudge programming contest jury system at SourceForge.net. 
+Fast, secure and Free Open Source software downloads" /></a></td>
+<td><a href="http://www.A-Eskwadraat.nl/"><img
+       height="72" width="118"
+       src="aes2.png" 
+       alt="A-Eskwadraat Logo" /></a></td>
+<!--
+<td><a href="http://www.uu.nl/english"><img
+       height="54" width="194"
+       src="uu.png" 
+       alt="Utrecht University Logo" /></a></td>
+-->
+<td width="100%"></td>
+<td><a href="http://validator.w3.org/check?uri=referer"><img
+	src="valid-xhtml10.png"
+	alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a></td>
+<td><a href="http://jigsaw.w3.org/css-validator/check/referer"><img
+       height="31" width="88"
+       src="valid-css.png" 
+       alt="Valid CSS" /></a>
+</td>
+</tr></table>
+
+<p id="lastmod">
+	Last modified: <!--#echo var="LAST_MODIFIED" -->
+</p>
+
+</body>
+</html>

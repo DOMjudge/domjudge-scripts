@@ -1,0 +1,205 @@
+/* $Id: style.css 1528 2007-07-02 14:07:24Z kink $ */
+
+body {
+	color: black;
+	background-color: white;
+	font-family: sans-serif;
+}
+
+img {	border: 0; }
+
+.sol {
+	font-weight: bold;
+	font-variant: small-caps;
+}
+
+.sol_correct      { color: green;  }
+.sol_incorrect    { color: red;    }
+.sol_queued       { color: gray;   }
+
+a:link, a:visited { color: blue;   }
+a:hover           { color: purple; }
+a:active          { color: red;    }
+
+.disabled         { color: silver; }
+.disabled a       { color: gray;   }
+
+/* general table layout (not in scoreboard or lists) */
+table {
+	border-collapse: separate;
+	border-spacing: 2px;
+}
+
+th {
+	vertical-align: bottom;
+	border-bottom: 1px dashed gray;
+}
+
+caption {
+	font-weight: bold;
+	margin-bottom: 1ex;
+}
+
+hr {
+	border: 0;
+	height: 1px;
+	background-color: gray;
+}
+
+tr.unread td {
+	font-weight: bold;
+}
+
+/* more spacing in lists of teams, submissions, etc. */
+.list { border-spacing: 0px; }
+.list td, .list th {
+	padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+	vertical-align: bottom;
+}
+
+.teamstatus { text-align: center; }
+.teamstatus img { vertical-align: middle; }
+
+.output_text {
+	border: 2px dotted #C0C0C0;
+	background-color: #F9F9F9;
+	margin: 0;
+	padding: 5px;
+	font-family: monospace;	
+}
+
+.teamid, .filename, .hostname { font-family: monospace; }
+
+#menubox {
+	border-width: 0px;
+	width: 100%;
+	height: 3.1em;
+}
+
+#menutop a {
+	font-weight: bold;
+	text-decoration: none;
+	background-color: #FFFFF0;
+	border: 1px solid black;
+	margin: 2px;
+	padding: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+#menutop a.new {
+	color: #FF0000;
+}
+#clock {
+	position: absolute; right: 1ex; top: 1ex;
+	font-size: small;
+	font-family: monospace;
+	border: 1px dashed #ccc;
+	padding: 4px;
+	color: gray;
+}
+
+.highlight { background-color: yellow; }
+
+fieldset {
+	margin: 2em;
+	padding: 1em;
+}
+
+.error {
+	color: red;
+	font-family: monospace;
+	border: 1px dotted red;
+}
+
+legend {
+	font-variant: small-caps;
+	font-weight: bold;
+	padding: .1ex .5ex;
+}
+
+.error legend {
+	font-size: x-large;
+	border-right: 1px solid gray;
+	border-bottom: 1px solid gray;
+}
+
+.msgbox {
+	background-color: #fffff0;
+	border: 1px solid #f2e93a;
+}
+
+.msgbox legend {
+	background-color: #fffff0;
+	border-right: 2px solid #f2e93a;
+	border-bottom: 2px solid #f2e93a;
+}
+
+
+.scoreboard { border-collapse: collapse; }
+.scoreboard td { font-size: small; }
+.scoreboard tr { border-bottom: 1px solid silver; }
+.scoreboard td, .scoreboard th {
+	border-right: 1px solid black;
+	padding: 3px;
+}
+.scoreboard a {
+	display: block;
+	padding: 3px;
+	text-decoration: none;
+	color: black;
+}
+
+/* set cell padding to 0 and <a> tag to 3 to make all of cell
+   clickable in the jury scoreboard and for all team cells */
+.scoreboard_jury td, .scoreboard_jury th { padding: 0px; }
+.scoreboard .scoretn { padding: 0px; }
+
+.scoreheader {
+	font-variant: small-caps;
+	border-bottom: 2px solid black;
+}
+.score_correct   { background: #33FF66; }
+.score_incorrect { background: #FF6666; }
+.score_neutral   { background: white;   }
+
+#scoresolv,#scoretotal { width: 5em; }
+.scorenc,.scorett,.scorepl { text-align: right; }
+.scoreprob { width: 7em; }
+.scoreaffil { text-align: center; }
+
+#scoresummary {
+	border-top: 2px solid black;
+	border-bottom: none;
+	font-variant: small-caps;
+}
+#scorethisisme .scoretn {
+	background: #ff6600;
+	font-weight: bold;
+}
+
+#lastmod {
+	color: gray;
+	font-size: x-small;
+	position: absolute; right: 1ex; margin-top: 1em;
+}
+
+#djlogo {
+	position: absolute; right: 1ex;
+	width: 93px; height: 196px;
+}
+
+#teamscoresummary { position: absolute; right: 2ex; top: 7ex; }
+#teamscoresummary td { padding: 3px; }
+#teamscoresummary th { padding: 3px; }
+
+#teampicture { position: absolute; right: 2ex; top: 7ex; }
+
+/* between different sortorder-categories, print a thick line */
+.sortorderswitch { border-top: 2px solid black; }
+
+img.picto { width: 16px; height: 16px; }
+
+.judgetime { font-size: smaller; font-style: italic; }
+
