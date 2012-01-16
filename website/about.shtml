@@ -1,0 +1,17 @@
+
+<!--#include virtual="/header.shtml" -->
+
+<h1>DOMjudge - About the project</h1>
+
+<p>The DOMjudge project was started in 2004 at
+<a href="http://www.a-eskwadraat.nl/">Study Association A-Eskwadraat</a>
+at Utrecht University, The Netherlands. Development is still hosted here.</p>
+
+<p>The authors are Jaap Eldering, Peter van de Werken, Thijs Kinkhorst
+Tobias Werth, and Nicky Gerritsen; with contributions from many others.</p>
+
+<p>You can reach us through the development mailinglist at
+<a href="mailto:domjudge-devel@lists.a-eskwadraat.nl">DOMjudge-devel@lists.A-Eskwadraat.nl</a>.
+
+
+<!--#include virtual="/footer.shtml" -->

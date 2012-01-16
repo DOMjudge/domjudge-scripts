@@ -1,0 +1,70 @@
+
+<!--#include virtual="/header.shtml" -->
+
+<h1>DOMjudge - Introduction</h1>
+
+<p>DOMjudge is an automated judge system to run programming contests. It 
+has a mechanism to submit problem solutions, have them judged fully
+automatically and provides (web)interfaces for teams, the jury and the
+general public.</p>
+
+<p>DOMjudge is meant to be used in programming contests like the
+<a href="http://icpc.baylor.edu/icpc/">ACM ICPC</a> programming contests,
+where teams are on-site and there is a fixed problem set and timeframe.
+</p>
+
+<p>Key aspects include:</p>
+
+<ul>
+<li>Webinterface for portability and simplicity</li>
+<li>Scalable: distributed judging is easy</li>
+<li>Modular system for plugging in languages/compilers</li>
+<li>Features rejudging, clarifications, detailed submission/judging info</li>
+<li>Lightweight, depends on standard software to do its task</li>
+<li>Designed with security in mind</li>
+<li>Compatible with ICPC Validator Standard</li>
+<li>It's Open Source, Free Software</li>
+
+</ul>
+
+<p>It has been used in many live contests, a selection:</p>
+
+<ul>
+<li>Utrechts Kampioenschap Programmeren 2004 - 2011</li>
+<li><a href="http://www.bapc.eu/">Benelux Algorithm Programming Contest</a>
+    2004, 2006, 2007, 2009 - 2011</li>
+<li>German Collegiate Programming Contest 2010, 2011</li>
+<li><a href="http://www.nwerc.eu/">ACM ICPC NWERC</a> 2007 - 2011</li>
+
+<li><a href="http://www.swerc.eu/">ACM ICPC SWERC</a> 2008, 2010, 2011</li>
+<li><a href="http://ser.cs.fit.edu/">ACM ICPC SER USA</a> 2010, 2011</li>
+</ul>
+
+<p>The <a href="CLI2010-domjudge.pdf">presentation slides (PDF)</a> of
+Tobias Werth's presentation at the 2010 ICPC World Finals show a lot
+of DOMjudge's features. You may also view the <a href="demo">online demo</a>.</p>
+
+<a name="requirements"></a>
+<h2>Requirements</h2>
+
+<p>The following is required to run DOMjudge:</p>
+<ul>
+<li>At least one machine running Linux, with root access</li>
+<li>Apache web server with PHP 5 and
+    PHP command line interface</li>
+<li>MySQL database server version 4.1 or newer</li>
+<li>Compilers for the languages you want to support</li>
+</ul>
+
+<p>For a detailed list of all software please refer to the
+<a href="snapshot/admin-manual/admin-manual-2.html#install_config:requirements">
+administrator manual</a>.</p>
+
+<h2>Licence</h2>
+
+<p>DOMjudge is licenced under the GNU General Public License. This gives
+you the freedom to use it for any purpose, without cost, make changes
+that you require and share those with the community.</p>
+
+
+<!--#include virtual="/footer.shtml" -->

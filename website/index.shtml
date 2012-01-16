@@ -1,211 +1,33 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-<title>DOMjudge - Programming Contest Jury System</title>
-<link rel="shortcut icon" href="/favicon.png" type="image/png" />
-<link rel="stylesheet" href="style.css" type="text/css" />
-</head>
-<body>
 
-<a name="top"></a>
-
-<div id="menutop">
-<a href=".">home</a>
-<a href="./#requirements">requirements</a>
-<a href="./#download" class="new">download (3.2.1)</a>
-<a href="./#documentation">documentation</a>
-<a href="http://domjudge.a-eskwadraat.nl/trac/wiki/Development">development</a>
-<a href="demo.shtml">demo</a>
-<a href="./#authors">authors</a>
-</div>
-
-<img src="DOMjudgelogo_sc.png" alt="DOMjudge logo"
-	width="80" height="169" align="right" border="0" />
+<!--#include virtual="/header.shtml" -->
 
 <h1>DOMjudge</h1>
 
-<p>DOMjudge is an automated judge system to run programming contests. It 
-has a mechanism to submit problem solutions, have them judged fully
-automatically and provides (web)interfaces for teams, the jury and the
-general public.</p>
+<p>DOMjudge is an automated judge system to run programming contests,
+like the
+<a href="http://icpc.baylor.edu/icpc/">ACM ICPC</a>.
+It has a focus on usability and security, has been used in many live
+contests and is free, open source software.
+</p>
 
-<p>DOMjudge is meant to be used in programming contests like the
-<a href="http://icpc.baylor.edu/icpc/">ACM ICPC programming contests</a>,
-where teams are on-site and there is a fixed problem set and timeframe.
-It is <b>not</b> meant for on-line submission systems like the
-<a href="http://uva.onlinejudge.org/">UVa online judge</a> or as
-courseware, although other people have modified it to that end.</p>
 
-<p>Key aspects include:</p>
+<p>Please make your choice:</p>
 
 <ul>
-<li>Lightweight, depends on standard software to do its task</li>
-<li>Webinterface for portability and simplicity</li>
-<li>Scalable: distributed judging is easy</li>
-<li>Modular system for plugging in languages/compilers</li>
-<li>Features rejudging, clarifications, detailed submission/judging info</li>
-<li>Designed with security in mind</li>
-<li>Compatible with ICPC Validator Standard</li>
-<li>It's Open Source, Free Software</li>
+<li><a href="intro"><b>Intro:</b></a>
+	Read more on what DOMjudge does and what you need to run it</li>
+<li><a href="download"><b>Download:</b></a>
+	Get the lastest release</li>
+<li><a href="docs"><b>Demo:</b></a>
+	View an online demo installation</li>
+<li><a href="demo"><b>Documentation:</b></a>
+	Dive into the manuals for all details</li>
+<li><a href="http://domjudge.a-eskwadraat.nl/trac/wiki/Development"><b>Contribute:</b></a>
+	Report a bug or check out the latest sources
+<li><a href="about"><b>About:</b></a>
+	Learn about the project backgrounds
 </ul>
 
-<p>It has been used in many live contests, including:</p>
 
-<ul>
-<li>Utrechts Kampioenschap Programmeren 2004 - 2011</li>
-<li><a href="http://www.bapc.eu/">Benelux Algorithm Programming Contest</a>
-    2004, 2006, 2007, 2009 - 2011</li>
-<li>German Collegiate Programming Contest 2010, 2011</li>
-<li><a href="http://www.nwerc.eu/">ACM ICPC NWERC</a> 2007 - 2011</li>
-<li><a href="http://www.swerc.eu/">ACM ICPC SWERC</a> 2008, 2010, 2011</li>
-<li><a href="http://ser.cs.fit.edu/">ACM ICPC SER USA</a> 2010, 2011</li>
-</ul>
-<p>We'd love to get <a href="mailto:domjudge@a-eskwadraat.nl">feedback</a>
-from people using DOMjudge in other programming contests, as courseware,
-online training systems, etcetera.</p>
-
-<p>There is also the <a href="demo.shtml">online demo</a> to see
-a live DOMjudge setup (with some non-working details).
-The <a href="CLI2010-domjudge.pdf">presentation slides (PDF)</a> of
-Tobias Werth's presentation at the 2010 ICPC World Finals show a lot
-of DOMjudge's features.</p>
-
-<a name="requirements"></a>
-<h2>Requirements</h2>
-
-<p>This is a (rough) list of the requirements for DOMjudge.</p>
-<ul>
-<li>At least one machine running Linux, with local root access</li>
-<li>Apache web server with PHP 5 and
-    PHP command line interface</li>
-<li>MySQL database server version 4.1 or newer</li>
-<li>Compilers for the languages you want to support</li>
-</ul>
-
-<p>For a complete list please refer to the
-<a href="snapshot/admin-manual/admin-manual-2.html#install_config:requirements">
-administrator manual</a>.</p>
-
-
-<a name="download"></a>
-<h2>Download</h2>
-
-<p>The latest stable release is <strong>3.2.1</strong>, dated 9 November 2011.</p>
-
-<p><a href="http://sourceforge.net/projects/domjudge/files/domjudge/3.2.1/">
-download here</a></p>
-
-<p>There is also the previous release series <strong>3.1.4</strong>, dated 27 August 2011, to be
-<a href="http://sourceforge.net/projects/domjudge/files/domjudge/3.1.4/">
-downloaded here.</a></p>
-
-<p>To get notifications of new releases, subscribe to the low volume
-<a href="https://secure.a-eskwadraat.nl/mailman/listinfo/domjudge-announce">announcements
-mailing list</a>.</p>
-
-<p>The sources of included {b,d}ash shell binaries can be
-<a href="sources/">downloaded here</a>.</p>
-
-<h3>Debian Packages</h3>
-
-<p>There are also <a href="http://www.debian.org">Debian GNU/Linux</a> packages
-available from <a href="http://non-gnu.uvt.nl/debian/lenny/domjudge/">
-http://non-gnu.uvt.nl/debian/lenny/domjudge/</a> for i386 and amd64 architectures.
-The packages work on Lenny, Squeeze and newer, and also on the various versions
-of Ubuntu.</p>
-
-<p>You can add the following apt source to <tt>/etc/apt/sources.list</tt> which is
-signed with <a href="http://non-gnu.uvt.nl/debian/uvt_key-with-signatures.asc">this key</a>:</p>
-
-<pre>deb http://non-gnu.uvt.nl/debian lenny uvt</pre>
-
-
-<a name="documentation"></a>
-<h2>Documentation</h2>
-
-<p>DOMjudge has all documentation included in the tarball. For your convenience,
-here you can find the documentation from the latest stable release.</p>
-
-<dl>
-<dt><a href="docs/admin-manual.html">Administrator's manual</a>
-(HTML), or a <a href="docs/admin-manual.pdf">PDF version</a>.</dt>
-<dd>The complete reference for those setting up and running the DOMjudge system.</dd> 
-<dt><a href="docs/judge-manual.html">Judge's manual</a>
-(HTML), or a <a href="docs/judge-manual.pdf">PDF version</a>.</dt>
-<dd>Instructions for members of the jury to work with the system.</dd>
-<dt><a href="docs/team-manual.pdf">Team manual</a> (PDF)</dt>
-<dd>Concise manual for participating teams. Only available in Portable 
-Document Format (PDF).</dd> 
-</dl>
-
-<p>The documentation for the development trunk version is available under
-the <a href="/snapshot/">snapshot directory</a>; note that it might
-differ on details from the documentation of releases.</p>
-
-<p>We also have a <a href="demo.shtml">live demonstration</a> setup of the
-web interface.</p>
-
-<!--
-<a name="development"></a>
-<h2>Development</h2>
-
-<p>DOMjudge has first been developed for use in the 
-<a href="http://2004.nkp.nl/">Dutch Programming Championship Finals (2004)</a> as
-an alternative to the ACM <a href="http://www.ecs.csus.edu/pc2/">PC^2 system</a>.
-It has served there with great satisfaction. There were however some performance
-problems, which have been solved and also more features added. DOMjudge has now
-been used in quite a few contests (see the list at the top of this page) including the 
-<a href="http://icpc.baylor.edu/icpc/regionals/default.html">ACM ICPC</a>
-<a href="http://www.nwerc.eu">North-Western European Regionals (NWERC)</a> 
-of 2007/2008 in Utrecht, The Netherlands.</p>
-
-<p>DOMjudge is under active development. For notifications of new releases,
-subscribe to the low volume
-<a href="https://secure.a-eskwadraat.nl/mailman/listinfo/domjudge-announce">announcements
-mailing list</a>. You can check out the current
-Subversion repository trunk with the following command:</p>
-
-<pre class="output_text">svn co https://secure.a-eskwadraat.nl/svn/domjudge/trunk [&lt;local-checkout-directory&gt;]</pre>
-
-<p>See also our <a href="https://secure.a-eskwadraat.nl/viewvc/domjudge/">
-web browsable repository</a>. Alternatively, you can clone our public Git 
-repository with the command:</p>
-<pre class="output_text">git clone git://a-eskwadraat.nl/git/domjudge.git [&lt;local-checkout-directory&gt;]</pre>
-<p>This Git repository is automatically kept in sync with the master Subversion 
-repository using git-svn. Here, we also have a
-<a href="https://secure.a-eskwadraat.nl/gitweb/domjudge.git">web interface</a> 
-available.</p>
-
-<p>Every night a <a href="snapshot/">development snapshot</a> is generated
-from our repository. Note that our repository contains code that might
-be experimental, buggy or subject to change. Use at your own risk.</p>
-
-<p>Additional information such as
-<a href="http://sourceforge.net/tracker/?group_id=121969">bugs and feature 
-requests</a> can be found on our
-<a href="http://sourceforge.net/projects/domjudge">project page</a>
-at SourceForge.</p>
-
-<p>Furthermore, there is the
-<a href="http://lists.a-eskwadraat.nl/mailman/listinfo/domjudge-devel">
-DOMjudge-devel</a> mailinglist for development discussions and the
-<a href="http://lists.a-eskwadraat.nl/mailman/listinfo/domjudge-commits">
-DOMjudge-commits</a> mailinglist for commit mails from our repository.
-Anyone interested is welcome to subscribe to either mailinglist.</p>
--->
-
-<a name="authors"></a>
-<h2>Authors and Licence</h2>
-
-<p>The main authors of DOMjudge are Jaap Eldering, Thijs Kinkhorst, Peter van de Werken,
-Tobias Werth, and Nicky Gerritsen.
-You can reach us at <a href="mailto:domjudge@a-eskwadraat.nl">DOMjudge@A-Eskwadraat.nl</a>.
-Development is hosted at <a href="http://www.a-eskwadraat.nl/">Study Association A-Eskwadraat</a>
-at Utrecht University, The Netherlands.</p>
-
-<p>DOMjudge is open source, free software and licenced under the
-<a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>.</p>
 
 <!--#include virtual="/footer.shtml" -->
