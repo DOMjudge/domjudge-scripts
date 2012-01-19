@@ -1,1 +1,5 @@
 Options +MultiViews
+
+Redirect /docs		http://home.A-Eskwadraat.nl/~domjudge/docs
+Redirect /snapshot	http://home.A-Eskwadraat.nl/~domjudge/snapshot
+Redirect /sources	http://home.A-Eskwadraat.nl/~domjudge/sources
