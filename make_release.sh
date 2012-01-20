@@ -7,7 +7,7 @@
 set -e
 
 TEMPDIR=`mktemp -d /tmp/domjudge.XXXXXX`
-GITURL="file://$HOME/git/domjudge.git"
+GITURL="git://a-eskwadraat.nl/git/domjudge.git"
 
 if [ -z "$1" ]; then
 	echo "Error: missing required release tag argument."

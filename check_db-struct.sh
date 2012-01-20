@@ -11,8 +11,7 @@ set -e
 MYSQLOPTS='-u domjudge_jury -p'
 DBNAME='domjudge'
 
-# For some reason read-only access via git:// doesn't work
-GITURL='ssh://domjudge@a-eskwadraat.nl/home/extern/domjudge/git/domjudge.git'
+GITURL='git://a-eskwadraat.nl/git/domjudge.git'
 
 DBSTRUCT=` mktemp /tmp/domjudge-db__sql.XXXXXX`
 GITSTRUCT=`mktemp /tmp/domjudge-git_sql.XXXXXX`
@@ -40,7 +39,7 @@ mysqldump $MYSQLOPTS -n -d -Q --skip-add-drop-table "$DBNAME" | \
 if [ -n "$LOCALSQL" ]; then
 	cp "$LOCALSQL" $SQLTMP
 else
-	git archive --format=tar --remote=$GITURL master \
+	git archive --format=tar --remote="$GITURL" master \
 		sql/mysql_db_structure.sql 2>/dev/null | tar x -O > $SQLTMP
 fi
 cat $SQLTMP | sqlfilter > $GITSTRUCT
