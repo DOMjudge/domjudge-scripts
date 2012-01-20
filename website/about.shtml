@@ -1,7 +1,8 @@
+<!--#set var="dj_page_title" value="About the project" -->
 
 <!--#include virtual="/header.shtml" -->
 
-<h1>DOMjudge - About the project</h1>
+<h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
 
 <p>The DOMjudge project was started in 2004 at
 <a href="http://www.a-eskwadraat.nl/">Study Association A-Eskwadraat</a>

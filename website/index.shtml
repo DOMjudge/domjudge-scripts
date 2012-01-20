@@ -1,4 +1,4 @@
-
+<!--#set var="dj_page_title" value="Programming Contest Jury System" -->
 <!--#include virtual="/header.shtml" -->
 
 <h1>DOMjudge</h1>

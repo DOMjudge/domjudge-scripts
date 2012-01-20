@@ -1,7 +1,8 @@
+<!--#set var="dj_page_title" value="Documentation" -->
 
 <!--#include virtual="/header.shtml" -->
 
-<h1>DOMjudge - Documentation</h1>
+<h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
 
 <p>The DOMjudge tarball contains manuals for the administrator, judges and teams, which correspond to that version.</p>
 

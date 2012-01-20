@@ -1,7 +1,8 @@
+<!--#set var="dj_page_title" value="Online Demo" -->
 
 <!--#include virtual="/header.shtml" -->
 
-<h1>DOMjudge Online Demo</h1>
+<h1>DOMjudge <!--#echo var="dj_page_title" --></h1>
 
 <p>We have set up an online demonstration of the DOMjudge web interface,
 populated with data from a live contest.</p>
