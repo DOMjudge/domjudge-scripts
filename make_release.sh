@@ -1,5 +1,4 @@
 #!/bin/sh
-# $Id$
 #
 # Script to create a DOMjudge release package. Release file is
 # generated in the current directory.
@@ -32,9 +31,7 @@ fi
 # Add released tag for revision information:
 sed -i 's/PUBLISHED =.*/PUBLISHED = release/' paths.mk.in
 
-# Ignore libmcrypt warnings when running autoconf.
 make QUIET=1 dist
-# 2>&1 | grep -v libmcrypt.m4
 
 # Check for renamed SQL upgrade file
 if ls sql/upgrade/upgrade_*SVN.sql >/dev/null 2>&1; then

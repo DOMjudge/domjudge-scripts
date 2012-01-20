@@ -1,11 +1,12 @@
-#!/bin/sh -e
-# $Id$
+#!/bin/sh
 #
 # Cronjob script to automatically run the following checks:
 # - 'make build' works
 # - php/shell script syntax checks
 # - testsuite tests
 # - HTML validation
+
+set -e
 
 #DEBUG=1
 

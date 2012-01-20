@@ -1,8 +1,9 @@
 #!/bin/sh
-# $Id$
 #
 # Script to publish a snapshot package, ChangeLog en admin-manual on
 # the public page at http://domjudge.sourceforge.net/snapshot/.
+
+set -e
 
 #DEBUG=1
 

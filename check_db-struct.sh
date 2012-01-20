@@ -1,5 +1,4 @@
 #!/bin/sh
-# $Id$
 #
 # Usage: $0 [<local-sql-file> [<databasename>]]
 #
