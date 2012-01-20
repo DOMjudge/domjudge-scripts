@@ -3,13 +3,14 @@
 
 <h1>DOMjudge - Download</h1>
 
-<p>The latest stable release is <strong>3.2.1</strong>, dated 9 November 2011.</p>
+<p>The latest stable release is <strong><!--#echo var="dj_current_branch_version" --></strong>, dated <!--#echo var="dj_current_branch_date" -->.</p>
 
-<p><a href="http://sourceforge.net/projects/domjudge/files/domjudge/3.2.1/">
+<p><a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_current_branch_version" -->/">
 download here</a></p>
 
-<p>There is also the previous release series <strong>3.1.4</strong>, dated 27 August 2011, to be
-<a href="http://sourceforge.net/projects/domjudge/files/domjudge/3.1.4/">
+<p>There is also the previous release series <strong><!--#echo var="dj_previous_branch_version" --></strong>,
+dated <!--#echo var="dj_previous_branch_date" -->, to be
+<a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_previous_branch_version" -->/">
 downloaded here.</a></p>
 
 <p>To get notifications of new releases, subscribe to the low volume

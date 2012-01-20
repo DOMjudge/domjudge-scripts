@@ -1,3 +1,8 @@
+<!--#set var="dj_current_branch_version" value="3.2.1"-->
+<!--#set var="dj_current_branch_date" value="9 November 2011"-->
+<!--#set var="dj_previous_branch_version" value="3.1.4"-->
+<!--#set var="dj_previous_branch_date" value="27 August 2011"-->
+
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -14,7 +19,7 @@
 <div id="menutop">
 <a href=".">home</a>
 <a href="intro">intro</a>
-<a href="download" class="new">download (3.2.1)</a>
+<a href="download" class="new">download (<!--#echo var="dj_current_branch_version" -->)</a>
 <a href="documentation">documentation</a>
 <a href="demo">demo</a>
 <a href="http://domjudge.a-eskwadraat.nl/trac/wiki/Development">contribute</a>
