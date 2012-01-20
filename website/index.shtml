@@ -1,5 +1,4 @@
-<!--#set var="dj_page_title" value="Programming Contest Jury System" -->
-<!--#include virtual="/header.shtml" -->
+<!--#set var="dj_page_title" value="Programming Contest Jury System" --><!--#include virtual="/header.shtml" -->
 
 <h1>DOMjudge</h1>
 
@@ -23,9 +22,9 @@ contests and is free, open source software.
 <li><a href="documentation"><b>Documentation:</b></a>
 	Dive into the manuals for all details</li>
 <li><a href="http://domjudge.a-eskwadraat.nl/trac/wiki/Development"><b>Contribute:</b></a>
-	Report a bug or check out the latest sources
+	Report a bug or check out the latest sources</li>
 <li><a href="about"><b>About:</b></a>
-	Learn about the project backgrounds
+	Learn about the project backgrounds</li>
 </ul>
 
 

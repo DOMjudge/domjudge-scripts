@@ -1,6 +1,4 @@
-<!--#set var="dj_page_title" value="About the project" -->
-
-<!--#include virtual="/header.shtml" -->
+<!--#set var="dj_page_title" value="About the project" --><!--#include virtual="/header.shtml" -->
 
 <h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
 
@@ -12,7 +10,7 @@ at Utrecht University, The Netherlands. Development is still hosted here.</p>
 Tobias Werth, and Nicky Gerritsen; with contributions from many others.</p>
 
 <p>You can reach us through the development mailinglist at
-<a href="mailto:domjudge-devel@lists.a-eskwadraat.nl">DOMjudge-devel@lists.A-Eskwadraat.nl</a>.
+<a href="mailto:domjudge-devel@lists.a-eskwadraat.nl">DOMjudge-devel@lists.A-Eskwadraat.nl</a>.</p>
 
 
 <!--#include virtual="/footer.shtml" -->
