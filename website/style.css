@@ -182,12 +182,12 @@ legend {
 #lastmod {
 	color: gray;
 	font-size: x-small;
-	position: absolute; right: 1ex; margin-top: 1em;
+	position: absolute; right: 1ex; margin-top: 5em;
 }
 
 #djlogo {
-	position: absolute; right: 1ex;
-	width: 93px; height: 196px;
+	float: right;
+	width: 80px; height: 169px;
 }
 
 #teamscoresummary { position: absolute; right: 2ex; top: 7ex; }
@@ -203,3 +203,9 @@ img.picto { width: 16px; height: 16px; }
 
 .judgetime { font-size: smaller; font-style: italic; }
 
+#organisations {
+	position: absolute; left: 1ex;
+}
+#validity {
+	position: absolute; right: 1ex;
+}

@@ -43,7 +43,6 @@ where teams are on-site and there is a fixed problem set and timeframe.
 Tobias Werth's presentation at the 2010 ICPC World Finals show a lot
 of DOMjudge's features. You may also view the <a href="demo">online demo</a>.</p>
 
-<a name="requirements"></a>
 <h2>Requirements</h2>
 
 <p>The following is required to run DOMjudge:</p>

@@ -4,8 +4,8 @@
 <!--#set var="dj_previous_branch_version" value="3.1.4"-->
 <!--#set var="dj_previous_branch_date" value="27 August 2011"-->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <title>DOMjudge - <!--#echo var="dj_page_title" --></title>
@@ -13,8 +13,6 @@
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 <body>
-
-<a name="top"></a>
 
 <div id="menutop">
 <a href=".">home</a>
@@ -26,5 +24,5 @@
 <a href="about">about</a>
 </div>
 
-<img src="DOMjudgelogo_sc.png" alt="DOMjudge logo"
-	width="80" height="169" align="right" border="0" />
+<p><img src="DOMjudgelogo_sc.png" alt="DOMjudge logo"
+	width="80" height="169" id="djlogo" /></p>
