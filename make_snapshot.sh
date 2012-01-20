@@ -33,7 +33,6 @@ sed -i "s/PUBLISHED =.*/PUBLISHED = `date +%Y-%m-%d`/" $DJDIR/paths.mk.in
 quiet make -C $DJDIR dist
 tar -cf $DJDIR.tar $DJDIR
 gzip -9 $DJDIR.tar
-quiet make -C $DJDIR docs
 
 rm -rf $PUBDIR/*
 mkdir -p $PUBDIR/admin-manual $PUBDIR/judge-manual
