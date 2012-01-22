@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Usage: $0 [<local-sql-file> [<databasename>]]
+# Usage: $0 [-o '<mysql-opts>'] [-d <databasename>] [-l <local-sql-file>]
 #
 # Check whether DOMjudge mysql database structure is consistent with
 # git repository: outputs diff.
@@ -9,6 +9,7 @@ set -e
 
 MYSQLOPTS='-u domjudge_jury -p'
 DBNAME='domjudge'
+LOCALSQL=''
 
 GITURL='git://a-eskwadraat.nl/git/domjudge.git'
 
@@ -24,13 +25,27 @@ sqlfilter()
 	sed 's/ \(DEFAULT CHARSET\|AUTO_INCREMENT\|ENGINE\)=[^ ]*//g;/_client *= /d'
 }
 
-if [ $# -ge 1 ]; then
-	LOCALSQL=$1
-fi
-
-if [ $# -ge 2 ]; then
-	DBNAME=$2
-fi
+# Parse command-line options:
+while getopts ':o:d:l:' OPT ; do
+	case "$OPT" in
+		o) MYSQLOPTS=$OPTARG ;;
+		d) DBNAME=$OPTARG ;;
+		l) LOCALSQL=$OPTARG ;;
+		:)
+			echo "Error: option '$OPTARG' requires an argument."
+			exit 1
+			;;
+		?)
+			echo "Error: unknown option '$OPTARG'."
+			exit 1
+			;;
+		*)
+			echo "Error: unknown error reading option '$OPT', value '$OPTARG'."
+			exit 1
+			;;
+	esac
+done
+shift $((OPTIND-1))
 
 mysqldump $MYSQLOPTS -n -d -Q --skip-add-drop-table "$DBNAME" | \
 	sqlfilter > $DBSTRUCT
