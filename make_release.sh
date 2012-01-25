@@ -29,14 +29,14 @@ VERSION="`cat README | head -n 1 | sed 's/.*version //'`"
 CHLOG="`grep ^Version ChangeLog | head -n 1`"
 
 # Check for non-release version
-if [ "${VERSION%DEV}" != "${VERSION}" ] ||
+if [ "${VERSION%DEV}" != "${VERSION}" ] || \
    [ "${VERSION%SVN}" != "${VERSION}" ]; then
 	echo "WARNING: version string contains 'DEV' or 'SVN', should probably be changed!"
 fi
 
 # Check for renamed SQL upgrade file
-if ls sql/upgrade/upgrade_*DEV.sql \
-      sql/upgrade/upgrade_*SVN.sql >/dev/null 2>&1; then
+if ls sql/upgrade/upgrade_*DEV.sql >/dev/null 2>&1 || \
+      sql/upgrade/upgrade_*SVN.sql >/dev/null 2>&1 ; then
 	echo "WARNING: found SQL upgrade file to DEV/SVN version, should probably be renamed!"
 fi
 
