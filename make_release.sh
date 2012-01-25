@@ -14,6 +14,10 @@ if [ -z "$1" ]; then
 fi
 TAG="$1" ; shift
 
+if [ -n "$1" ]; then
+	GITURL="$1" ; shift
+fi
+
 OWD="$PWD"
 cd $TEMPDIR
 
@@ -24,19 +28,22 @@ cd domjudge
 VERSION="`cat README | head -n 1 | sed 's/.*version //'`"
 CHLOG="`grep ^Version ChangeLog | head -n 1`"
 
-if [ "${VERSION%DEV}" != "${VERSION}" ]; then
-	echo "WARNING: version string contains 'DEV', should probably be changed!"
+# Check for non-release version
+if [ "${VERSION%DEV}" != "${VERSION}" ] ||
+   [ "${VERSION%SVN}" != "${VERSION}" ]; then
+	echo "WARNING: version string contains 'DEV' or 'SVN', should probably be changed!"
+fi
+
+# Check for renamed SQL upgrade file
+if ls sql/upgrade/upgrade_*DEV.sql \
+      sql/upgrade/upgrade_*SVN.sql >/dev/null 2>&1; then
+	echo "WARNING: found SQL upgrade file to DEV/SVN version, should probably be renamed!"
 fi
 
 # Add released tag for revision information:
 sed -i 's/PUBLISHED =.*/PUBLISHED = release/' paths.mk.in
 
 make QUIET=1 dist
-
-# Check for renamed SQL upgrade file
-if ls sql/upgrade/upgrade_*DEV.sql >/dev/null 2>&1; then
-	echo "WARNING: SQL upgrade file to a DEV version was found, should probably be renamed!"
-fi
 
 cd ..
 
