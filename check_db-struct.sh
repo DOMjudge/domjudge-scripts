@@ -7,7 +7,7 @@
 
 set -e
 
-MYSQLOPTS='-u domjudge_jury -p'
+MYSQLOPTS=''
 DBNAME='domjudge'
 LOCALSQL=''
 
