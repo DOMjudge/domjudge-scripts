@@ -26,7 +26,7 @@ quiet()
 	if [ "$DEBUG" ]; then
 		$@
 	else
-		$@ &> /dev/null
+		$@ > /dev/null 2>&1
 	fi
 }
 
@@ -123,8 +123,8 @@ for i in $URLS ; do
 	# Special-case plugin interface for user/pass and XML output:
 	if [ "${i#plugin/}" != "$i" ]; then
 		output=`wget -q --user=$PLUGINUSER --password=$PLUGINPASS -O - "$url" 2>&1`
-		if ! echo "$output" | head -n 2 | grep '^<root>' 2>&1 >/dev/null ; then
-			echo -e "Errors found in '$url'\n$output"
+		if ! echo "$output" | head -n 2 | grep '^<root>' >/dev/null 2>&1 ; then
+			printf "Errors found in '$url'\n$output"
 		fi
 		continue
 	fi
@@ -132,7 +132,7 @@ for i in $URLS ; do
 		xsltproc --noout --nowrite --nonet $XSLTTMP - 2>&1` || \
 		[ "$output" ] ; then
 
-		echo -e "Errors found in '$url'\n$output"
+		printf "Errors found in '$url'\n$output"
 	fi
 done
 IFS="$OFS"

@@ -17,7 +17,7 @@ quiet()
 	if [ "$DEBUG" ]; then
 		$@
 	else
-		$@ &> /dev/null
+		$@ > /dev/null 2>&1
 	fi
 }
 
@@ -36,10 +36,13 @@ gzip -9 $DJDIR.tar
 
 rm -rf $PUBDIR/*
 mkdir -p $PUBDIR/admin-manual $PUBDIR/judge-manual
-cp $DJDIR/doc/admin/{admin-manual*.{html,pdf},*.png} $PUBDIR/admin-manual/
-cp $DJDIR/doc/judge/judge-manual*.{html,pdf}         $PUBDIR/judge-manual/
-cp $DJDIR/doc/team/team-manual.pdf                   $PUBDIR/
-cp $DJDIR.tar.gz $DJDIR/ChangeLog                    $PUBDIR/
+cp $DJDIR/doc/admin/admin-manual*.html \
+   $DJDIR/doc/admin/admin-manual.pdf   \
+   $DJDIR/doc/admin/*.png                $PUBDIR/admin-manual/
+cp $DJDIR/doc/judge/judge-manual*.html \
+   $DJDIR/doc/judge/judge-manual.pdf     $PUBDIR/judge-manual/
+cp $DJDIR/doc/team/team-manual.pdf       $PUBDIR/
+cp $DJDIR.tar.gz $DJDIR/ChangeLog        $PUBDIR/
 cd /
 
 [ "$DEBUG" ] || rm -rf $TEMPDIR
