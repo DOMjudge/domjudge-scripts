@@ -78,13 +78,6 @@ if [ ! -f "$RESULTFILE" -o ! -r "$RESULTFILE" ]; then
 	exit 1
 fi
 
-cd "$INSTALLDIR"
-# Rebuild installation to incorporate any changes in the sources:
-make QUIET=1 maintainer-clean
-make QUIET=1 maintainer-conf CONFIGURE_FLAGS=--disable-checktestdata
-make QUIET=1 maintainer-install
-cd - > /dev/null
-
 # Clean database and load initial SQL data:
 (
 	echo "DROP DATABASE IF EXISTS \`$DBNAME\`;"
@@ -92,9 +85,7 @@ cd - > /dev/null
 ) | mysql $MYSQLOPTS
 mysql $MYSQLOPTS "$DBNAME" < "$INITDBSQL"
 
-# Cleanup any previous judging content and logs:
-rm -f  "$INSTALLDIR/output/log/judge.$JUDGEHOST.log"
-rm -f  "$INSTALLDIR/output/run/judgedaemon.pid"
+# Cleanup any previous judging contents:
 rm -rf "$INSTALLDIR/output/judging/$JUDGEHOST"
 
 # Upgrade DB schema to recent version:
