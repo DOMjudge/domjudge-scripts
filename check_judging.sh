@@ -24,6 +24,8 @@
 
 set -e
 
+PROGNAME=$0
+
 MYSQLOPTS=''
 DBNAME='domjudge'
 INSTALLDIR='.'
@@ -97,6 +99,13 @@ rm -rf "$INSTALLDIR/output/judging/$JUDGEHOST"
 
 # Upgrade DB schema to recent version:
 "$INSTALLDIR"/sql/dj-setup-database upgrade
+
+# Check DB structure to see if upgraded correctly:
+CHECKDB="`dirname $PROGNAME`/check_db-struct.sh"
+if [ -x "$CHECKDB" ]; then
+	$CHECKDB ${MYSQLOPTS:+-o "$MYSQLOPTS"} -d "$DBNAME" \
+	         -l "$INSTALLDIR"/sql/mysql_db_structure.sql
+fi
 
 # Submit all sources under SOURCESDIR:
 "$INSTALLDIR"/misc-tools/restore_sources2db "$SOURCESDIR"
