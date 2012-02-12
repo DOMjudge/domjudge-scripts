@@ -1,8 +1,8 @@
 #!/bin/sh
 #
 # Usage: $0 [-o '<mysql-opts>'] [-d <databasename>] [-i <install-dir>] \
-#           [-j <judgehost>] \
-#           <initial-DB.sql> <sources-dir> <results-file>
+#           [-j <judgehost>] [-w <XML-scoreboard-URL>] \
+#           <initial-DB.sql> <sources-dir> <judgings-file> [<standings-file>]
 #
 # Runs a fully automated backend test by submitting sources to a
 # running system and compare the outcomes with expected, known results.
@@ -20,7 +20,11 @@
 # 'misc-tools/{restore_sources2db,save_sources2file}'; their
 # modification time is used as submission time.
 #
-# The judging results are compared with those in the <results-file>.
+# The judging results are compared with those in the <judgings-file>.
+# If the '-w' option and a <standings-file> are given, then then final
+# scoreboard is downloaded from the plugin web interface (note that a
+# htpasswd user:pass combination can be passed via the URL) and
+# compared to the data in <standings-file>.
 
 set -e
 
@@ -30,18 +34,20 @@ MYSQLOPTS=''
 DBNAME='domjudge'
 INSTALLDIR='.'
 JUDGEHOST=${HOSTNAME:-`hostname`}
+SCOREURL=''
 
 # Maximum age of last polltime in seconds before we declare the
 # judgehost crashed.
 MAXPOLL=180
 
 # Parse command-line options:
-while getopts ':o:d:i:j:' OPT ; do
+while getopts ':o:d:i:j:w:' OPT ; do
 	case "$OPT" in
 		o) MYSQLOPTS=$OPTARG ;;
 		d) DBNAME=$OPTARG ;;
 		i) INSTALLDIR=$OPTARG ;;
 		j) JUDGEHOST=$OPTARG ;;
+		w) SCOREURL=$OPTARG ;;
 		:)
 			echo "Error: option '$OPTARG' requires an argument."
 			exit 1
@@ -64,7 +70,8 @@ if [ $# -lt 3 ]; then
 fi
 INITDBSQL=$1
 SOURCESDIR=$2
-RESULTFILE=$3
+JUDGINGSFILE=$3
+STANDINGSFILE=$4
 if [ ! -f "$INITDBSQL" -o ! -r "$INITDBSQL" ]; then
 	echo "Error: cannot read initial DB SQL file '$INITDBSQL'."
 	exit 1
@@ -73,8 +80,8 @@ if [ ! -d "$SOURCESDIR" -o ! -r "$SOURCESDIR" ]; then
 	echo "Error: cannot open sources directory '$SOURCESDIR'."
 	exit 1
 fi
-if [ ! -f "$RESULTFILE" -o ! -r "$RESULTFILE" ]; then
-	echo "Error: cannot read results file '$RESULTFILE'."
+if [ ! -f "$JUDGINGSFILE" -o ! -r "$JUDGINGSFILE" ]; then
+	echo "Error: cannot read judgings file '$JUDGINGSFILE'."
 	exit 1
 fi
 
@@ -145,11 +152,21 @@ while read CID SID RESULT ; do
 		echo "Warning: c$CID s$SID, result '$DBRESULT' does not match '$RESULT'."
 		WARNCOUNT=$((WARNCOUNT+1))
 	fi
-done < "$RESULTFILE"
+done < "$JUDGINGSFILE"
 
 if [ $WARNCOUNT -gt 0 ]; then
 	echo "Error: $WARNCOUNT submissions have non-matching results."
-	exit 1
 fi
+
+if [ -n "$SCOREURL" -a -f "$STANDINGSFILE" ]; then
+	SCOREXSLT="`dirname $PROGNAME`/scoreboard_xml2csv.xslt"
+	if ! wget -q "$SCOREURL" -O - | xsltproc "$SCOREXSLT" - | \
+		diff -U1 "$STANDINGSFILE" - ; then
+		echo "Error: mismatch in final scores."
+		WARNCOUNT=$((WARNCOUNT+1))
+	fi
+fi
+
+[ $WARNCOUNT -gt 0 ] && exit 1
 
 exit 0
