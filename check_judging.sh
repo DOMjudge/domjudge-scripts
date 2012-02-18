@@ -93,8 +93,10 @@ fi
 mysql $MYSQLOPTS "$DBNAME" < "$INITDBSQL"
 
 # Cleanup any previous judging contents:
-mv     "$INSTALLDIR/output/log/judge.$JUDGEHOST.log" \
-       "$INSTALLDIR/output/log/judge.$JUDGEHOST.log.old-$$"
+LOGFILE="$INSTALLDIR/output/log/judge.$JUDGEHOST.log"
+if [ -f "$LOGFILE" ]; then
+	mv "$LOGFILE" "$LOGFILE.old-$$"
+fi
 rm -rf "$INSTALLDIR/output/judging/$JUDGEHOST"
 
 # Upgrade DB schema to recent version:
