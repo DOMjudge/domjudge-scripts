@@ -29,13 +29,12 @@ where teams are on-site and there is a fixed problem set and timeframe.
 <p>It has been used in many live contests, a selection:</p>
 
 <ul>
-<li>Utrechts Kampioenschap Programmeren 2004 - 2011</li>
-<li><a href="http://www.bapc.eu/">Benelux Algorithm Programming Contest</a>
-    2004, 2006, 2007, 2009 - 2011</li>
-<li><a href="http://gcpc.nwerc.eu/">German Collegiate Programming Contest</a> 2010, 2011</li>
-<li><a href="http://www.nwerc.eu/">ACM ICPC NWERC</a> 2007 - 2011</li>
-<li><a href="http://www.swerc.eu/">ACM ICPC SWERC</a> 2008, 2010, 2011</li>
-<li><a href="http://ser.cs.fit.edu/">ACM ICPC SER USA</a> 2010, 2011</li>
+<li>Locally: Utrechts Kampioenschap Programmeren (since 2004)</li>
+<li>ACM ICPC Sub-regionals: <a href="http://www.bapc.eu/">BAPC</a>
+    (since 2004), <a href="http://gcpc.nwerc.eu/">GCPC</a> (since 2010)</li>
+<li>ACM ICPC Regionals: <a href="http://www.nwerc.eu/">NWERC</a> (since 2007), <a href="http://www.swerc.eu/">SWERC</a> (since 2008),
+<a href="http://ser.cs.fit.edu/">USA-SER</a> (since 2010)</li>
+<li>ACM ICPC World Finals: 2012 for ICPC Live</li>
 </ul>
 
 <p>The <a href="CLI2010-domjudge.pdf">presentation slides (PDF)</a> of
