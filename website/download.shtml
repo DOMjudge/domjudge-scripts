@@ -7,10 +7,6 @@
 <p><a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_current_branch_version" -->/">
 download here</a></p>
 
-<p>Release candidate 1 for the new release series <strong>3.3</strong> can be
-<a href="http://sourceforge.net/projects/domjudge/files/domjudge/3.3.0RC1/">
-downloaded here.</a></p>
-
 <p>There is also the previous release series <strong><!--#echo var="dj_previous_branch_version" --></strong>,
 dated <!--#echo var="dj_previous_branch_date" -->, to be
 <a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_previous_branch_version" -->/">
