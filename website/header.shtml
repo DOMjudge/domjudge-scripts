@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--#set var="dj_current_branch_version" value="3.3.0"-->
 <!--#set var="dj_current_branch_date" value="29 May 2012"-->
-<!--#set var="dj_previous_branch_version" value="3.2.2"-->
-<!--#set var="dj_previous_branch_date" value="25 January 2012"-->
+<!--#set var="dj_previous_branch_version" value="3.2.3"-->
+<!--#set var="dj_previous_branch_date" value="2 June 2012"-->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
