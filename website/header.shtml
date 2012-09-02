@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--#set var="dj_current_branch_version" value="3.3.1"-->
-<!--#set var="dj_current_branch_date" value="12 June 2012"-->
+<!--#set var="dj_current_branch_version" value="3.3.2"-->
+<!--#set var="dj_current_branch_date" value="2 September 2012"-->
 <!--#set var="dj_previous_branch_version" value="3.2.3"-->
 <!--#set var="dj_previous_branch_date" value="2 June 2012"-->
 
