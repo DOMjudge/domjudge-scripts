@@ -51,6 +51,11 @@ cd ~
 
 [ "$DEBUG" ] || rm -rf $TEMPDIR
 
+# FIXME: Stop processing: the xsltproc validity check generates inappropriate messages.
+exit 0;
+
+
+
 # Validate DOMjudge webpages running from uptodate git checkout
 # (we cannot use a fresh checkout due to missing website config)
 cd $LIVESYSTEMDIR && git pull -q
