@@ -51,10 +51,6 @@ cd ~
 
 [ "$DEBUG" ] || rm -rf $TEMPDIR
 
-# FIXME: Stop processing: the xsltproc validity check generates inappropriate messages.
-exit 0;
-
-
 
 # Validate DOMjudge webpages running from uptodate git checkout
 # (we cannot use a fresh checkout due to missing website config)
@@ -113,16 +109,6 @@ OFS="$IFS"
 IFS='
 '
 
-XSLTTMP=`mktemp /tmp/domjudge-xslt.XXXXXX`
-cat > $XSLTTMP <<EOF
-<?xml version="1.0" encoding="utf-8"?>
-
-<xsl:stylesheet version="1.0"
-xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-</xsl:stylesheet>
-EOF
-
 for i in $URLS ; do
 	url="$LIVEURLPREFIX$i"
 	# Special-case plugin interface for user/pass and XML output:
@@ -133,15 +119,13 @@ for i in $URLS ; do
 		fi
 		continue
 	fi
-	if ! output=`wget -q --user=$JUDGEUSER --password=$JUDGEPASS -O - "$url" 2>&1 | \
-		xsltproc --noout --nowrite --nonet $XSLTTMP - 2>&1` || \
-		[ "$output" ] ; then
-
-		printf "Errors found in '$url'\n$output"
+	output=`wget -q --user=$JUDGEUSER --password=$JUDGEPASS -O - "$url" 2>&1 | \
+		tidy -q -e -utf8 --new-blocklevel-tags nav 2>&1 1>/dev/null | \
+		grep -vE 'Warning: (<nav> is not|<table> lacks|trimming empty|.* proprietary attribute)' || true`
+	if [ "$output" ] ; then
+		echo "Errors found in '$url'\n$output"
 	fi
 done
 IFS="$OFS"
-
-[ "$DEBUG" ] || rm -f $XSLTTMP
 
 exit 0
