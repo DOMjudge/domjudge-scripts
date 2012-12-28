@@ -65,6 +65,7 @@ public/team.php?id=domjudge
 team
 team/clarification.php
 team/clarification.php?id=137
+team/scoreboard.php
 team/submission_details.php?id=129
 jury
 jury/auditlog.php
@@ -73,6 +74,7 @@ jury/checkconfig.php
 jury/clarification.php
 jury/clarification.php?id=107
 jury/clarifications.php
+jury/config.php
 jury/contests.php
 jury/contest.php?cmd=add
 jury/check_judgings.php
@@ -88,6 +90,7 @@ jury/problem.php?id=fltcmp
 jury/problem.php?id=fltcmp&cmd=edit
 jury/refresh_cache.php
 jury/scoreboard.php
+jury/scoreboard.php?country[]=NLD
 jury/show_source.php?id=1
 jury/submission.php?id=1
 jury/submission.php?id=91
