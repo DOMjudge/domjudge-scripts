@@ -121,9 +121,10 @@ for i in $URLS ; do
 	fi
 	output=`wget -q --user=$JUDGEUSER --password=$JUDGEPASS -O - "$url" 2>&1 | \
 		tidy -q -e -utf8 --new-blocklevel-tags nav 2>&1 1>/dev/null | \
-		grep -vE 'Warning: (<nav> is not|<table> lacks|trimming empty|.* proprietary attribute)' || true`
+		grep -vE 'Warning: (<nav> is not|<table> lacks|<input> attribute "type" .* value "(color|number)"|trimming empty|.* proprietary attribute|missing </pre> before <ol>|inserting implicit <pre>)' || true`
 	if [ "$output" ] ; then
-		echo "Errors found in '$url'\n$output"
+		echo "Errors found in '$url'
+$output"
 	fi
 done
 IFS="$OFS"
