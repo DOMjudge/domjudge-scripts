@@ -33,5 +33,14 @@ signed with <a href="http://non-gnu.uvt.nl/debian/uvt_key-with-signatures.asc">t
 
 <pre>deb http://non-gnu.uvt.nl/debian lenny uvt</pre>
 
+<h3>DOMjudge-live USB images</h3>
+
+<p>We also provide
+<a href="http://sourceforge.net/projects/domjudge/files/domjudge-live/">
+DOMjudge-live USB images</a> to run DOMjudge straight from an USB stick
+(it can also be written to harddisk or booted in a virtual machine).
+See the download page for more details on how use these.
+</p>
+
 
 <!--#include virtual="/footer.shtml" -->
