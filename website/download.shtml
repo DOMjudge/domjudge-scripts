@@ -28,7 +28,7 @@ http://non-gnu.uvt.nl/debian/lenny/domjudge/</a> for i386 and amd64 architecture
 The packages work on Lenny, Squeeze and newer, and also on the various versions
 of Ubuntu.</p>
 
-<p>You can add the following apt source to <tt>/etc/apt/sources.list</tt> which is
+<p>You can add the following apt source to <code>/etc/apt/sources.list</code> which is
 signed with <a href="http://non-gnu.uvt.nl/debian/uvt_key-with-signatures.asc">this key</a>:</p>
 
 <pre>deb http://non-gnu.uvt.nl/debian lenny uvt</pre>
