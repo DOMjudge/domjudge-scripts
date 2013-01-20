@@ -23,15 +23,15 @@ mailing list</a>.</p>
 <h3>Debian Packages</h3>
 
 <p>There are also <a href="http://www.debian.org">Debian GNU/Linux</a> packages
-available from <a href="http://non-gnu.uvt.nl/debian/lenny/domjudge/">
-http://non-gnu.uvt.nl/debian/lenny/domjudge/</a> for i386 and amd64 architectures.
+available from <a href="http://non-gnu.uvt.nl/debian/squeeze/domjudge/">
+http://non-gnu.uvt.nl/debian/squeeze/domjudge/</a> for i386 and amd64 architectures.
 The packages work on Lenny, Squeeze and newer, and also on the various versions
 of Ubuntu.</p>
 
 <p>You can add the following apt source to <code>/etc/apt/sources.list</code> which is
 signed with <a href="http://non-gnu.uvt.nl/debian/uvt_key-with-signatures.asc">this key</a>:</p>
 
-<pre>deb http://non-gnu.uvt.nl/debian lenny uvt</pre>
+<pre>deb http://non-gnu.uvt.nl/debian squeeze uvt</pre>
 
 <h3>DOMjudge-live USB images</h3>
 
