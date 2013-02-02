@@ -14,8 +14,13 @@ LIVESYSTEMDIR=~/system
 LIVEURLPREFIX='http://domjudge.a-eskwadraat.nl/domjudge/'
 GITURL='git://a-eskwadraat.nl/git/domjudge.git'
 
-JUDGEUSER=domjudge_jury
-JUDGEPASS=passwordhere
+ADMINUSER=admin
+ADMINPASS=passwordhere
+
+# Optionally specify a non-priveleged jury user to check the jury web
+# pages without admin permissions:
+#JUDGEUSER=jury
+#JUDGEPASS=passwordhere
 
 PLUGINUSER=jury
 PLUGINPASS=jury
@@ -60,14 +65,14 @@ URLS='
 .
 plugin/scoreboard.php
 plugin/event.php?fromid=1&toid=50
-public
+public/
 public/team.php?id=domjudge
 team
 team/clarification.php
 team/clarification.php?id=137
 team/scoreboard.php
 team/submission_details.php?id=129
-jury
+jury/
 jury/auditlog.php
 jury/balloons.php
 jury/checkconfig.php
@@ -112,6 +117,17 @@ OFS="$IFS"
 IFS='
 '
 
+check_html ()
+{
+	output=`wget -q ${USER:+--user=$USER} ${PASS:+--password=$PASS} -O - "$1" 2>&1 | \
+		tidy -q -e -utf8 --new-blocklevel-tags nav 2>&1 1>/dev/null | \
+		grep -vE 'Warning: (<nav> is not|<table> lacks|<input> attribute "type" .* value "(color|number)"|trimming empty|.* proprietary attribute|missing </pre> before <ol>|inserting implicit <pre>)' || true`
+	if [ "$output" ] ; then
+		echo "Errors found in '$url'
+$output"
+	fi
+}
+
 for i in $URLS ; do
 	url="$LIVEURLPREFIX$i"
 	# Special-case plugin interface for user/pass and XML output:
@@ -122,12 +138,24 @@ for i in $URLS ; do
 		fi
 		continue
 	fi
-	output=`wget -q --user=$JUDGEUSER --password=$JUDGEPASS -O - "$url" 2>&1 | \
-		tidy -q -e -utf8 --new-blocklevel-tags nav 2>&1 1>/dev/null | \
-		grep -vE 'Warning: (<nav> is not|<table> lacks|<input> attribute "type" .* value "(color|number)"|trimming empty|.* proprietary attribute|missing </pre> before <ol>|inserting implicit <pre>)' || true`
-	if [ "$output" ] ; then
-		echo "Errors found in '$url'
-$output"
+	if [ "${i#jury/}" != "$i" ]; then
+		if [ -n "$JUDGEUSER" ]; then
+			USER=$JUDGEUSER
+			PASS=$JUDGEPASS
+			check_html "$url"
+		fi
+		if [ -n "$ADMINUSER" ]; then
+			USER=$ADMINUSER
+			PASS=$ADMINPASS
+			check_html "$url"
+		fi
+		if [ -z "$JUDGEUSER" -a -z "$ADMINUSER" ]; then
+			unset USER PASS
+			check_html "$url"
+		fi
+	else
+		unset USER PASS
+		check_html "$url"
 	fi
 done
 IFS="$OFS"
