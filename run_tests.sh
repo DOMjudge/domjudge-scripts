@@ -73,27 +73,18 @@ team/clarification.php?id=137
 team/scoreboard.php
 team/submission_details.php?id=129
 jury/
-jury/auditlog.php
 jury/balloons.php
-jury/checkconfig.php
 jury/clarification.php
 jury/clarification.php?id=107
 jury/clarifications.php
-jury/config.php
 jury/contests.php
-jury/contest.php?cmd=add
-jury/check_judgings.php
-jury/genpasswds.php
 jury/index.php
 jury/judgehosts.php
-jury/judgehosts.php?cmd=edit&referrer=judgehosts.php
 jury/judgehost.php?id=judgehost1
+jury/language.php?id=c
 jury/languages.php
-jury/language.php?cmd=add
 jury/problems.php
 jury/problem.php?id=fltcmp
-jury/problem.php?id=fltcmp&cmd=edit
-jury/refresh_cache.php
 jury/scoreboard.php
 jury/scoreboard.php?country[]=NLD
 jury/show_source.php?id=1
@@ -109,9 +100,19 @@ jury/team_affiliation.php?id=UU
 jury/team_categories.php
 jury/team_category.php?id=1
 jury/team.php?id=domjudge
-jury/team.php?id=domjudge&cmd=edit
 jury/teams.php
-jury/testcase.php?probid=hello'
+jury/testcase.php?probid=hello
+admin/auditlog.php
+admin/checkconfig.php
+admin/check_judgings.php
+admin/config.php
+admin/contest.php?cmd=add
+admin/genpasswds.php
+admin/judgehosts.php?cmd=edit&referrer=judgehosts.php
+admin/language.php?cmd=add
+admin/problem.php?id=fltcmp&cmd=edit
+admin/refresh_cache.php
+admin/team.php?id=domjudge&cmd=edit'
 
 OFS="$IFS"
 IFS='
@@ -138,7 +139,15 @@ for i in $URLS ; do
 		fi
 		continue
 	fi
-	if [ "${i#jury/}" != "$i" ]; then
+	# Special-case admin-only pages in the jury interface:
+	if [ "${i#admin/}" != "$i" ]; then
+		url="${LIVEURLPREFIX}jury${i#admin}"
+		if [ -n "$ADMINUSER" ]; then
+			USER=$ADMINUSER
+			PASS=$ADMINPASS
+			check_html "$url"
+		fi
+	elif [ "${i#jury/}" != "$i" ]; then
 		if [ -n "$JUDGEUSER" ]; then
 			USER=$JUDGEUSER
 			PASS=$JUDGEPASS
