@@ -1,7 +1,7 @@
-<!--#set    var="dj_current_branch_version"  value="3.3.4"
---><!--#set var="dj_current_branch_date"     value="21 January 2013"
---><!--#set var="dj_previous_branch_version" value="3.2.4"
---><!--#set var="dj_previous_branch_date"    value="11 November 2012"--><!DOCTYPE html>
+<!--#set    var="dj_current_branch_version"  value="3.3.5"
+--><!--#set var="dj_current_branch_date"     value="16 April 2013"
+--><!--#set var="dj_previous_branch_version" value="3.2.5"
+--><!--#set var="dj_previous_branch_date"    value="16 April 2013"--><!DOCTYPE html>
 <html lang="en" xml:lang="en">
 <head>
 <title>DOMjudge - <!--#echo var="dj_page_title" --></title>
