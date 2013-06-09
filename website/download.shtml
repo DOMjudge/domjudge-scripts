@@ -2,23 +2,23 @@
 
 <h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
 
-<p>The latest stable release is <strong><!--#echo var="dj_current_branch_version" --></strong>, dated <!--#echo var="dj_current_branch_date" -->.</p>
+<p>The following downloads are available:</p>
+<ul>
+<li>The <a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_current_branch_version" -->/">
+latest stable release <strong><!--#echo var="dj_current_branch_version" --></strong></a>, dated <!--#echo var="dj_current_branch_date" -->.</li>
 
-<p><a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_current_branch_version" -->/">
-download here</a></p>
+<li>The <a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_previous_branch_version" -->/">previous release series <strong><!--#echo var="dj_previous_branch_version" --></strong></a>,
+dated <!--#echo var="dj_previous_branch_date" -->.</li>
 
-<p>There is also the previous release series <strong><!--#echo var="dj_previous_branch_version" --></strong>,
-dated <!--#echo var="dj_previous_branch_date" -->, to be
-<a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_previous_branch_version" -->/">
-downloaded here.</a></p>
+<li>The <a href="sources/">sources of included {b,d}ash shell</a> binaries.</li>
+
+<li>The <a href="/snapshot/">snapshot directory</a> contains nightly builds,
+including changelog and documentation, <strong>use at your own risk</strong>.</li>
+</ul>
 
 <p>To get notifications of new releases, subscribe to the low volume
 <a href="https://secure.a-eskwadraat.nl/mailman/listinfo/domjudge-announce">announcements
 mailing list</a>.</p>
-
-<p>The sources of included {b,d}ash shell binaries can be
-
-<a href="sources/">downloaded here</a>.</p>
 
 <h3>Debian Packages</h3>
 
