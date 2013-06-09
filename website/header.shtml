@@ -5,6 +5,7 @@
 <html lang="en" xml:lang="en">
 <head>
 <title>DOMjudge - <!--#echo var="dj_page_title" --></title>
+<meta charset="UTF-8">
 <link rel="shortcut icon" href="/favicon.png" type="image/png" />
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
