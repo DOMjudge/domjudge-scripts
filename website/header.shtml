@@ -1,6 +1,6 @@
-<!--#set    var="dj_current_branch_version"  value="3.3.5"
---><!--#set var="dj_current_branch_date"     value="16 April 2013"
---><!--#set var="dj_previous_branch_version" value="3.2.5"
+<!--#set    var="dj_current_branch_version"  value="3.4.0"
+--><!--#set var="dj_current_branch_date"     value="22 July 2013"
+--><!--#set var="dj_previous_branch_version" value="3.3.5"
 --><!--#set var="dj_previous_branch_date"    value="16 April 2013"--><!DOCTYPE html>
 <html lang="en" xml:lang="en">
 <head>
