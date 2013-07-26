@@ -33,11 +33,11 @@ signed with <a href="http://non-gnu.uvt.nl/debian/uvt_key-with-signatures.asc">t
 
 <pre>deb http://non-gnu.uvt.nl/debian squeeze uvt</pre>
 
-<h3>DOMjudge-live USB images</h3>
+<h3>DOMjudge-live images</h3>
 
 <p>We also provide
 <a href="http://sourceforge.net/projects/domjudge/files/domjudge-live/">
-DOMjudge-live USB images</a> to run DOMjudge straight from an USB stick
+DOMjudge-live images</a> to run DOMjudge straight from an USB stick
 (it can also be written to harddisk or booted in a virtual machine).
 See <a href="https://www.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git;a=blob_plain;f=live-usb/files/README">
 this README file</a> (which is also available in the
