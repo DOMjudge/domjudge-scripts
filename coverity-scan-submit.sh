@@ -20,14 +20,27 @@ fi
 VERSION=`  grep '^VERSION ='   paths.mk | sed 's/^VERSION = *//'`
 PUBLISHED=`grep '^PUBLISHED =' paths.mk | sed 's/^PUBLISHED = *//'`
 
+git_dirty()
+{
+	[ "$(git status 2> /dev/null | tail -n1)" != "nothing to commit (working directory clean)" ] && echo -n '*'
+}
+git_branch()
+{
+	git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/"
+}
+git_commit()
+{
+	git rev-parse HEAD | cut -c -12
+}
+
 if [ "$PUBLISHED" = release ]; then
 	DESC="release"
 elif [ -n "$PUBLISHED" ]; then
 	DESC="snapshot $PUBLISHED"
 elif [ -d .git ]; then
-	DESC="Git `git rev-parse HEAD | cut -c -12`"
+	DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
 else
-	DESC="Unknown source on `date`"
+	DESC="unknown source on `date`"
 fi
 
 export PATH="$PATH:$COVTOOL/bin"
@@ -40,7 +53,7 @@ echo "Submitting '$VERSION' '$DESC'"
 
 curl --form project=DOMjudge --form token="$TOKEN" \
      --form email="$EMAIL" --form file=@domjudge-scan.tgz \
-     --form version="$VERSION" --form description="$DESC" \
+     --form version="$VERSION" --form description="$VERSION - $DESC" \
      http://scan5.coverity.com/cgi-bin/upload.py
 
 exit 0
