@@ -1,0 +1,49 @@
+A new release can be created by one of the main DOMjudge developers.  The
+following steps should be taken (local directories refer to those on the
+account `domjudge@a-eskwadraat.nl`):
+
+ 1. Test everything. (duh...)
+ 1. Commit the correct version number in the `ChangeLog` and `README` files,
+    set `DEBUG=0` in `etc/common-config.php` (if releasing from the `master`
+    branch).
+ 1. Rename the latest SQL upgrade file from `sql/upgrade/upgrade_*DEV.sql`
+    to the release version (if existent), and (this can also be done later)
+    update any SQL upgrade file in the previous series to point to this
+    latest release. See `sql/upgrade/README` for details on the upgrade path
+    structure.
+ 1. Create a release version `$TAG` in Git with `$TAG` the version number
+    x.y.z:
+        git tag [-a|-s|-u <GPG-key-ID>] -m "Tag release version $TAG." $TAG
+    See `git tag --help` for more details on how to tag with(out) a
+    GPG signature.
+ 1. Create the release tarball by running
+        make_release.sh $TAG [<git-repo-url>]
+    The `<git-repo-url>` defaults to `git://a-eskwadraat.nl/git/domjudge.git`
+    but can be pointed to your local repository, before committing to the
+    central repository.
+
+    The tarball is placed in the current dir; check that it looks correct,
+    test e.g. by unpacking it and running
+        ./configure && make build
+ 1. Update files above to `{version+1}DEV`, `DEBUG=1`, and commit.
+ 1. Generate sha256sum and GPG signature:
+        sha256sum domjudge-$TAG.tar.gz > domjudge-$TAG.tar.gz.sha256sum
+        gpg -a --detach-sign --digest-algo SHA1 domjudge-$TAG.tar.gz
+    Copy these and the tarball to `~/releases`.
+ 1. Publish these files via the SF.net web interface:
+    https://sourceforge.net/projects/domjudge/files/domjudge/
+    or upload via `sftp <username>,domjudge@frs.sourceforge.net` to
+    `/home/frs/project/domjudge/domjudge/$TAG`.
+    Also move any superseded releases to the subdirectory `obsolete/`.
+ 1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
+    repository under `website/` and update the site at SF.net
+    (e.g. via `sftp <username>,domjudge@web.sourceforge.net`).
+ 1. Update the release documentation under `~/public_html/docs/`
+    (if releasing the latest stable branch).
+ 1. If necessary, add a source package of included dash static shell in
+    `~/public_html/sources/`.
+ 1. Send an email to domjudge-announce@lists.a-eskwadraat.nl.
+ 1. Don't forget to push everything to the central Git repository
+    (especially the release tags, since these are not pushed by default),
+    e.g. with
+        git push origin <x.y> refs/tags/<x.y.z>
