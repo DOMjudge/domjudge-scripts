@@ -17,7 +17,7 @@
 <a href="download" class="new">download (<!--#echo var="dj_current_branch_version" -->)</a>
 <a href="documentation">documentation</a>
 <a href="demo">demo</a>
-<a href="http://domjudge.a-eskwadraat.nl/trac/wiki/Development">contribute</a>
+<a href="development">development</a>
 <a href="about">about</a>
 </div></nav>
 
