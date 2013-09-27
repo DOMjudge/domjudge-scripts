@@ -11,7 +11,7 @@ bug or patch? All those are most welcome via the channels below.</p>
 <p>Bugs and feature enhancements are tracked in our `trac` instance, see the <a
 href="/trac/report">View Tickets</a> page. Reporting new issues is currently
 disabled for non-logged in users due to spam; please send your bug reports to
-domjudge-devel@lists.a-eskwadraat.nl.</a>
+domjudge-devel@lists.a-eskwadraat.nl.</p>
 
 <h2>Mailinglists</h2>
 
@@ -84,7 +84,7 @@ central repositories, which can be used via SSH.</p>
 <p>In the public URLs replace <kbd>git://a-eskwadraat.nl/</kbd> with <kbd>ssh://domjudge@a-eskwadraat.nl/home/extern/domjudge/</kbd>.</p>
 
 <p>You can create a local copy of these git repositories with the command
-(replace URL as desired):</pre>
+(replace URL as desired):</p>
 
 <pre>git clone git://a-eskwadraat.nl/git/domjudge.git</pre>
 
