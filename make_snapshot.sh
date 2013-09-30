@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# Script to publish a snapshot package, ChangeLog en admin-manual on
-# the public page at http://domjudge.sourceforge.net/snapshot/.
+# Script to publish a snapshot package, ChangeLog and admin-manual on
+# the public page at http://www.domjudge.org/snapshot/.
 
 set -e
 

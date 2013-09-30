@@ -209,3 +209,7 @@ img.picto { width: 16px; height: 16px; }
 #validity {
 	position: absolute; right: 1ex;
 }
+
+dt {
+	font-weight: strong;
+}

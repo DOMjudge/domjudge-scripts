@@ -36,8 +36,7 @@ account `domjudge@a-eskwadraat.nl`):
     `/home/frs/project/domjudge/domjudge/$TAG`.
     Also move any superseded releases to the subdirectory `obsolete/`.
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
-    repository under `website/` and update the site at SF.net
-    (e.g. via `sftp <username>,domjudge@web.sourceforge.net`).
+    repository under `website/` and run `make install` as domjudge@max.
  1. Update the release documentation under `~/public_html/docs/`
     (if releasing the latest stable branch).
  1. If necessary, add a source package of included dash static shell in
