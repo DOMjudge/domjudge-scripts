@@ -9,7 +9,7 @@ set -e
 
 PUBDIR=~/public_html/snapshot
 DJDIR=domjudge-snapshot-`date +%Y%m%d`
-GITURL="file://$HOME/git/domjudge.git"
+GITURL="git://a-eskwadraat.nl/git/domjudge.git"
 
 [ "$DEBUG" ] && set -x
 quiet()
