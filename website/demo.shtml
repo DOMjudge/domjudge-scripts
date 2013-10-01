@@ -22,13 +22,13 @@ populated with data from a live contest.</p>
 <p>Check out the following interfaces:</p>
 
 <ul>
-<li><a href="http://domjudge.a-eskwadraat.nl/demo/public/">
+<li><a href="demoweb/public/">
     <strong>Public interface:</strong></a> shows the scoreboard.</li>
-<li><a href="http://domjudge.a-eskwadraat.nl/demo/team/">
+<li><a href="demoweb/team/">
     <strong>Team interface:</strong></a> shows your submissions, clarifications
     and the scoreboard. You're always the DOMjudge testteam, this is hardcoded
     in the demo site. You can't actually submit solutions.</li>
-<li><a href="http://domjudge.a-eskwadraat.nl/demo/jury/">
+<li><a href="demoweb/jury/">
     <strong>Jury/admin interface:</strong></a> the full set of options available
     to judges/admins. Log in with user <em>jury</em> or <em>admin</em> respectively.
     The admin interface is a superset of the jury interface with additional
@@ -41,9 +41,9 @@ populated with data from a live contest.</p>
     to an external, fancier scoreboard or to gather statistics. There are
     currently two datasets exported:
     <ul>
-    <li><a href="http://domjudge.a-eskwadraat.nl/demo/plugin/scoreboard.php">
+    <li><a href="demoweb/plugin/scoreboard.php">
         the scoreboard</a> and</li>
-    <li><a href="http://domjudge.a-eskwadraat.nl/demo/plugin/event.php">
+    <li><a href="demoweb/plugin/event.php">
         a list of events.</a></li>
     </ul>
     Login with user <em>public</em> for the public view or <em>jury</em> for the
