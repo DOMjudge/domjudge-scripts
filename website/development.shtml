@@ -12,7 +12,8 @@ bug or patch? All those are most welcome via the channels below.</p>
 href="https://github.com/DOMjudge/domjudge/issues">Issues</a> page.
 You may report a new issue there. Pull requests are also very welcome.
 If unsure whether what you're seeing is a bug, you're always welcome
-to discuss it on domjudge-devel@lists.a-eskwadraat.nl beforehand (see below).</p>
+to discuss it on <kbd>domjudge-devel@lists.a-eskwadraat.nl</kbd>
+beforehand (see below).</p>
 
 <h2>Mailinglists</h2>
 
@@ -58,7 +59,7 @@ at your own risk.</p>
 <dt>DOMjudge</dt>
 <dd>The main repository that contains the source code of the system itself.
   <ul>
-  <li>Public read-only git repository: <kbd>https://github.com/DOMjudge/domjudge.git</kbd></li>
+  <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge.git</kbd></li>
   <li>Public gitweb interface: <a href="https://secure.a-eskwadraat.nl/gitweb?p=domjudge.git">https://secure.a-eskwadraat.nl/gitweb?p=domjudge.git</a></li>
   </ul>
 </dd>
@@ -66,14 +67,14 @@ at your own risk.</p>
 <dd>Contains packaging for various (Linux) distributions, currently only for
 <a href="http://www.debian.org/">Debian</a>.
   <ul>
-  <li>Public read-only git repository: <kbd>https://github.com/DOMjudge/domjudge-packaging.git</kbd></li>
+  <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge-packaging.git</kbd></li>
   <li>Public gitweb interface: <a href="https://secure.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git">https://secure.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git</a></li>
   </ul>
 </dd>
 <dt>DOMjudge-scripts</dt>
 <dd>Contains various developer/maintainer helper scripts.
   <ul>
-  <li>Public read-only git repository: <kbd>https://github.com/DOMjudge/domjudge-scripts.git</kbd></li>
+  <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge-scripts.git</kbd></li>
   <li>Public gitweb interface: <a href="https://secure.a-eskwadraat.nl/gitweb?p=domjudge-scripts.git">https://secure.a-eskwadraat.nl/gitweb?p=domjudge-scripts.git</a></li>
   </ul>
 </dd>
@@ -89,7 +90,7 @@ at your own risk.</p>
 
 <p>Additional information can be found in the administrator's manual,
 especially the
-<a href="/snapshot/admin-manual/admin-manual-12.html">appendix with developer information</a>.</p>
+<a href="/snapshot/admin-manual/admin-manual-11.html">appendix with developer information</a>.</p>
 
 <p>If you have any questions left, don't hesitate to ask at the <a href="http://lists.a-eskwadraat.nl/mailman/listinfo/domjudge-devel">DOMjudge-devel mailinglist</a>.</p>
 
