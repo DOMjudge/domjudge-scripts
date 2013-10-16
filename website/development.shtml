@@ -44,8 +44,8 @@ list members (to prevent spam).</p>
 
 <h2>Snapshots</h2>
 
-<p>We produce nightly builds of the latest DOMjudge sources (the `master` branch
-from the main git repository). These can be found in
+<p>We produce nightly builds of the latest DOMjudge sources (the
+<kbd>master</kbd> branch from the main git repository). These can be found in
 <a href="/snapshot/">the snapshot directory</a>. Note that our repository
 contains code that might be experimental, buggy or subject to change. Use
 at your own risk.</p>
