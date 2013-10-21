@@ -24,19 +24,18 @@ to:</p>
 <dl>
 <dt>DOMjudge-announce</dt>
 <dd>This low-volume
-<a href="https://secure.a-eskwadraat.nl/mailman/listinfo/domjudge-announce">announcement list</a>
+<a href="https://www.a-eskwadraat.nl/mailman/listinfo/domjudge-announce">announcement list</a>
 is used for sending announcements about new releases and other important
 news.</dd>
 <dt>DOMjudge-devel</dt>
 <dd>The
-<a href="http://lists.a-eskwadraat.nl/mailman/listinfo/domjudge-devel">development mailinglist</a>
+<a href="http://www.a-eskwadraat.nl/mailman/listinfo/domjudge-devel">development mailinglist</a>
 is used for discussions on development, but is also used for asking general
 questions on using and installing DOMjudge.</dd>
 <dt>DOMjudge-commits</dt>
 <dd>The
-<a href="http://lists.a-eskwadraat.nl/mailman/listinfo/domjudge-commits">commits mailinglist</a>
-receives all (automatic) commit emails from the git repositories, as well as
-any updates on tracked issues.</dd>
+<a href="http://www.a-eskwadraat.nl/mailman/listinfo/domjudge-commits">commits mailinglist</a>
+receives all (automatic) commit emails from the git repositories.</dd>
 </dl>
 
 <p>Note that only the DOMjudge-devel list can be posted to, and only by
@@ -60,7 +59,7 @@ at your own risk.</p>
 <dd>The main repository that contains the source code of the system itself.
   <ul>
   <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge.git</kbd></li>
-  <li>Public gitweb interface: <a href="https://secure.a-eskwadraat.nl/gitweb?p=domjudge.git">https://secure.a-eskwadraat.nl/gitweb?p=domjudge.git</a></li>
+  <li>Public gitweb interface: <a href="https://www.a-eskwadraat.nl/gitweb?p=domjudge.git">https://www.a-eskwadraat.nl/gitweb?p=domjudge.git</a></li>
   </ul>
 </dd>
 <dt>DOMjudge-packaging</dt>
@@ -68,14 +67,14 @@ at your own risk.</p>
 <a href="http://www.debian.org/">Debian</a>.
   <ul>
   <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge-packaging.git</kbd></li>
-  <li>Public gitweb interface: <a href="https://secure.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git">https://secure.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git</a></li>
+  <li>Public gitweb interface: <a href="https://www.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git">https://www.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git</a></li>
   </ul>
 </dd>
 <dt>DOMjudge-scripts</dt>
 <dd>Contains various developer/maintainer helper scripts.
   <ul>
   <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge-scripts.git</kbd></li>
-  <li>Public gitweb interface: <a href="https://secure.a-eskwadraat.nl/gitweb?p=domjudge-scripts.git">https://secure.a-eskwadraat.nl/gitweb?p=domjudge-scripts.git</a></li>
+  <li>Public gitweb interface: <a href="https://www.a-eskwadraat.nl/gitweb?p=domjudge-scripts.git">https://www.a-eskwadraat.nl/gitweb?p=domjudge-scripts.git</a></li>
   </ul>
 </dd>
 </dl>
@@ -92,6 +91,6 @@ at your own risk.</p>
 especially the
 <a href="/snapshot/admin-manual/admin-manual-11.html">appendix with developer information</a>.</p>
 
-<p>If you have any questions left, don't hesitate to ask at the <a href="http://lists.a-eskwadraat.nl/mailman/listinfo/domjudge-devel">DOMjudge-devel mailinglist</a>.</p>
+<p>If you have any questions left, don't hesitate to ask at the <a href="http://www.a-eskwadraat.nl/mailman/listinfo/domjudge-devel">DOMjudge-devel mailinglist</a>.</p>
 
 <!--#include virtual="/footer.shtml" -->
