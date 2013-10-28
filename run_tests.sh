@@ -11,7 +11,7 @@ set -e
 #DEBUG=1
 
 LIVESYSTEMDIR=~/system
-LIVEURLPREFIX='http://domjudge.a-eskwadraat.nl/domjudge/'
+LIVEURLPREFIX='http://www.domjudge.org/domjudge/'
 GITURL='git://a-eskwadraat.nl/git/domjudge.git'
 
 ADMINUSER=admin
@@ -71,7 +71,8 @@ team
 team/clarification.php
 team/clarification.php?id=137
 team/scoreboard.php
-team/submission_details.php?id=129
+team/submission_details.php?id=998
+team/submission_details.php?id=1163
 jury/
 jury/balloons.php
 jury/clarification.php
