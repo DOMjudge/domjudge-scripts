@@ -41,10 +41,10 @@ git clone -q "$GITURL" $TEMPDIR/system
 cd $TEMPDIR/system
 
 # Test 'make config build docs':
-make -k QUIET=1 CONFIGURE_FLAGS='--disable-submitclient' \
-	MAINT_CXFLAGS='-O -Wall -fPIE -Wformat -Wformat-security -ansi' \
+make -k QUIET=1 MAINT_CXFLAGS='-O -Wall -fPIE -Wformat -Wformat-security -ansi' \
 	maintainer-conf 2>&1 || true
-make -k QUIET=1 build docs 2>&1 | grep -vEB1 "warning: variable .dummy. set but not used"
+make -k QUIET=1 build docs 2>&1 | \
+	sed -n '/warning: variable .dummy. set but not used/{n;x;d;};x;1d;p;${x;p;}' || true
 
 # Run DOMjudge internal tests (remove install-sh script for false positives):
 rm install-sh
