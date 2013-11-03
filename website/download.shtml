@@ -2,19 +2,14 @@
 
 <h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
 
-<p>The following downloads are available:</p>
-<ul>
-<li>The <a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_current_branch_version" -->/">
-latest stable release <strong><!--#echo var="dj_current_branch_version" --></strong></a>, dated <!--#echo var="dj_current_branch_date" -->.</li>
-
-<li>The <a href="http://sourceforge.net/projects/domjudge/files/domjudge/<!--#echo var="dj_previous_branch_version" -->/">previous release series <strong><!--#echo var="dj_previous_branch_version" --></strong></a>,
+<p>The latest stable release is version
+<strong><!--#echo var="dj_current_branch_version" --></strong></a>,
+dated <!--#echo var="dj_current_branch_date" -->.<br />
+<p>Also available is the previous release series
+<strong><!--#echo var="dj_previous_branch_version" --></strong></a>,
 dated <!--#echo var="dj_previous_branch_date" -->.</li>
 
-<li>The <a href="sources/">sources of included {b,d}ash shell</a> binaries.</li>
-
-<li>The <a href="/snapshot/">snapshot directory</a> contains nightly builds,
-including changelog and documentation, <strong>use at your own risk</strong>.</li>
-</ul>
+<p><strong><a href="/releases/">download here</a></strong></p>
 
 <p>To get notifications of new releases, subscribe to the low volume
 <a href="https://www.a-eskwadraat.nl/mailman/listinfo/domjudge-announce">announcements
@@ -36,7 +31,7 @@ signed with <a href="http://non-gnu.uvt.nl/debian/uvt_key-with-signatures.asc">t
 <h3>DOMjudge-live images</h3>
 
 <p>We also provide
-<a href="http://sourceforge.net/projects/domjudge/files/domjudge-live/">
+<a href="/live/">
 DOMjudge-live images</a> to run DOMjudge straight from an USB stick
 (it can also be written to harddisk or booted in a virtual machine).
 See <a href="https://www.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git;a=blob_plain;f=live-usb/files/README">
@@ -46,5 +41,12 @@ packaging</a> Git repository and as <code>/README</code> on the image)
 more details on how use these.
 </p>
 
+<h3>Other downloads</h3>
+
+<p>Also available are the
+<a href="sources/">sources of included {b,d}ash shell</a> binaries.</p>
+
+<p>The <a href="/snapshot/">snapshot directory</a> contains nightly builds,
+including changelog and documentation, <strong>use at your own risk</strong>.</p>
 
 <!--#include virtual="/footer.shtml" -->
