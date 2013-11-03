@@ -30,17 +30,14 @@ account `domjudge@a-eskwadraat.nl`):
         sha256sum domjudge-$TAG.tar.gz > domjudge-$TAG.tar.gz.sha256sum
         gpg -a --detach-sign --digest-algo SHA1 domjudge-$TAG.tar.gz
     Copy these and the tarball to `~/releases`.
- 1. Publish these files via the SF.net web interface:
-    https://sourceforge.net/projects/domjudge/files/domjudge/
-    or upload via `sftp <username>,domjudge@frs.sourceforge.net` to
-    `/home/frs/project/domjudge/domjudge/$TAG`.
-    Also move any superseded releases to the subdirectory `obsolete/`.
+ 1. Copy these files to vm-domjudge:/srv/www/domjudge/releases/
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
-    repository under `website/` and run `make install` as domjudge@max.
+    repository under `website/` and run "make install" as domjudge@vm-domjudge
+ 1. Update the release documentation under `/srv/http/domjudge/docs/`
  1. Update the release documentation under `~/public_html/docs/`
     (if releasing the latest stable branch).
  1. If necessary, add a source package of included dash static shell in
-    `~/public_html/sources/`.
+    `/srv/http/domjudge/sources/`.
  1. Send an email to domjudge-announce@lists.a-eskwadraat.nl.
  1. Don't forget to push everything to the central Git repository
     (especially the release tags, since these are not pushed by default),
