@@ -121,13 +121,15 @@ IFS='
 
 check_html ()
 {
-	output=`wget -q ${USER:+--user=$USER} ${PASS:+--password=$PASS} -O - "$1" 2>&1 | \
-		tidy -q -e -utf8 --new-blocklevel-tags nav 2>&1 1>/dev/null | \
-		grep -vE 'Warning: (<nav> is not|<table> lacks|<input> attribute "type" .* value "(color|number)"|trimming empty|.* proprietary attribute|missing </pre> before <ol>|inserting implicit <pre>)' || true`
+	TEMP=`mktemp`;
+	wget -q ${USER:+--user=$USER} ${PASS:+--password=$PASS} -O - "$1" 2>&1 > $TEMP
+	set +e
+	output=`curl -s  -F "doctype=HTML5" -F "charset=utf-8" -F "uploaded_file=@$TEMP;filename=domjudge.html;type=text/html" -F "tests[]=markup-validator" http://validator.w3.org/check |grep 'id="results" class="invalid"'`
 	if [ "$output" ] ; then
-		echo "Errors found in '$url'
-$output"
+		echo "HTML validation errors found in '$url'"
 	fi
+	rm $TEMP
+	set -e
 }
 
 for i in $URLS ; do
