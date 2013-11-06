@@ -14,14 +14,6 @@ LIVESYSTEMDIR=~/system
 LIVEURLPREFIX='http://www.domjudge.org/domjudge/'
 GITURL='git://a-eskwadraat.nl/git/domjudge.git'
 
-ADMINUSER=admin
-ADMINPASS=passwordhere
-
-# Optionally specify a non-priveleged jury user to check the jury web
-# pages without admin permissions:
-#JUDGEUSER=jury
-#JUDGEPASS=passwordhere
-
 PLUGINUSER=jury
 PLUGINPASS=jury
 
@@ -113,7 +105,8 @@ admin/judgehosts.php?cmd=edit&referrer=judgehosts.php
 admin/language.php?cmd=add
 admin/problem.php?id=fltcmp&cmd=edit
 admin/refresh_cache.php
-admin/team.php?id=domjudge&cmd=edit'
+admin/team.php?id=domjudge&cmd=edit
+api/'
 
 OFS="$IFS"
 IFS='
@@ -121,14 +114,13 @@ IFS='
 
 check_html ()
 {
-	TEMP=`mktemp`;
-	wget -q ${USER:+--user=$USER} ${PASS:+--password=$PASS} -O - "$1" 2>&1 > $TEMP
 	set +e
-	output=`curl -s  -F "doctype=HTML5" -F "charset=utf-8" -F "uploaded_file=@$TEMP;filename=domjudge.html;type=text/html" -F "tests[]=markup-validator" http://validator.w3.org/check |grep 'id="results" class="invalid"'`
+	url=`perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$1")`
+	w3url="http://validator.w3.org/check?uri=$url"
+	output=`curl -s $w3url |grep 'id="results" class="invalid"'`
 	if [ "$output" ] ; then
-		echo "HTML validation errors found in '$url'"
+		echo "HTML validation errors found in '$1'. See: $w3url"
 	fi
-	rm $TEMP
 	set -e
 }
 
@@ -142,33 +134,7 @@ for i in $URLS ; do
 		fi
 		continue
 	fi
-	# Special-case admin-only pages in the jury interface:
-	if [ "${i#admin/}" != "$i" ]; then
-		url="${LIVEURLPREFIX}jury${i#admin}"
-		if [ -n "$ADMINUSER" ]; then
-			USER=$ADMINUSER
-			PASS=$ADMINPASS
-			check_html "$url"
-		fi
-	elif [ "${i#jury/}" != "$i" ]; then
-		if [ -n "$JUDGEUSER" ]; then
-			USER=$JUDGEUSER
-			PASS=$JUDGEPASS
-			check_html "$url"
-		fi
-		if [ -n "$ADMINUSER" ]; then
-			USER=$ADMINUSER
-			PASS=$ADMINPASS
-			check_html "$url"
-		fi
-		if [ -z "$JUDGEUSER" -a -z "$ADMINUSER" ]; then
-			unset USER PASS
-			check_html "$url"
-		fi
-	else
-		unset USER PASS
-		check_html "$url"
-	fi
+	check_html "$url"
 done
 IFS="$OFS"
 
