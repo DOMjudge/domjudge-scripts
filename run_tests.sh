@@ -14,6 +14,11 @@ LIVESYSTEMDIR=~/system
 LIVEURLPREFIX='http://www.domjudge.org/domjudge/'
 GITURL='git://a-eskwadraat.nl/git/domjudge.git'
 
+# Optionally specify a non-priveleged jury user to check the jury web
+# pages without admin permissions:
+#WEB_USER=jury
+#WEB_PASS=passwordhere
+
 PLUGINUSER=jury
 PLUGINPASS=jury
 
@@ -117,7 +122,8 @@ check_html ()
 	set +e
 	url=`perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$1")`
 	w3url="http://validator.w3.org/check?uri=$url"
-	output=`curl -s $w3url |grep 'id="results" class="invalid"'`
+	output=`curl -s ${HTPW_USER:+--user=$USER:${PASS} $w3url | \
+	        grep 'id="results" class="invalid"'`
 	if [ "$output" ] ; then
 		echo "HTML validation errors found in '$1'. See: $w3url"
 	fi
