@@ -122,7 +122,7 @@ check_html ()
 	set +e
 	url=`perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$1")`
 	w3url="http://validator.w3.org/check?uri=$url"
-	output=`curl -s ${WEB_USER:+-u $WEB_USER:$WEB_PASS} $w3url | \
+	output=`curl -s ${WEB_USER:+-u$WEB_USER:$WEB_PASS} $w3url | \
 	        grep 'id="results" class="invalid"'`
 	if [ "$output" ] ; then
 		echo "HTML validation errors found in '$1'. See: $w3url"
