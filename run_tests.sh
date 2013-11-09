@@ -51,8 +51,6 @@ cd tests
 
 cd ~
 
-[ "$DEBUG" ] || rm -rf $TEMPDIR
-
 
 # Validate DOMjudge webpages running from uptodate git checkout
 # (we cannot use a fresh checkout due to missing website config)
@@ -117,15 +115,19 @@ OFS="$IFS"
 IFS='
 '
 
+NUNCHECKED=0
+
 check_html ()
 {
 	set +e
 	url=`perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$1")`
 	w3url="http://validator.w3.org/check?uri=$url"
-	output=`curl -s ${WEB_USER:+-u$WEB_USER:$WEB_PASS} $w3url | \
-	        grep 'id="results" class="invalid"'`
-	if [ "$output" ] ; then
-		echo "HTML validation errors found in '$1'. See: $w3url"
+	TEMP=`mktemp $TEMPDIR/validate_XXXXXX.html`
+	curl -s ${WEB_USER:+-u$WEB_USER:$WEB_PASS} $w3url > $TEMP
+	if grep 'class="msg">External Checker not available' $TEMP >/dev/null 2>&1 ; then
+		NUNCHECKED=$((NUNCHECKED+1))
+	elif grep 'id="results" class="invalid"' $TEMP >/dev/null 2>&1 ; then
+		echo "<a href=\"$w3url\">HTML validation errors found</a> in '$1'."
 	fi
 	set -e
 }
@@ -143,5 +145,11 @@ for i in $URLS ; do
 	check_html "$url"
 done
 IFS="$OFS"
+
+if [ "$NUNCHECKED" -ge 1 ]; then
+	echo "Unable to validate $NUNCHECKED pages."
+fi
+
+[ "$DEBUG" ] || rm -rf $TEMPDIR
 
 exit 0
