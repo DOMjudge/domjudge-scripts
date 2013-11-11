@@ -127,7 +127,8 @@ check_html ()
 	if grep 'class="msg">External Checker not available' $TEMP >/dev/null 2>&1 ; then
 		NUNCHECKED=$((NUNCHECKED+1))
 	elif grep 'id="results" class="invalid"' $TEMP >/dev/null 2>&1 ; then
-		echo "<a href=\"$w3url\">HTML validation errors found</a> in '$1'."
+		echo "<a href=\"$w3url\">HTML validation errors found</a> in" \
+		     "<a href=\"$1\">$1</a>.<br />"
 	fi
 	set -e
 }
@@ -138,7 +139,7 @@ for i in $URLS ; do
 	if [ "${i#plugin/}" != "$i" ]; then
 		output=`wget -q --user=$PLUGINUSER --password=$PLUGINPASS -O - "$url" 2>&1`
 		if ! echo "$output" | head -n 2 | grep '^<root>' >/dev/null 2>&1 ; then
-			printf "Errors found in '$url'\n$output"
+			echo "Errors found in '$url':<br />\n<pre>$output\n</pre><br />"
 		fi
 		continue
 	fi
@@ -147,7 +148,7 @@ done
 IFS="$OFS"
 
 if [ "$NUNCHECKED" -ge 1 ]; then
-	echo "Unable to validate $NUNCHECKED pages."
+	echo "<p><b>Unable to validate $NUNCHECKED pages.</b></p>"
 fi
 
 [ "$DEBUG" ] || rm -rf $TEMPDIR
