@@ -84,6 +84,7 @@ jury/problem.php?id=fltcmp
 jury/scoreboard.php
 jury/scoreboard.php?country[]=NLD
 jury/show_source.php?id=1
+jury/edit_source.php?id=1&rank=0
 jury/submission.php?id=1
 jury/submission.php?id=91
 jury/submission.php?id=94
