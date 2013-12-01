@@ -113,6 +113,10 @@ fi
 "$INSTALLDIR"/misc-tools/restore_sources2db "$SOURCESDIR"
 
 # Start the judgedaemon and check when judging is done or hangs:
+PIDFILE="$INSTALLDIR/output/run/judgedaemon.pid"
+if [ -f "$PIDFILE" ]; then
+	echo "Warning: pidfile '$PIDFILE' found, might be stale..."
+fi
 echo "Starting judgedaemon on '$JUDGEHOST', `date`."
 JUDGEPID=`"$INSTALLDIR"/judge/judgedaemon -d 2>&1 | grep ' PID = ' | sed 's/.* PID = //'`
 if ! ps -p "$JUDGEPID" > /dev/null 2>&1 ; then
@@ -120,10 +124,10 @@ if ! ps -p "$JUDGEPID" > /dev/null 2>&1 ; then
 	exit 1
 fi
 while sleep 30 ; do
-	lastpoll=`echo "SELECT (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(polltime)) \
+	lastpoll=`echo "SELECT FLOOR(UNIX_TIMESTAMP() - polltime) \
 	            FROM judgehost WHERE hostname = '$JUDGEHOST'" | \
 		mysql -N $MYSQLOPTS "$DBNAME"`
-	lastjudge=`echo "SELECT (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(endtime)) \
+	lastjudge=`echo "SELECT FLOOR(UNIX_TIMESTAMP() - endtime) \
 	           FROM judging WHERE result IS NOT NULL ORDER BY endtime DESC LIMIT 1" | \
 		mysql -N $MYSQLOPTS "$DBNAME"`
 
