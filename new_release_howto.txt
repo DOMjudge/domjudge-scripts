@@ -34,7 +34,6 @@ account `domjudge@a-eskwadraat.nl`):
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
     repository under `website/` and run "make install" as domjudge@vm-domjudge
  1. Update the release documentation under `/srv/http/domjudge/docs/`
- 1. Update the release documentation under `~/public_html/docs/`
     (if releasing the latest stable branch).
  1. If necessary, add a source package of included dash static shell in
     `/srv/http/domjudge/sources/`.
