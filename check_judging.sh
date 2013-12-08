@@ -123,7 +123,7 @@ if ! ps -p "$JUDGEPID" > /dev/null 2>&1 ; then
 	echo "Error: the judgedaemon seems have failed to start..."
 	exit 1
 fi
-while sleep 30 ; do
+while sleep 10 ; do
 	lastpoll=`echo "SELECT FLOOR(UNIX_TIMESTAMP() - polltime) \
 	            FROM judgehost WHERE hostname = '$JUDGEHOST'" | \
 		mysql -N $MYSQLOPTS "$DBNAME"`
