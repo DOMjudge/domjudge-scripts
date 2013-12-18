@@ -34,9 +34,9 @@ signed with <a href="http://non-gnu.uvt.nl/debian/uvt_key-with-signatures.asc">t
 <a href="/live/">
 DOMjudge-live images</a> to run DOMjudge straight from an USB stick
 (it can also be written to harddisk or booted in a virtual machine).
-See <a href="https://www.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git;a=blob_plain;f=live-usb/files/README">
+See <a href="http://www.domjudge.org/gitweb?p=domjudge-packaging.git;a=blob_plain;f=live-usb/files/README">
 this README file</a> (which is also available in the
-<a href="https://www.a-eskwadraat.nl/gitweb?p=domjudge-packaging.git">DOMjudge
+<a href="http://www.domjudge.org/gitweb?p=domjudge-packaging.git">DOMjudge
 packaging</a> Git repository and as <code>/README</code> on the image)
 more details on how use these.
 </p>
