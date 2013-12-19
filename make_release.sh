@@ -5,8 +5,9 @@
 
 set -e
 
-TEMPDIR=`mktemp -d /tmp/domjudge.XXXXXX`
-GITURL="git://a-eskwadraat.nl/git/domjudge.git"
+GITURL="https://github.com/DOMjudge/domjudge.git"
+
+TEMPDIR=`mktemp -d /tmp/domjudge-make_release-XXXXXX`
 
 if [ -z "$1" ]; then
 	echo "Error: missing required release tag argument."
@@ -21,7 +22,9 @@ fi
 OWD="$PWD"
 cd $TEMPDIR
 
-git archive --prefix=domjudge/ --format=tar --remote="$GITURL" "$TAG" | tar x
+git clone -q --no-checkout --depth 1 --single-branch --branch "$TAG" "$GITURL" dj-clone
+
+( cd dj-clone && git archive --prefix=domjudge/ --format=tar "$TAG" ) | tar x
 
 cd domjudge
 

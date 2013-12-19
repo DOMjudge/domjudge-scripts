@@ -12,7 +12,7 @@ set -e
 
 LIVESYSTEMDIR=~/system
 LIVEURLPREFIX='http://www.domjudge.org/domjudge/'
-GITURL='git://a-eskwadraat.nl/git/domjudge.git'
+GITURL='https://github.com/DOMjudge/domjudge.git'
 
 # Optionally specify a non-priveleged jury user to check the jury web
 # pages without admin permissions:
@@ -33,7 +33,7 @@ quiet()
 }
 
 # Create an export of fresh git master sources:
-TEMPDIR=`mktemp -d /tmp/domjudge.XXXXXX`
+TEMPDIR=`mktemp -d /tmp/domjudge-run_tests-XXXXXX`
 git clone -q "$GITURL" $TEMPDIR/system
 cd $TEMPDIR/system
 

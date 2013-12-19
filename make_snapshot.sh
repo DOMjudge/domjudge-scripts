@@ -9,7 +9,7 @@ set -e
 
 PUBDIR=~/public_html/snapshot
 DJDIR=domjudge-snapshot-`date +%Y%m%d`
-GITURL="git://a-eskwadraat.nl/git/domjudge.git"
+GITURL="https://github.com/DOMjudge/domjudge.git"
 
 [ "$DEBUG" ] && set -x
 quiet()
@@ -21,11 +21,12 @@ quiet()
 	fi
 }
 
-TEMPDIR=`mktemp -d /tmp/domjudge.XXXXXX`
+TEMPDIR=`mktemp -d /tmp/domjudge-make_snapshot-XXXXXX`
 cd $TEMPDIR
 
-git archive --prefix=$DJDIR/ --format=tar \
-	--remote="$GITURL" refs/heads/master | tar x
+git clone -q --no-checkout --depth 1 "$GITURL" dj-clone
+
+( cd dj-clone && git archive --prefix=$DJDIR/ --format=tar refs/heads/master ) | tar x
 
 # Add released tag for revision information:
 sed -i "s/PUBLISHED =.*/PUBLISHED = `date +%Y-%m-%d`/" $DJDIR/paths.mk.in

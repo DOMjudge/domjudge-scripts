@@ -11,11 +11,14 @@ MYSQLOPTS=''
 DBNAME='domjudge'
 LOCALSQL=''
 
-GITURL='git://a-eskwadraat.nl/git/domjudge.git'
+GITURL='https://github.com/DOMjudge/domjudge.git'
 
-DBSTRUCT=` mktemp /tmp/domjudge-db__sql.XXXXXX`
-GITSTRUCT=`mktemp /tmp/domjudge-git_sql.XXXXXX`
-SQLTMP=`   mktemp /tmp/domjudge-tmp_sql.XXXXXX`
+TEMPDIR=`mktemp -d /tmp/domjudge-check_db-XXXXXX`
+
+DBSTRUCT="$TEMPDIR/db__struct.sql"
+GITSTRUCT="$TEMPDIR/git_struct.sql"
+SQLTMP="$TEMPDIR/tmp_struct.sql"
+GITCLONE="$TEMPDIR/domjudge"
 
 # Filter SQL expression for comments and unimportant changes
 # like auto_increment counters:
@@ -53,11 +56,14 @@ mysqldump $MYSQLOPTS -n -d -Q --skip-add-drop-table "$DBNAME" | \
 if [ -n "$LOCALSQL" ]; then
 	cp "$LOCALSQL" $SQLTMP
 else
-	git archive --format=tar --remote="$GITURL" master \
-		sql/mysql_db_structure.sql 2>/dev/null | tar x -O > $SQLTMP
+# This is a kludge to get a single file from a (remote) git
+# repository, but unfortunately git-archive is not supported by the
+# http(s) protocol nor by github.
+	git clone -q --no-checkout --depth 1 "$GITURL" $GITCLONE
+	( cd $GITCLONE && git show HEAD:sql/mysql_db_structure.sql ) > $SQLTMP
 fi
 cat $SQLTMP | sqlfilter > $GITSTRUCT
 
 diff -ibw -u $DBSTRUCT $GITSTRUCT || true
 
-rm -f $SQLTMP $DBSTRUCT $GITSTRUCT
+rm -rf $TEMPDIR
