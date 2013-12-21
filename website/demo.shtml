@@ -26,8 +26,8 @@ populated with data from a live contest.</p>
     <strong>Public interface:</strong></a> shows the scoreboard.</li>
 <li><a href="demoweb/team/">
     <strong>Team interface:</strong></a> shows your submissions, clarifications
-    and the scoreboard. You're always the DOMjudge testteam, this is hardcoded
-    in the demo site. You can't actually submit solutions.</li>
+    and the scoreboard. Log in with user <em>team</em>. You can't
+    actually submit solutions.</li>
 <li><a href="demoweb/jury/">
     <strong>Jury/admin interface:</strong></a> the full set of options available
     to judges/admins. Log in with user <em>jury</em> or <em>admin</em> respectively.
@@ -36,6 +36,14 @@ populated with data from a live contest.</p>
     There are no judgehosts running, so things like rejudging have not much effect.
     Team source code has been replaced with a placeholder, so the source diff
     function is not useful.</li>
+<li><a href="demoweb/api/">
+    <strong>JSON REST API:</strong></a> this application programming
+    interface allows various clients to request and submit contest
+    data. It is used by the judgedaemon, but can also be used e.g. for
+    an external scoreboard display. The page shows the internal
+    documentation of available functions.
+    <em>This interface is still under development and will deprecate the
+    old XML plugin interface.</em></li>
 <li><strong>The plugin interface:</strong> this interface outputs various data
     on the contest in XML format, to be used by plugins, e.g. for exporting it
     to an external, fancier scoreboard or to gather statistics. There are
