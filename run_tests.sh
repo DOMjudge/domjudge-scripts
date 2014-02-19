@@ -98,7 +98,11 @@ jury/team_categories.php
 jury/team_category.php?id=1
 jury/team.php?id=domjudge
 jury/teams.php
+jury/users.php
+jury/user.php?id=1
 jury/testcase.php?probid=hello
+jury/executables.php
+jury/executable.php?id=c
 jury/auditlog.php
 jury/checkconfig.php
 jury/check_judgings.php
