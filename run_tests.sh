@@ -32,6 +32,15 @@ make -k QUIET=1 MAINT_CXFLAGS='-O -Wall -fPIE -Wformat -Wformat-security -ansi' 
 make -k QUIET=1 build docs 2>&1 | \
 	sed -n '/warning: variable .dummy. set but not used/{n;x;d;};x;1d;p;${x;p;}' || true
 
+# Test 'make install-{domserver,judgehost,docs}'.
+# To make this work, we need to disable the root check and filter
+# failure to set ownership and permissions of installed files.
+mkdir $TEMPDIR/install
+sed -i '/: check-root/d' Makefile
+QUIET=1 ./configure -q --enable-cgroups --prefix=$TEMPDIR/install 2>&1 || true
+make -k QUIET=1 build install-domserver install-judgehost install-docs 2>&1 | \
+	grep -v 'install: cannot change owner and permissions of' || true
+
 # Run DOMjudge internal tests (remove install-sh script for false positives):
 rm install-sh
 cd tests
