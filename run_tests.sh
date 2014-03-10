@@ -39,7 +39,7 @@ mkdir $TEMPDIR/install
 sed -i '/: check-root/d' Makefile
 QUIET=1 ./configure -q --enable-cgroups --prefix=$TEMPDIR/install 2>&1 || true
 make -k QUIET=1 build install-domserver install-judgehost install-docs 2>&1 | \
-	grep -v 'install: cannot change owner and permissions of' || true
+	grep -vE 'install: cannot change owner(ship| and permissions of)' || true
 
 # Run DOMjudge internal tests (remove install-sh script for false positives):
 rm install-sh
