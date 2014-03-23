@@ -60,7 +60,7 @@ jury/judgehost.php?id=judgehost1
 jury/language.php?id=c
 jury/languages.php
 jury/problems.php
-jury/problem.php?id=fltcmp
+jury/problem.php?id=7
 jury/scoreboard.php
 jury/scoreboard.php?country[]=NLD
 jury/show_source.php?id=1
@@ -73,14 +73,14 @@ jury/submissions.php?view[0]
 jury/submissions.php?view[1]
 jury/submissions.php?view[2]
 jury/team_affiliations.php
-jury/team_affiliation.php?id=UU
+jury/team_affiliation.php?id=1
 jury/team_categories.php
 jury/team_category.php?id=1
 jury/team.php?id=domjudge
 jury/teams.php
 jury/users.php
 jury/user.php?id=1
-jury/testcase.php?probid=hello
+jury/testcase.php?probid=10
 jury/executables.php
 jury/executable.php?id=c
 jury/auditlog.php
@@ -91,7 +91,7 @@ jury/contest.php?cmd=add
 jury/genpasswds.php
 jury/judgehosts.php?cmd=edit&referrer=judgehosts.php
 jury/language.php?cmd=add
-jury/problem.php?id=fltcmp&cmd=edit
+jury/problem.php?id=7&cmd=edit
 jury/refresh_cache.php
 jury/team.php?id=domjudge&cmd=edit
 api/'
