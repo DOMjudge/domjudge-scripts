@@ -20,12 +20,25 @@ GITSTRUCT="$TEMPDIR/git_struct.sql"
 SQLTMP="$TEMPDIR/tmp_struct.sql"
 GITCLONE="$TEMPDIR/domjudge"
 
+# Check that GNU sed is available; we use the GNU 'e' command in
+# sqlfilter() below:
+if ! sed --version | grep '^GNU sed ' > /dev/null 2>&1 ; then
+	echo "Error: this script requires GNU sed."
+	exit 1
+fi
+
 # Filter SQL expression for comments and unimportant changes
 # like auto_increment counters:
 sqlfilter()
 {
 	grep -vE '^(/\*|--|$)' | \
-	sed 's/ \(DEFAULT CHARSET\|AUTO_INCREMENT\|ENGINE\)=[^ ]*//g;/_client *= /d'
+	sed 's/ \(DEFAULT CHARSET\|AUTO_INCREMENT\|ENGINE\)=[^ ]*//g;/_client *= /d;s/,$//' | \
+# The next sed scripts sort consecutive lines of CONSTRAINT, KEY and
+# UNIQUE KEY lines. Matching lines are stored in the hold buffer, and
+# at a non-matching line, the hold buffer is piped to sort and cleared.
+	sed -n '/^  CONSTR/H;/^  CONSTR/!{x;s/^\n\(.*\)/'"echo '\1' | sort"'/e;Ta;p;:a;x;p;z;h}' | \
+	sed -n '/^  KEY/H;   /^  KEY/!   {x;s/^\n\(.*\)/'"echo '\1' | sort"'/e;Ta;p;:a;x;p;z;h}' | \
+	sed -n '/^  UNIQUE/H;/^  UNIQUE/!{x;s/^\n\(.*\)/'"echo '\1' | sort"'/e;Ta;p;:a;x;p;z;h}'
 }
 
 # Parse command-line options:
