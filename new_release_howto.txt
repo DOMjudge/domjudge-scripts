@@ -18,7 +18,7 @@ account `domjudge@a-eskwadraat.nl`):
     GPG signature.
  1. Create the release tarball by running
         make_release.sh $TAG [<git-repo-url>]
-    The `<git-repo-url>` defaults to `git://a-eskwadraat.nl/git/domjudge.git`
+    The `<git-repo-url>` defaults to `https://github.com/DOMjudge/domjudge.git`
     but can be pointed to your local repository, before committing to the
     central repository.
 
@@ -30,7 +30,7 @@ account `domjudge@a-eskwadraat.nl`):
         sha256sum domjudge-$TAG.tar.gz > domjudge-$TAG.tar.gz.sha256sum
         gpg -a --detach-sign --digest-algo SHA1 domjudge-$TAG.tar.gz
     Copy these and the tarball to `~/releases`.
- 1. Copy these files to vm-domjudge:/srv/www/domjudge/releases/
+ 1. Copy these files to vm-domjudge:/srv/http/domjudge/releases/
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
     repository under `website/` and run "make install" as domjudge@vm-domjudge
  1. Update the release documentation under `/srv/http/domjudge/docs/`
