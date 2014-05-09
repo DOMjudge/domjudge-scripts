@@ -1,5 +1,5 @@
 <!--#set    var="dj_current_branch_version"  value="3.4.3"
---><!--#set var="dj_current_branch_date"     value="8 May 2014"
+--><!--#set var="dj_current_branch_date"     value="9 May 2014"
 --><!--#set var="dj_previous_branch_version" value="3.3.6"
 --><!--#set var="dj_previous_branch_date"    value="8 December 2013"--><!DOCTYPE html>
 <html lang="en" xml:lang="en">
