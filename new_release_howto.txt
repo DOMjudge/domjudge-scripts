@@ -6,11 +6,6 @@ account `domjudge@a-eskwadraat.nl`):
  1. Commit the correct version number in the `ChangeLog` and `README` files,
     set `DEBUG=0` in `etc/common-config.php` (if releasing from the `master`
     branch).
- 1. Rename the latest SQL upgrade file from `sql/upgrade/upgrade_*DEV.sql`
-    to the release version (if existent), and (this can also be done later)
-    update any SQL upgrade file in the previous series to point to this
-    latest release. See `sql/upgrade/README` for details on the upgrade path
-    structure.
  1. Create a release version `$TAG` in Git with `$TAG` the version number
     x.y.z:
         git tag [-a|-s|-u <GPG-key-ID>] -m "Tag release version $TAG." $TAG
