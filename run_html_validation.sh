@@ -41,7 +41,7 @@ URLS='
 plugin/scoreboard.php
 plugin/event.php?fromid=1&toid=50
 public/
-public/team.php?id=domjudge
+public/team.php?id=2
 team
 team/clarification.php
 team/clarification.php?id=137
@@ -76,7 +76,7 @@ jury/team_affiliations.php
 jury/team_affiliation.php?id=1
 jury/team_categories.php
 jury/team_category.php?id=1
-jury/team.php?id=domjudge
+jury/team.php?id=2
 jury/teams.php
 jury/users.php
 jury/user.php?id=1
@@ -93,7 +93,7 @@ jury/judgehosts.php?cmd=edit&referrer=judgehosts.php
 jury/language.php?cmd=add
 jury/problem.php?id=7&cmd=edit
 jury/refresh_cache.php
-jury/team.php?id=domjudge&cmd=edit
+jury/team.php?id=2&cmd=edit
 api/'
 
 OFS="$IFS"
