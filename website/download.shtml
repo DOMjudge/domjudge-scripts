@@ -3,11 +3,11 @@
 <h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
 
 <p>The latest stable release is version
-<strong><!--#echo var="dj_current_branch_version" --></strong></a>,
-dated <!--#echo var="dj_current_branch_date" -->.<br />
+<strong><!--#echo var="dj_current_branch_version" --></strong>,
+dated <!--#echo var="dj_current_branch_date" -->.</p>
 <p>Also available is the previous release series
-<strong><!--#echo var="dj_previous_branch_version" --></strong></a>,
-dated <!--#echo var="dj_previous_branch_date" -->.</li>
+<strong><!--#echo var="dj_previous_branch_version" --></strong>,
+dated <!--#echo var="dj_previous_branch_date" -->.</p>
 
 <p><strong><a href="/releases/">download here</a></strong></p>
 
