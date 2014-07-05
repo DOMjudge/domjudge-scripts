@@ -14,6 +14,8 @@
 # First, the file <initial-DB.sql> is loaded into the DOMjudge
 # database, and should contain a pristine contest state without any
 # submissions or judgings present. Any data present is cleared!
+# The filename can optionally be suffixed by .gz or .bz2 to indicate a
+# compressed file.
 #
 # Then all submissions in <sources-dir> are submitted into the system.
 # These files should follow naming conventions as used by the scripts
@@ -90,7 +92,14 @@ fi
 	echo "DROP DATABASE IF EXISTS \`$DBNAME\`;"
 	echo "CREATE DATABASE \`$DBNAME\` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
 ) | mysql $MYSQLOPTS
-mysql $MYSQLOPTS "$DBNAME" < "$INITDBSQL"
+if [ "${INITDBSQL%.gz}" != "$INITDBSQL" ]; then
+	PIPE="zcat $INITDBSQL"
+elif [ "${INITDBSQL%.bz2}" != "$INITDBSQL" ]; then
+	PIPE="bzcat $INITDBSQL"
+else
+	PIPE="cat $INITDBSQL"
+fi
+$PIPE | mysql $MYSQLOPTS "$DBNAME"
 
 # Cleanup any previous judging contents:
 LOGFILE="$INSTALLDIR/output/log/judge.$JUDGEHOST.log"
