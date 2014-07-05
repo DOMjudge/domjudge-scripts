@@ -148,7 +148,8 @@ while sleep 10 ; do
 		echo "Error: the judgedaemon seems to have crashed..."
 		exit 1
 	fi
-	if [ "$lastjudge" != 'NULL' -a "$lastjudge" -gt $((lastpoll+10)) ]; then
+	if [ -n "$lastjudge" -a "$lastjudge" != 'NULL' ] && \
+	   [ "$lastjudge" -gt $((lastpoll+60)) ]; then
 		break
 	fi
 done
