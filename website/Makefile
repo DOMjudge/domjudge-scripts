@@ -13,5 +13,4 @@ install-docs:
 	TEMP=`mktemp -d` ; cd $$TEMP ; tar xzf $$LATEST ; \
 	cp domjudge-*/doc/team/team-manual*.pdf $(WWWDIR)/docs/ ; \
 	cp domjudge-*/doc/{admin,judge}/*-manual*.{html,pdf} $(WWWDIR)/docs/ ; \
-	cp domjudge-*/doc/admin/*.png $(WWWDIR)/docs/ ; \
 	rm -rf $$TEMP
