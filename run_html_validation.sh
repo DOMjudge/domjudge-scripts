@@ -38,8 +38,6 @@ cd $LIVESYSTEMDIR && git stash -q && git pull -q && git stash pop -q
 
 URLS='
 .
-plugin/scoreboard.php
-plugin/event.php?fromid=1&toid=50
 public/
 public/team.php?id=2
 team
@@ -120,14 +118,6 @@ check_html ()
 
 for i in $URLS ; do
 	url="$LIVEURLPREFIX$i"
-	# Special-case plugin interface for user/pass and XML output:
-	if [ "${i#plugin/}" != "$i" ]; then
-		output=`wget -q --user=$PLUGINUSER --password=$PLUGINPASS -O - "$url" 2>&1`
-		if ! echo "$output" | head -n 2 | grep '^<root>' >/dev/null 2>&1 ; then
-			echo "Errors found in '$url':<br />\n<pre>$output\n</pre><br />"
-		fi
-		continue
-	fi
 	check_html "$url"
 done
 IFS="$OFS"
