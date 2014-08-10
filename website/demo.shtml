@@ -42,22 +42,7 @@ populated with data from a live contest.</p>
     data. It is used by the judgedaemon, but can also be used e.g. for
     an external scoreboard display. The page shows the internal
     documentation of available functions.
-    <em>This interface is still under development and will deprecate the
-    old XML plugin interface.</em></li>
-<li><strong>The plugin interface:</strong> this interface outputs various data
-    on the contest in XML format, to be used by plugins, e.g. for exporting it
-    to an external, fancier scoreboard or to gather statistics. There are
-    currently two datasets exported:
-    <ul>
-    <li><a href="demoweb/plugin/scoreboard.php">
-        the scoreboard</a> and</li>
-    <li><a href="demoweb/plugin/event.php">
-        a list of events.</a></li>
-    </ul>
-    Login with user <em>public</em> for the public view or <em>jury</em> for the
-    full jury view (e.g. a non-frozen scoreboard).
-    Note that especially the event list might be quite long and take a long time
-    to load in your browser.</li>
+    <em>This interface is still under development.</em></li>
 </ul>
 
 <p><strong>Note:</strong> all passwords are equal to the respective usernames.</p>
