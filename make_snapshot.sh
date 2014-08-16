@@ -1,7 +1,8 @@
 #!/bin/sh
 #
 # Script to publish a snapshot package, ChangeLog and admin-manual on
-# the public page at http://www.domjudge.org/snapshot/.
+# the public page at http://www.domjudge.org/snapshot/. Alternatively,
+# when a git URL is passed only a snapshot package is generated.
 
 set -e
 
@@ -10,6 +11,12 @@ set -e
 PUBDIR=~/public_html/snapshot
 DJDIR=domjudge-snapshot-`date +%Y%m%d`
 GITURL="https://github.com/DOMjudge/domjudge.git"
+
+# If a git repo URL is passed, don't update the website.
+if [ -n "$1" ]; then
+	GITURL="$1" ; shift
+	PUBDIR=
+fi
 
 [ "$DEBUG" ] && set -x
 quiet()
@@ -35,15 +42,17 @@ quiet make -C $DJDIR dist
 tar -cf $DJDIR.tar $DJDIR
 gzip -9 $DJDIR.tar
 
-rm -rf $PUBDIR/*
-mkdir -p $PUBDIR/admin-manual $PUBDIR/judge-manual
-cp $DJDIR/doc/admin/admin-manual*.html \
-   $DJDIR/doc/admin/admin-manual.pdf     $PUBDIR/admin-manual/
-cp $DJDIR/doc/judge/judge-manual*.html \
-   $DJDIR/doc/judge/judge-manual.pdf     $PUBDIR/judge-manual/
-cp $DJDIR/doc/team/team-manual.pdf       $PUBDIR/
-cp $DJDIR.tar.gz $DJDIR/ChangeLog        $PUBDIR/
-cd /
+if [ -n "$PUBDIR" ]; then
+	rm -rf $PUBDIR/*
+	mkdir -p $PUBDIR/admin-manual $PUBDIR/judge-manual
+	cp $DJDIR/doc/admin/admin-manual*.html \
+	   $DJDIR/doc/admin/admin-manual.pdf     $PUBDIR/admin-manual/
+	cp $DJDIR/doc/judge/judge-manual*.html \
+	   $DJDIR/doc/judge/judge-manual.pdf     $PUBDIR/judge-manual/
+	cp $DJDIR/doc/team/team-manual.pdf       $PUBDIR/
+	cp $DJDIR.tar.gz $DJDIR/ChangeLog        $PUBDIR/
+	cd /
+fi
 
 [ "$DEBUG" ] || rm -rf $TEMPDIR
 
