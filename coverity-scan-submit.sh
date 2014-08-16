@@ -45,15 +45,25 @@ fi
 
 export PATH="$PATH:$COVTOOL/bin"
 
-cov-build --dir cov-int make build
+cov-build --dir cov-int make build build-scripts
 
-tar czf domjudge-scan.tgz cov-int
+ARCHIVE=domjudge-scan.tar.xz
+
+echo "Compressing scan directory 'cov-int' into '$ARCHIVE'..."
+
+tar caf "$ARCHIVE" cov-int
 
 echo "Submitting '$VERSION' '$DESC'"
 
+TMP=`mktemp --tmpdir curl-cov-submit-XXXXXX.html`
+
 curl --form project=DOMjudge --form token="$TOKEN" \
-     --form email="$EMAIL" --form file=@domjudge-scan.tgz \
+     --form email="$EMAIL" --form file=@"$ARCHIVE" \
      --form version="$VERSION" --form description="$VERSION - $DESC" \
-     http://scan5.coverity.com/cgi-bin/upload.py
+     -o $TMP https://scan.coverity.com/builds?project=DOMjudge
+
+cat $TMP
+
+rm -f $TMP
 
 exit 0
