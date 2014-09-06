@@ -182,7 +182,7 @@ legend {
 #lastmod {
 	color: gray;
 	font-size: x-small;
-	position: absolute; right: 1ex; margin-top: 5em;
+	position: absolute; right: 1ex; margin-top: 40px;
 }
 
 #djlogo {
@@ -204,10 +204,23 @@ img.picto { width: 16px; height: 16px; }
 .judgetime { font-size: smaller; font-style: italic; }
 
 #organisations {
-	position: absolute; left: 1ex;
+	float: right;
+	margin: 1ex;
+	margin-right: 3ex;
 }
+
 #validity {
 	position: absolute; right: 1ex;
+}
+
+#github {
+	position: absolute; left: 1ex;
+}
+
+.githubframe {
+	background-color: transparent;
+	overflow: hidden;
+	border: none;
 }
 
 dt {
