@@ -23,7 +23,7 @@ account `domjudge@a-eskwadraat.nl`):
  1. Update files above to `{version+1}DEV`, `DEBUG=1`, and commit.
  1. Generate sha256sum and GPG signature:
         sha256sum domjudge-$TAG.tar.gz > domjudge-$TAG.tar.gz.sha256sum
-        gpg -a --detach-sign --digest-algo SHA1 domjudge-$TAG.tar.gz
+        gpg -a --detach-sign --digest-algo SHA256 domjudge-$TAG.tar.gz
     Copy these and the tarball to `~/releases`.
  1. Copy these files to vm-domjudge:/srv/http/domjudge/releases/
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
