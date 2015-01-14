@@ -1,6 +1,6 @@
-A new release can be created by one of the main DOMjudge developers.  The
-following steps should be taken (local directories refer to those on the
-account `domjudge@a-eskwadraat.nl`):
+A new release can be created by one of the main DOMjudge developers.
+The following steps should be taken (local directories refer to those
+on the account `domjudge@vm-domjudge`):
 
  1. Test everything. (duh...)
  1. Commit the correct version number in the `ChangeLog` and `README` files,
@@ -24,8 +24,7 @@ account `domjudge@a-eskwadraat.nl`):
  1. Generate sha256sum and GPG signature:
         sha256sum domjudge-$TAG.tar.gz > domjudge-$TAG.tar.gz.sha256sum
         gpg -a --detach-sign --digest-algo SHA256 domjudge-$TAG.tar.gz
-    Copy these and the tarball to `~/releases`.
- 1. Copy these files to vm-domjudge:/srv/http/domjudge/releases/
+    Copy these files to `/srv/http/domjudge/releases/`
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
     repository under `website/` and run "make install" as domjudge@vm-domjudge
  1. Update the release documentation under `/srv/http/domjudge/docs/`
