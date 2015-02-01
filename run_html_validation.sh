@@ -52,9 +52,12 @@ jury/clarification.php
 jury/clarification.php?id=107
 jury/clarifications.php
 jury/contests.php
+jury/contest.php?id=2
 jury/index.php
 jury/judgehosts.php
 jury/judgehost.php?id=judgehost1
+jury/judgehost_restrictions.php
+jury/judgehost_restriction.php?id=1
 jury/language.php?id=c
 jury/languages.php
 jury/problems.php
@@ -88,6 +91,7 @@ jury/config.php
 jury/contest.php?cmd=add
 jury/genpasswds.php
 jury/judgehosts.php?cmd=edit&referrer=judgehosts.php
+jury/judgehost_restriction.php?cmd=add
 jury/language.php?cmd=add
 jury/problem.php?id=7&cmd=edit
 jury/refresh_cache.php
