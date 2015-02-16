@@ -33,10 +33,8 @@ make -k QUIET=1 build docs 2>&1 | \
 	sed -n '/warning: variable .dummy. set but not used/{n;x;d;};x;1d;p;${x;p;}' || true
 
 # Test 'make install-{domserver,judgehost,docs}'.
-# To make this work, we need to disable the root check and filter
-# failure to set ownership and permissions of installed files.
+# We need to filter failure to set ownership and permissions of password files.
 mkdir $TEMPDIR/install
-sed -i '/: check-root/d' Makefile
 QUIET=1 ./configure -q --enable-cgroups --prefix=$TEMPDIR/install 2>&1 || true
 make -k QUIET=1 build install-domserver install-judgehost install-docs 2>&1 | \
 	grep -vE 'install: cannot change owner(ship| and permissions of)' || true
