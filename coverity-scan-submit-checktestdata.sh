@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 # Run a Coverity scan on the local directory (which must be in a
-# configured DOMjudge source-tree root) and submit it.
+# checktestdata source-tree root) and submit it.
 
 # The following variables must be set manually:
 
@@ -12,13 +12,11 @@ EMAIL=yourname@example.com
 COVTOOL=/path/to/cov-analysis-linux64-XX
 
 
-if [ ! -r paths.mk ]; then
-	echo "Cannot find 'paths.mk', run in the root of a configured DOMjudge source tree!"
+if [ ! -r config.mk ]; then
+	echo "Cannot find 'config.mk', run in the root of a"
+	echo "configured checktestdata source tree!"
 	exit 1
 fi
-
-VERSION=`  grep '^VERSION ='   paths.mk | sed 's/^VERSION = *//'`
-PUBLISHED=`grep '^PUBLISHED =' paths.mk | sed 's/^PUBLISHED = *//'`
 
 git_dirty()
 {
@@ -33,21 +31,17 @@ git_commit()
 	git rev-parse HEAD | cut -c -12
 }
 
-if [ "$PUBLISHED" = release ]; then
-	DESC="release"
-elif [ -n "$PUBLISHED" ]; then
-	DESC="snapshot $PUBLISHED"
-elif [ -d .git ]; then
-	DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
-else
-	DESC="unknown source on `date`"
-fi
+VERSION=`grep '^VERSION =' config.mk | sed 's/^VERSION = *//'`
+
+DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
 
 export PATH="$PATH:$COVTOOL/bin"
 
-cov-build --dir cov-int make build build-scripts
+make dist
 
-ARCHIVE=domjudge-scan.tar.xz
+cov-build --dir cov-int make build
+
+ARCHIVE=checktestdata-scan.tar.xz
 
 echo "Compressing scan directory 'cov-int' into '$ARCHIVE'..."
 
@@ -57,10 +51,10 @@ echo "Submitting '$VERSION' '$DESC'"
 
 TMP=`mktemp --tmpdir curl-cov-submit-XXXXXX.html`
 
-curl --form project=DOMjudge --form token="$TOKEN" \
+curl --form project=Checktestdata --form token="$TOKEN" \
      --form email="$EMAIL" --form file=@"$ARCHIVE" \
      --form version="$VERSION" --form description="$VERSION - $DESC" \
-     -o $TMP https://scan.coverity.com/builds?project=DOMjudge
+     -o $TMP https://scan.coverity.com/builds?project=Checktestdata
 
 cat $TMP
 
