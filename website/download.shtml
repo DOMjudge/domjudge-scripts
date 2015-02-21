@@ -18,27 +18,35 @@ mailing list</a>.</p>
 <h3>Debian Packages</h3>
 
 <p>There are also <a href="http://www.debian.org">Debian GNU/Linux</a> packages
-available from <a href="http://non-gnu.uvt.nl/debian/squeeze/domjudge/">
-http://non-gnu.uvt.nl/debian/squeeze/domjudge/</a> for i386 and amd64 architectures.
-The packages work on Lenny, Squeeze and newer, and also on the various versions
+available for the amd64 architecture; other architectures might be buildable
+from the source packages.
+The packages work on Wheezy and newer, and also on the various versions
 of Ubuntu.</p>
 
-<p>You can add the following apt source to <code>/etc/apt/sources.list</code> which is
-signed with <a href="http://non-gnu.uvt.nl/debian/uvt_key-with-signatures.asc">this key</a>:</p>
-
-<pre>deb http://non-gnu.uvt.nl/debian squeeze uvt</pre>
+<p>To install these packages, add our
+<a href="/repokey.asc">repository GPG key</a> directly to APT with
+<pre>sudo curl -o - http://domjudge.org/repokey.asc | apt-key add -</pre>
+or first check our signatures on the key for authenticity.
+Then add the following lines to <code>/etc/apt/sources.list</code>:
+<pre>
+deb     http://domjudge.org/debian unstable/
+deb-src http://domjudge.org/debian unstable/
+</pre>
+Note the slash following <code>unstable</code> and the missing
+section(s) <code>main contrib non-free</code>.
+</p>
 
 <h3>DOMjudge-live images</h3>
 
 <p>We also provide
 <a href="/live/">
-DOMjudge-live images</a> to run DOMjudge straight from an USB stick
-(it can also be written to harddisk or booted in a virtual machine).
-See <a href="http://www.domjudge.org/gitweb?p=domjudge-packaging.git;a=blob_plain;f=live-usb/files/README">
+DOMjudge-live images</a> to run DOMjudge straight from an USB stick,
+as virtual machine, or to be written to harddisk.
+See <a href="https://github.com/DOMjudge/domjudge-packaging/blob/master/live-image/files/README">
 this README file</a> (which is also available in the
-<a href="http://www.domjudge.org/gitweb?p=domjudge-packaging.git">DOMjudge
+<a href="https://github.com/DOMjudge/domjudge-packaging/">DOMjudge
 packaging</a> Git repository and as <code>/README</code> on the image)
-more details on how use these.
+for more details on how use these.
 </p>
 
 <h3>Other downloads</h3>
