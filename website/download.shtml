@@ -24,15 +24,15 @@ The packages work on Wheezy and newer, and also on the various versions
 of Ubuntu.</p>
 
 <p>To install these packages, add our
-<a href="/repokey.asc">repository GPG key</a> directly to APT with
+<a href="/repokey.asc">repository GPG key</a> directly to APT with</p>
 <pre>sudo curl -o - http://domjudge.org/repokey.asc | apt-key add -</pre>
-or first check our signatures on the key for authenticity.
-Then add the following lines to <code>/etc/apt/sources.list</code>:
+<p>or first check our signatures on the key for authenticity.
+Then add the following lines to <code>/etc/apt/sources.list</code>:</p>
 <pre>
 deb     http://domjudge.org/debian unstable/
 deb-src http://domjudge.org/debian unstable/
 </pre>
-Note the slash following <code>unstable</code> and the missing
+<p>Note the slash following <code>unstable</code> and the missing
 section(s) <code>main contrib non-free</code>.
 </p>
 
