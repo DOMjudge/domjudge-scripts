@@ -77,6 +77,13 @@ at your own risk.</p>
   <li>Public web interface: <a href="https://github.com/DOMjudge/domjudge-scripts">github</a>, <a href="http://www.domjudge.org/gitweb?p=domjudge-scripts.git">gitweb</a></li>
   </ul>
 </dd>
+<dt>Checktestdata</dt>
+<dd>Contains checktestdata: a program to syntactically verify testdata.
+  <ul>
+  <li>Public git repository: <kbd>https://github.com/DOMjudge/checktestdata.git</kbd></li>
+  <li>Public web interface: <a href="https://github.com/DOMjudge/checktestdata">github</a>, <a href="http://www.domjudge.org/gitweb?p=checktestdata.git">gitweb</a></li>
+  </ul>
+</dd>
 </dl>
 
 <p>You can create a local copy of these git repositories with the command
