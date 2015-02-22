@@ -22,7 +22,7 @@ PUBLISHED=`grep '^PUBLISHED =' paths.mk | sed 's/^PUBLISHED = *//'`
 
 git_dirty()
 {
-	[ "$(git status 2> /dev/null | tail -n1)" != "nothing to commit (working directory clean)" ] && echo -n '*'
+	git diff --quiet --exit-code || echo -n '*'
 }
 git_branch()
 {
@@ -57,8 +57,7 @@ echo "Submitting '$VERSION' '$DESC'"
 
 TMP=`mktemp --tmpdir curl-cov-submit-XXXXXX.html`
 
-curl --form project=DOMjudge --form token="$TOKEN" \
-     --form email="$EMAIL" --form file=@"$ARCHIVE" \
+curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
      --form version="$VERSION" --form description="$VERSION - $DESC" \
      -o $TMP https://scan.coverity.com/builds?project=DOMjudge
 
