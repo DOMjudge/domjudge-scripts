@@ -62,6 +62,8 @@ jury/language.php?id=c
 jury/languages.php
 jury/problems.php
 jury/problem.php?id=7
+jury/rejudgings.php
+jury/rejudging.php?id=1
 jury/scoreboard.php
 jury/scoreboard.php?country[]=NLD
 jury/show_source.php?id=1
