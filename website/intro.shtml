@@ -29,10 +29,11 @@ where teams are on-site and there is a fixed problem set and timeframe.
 
 <ul>
 <li>Locally: Utrechts Kampioenschap Programmeren (since 2004)</li>
-<li>ACM ICPC Sub-regionals: <a href="http://www.bapc.eu/">BAPC</a>
-    (since 2004), <a href="http://gcpc.nwerc.eu/">GCPC</a> (since 2010)</li>
-<li>ACM ICPC Regionals: <a href="http://www.nwerc.eu/">NWERC</a> (since 2007), <a href="http://www.swerc.eu/">SWERC</a> (since 2008),
-<a href="http://ser.cs.fit.edu/">SER USA</a> (since 2010)</li>
+<li>ACM ICPC Sub-regionals: <a href="http://www.bapc.eu/">BAPC</a> (since 2004),
+                            <a href="http://gcpc.nwerc.eu/">GCPC</a> (since 2010)</li>
+<li>ACM ICPC Regionals: <a href="http://www.nwerc.eu/">NWERC</a> (since 2007),
+                        <a href="http://www.swerc.eu/">SWERC</a> (since 2008),
+                        <a href="http://ser.cs.fit.edu/">SER USA</a> (since 2010)</li>
 <li>ACM ICPC World Finals: for ICPC Live (since 2012) and as shadow system (2014)</li>
 </ul>
 
@@ -40,7 +41,7 @@ where teams are on-site and there is a fixed problem set and timeframe.
     "courseware" in teaching environments, etc. Only a few links (some
     might be dead):
 <a href="https://icpc.informatik.uni-erlangen.de/oj/public/">online judge at FAU</a>,
-<a href="http://domjudge.zoo.cs.uu.nl/domjudge/">courseware at UU</a>,
+<a href="https://domjudge.cs.uu.nl/">courseware at UU</a>,
 <a href="http://www.programa-me.com/">Programa-Me (a program for high school students)</a>,
 <a href="http://techkriti.org/chaos/public/about.php">IIT Kanpur "Chaos" contest</a>,
 <a href="http://judge.gepwnage.nl/public/">GEPWNAGE online judge at TU/e</a>.
