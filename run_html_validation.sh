@@ -39,13 +39,17 @@ cd $LIVESYSTEMDIR && git stash -q && git pull -q && git stash pop -q
 URLS='
 .
 public/
+public/problems.php
 public/team.php?id=2
 team
 team/clarification.php
 team/clarification.php?id=137
+team/problems.php
 team/scoreboard.php
+team/scoreboard.php?categoryid[]=1&filter=filter
 team/submission_details.php?id=998
 team/submission_details.php?id=1163
+team/team.php?id=2
 jury/
 jury/auditlog.php
 jury/balloons.php
