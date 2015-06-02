@@ -29,8 +29,7 @@ cd $TEMPDIR/system
 # Test 'make config build docs':
 make -k QUIET=1 MAINT_CXFLAGS='-O -Wall -fPIE -Wformat -Wformat-security -ansi' \
 	maintainer-conf 2>&1 || true
-make -k QUIET=1 build docs 2>&1 | \
-	sed -n '/warning: variable .dummy. set but not used/{n;x;d;};x;1d;p;${x;p;}' || true
+make -k QUIET=1 build docs 2>&1
 
 # Test 'make install-{domserver,judgehost,docs}'.
 # We need to filter failure to set ownership and permissions of password files.
