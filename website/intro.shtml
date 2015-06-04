@@ -34,8 +34,10 @@ where teams are on-site and there is a fixed problem set and timeframe.
 <li>ACM ICPC Regionals: <a href="http://www.nwerc.eu/">NWERC</a> (since 2007),
                         <a href="http://www.swerc.eu/">SWERC</a> (since 2008),
                         <a href="http://ser.cs.fit.edu/">SER USA</a> (since 2010),
-                        <a href="http://socalcontest.org/">SOCAL</a> (since 2013)</li>
-<li>ACM ICPC World Finals: for ICPC Live (since 2012) and as shadow system (2014)</li>
+                        <a href="http://socalcontest.org/">SOCAL</a> (since 2013),
+                        <a href="http://org.coloradomesa.edu/~wmacevoy/rmrc/2014/">RMRC</a> (since 2014)</li>
+<li>ACM ICPC World Finals: for ICPC Live (since 2012)
+  and as shadow system (since 2014)</li>
 </ul>
 
 <p>DOMjudge has also been adapted for use in numerous online contests, as
