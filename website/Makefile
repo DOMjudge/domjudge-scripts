@@ -14,3 +14,4 @@ install-docs:
 	cp domjudge-*/doc/team/team-manual*.pdf $(WWWDIR)/docs/ ; \
 	cp domjudge-*/doc/{admin,judge}/*-manual*.{html,pdf} $(WWWDIR)/docs/ ; \
 	rm -rf $$TEMP
+	cp docs/* $(WWWDIR)/docs/
