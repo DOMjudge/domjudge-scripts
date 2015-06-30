@@ -59,29 +59,29 @@ at your own risk.</p>
 <dd>The main repository that contains the source code of the system itself.
   <ul>
   <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge.git</kbd></li>
-  <li>Public web interface: <a href="https://github.com/DOMjudge/domjudge">github</a>, <a href="http://www.domjudge.org/gitweb?p=domjudge.git">gitweb</a></li>
+  <li>Public web interface: <a href="https://github.com/DOMjudge/domjudge">github</a>, <a href="https://www.domjudge.org/gitweb?p=domjudge.git">gitweb</a></li>
   </ul>
 </dd>
 <dt>DOMjudge-packaging</dt>
 <dd>Contains packaging for various (Linux) distributions, currently only for
-<a href="http://www.debian.org/">Debian</a>.
+<a href="https://www.debian.org/">Debian</a>.
   <ul>
   <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge-packaging.git</kbd></li>
-  <li>Public web interface: <a href="https://github.com/DOMjudge/domjudge-packaging">github</a>, <a href="http://www.domjudge.org/gitweb?p=domjudge-packaging.git">gitweb</a></li>
+  <li>Public web interface: <a href="https://github.com/DOMjudge/domjudge-packaging">github</a>, <a href="https://www.domjudge.org/gitweb?p=domjudge-packaging.git">gitweb</a></li>
   </ul>
 </dd>
 <dt>DOMjudge-scripts</dt>
 <dd>Contains various developer/maintainer helper scripts.
   <ul>
   <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge-scripts.git</kbd></li>
-  <li>Public web interface: <a href="https://github.com/DOMjudge/domjudge-scripts">github</a>, <a href="http://www.domjudge.org/gitweb?p=domjudge-scripts.git">gitweb</a></li>
+  <li>Public web interface: <a href="https://github.com/DOMjudge/domjudge-scripts">github</a>, <a href="https://www.domjudge.org/gitweb?p=domjudge-scripts.git">gitweb</a></li>
   </ul>
 </dd>
 <dt>Checktestdata</dt>
 <dd>Contains checktestdata: a program to syntactically verify testdata.
   <ul>
   <li>Public git repository: <kbd>https://github.com/DOMjudge/checktestdata.git</kbd></li>
-  <li>Public web interface: <a href="https://github.com/DOMjudge/checktestdata">github</a>, <a href="http://www.domjudge.org/gitweb?p=checktestdata.git">gitweb</a></li>
+  <li>Public web interface: <a href="https://github.com/DOMjudge/checktestdata">github</a>, <a href="https://www.domjudge.org/gitweb?p=checktestdata.git">gitweb</a></li>
   </ul>
 </dd>
 </dl>

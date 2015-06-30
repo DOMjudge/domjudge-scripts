@@ -3,10 +3,10 @@
 <hr />
 
 <div id="github">
-<iframe src="http://ghbtns.com/github-btn.html?user=DOMjudge&amp;type=follow&amp;size=large"
+<iframe src="https://ghbtns.com/github-btn.html?user=DOMjudge&amp;type=follow&amp;size=large"
         class="orglogo githubframe" width="190" height="30"></iframe>
 &nbsp;
-<iframe src="http://ghbtns.com/github-btn.html?user=DOMjudge&amp;type=fork&amp;size=large&amp;repo=domjudge&amp;count=true"
+<iframe src="https://ghbtns.com/github-btn.html?user=DOMjudge&amp;type=fork&amp;size=large&amp;repo=domjudge&amp;count=true"
         class="orglogo githubframe" width="125" height="30"></iframe>
 </div>
 

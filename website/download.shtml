@@ -17,7 +17,7 @@ mailing list</a>.</p>
 
 <h3>Debian Packages</h3>
 
-<p>There are also <a href="http://www.debian.org">Debian GNU/Linux</a> packages
+<p>There are also <a href="https://www.debian.org">Debian GNU/Linux</a> packages
 available for the amd64 architecture; other architectures might be buildable
 from the source packages.
 The packages work on Wheezy and newer, and also on the various versions
@@ -25,12 +25,12 @@ of Ubuntu.</p>
 
 <p>To install these packages, add our
 <a href="/repokey.asc">repository GPG key</a> directly to APT with</p>
-<pre>sudo curl -o - http://domjudge.org/repokey.asc | apt-key add -</pre>
+<pre>sudo curl -o - https://domjudge.org/repokey.asc | apt-key add -</pre>
 <p>or first check our signatures on the key for authenticity.
 Then add the following lines to <code>/etc/apt/sources.list</code>:</p>
 <pre>
-deb     http://domjudge.org/debian unstable/
-deb-src http://domjudge.org/debian unstable/
+deb     https://domjudge.org/debian unstable/
+deb-src https://domjudge.org/debian unstable/
 </pre>
 <p>Note the slash following <code>unstable</code> and the missing
 section(s) <code>main contrib non-free</code>.

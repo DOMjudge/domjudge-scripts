@@ -2,21 +2,9 @@
 
 <h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
 
-<div id="organisations">
-<a href="http://www.A-Eskwadraat.nl/"><img
-       height="72" width="118"
-       src="aes2.png"
-       alt="A-Eskwadraat Logo" /></a>
-<br />
-<a href="http://www.uu.nl/english"><img
-       height="54" width="194"
-       src="uu.png"
-       alt="Utrecht University Logo" /></a>
-</div>
-
 <p>The DOMjudge project was started in 2004 at
 <a href="http://www.a-eskwadraat.nl/">Study Association A-Eskwadraat</a>
-at Utrecht University, The Netherlands. Development continues to be hosted here.</p>
+at Utrecht University, The Netherlands, but is now an independent project.</p>
 
 <p>The main developers are Jaap Eldering, Nicky Gerritsen, Keith
 Johnson, Thijs Kinkhorst, and Tobias Werth, with contributions from
