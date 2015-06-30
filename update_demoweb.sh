@@ -1,6 +1,6 @@
 #!/bin/sh
 # Script to update the DOMjudge demo webinterface
-# at:    http://www.domjudge.org/demoweb/
+# at:    https://www.domjudge.org/demoweb/
 
 set -e
 
