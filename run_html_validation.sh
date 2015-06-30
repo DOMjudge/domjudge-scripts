@@ -8,7 +8,7 @@ set -e
 #DEBUG=1
 
 LIVESYSTEMDIR=~/system
-LIVEURLPREFIX='http://www.domjudge.org/domjudge/'
+LIVEURLPREFIX='https://www.domjudge.org/domjudge/'
 
 # Optionally specify a non-priveleged jury user to check the jury web
 # pages without admin permissions:
