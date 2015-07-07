@@ -5,6 +5,9 @@
 <p>The latest stable release is version
 <strong><!--#echo var="dj_current_branch_version" --></strong>,
 dated <!--#echo var="dj_current_branch_date" -->.</p>
+
+<p>A <em>release candidate</em> of the next stable branch: <strong>5.0.0 RC1</strong> is available.</p>
+
 <p>Also available is the previous release series
 <strong><!--#echo var="dj_previous_branch_version" --></strong>,
 dated <!--#echo var="dj_previous_branch_date" -->.</p>

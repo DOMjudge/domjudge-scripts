@@ -26,7 +26,7 @@ on the account `domjudge@vm-domjudge`):
         gpg -a --detach-sign --digest-algo SHA256 domjudge-$TAG.tar.gz
     Copy these files to `/srv/http/domjudge/releases/`
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
-    repository under `website/` and run "make install" as domjudge@vm-domjudge
+    repository under `website/` and run "make install" as domjudge@domjudge
  1. Update the release documentation under `/srv/http/domjudge/docs/`
     (if releasing the latest stable branch).
  1. If necessary, add a source package of included dash static shell in
