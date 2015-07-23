@@ -7,16 +7,13 @@ set -e
 
 #DEBUG=1
 
+# Optionally specify a user and password when the web interface is
+# password protected:
+#USER=jury
+#PASS=passwordhere
+
 LIVESYSTEMDIR=~/system
-LIVEURLPREFIX='https://www.domjudge.org/domjudge/'
-
-# Optionally specify a non-priveleged jury user to check the jury web
-# pages without admin permissions:
-#WEB_USER=jury
-#WEB_PASS=passwordhere
-
-PLUGINUSER=jury
-PLUGINPASS=jury
+LIVEURLPREFIX="https://${USER:+$USER:$PASS@}www.domjudge.org/domjudge/"
 
 [ "$DEBUG" ] && set -x
 quiet()
@@ -118,10 +115,10 @@ check_html ()
 	url=`perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$1")`
 	w3url="http://validator.w3.org/check?uri=$url"
 	TEMP=`mktemp $TEMPDIR/validate_XXXXXX.html`
-	curl -s ${WEB_USER:+-u$WEB_USER:$WEB_PASS} $w3url > $TEMP
-	if grep 'class="msg">External Checker not available' $TEMP >/dev/null 2>&1 ; then
+	curl -s $w3url > $TEMP
+	if grep 'class="non-document-error' $TEMP >/dev/null 2>&1 ; then
 		NUNCHECKED=$((NUNCHECKED+1))
-	elif grep 'id="results" class="invalid"' $TEMP >/dev/null 2>&1 ; then
+	elif grep 'class="failure' $TEMP >/dev/null 2>&1 ; then
 		echo "<a href=\"$w3url\">HTML validation errors found</a> in" \
 		     "<a href=\"$1\">$1</a>.<br />"
 	fi
