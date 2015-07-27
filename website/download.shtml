@@ -15,7 +15,7 @@ dated <!--#echo var="dj_previous_branch_date" -->.</p>
 <p><strong><a href="/releases/">download here</a></strong></p>
 
 <p>To get notifications of new releases, subscribe to the low volume
-<a href="https://lists.a-eskwadraat.nl/mailman/listinfo/domjudge-announce">announcements
+<a href="https://www.domjudge.org/mailman/listinfo/domjudge-announce">announcements
 mailing list</a>.</p>
 
 <h3>Debian Packages</h3>

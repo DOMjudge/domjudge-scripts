@@ -31,7 +31,7 @@ on the account `domjudge@vm-domjudge`):
     (if releasing the latest stable branch).
  1. If necessary, add a source package of included dash static shell in
     `/srv/http/domjudge/sources/`.
- 1. Send an email to domjudge-announce@lists.a-eskwadraat.nl.
+ 1. Send an email to domjudge-announce@domjudge.org.
  1. Don't forget to push everything to the central Git repository
     (especially the release tags, since these are not pushed by default),
     e.g. with
