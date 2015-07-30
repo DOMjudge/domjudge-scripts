@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Script to publish a snapshot package, ChangeLog and admin-manual on
-# the public page at http://www.domjudge.org/snapshot/. Alternatively,
+# the public page at https://www.domjudge.org/snapshot/. Alternatively,
 # when a git URL is passed only a snapshot package is generated.
 
 set -e
