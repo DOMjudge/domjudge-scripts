@@ -32,7 +32,8 @@ fi
 sqlfilter()
 {
 	grep -vE '^(/\*|--|$)' | \
-	sed 's/ \(DEFAULT CHARSET\|AUTO_INCREMENT\|ENGINE\)=[^ ]*//g;/_client *= /d;s/,$//' | \
+	sed -e 's/ \(DEFAULT CHARSET\|AUTO_INCREMENT\|ENGINE\)=[^ ]*//g;/_client *= /d;s/,$//' \
+	    -e 's/ COLLATE utf8mb4_unicode_ci//' | \
 # The next sed scripts sort consecutive lines of CONSTRAINT, KEY and
 # UNIQUE KEY lines. Matching lines are stored in the hold buffer, and
 # at a non-matching line, the hold buffer is piped to sort and cleared.
