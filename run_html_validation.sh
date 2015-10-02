@@ -15,6 +15,8 @@ set -e
 LIVESYSTEMDIR=~/system
 LIVEURLPREFIX="https://${USER:+$USER:$PASS@}www.domjudge.org/domjudge/"
 
+VNUCHECKER=~/vnu_html_checker/vnu.jar
+
 [ "$DEBUG" ] && set -x
 quiet()
 {
@@ -25,7 +27,7 @@ quiet()
 	fi
 }
 
-TEMPDIR=`mktemp -d /tmp/domjudge-html_validation-XXXXXX`
+TEMPDIR=`mktemp -d /tmp/dj_html_validate-XXXXXX`
 
 cd ~
 
@@ -107,33 +109,20 @@ OFS="$IFS"
 IFS='
 '
 
-NUNCHECKED=0
-
 check_html ()
 {
 	set +e
-	url=`perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$1")`
-	w3url="http://validator.w3.org/check?uri=$url"
-	TEMP=`mktemp $TEMPDIR/validate_XXXXXX.html`
-	curl -s $w3url > $TEMP
-	if grep 'class="non-document-error' $TEMP >/dev/null 2>&1 ; then
-		NUNCHECKED=$((NUNCHECKED+1))
-	elif grep 'class="failure' $TEMP >/dev/null 2>&1 ; then
-		echo "<a href=\"$w3url\">HTML validation errors found</a> in" \
-		     "<a href=\"$1\">$1</a>.<br />"
-	fi
+	url="$LIVEURLPREFIX$1"
+	TEMP=$TEMPDIR/`echo "$1" | sed 's/[\/\?=&]/_/g'`.html
+	curl -s -g ${USER:+-u$USER:$PASS} "$url" > $TEMP
+	java -jar $VNUCHECKER "$TEMP"
 	set -e
 }
 
 for i in $URLS ; do
-	url="$LIVEURLPREFIX$i"
-	check_html "$url"
+	check_html "$i"
 done
 IFS="$OFS"
-
-if [ "$NUNCHECKED" -ge 1 ]; then
-	echo "<p><b>Unable to validate $NUNCHECKED pages.</b></p>"
-fi
 
 [ "$DEBUG" ] || rm -rf $TEMPDIR
 
