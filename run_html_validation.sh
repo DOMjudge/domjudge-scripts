@@ -114,7 +114,7 @@ check_html ()
 	set +e
 	url="$LIVEURLPREFIX$1"
 	TEMP=$TEMPDIR/`echo "$1" | sed 's/[\/\?=&]/_/g'`.html
-	curl -s -g ${USER:+-u$USER:$PASS} "$url" > $TEMP
+	curl -s -L -g ${USER:+-u$USER:$PASS} "$url" > $TEMP
 	java -jar $VNUCHECKER "$TEMP"
 	set -e
 }
