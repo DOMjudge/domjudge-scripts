@@ -115,8 +115,8 @@ check_html ()
 	url="$LIVEURLPREFIX$1"
 	TEMP=$TEMPDIR/`echo "$1" | sed 's/[\/\?=&]/_/g'`.html
 	curl -s -L -g ${USER:+-u$USER:$PASS} "$url" > $TEMP
-	java -jar $VNUCHECKER "$TEMP" | \
-		grep -v 'error: Attribute “sorttable_customkey” not allowed on element'
+	java -jar $VNUCHECKER "$TEMP" 2>&1 | \
+		grep -v 'error: Attribute .*sorttable_customkey.* not allowed on element'
 	set -e
 }
 
