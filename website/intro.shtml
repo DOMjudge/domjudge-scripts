@@ -65,7 +65,7 @@ of DOMjudge's features. You may also view the <a href="demo">online demo</a>.</p
 <li>At least one machine running Linux, with root access</li>
 <li>Apache web server with PHP 5 and
     PHP command line interface</li>
-<li>MySQL or MariaDB database server version 4.1 or newer</li>
+<li>MySQL or MariaDB database server version 5.5.3 or newer</li>
 <li>Compilers for the languages you want to support</li>
 </ul>
 
