@@ -31,15 +31,16 @@ git_commit()
 	git rev-parse HEAD | cut -c -12
 }
 
-VERSION=`grep '^VERSION =' config.mk | sed 's/^VERSION = *//'`
-
-DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
-
 export PATH="$PATH:$COVTOOL/bin"
 
 make dist
+./bootstrap
 
 cov-build --dir cov-int make build
+
+VERSION=`grep '^VERSION =' config.mk | sed 's/^VERSION = *//'`
+
+DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
 
 ARCHIVE=checktestdata-scan.tar.xz
 
