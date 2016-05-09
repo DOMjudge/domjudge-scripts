@@ -34,7 +34,7 @@ make -k QUIET=1 build docs 2>&1
 # Test 'make install-{domserver,judgehost,docs}'.
 # We need to filter failure to set ownership and permissions of password files.
 mkdir $TEMPDIR/install
-QUIET=1 ./configure -q --enable-cgroups --prefix=$TEMPDIR/install 2>&1 || true
+QUIET=1 ./configure -q --prefix=$TEMPDIR/install 2>&1 || true
 make -k QUIET=1 build install-domserver install-judgehost install-docs 2>&1 | \
 	grep -vE 'install: cannot change owner(ship| and permissions of)' || true
 
