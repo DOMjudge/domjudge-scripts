@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Set credentials in ~/.netrc
+
+curl -k -s -n https://domserver/domjudge/api/scoreboard?cid=9 > domjudge.json
+curl -k -s -n https://kattis/api/v0/scoreboard > kattis.json
+
+cat domjudge.json | python -mjson.tool > domjudge.json.pp
+cat kattis.json | python -mjson.tool > kattis.json.pp
+
+diff -u domjudge.json.pp kattis.json.pp

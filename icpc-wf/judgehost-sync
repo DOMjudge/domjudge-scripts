@@ -1,0 +1,58 @@
+#!/bin/bash
+# Script to synchronize judgehosts from master judgehost.
+#
+# This script must be run as root from the master and takes as
+# argument the IP or (SSH alias) hostname of the judgehost that has to
+# be synchronized. Ssh access to the judgehost has to be enabled.
+
+
+TARGET=$1
+
+if [ -z "$TARGET" ]; then
+	echo "Error: judgehost target argument missing."
+	exit 1
+fi
+
+# First sync SSL certificates, needed below:
+rsync -av --delete /usr/share/ca-certificates/ $TARGET:/usr/share/ca-certificates
+rsync -av --delete /usr/local/share/ca-certificates/ $TARGET:/usr/local/share/ca-certificates
+ssh $TARGET update-ca-certificates
+
+# Synchronize installed packages:
+rsync -av --delete /etc/apt/sources.list.d $TARGET:/etc/apt
+scp /etc/hosts $TARGET:/etc/
+
+ssh $TARGET 'apt-get update && /usr/lib/dpkg/methods/apt/update /var/lib/dpkg/'
+dpkg --get-selections | ssh $TARGET 'dpkg --set-selections'
+ssh $TARGET 'apt-get -y dselect-upgrade'
+
+# Synchronize other stuff:
+rsync -av --delete /etc/{rc.local,ntp.conf,timezone,localtime,cgconfig.conf,sudoers.d,hosts,php5,lightdm} $TARGET:/etc
+
+rsync -av --delete --exclude=/output /home/domjudge/domjudge/ $TARGET:/home/domjudge/domjudge
+ssh $TARGET 'su -c "cd ~/domjudge && make maintainer-clean && make maintainer-conf CONFIGURE_FLAGS=--disable-submitclient CONFIGURE_FLAGS+=--disable-doc-build && make maintainer-install" domjudge'
+ssh $TARGET "for i in '' -1 -2 -3 -4 ; do useradd -d /nonexistent -g nogroup -s /bin/false domjudge-run\$i ; done"
+
+ssh $TARGET 'mkdir -p /chroot/domjudge'
+rsync -avx --delete /chroot/domjudge/ $TARGET:/chroot/domjudge
+
+# Add init script(started at the end of rc.local, not by the runlevels)
+scp -p ~domjudge/domjudge/etc/domjudge-judgehost.init $TARGET:/etc/init.d/domjudge-judgehost
+#ssh $TARGET 'update-rc.d domjudge-judgehost defaults'
+
+# disable screensaver
+ssh $TARGET 'dbus-launch gsettings set org.gnome.desktop.screensaver idle-activation-enabled false'
+
+# rotate screen to portrait
+ssh root@$TARGET 'mkdir -p /home/icpc2016/.config/autostart'
+scp ~domjudge/rotate.desktop root@$TARGET:/home/icpc2016/.config/autostart
+scp ~domjudge/terminal.desktop root@$TARGET:/home/icpc2016/.config/autostart
+ssh root@$TARGET 'chown -R icpc2016:icpc2016 /home/icpc2016/.config/autostart'
+
+# Check for cgroups enabled in the kernel:
+if ! ssh $TARGET 'grep swapaccount /etc/default/grub >/dev/null 2>&1' ; then
+	ssh $TARGET "sed -i 's/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"ipv6.disable=1 cgroup_enable=memory swapaccount=1 /' /etc/default/grub && update-grub"
+	echo "REBOOT REQUIRED!"
+fi
+
+exit 0

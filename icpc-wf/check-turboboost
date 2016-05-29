@@ -1,0 +1,15 @@
+#!/bin/bash
+echo -n "checking no_turbo: "
+cat /sys/devices/system/cpu/intel_pstate/no_turbo
+
+echo -n "min perf pct: "
+cat /sys/devices/system/cpu/intel_pstate/min_perf_pct
+
+echo -n "max perf pct: "
+cat /sys/devices/system/cpu/intel_pstate/max_perf_pct
+
+echo "scaling governors: "
+cat /sys/devices/system/cpu/cpu?/cpufreq/scaling_governor
+
+echo "lscpu: "
+lscpu
