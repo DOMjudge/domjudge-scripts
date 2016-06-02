@@ -1,7 +1,9 @@
 #!/bin/sh -e
 
 # Run a Coverity scan on the local directory (which must be in a
-# configured DOMjudge source-tree root) and submit it.
+# configured DOMjudge source-tree root) and submit it. With option
+# '-c' create a clean checkout and run 'make maintainer-conf' to
+# prepare it to submit from.
 
 # The following variables must be set manually:
 
@@ -11,6 +13,36 @@ EMAIL=yourname@example.com
 
 COVTOOL=/path/to/cov-analysis-linux64-XX
 
+# This may be adjusted to point e.g. to a local URL:
+GITURL="https://github.com/DOMjudge/domjudge"
+
+# Parse command-line options:
+while getopts ':cq' OPT ; do
+	case "$OPT" in
+		c) NEWCHECKOUT=1 ;;
+		q) QUIET=1; QUIETOPT="-q" QUIETMAKE="QUIET=1" ;;
+		:)
+			echo "Error: option '$OPTARG' requires an argument."
+			exit 1
+			;;
+		?)
+			echo "Error: unknown option '$OPTARG'."
+			exit 1
+			;;
+		*)
+			echo "Error: unknown error reading option '$OPT', value '$OPTARG'."
+			exit 1
+			;;
+	esac
+done
+shift $((OPTIND-1))
+
+if [ -n "$NEWCHECKOUT" ]; then
+	TEMPDIR=`mktemp -d /tmp/domjudge-cov-scan-XXXXXX`
+	git clone $QUIETOPT "$GITURL" $TEMPDIR
+	cd $TEMPDIR
+	make $QUIETMAKE maintainer-conf
+fi
 
 if [ ! -r paths.mk ]; then
 	echo "Cannot find 'paths.mk', run in the root of a configured DOMjudge source tree!"
@@ -45,24 +77,28 @@ fi
 
 export PATH="$PATH:$COVTOOL/bin"
 
-cov-build --dir cov-int make build build-scripts
+cov-build --dir cov-int make $QUIETMAKE build build-scripts
 
 ARCHIVE=domjudge-scan.tar.xz
 
-echo "Compressing scan directory 'cov-int' into '$ARCHIVE'..."
+[ -n "QUIET" ] || echo "Compressing scan directory 'cov-int' into '$ARCHIVE'..."
 
 tar caf "$ARCHIVE" cov-int
 
-echo "Submitting '$VERSION' '$DESC'"
+[ -n "QUIET" ] || echo "Submitting '$VERSION' '$DESC'"
 
 TMP=`mktemp --tmpdir curl-cov-submit-XXXXXX.html`
 
 curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
      --form version="$VERSION" --form description="$VERSION - $DESC" \
-     -o $TMP https://scan.coverity.com/builds?project=DOMjudge
+     -o $TMP ${QUIET:+-s} https://scan.coverity.com/builds?project=DOMjudge
 
 cat $TMP
 
 rm -f $TMP
+
+if [ -n "$NEWCHECKOUT" ]; then
+	rm -rf "$TEMPDIR"
+fi
 
 exit 0
