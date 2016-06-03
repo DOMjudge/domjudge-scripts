@@ -67,7 +67,12 @@ export PATH="$PATH:$COVTOOL/bin"
 
 make $QUIETMAKE dist
 
-cov-build --dir cov-int make $QUIETMAKE build
+if [ -n "$QUIET" ]; then
+	cov-build --dir cov-int make $QUIETMAKE build 2>&1 | \
+		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^ *$|compilation units \(100%\)|^The cov-build utility completed successfully.)' || true
+else
+	cov-build --dir cov-int make $QUIETMAKE build
+fi
 
 VERSION=`grep '^VERSION =' config.mk | sed 's/^VERSION = *//'`
 

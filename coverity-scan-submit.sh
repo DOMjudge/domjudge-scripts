@@ -77,7 +77,12 @@ fi
 
 export PATH="$PATH:$COVTOOL/bin"
 
-cov-build --dir cov-int make $QUIETMAKE build build-scripts
+if [ -n "$QUIET" ]; then
+	cov-build --dir cov-int make $QUIETMAKE build build-scripts 2>&1 | \
+		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^ *$|compilation units \(100%\)|^The cov-build utility completed successfully.)' || true
+else
+	cov-build --dir cov-int make $QUIETMAKE build build-scripts
+fi
 
 ARCHIVE=domjudge-scan.tar.xz
 
