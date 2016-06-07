@@ -19,7 +19,7 @@
 ARCHIVE=coverity-scan.tar.xz
 
 # Parse command-line options:
-while getopts ':c:n:u:q' OPT ; do
+while getopts ':c:dn:u:q' OPT ; do
 	case "$OPT" in
 		c) if [ ! -r "$OPTARG" ]; then
 			   echo "Error: cannot read '$OPTARG'."
@@ -27,7 +27,8 @@ while getopts ':c:n:u:q' OPT ; do
 		   fi
 		   . "$OPTARG"
 		   ;;
-		n) NEWERTHAN=$OPTAG ;;
+		d) DEBUG=1 ;;
+		n) NEWERTHAN=$OPTARG ;;
 		u) GITURL=$OPTARG ;;
 		q) QUIET=1; QUIETOPT="-q" QUIETMAKE="QUIET=1" ;;
 		:)
@@ -45,6 +46,11 @@ while getopts ':c:n:u:q' OPT ; do
 	esac
 done
 shift $((OPTIND-1))
+
+if [ -n "$DEBUG" ]; then
+	echo "Debuggin enabled."
+	set -x
+fi
 
 # Read variables now, since they may specify COVTOOL, GITURL and NEWERTHAN:
 for i in ./cov-submit-data*.sh ; do
@@ -76,7 +82,7 @@ if [ -n "$GITURL" ]; then
 fi
 
 if [ -n "$NEWERTHAN" ]; then
-	if [ -z "$(git log --since="$(date -d 'now - $NEWERTHAN')")" ]; then
+	if [ -z "$(git log --since="$(date -d "now - $NEWERTHAN")")" ]; then
 		[ -n "QUIET" ] || echo "No new commits in the last $NEWERTHAN, aborting."
 		exit 0
 	fi
@@ -114,6 +120,7 @@ tar caf "$ARCHIVE" cov-int
 
 TMP=`mktemp --tmpdir curl-cov-submit-XXXXXX.html`
 
+${DEBUG:+echo} \
 curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
      --form version="$VERSION" --form description="$VERSION - $DESC" \
      -o $TMP ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT"
@@ -122,7 +129,7 @@ cat $TMP
 
 rm -f $TMP
 
-if [ -n "$GITURL" ]; then
+if [ -n "$GITURL" -a -z "$DEBUG" ]; then
 	rm -rf "$TEMPDIR"
 fi
 
