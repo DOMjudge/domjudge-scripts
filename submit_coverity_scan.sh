@@ -90,7 +90,7 @@ fi
 
 if [ -n "$QUIET" ]; then
 	cov-build --dir cov-int make $QUIETMAKE coverity-build 2>&1 | \
-		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^ *$|compilation units \(100%\)|^The cov-build utility completed successfully.)' || true
+		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|^The cov-build utility completed successfully.)' || true
 else
 	cov-build --dir cov-int make $QUIETMAKE coverity-build
 fi
@@ -125,7 +125,7 @@ curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
      --form version="$VERSION" --form description="$VERSION - $DESC" \
      -o $TMP ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT"
 
-cat $TMP
+grep -vE '^[[:space:]]*$' $TMP
 
 rm -f $TMP
 
