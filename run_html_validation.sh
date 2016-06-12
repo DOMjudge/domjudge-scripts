@@ -68,6 +68,8 @@ jury/genpasswds.php
 jury/impexp.php
 jury/impexp_contestyaml.php
 jury/index.php
+jury/internal_errors.php
+jury/internal_error.php?id=1
 jury/judgehost.php?id=judgehost1
 jury/judgehosts.php?cmd=edit&referrer=judgehosts.php
 jury/judgehosts.php
@@ -113,10 +115,14 @@ check_html ()
 {
 	set +e
 	url="$LIVEURLPREFIX$1"
-	TEMP=$TEMPDIR/`echo "$1" | sed 's/[\/\?=&]/_/g'`.html
+	TEMP=$TEMPDIR/`echo "$1" | sed 's!/!_!g'`.html
 	curl -s -L -g ${USER:+-u$USER:$PASS} "$url" > $TEMP
+	# Filter out some unfixable errors and normalize file/URL output:
 	java -jar $VNUCHECKER "$TEMP" 2>&1 | \
-		grep -v 'error: Attribute .*sorttable_customkey.* not allowed on element'
+		grep -v 'error: Attribute .*sorttable_customkey.* not allowed on element' | \
+		sed -e 's!^"file.*validate-[a-zA-Z]*/!!' \
+		    -e 's!^\(api\|jury\|team\|public\)_!\1/!' \
+		    -e 's/\.html":/ /g'
 	set -e
 }
 
