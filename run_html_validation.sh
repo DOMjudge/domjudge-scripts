@@ -120,9 +120,9 @@ check_html ()
 	# Filter out some unfixable errors and normalize file/URL output:
 	java -jar $VNUCHECKER "$TEMP" 2>&1 | \
 		grep -v 'error: Attribute .*sorttable_customkey.* not allowed on element' | \
-		sed -e 's!^"file.*validate-[a-zA-Z]*/!!' \
+		sed -e 's!^"file.*validate-[a-zA-Z0-9]*/!!' \
 		    -e 's!^\(api\|jury\|team\|public\)_!\1/!' \
-		    -e 's/\.html":/ /g'
+		    -e 's/\.html":/ /g;s/%3F/?/g;s/%26/\&/g;s/%3D/=/g;s/%5B/[/g;s/%5D/]/g'
 	set -e
 }
 
