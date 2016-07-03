@@ -26,7 +26,7 @@ of Ubuntu.</p>
 
 <p>To install these packages, add our
 <a href="/repokey.asc">repository GPG key</a> directly to APT with</p>
-<pre>sudo curl -o - https://domjudge.org/repokey.asc | apt-key add -</pre>
+<pre>curl -o - https://www.domjudge.org/repokey.asc | sudo apt-key add -</pre>
 <p>or first check our signatures on the key for authenticity.
 Then add the following lines to <code>/etc/apt/sources.list</code>:</p>
 <pre>
