@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 # Run a Coverity scan on the local directory (which must be in a
-# configured DOMjudge/checktestdata source-tree root) and submit it,
+# configured DOMjudge or Checktestdata source-tree root) and submit it,
 # using 'make coverity-build'. After that, files 'cov-submit-data*.sh'
 # are sourced to read variables PROJECT, EMAIL, TOKEN, COVTOOL,
 # VERSION and optionally DESC, which are used for submission.
@@ -83,7 +83,7 @@ fi
 
 if [ -n "$NEWERTHAN" ]; then
 	if [ -z "$(git log --since="$(date -d "now - $NEWERTHAN")")" ]; then
-		[ -n "QUIET" ] || echo "No new commits in the last $NEWERTHAN, aborting."
+		[ -n "$QUIET" ] || echo "No new commits in the last $NEWERTHAN, aborting."
 		exit 0
 	fi
 fi
