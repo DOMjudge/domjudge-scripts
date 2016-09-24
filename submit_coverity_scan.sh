@@ -10,6 +10,9 @@
 #
 # -c FILE      Also read variables from FILE. This can be specified
 #              multiple times; these variables can be overriden later.
+#              If option is not specified this defaults to reading
+#              'cov-submit-data*.sh' from the current directory.
+# -d           Enable verbose debugging output.
 # -n INTERVAL  Set e.g. to 'X days' to only submit if there are
 #              commits more recent than that.
 # -u URL       Create a clean checkout from the Git URL argument and
@@ -21,12 +24,14 @@ ARCHIVE=coverity-scan.tar.xz
 # Parse command-line options:
 while getopts ':c:dn:u:q' OPT ; do
 	case "$OPT" in
-		c) if [ ! -r "$OPTARG" ]; then
-			   echo "Error: cannot read '$OPTARG'."
-			   exit 1
-		   fi
-		   . "$OPTARG"
-		   ;;
+		c)
+			READCONFIG=1
+			if [ ! -r "$OPTARG" ]; then
+				echo "Error: cannot read '$OPTARG'."
+				exit 1
+			fi
+			. "$OPTARG"
+			;;
 		d) DEBUG=1 ;;
 		n) NEWERTHAN=$OPTARG ;;
 		u) GITURL=$OPTARG ;;
@@ -53,11 +58,13 @@ if [ -n "$DEBUG" ]; then
 fi
 
 # Read variables now, since they may specify COVTOOL, GITURL and NEWERTHAN:
-for i in ./cov-submit-data*.sh ; do
-	# Check if the file exists in case the globbing returned nothing:
-	[ -r "$i" ] || continue
-	. "$i"
-done
+if [ -z "$READCONFIG" ]; then
+	for i in ./cov-submit-data*.sh ; do
+		# Check if the file exists in case the globbing returned nothing:
+		[ -r "$i" ] || continue
+		. "$i"
+	done
+fi
 
 export PATH="$PATH:$COVTOOL/bin"
 
