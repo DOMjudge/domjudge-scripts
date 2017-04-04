@@ -7,9 +7,12 @@ Add domjudge user:
 
 $ sudo adduser --disabled-password domjudge
 
-$ sudo apt-get install autoconf automake git gcc g++ make zip unzip mysql-server apache2 php php-cli libapache2-mod-php php-gd php-curl php-mysql php-json php-mcrypt php-gmp php-zip bsdmainutils phpmyadmin ntp libcgroup-dev libcurl4-gnutls-dev libjsoncpp-dev libmagic-dev composer
+$ sudo apt-get install autoconf automake git gcc g++ make zip unzip php php-cli php-gd php-curl php-mysql php-json php-mcrypt php-mbstring php-gmp php-zip bsdmainutils ntp libcgroup-dev libcurl4-gnutls-dev libjsoncpp-dev libmagic-dev composer debootstrap
 
 $ sudo phpenmod mcrypt zip
+
+# On domserver only:
+$ sudo apt-get install mysql-server apache2 phpmyadmin libapache2-mod-php
 
 Set a MySQL root password and add it to /root/.my.cnf
 
@@ -51,10 +54,22 @@ $ sudo install -m0440 $DJDIR/etc/sudoers-domjudge /etc/sudoers.d/
 Update config, CSS background color, ...
 $ sed -i "s/background-color: .*\$/background-color: $COLOR;/" $DJDIR/www/style.css
 
-$ sudo openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out /etc/ssl/certs/domjudge.crt -keyout /etc/ssl/private/domjudge.pem
+$ sudo openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out /etc/ssl/certs/$HOST.crt -keyout /etc/ssl/private/$HOST.pem
 $ sudo sed -i "s,certs/ssl-cert-snakeoil.pem,certs/$HOST.crt,;s,private/ssl-cert-snakeoil.key,private/$HOST.pem," /etc/apache2/sites-available/default-ssl.conf
 
 $ sudo sed -i "/^# Global config/i Servername \"$HOST\"" /etc/apache2/apache2.conf
 $ sudo ln -s $DJDIR/etc/apache.conf /etc/apache2/conf-available/domjudge.conf
 $ sudo -- sh -c 'a2enconf domjudge; a2dissite 000-default; a2ensite default-ssl; a2enmod ssl'
 $ sudo service apache2 restart
+
+# On judgehosts create domjudge-run users, group and build chroot:
+$ for i in '' -0 -1 -2 -3 ; do sudo useradd -d /nonexistent -g nogroup -s /bin/false domjudge-run$i ; done
+$ sudo groupadd domjudge-run
+
+$ sudo $DJDIR/misc-tools/dj_make_chroot
+
+# Add etc/restapi.secret from domserver and update URL.
+
+# Copy /etc/ssl/certs/domserver*.crt from domserver to
+# /usr/local/share/ca-certificates and run:
+$ sudo update-ca-certificates
