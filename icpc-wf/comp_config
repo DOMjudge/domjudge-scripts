@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+# Set credentials in ~/.netrc
+
+HOST_blue='https://localhost:2443/domjudge'
+HOST_green='https://localhost:3443/domjudge'
+
+COMPILE_SCRIPTS="c cpp java_javac_detect py2 py3"
+
+TMPDIR=`mktemp -d`
+
+mkdir -p $TMPDIR/{blue,green}
+
+for i in blue green ; do
+	HOST="HOST_$i"
+
+	curl -k -s -n "${!HOST}/api/config" | python -mjson.tool > $TMPDIR/$i/config.json
+
+	for j in $COMPILE_SCRIPTS ; do
+		curl -k -s -n "${!HOST}/api/executable?execid=$j" | \
+			tr -d '"\\' | base64 -d -i > $TMPDIR/$i/$j.zip
+		( mkdir $TMPDIR/$i/$j && cd $TMPDIR/$i/$j && \
+		  unzip -q ../$j.zip && rm ../$j.zip )
+	done
+done
+
+diff -r -u1 $TMPDIR/{blue,green}
