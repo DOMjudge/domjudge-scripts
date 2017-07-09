@@ -11,38 +11,34 @@ set -e
 
 GITURL='https://github.com/DOMjudge/domjudge.git'
 
-[ "$DEBUG" ] && set -x
-quiet()
-{
-	if [ "$DEBUG" ]; then
-		$@
-	else
-		$@ > /dev/null 2>&1
-	fi
-}
+if [ "$DEBUG" ]; then
+	set -x
+else
+	export QUIET=1
+fi
 
 # Create an export of fresh git master sources:
 TEMPDIR=`mktemp -d /tmp/domjudge-run_tests-XXXXXX`
-git clone -q "$GITURL" $TEMPDIR/system
+git clone ${QUIET:+-q} "$GITURL" $TEMPDIR/system
 cd $TEMPDIR/system
 
 # Test 'make config build docs':
-make -k QUIET=1 MAINT_CXFLAGS='-O -Wall -fPIE -Wformat -Wformat-security -ansi' \
+make -k MAINT_CXFLAGS='-O -Wall -fPIE -Wformat -Wformat-security -ansi' \
 	maintainer-conf 2>&1 || true
-make -k QUIET=1 build docs 2>&1
+make -k build docs 2>&1
 
 # Test 'make install-{domserver,judgehost,docs}'.
 # We need to filter failure to set ownership and permissions of password files.
 mkdir $TEMPDIR/install
-QUIET=1 ./configure -q --prefix=$TEMPDIR/install 2>&1 || true
-make -k QUIET=1 build install-domserver install-judgehost install-docs 2>&1 | \
+./configure ${QUIET:+-q} --prefix=$TEMPDIR/install 2>&1 || true
+make -k build install-domserver install-judgehost install-docs 2>&1 | \
 	grep -vE 'install: cannot change owner(ship| and permissions of)' || true
 
 # Run DOMjudge internal tests (remove install-sh script for false positives):
 rm install-sh
 cd tests
 ./syntax
-./tests -q
+./tests ${QUIET:+-q}
 
 [ "$DEBUG" ] || rm -rf $TEMPDIR
 
