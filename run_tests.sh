@@ -31,7 +31,7 @@ make -k build docs 2>&1
 # We need to filter failure to set ownership and permissions of password files.
 mkdir $TEMPDIR/install
 ./configure ${QUIET:+-q} --prefix=$TEMPDIR/install 2>&1 || true
-make -k build install-domserver install-judgehost install-docs 2>&1 | \
+make -k dist build install-domserver install-judgehost install-docs 2>&1 | \
 	grep -vE 'install: cannot change owner(ship| and permissions of)' || true
 
 # Run DOMjudge internal tests (remove install-sh script for false positives):
