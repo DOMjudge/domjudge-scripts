@@ -95,11 +95,12 @@ if [ -n "$NEWERTHAN" ]; then
 	fi
 fi
 
+COVOPTS='--dir cov-int --fs-capture-search ./'
 if [ -n "$QUIET" ]; then
-	cov-build --dir cov-int make $QUIETMAKE coverity-build 2>&1 | \
+	cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | \
 		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|^The cov-build utility completed successfully.)' || true
 else
-	cov-build --dir cov-int make $QUIETMAKE coverity-build
+	cov-build $COVOPTS make $QUIETMAKE coverity-build
 fi
 
 DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
