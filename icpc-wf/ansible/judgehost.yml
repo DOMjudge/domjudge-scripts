@@ -1,0 +1,197 @@
+---
+
+- name: setup domserver
+  hosts: all
+  become: yes
+  vars:
+    DJDIR: /home/domjudge/domjudge
+    DOMSERVER: https://domserver/domjudge/api
+    DOMSERVER_IP: 10.3.3.215
+    DOMSERVER_JH_PASS: RESTAPI_PASSWORD
+    DOMJUDGE_USER_PASS: SYSTEM_PASSWORD_HASHED
+  handlers:
+    - name: update-grub
+      command: update-grub
+    - name: update-ca-certificates
+      command: update-ca-certificates
+  tasks:
+    - name: create domjudge user
+      user:
+        name: domjudge
+        password: {{DOMJUDGE_USER_PASS}}
+    - name: create domjudge-run users
+      user: name={{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
+      with_items:
+        - domjudge-run-0
+        - domjudge-run-1
+        - domjudge-run-2
+        - domjudge-run-3
+    - name: create domjudge-run group
+      group: name=domjudge-run state=present
+
+    - name: fix apt sources list
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list
+        regexp: 'pc2cancer\.ecs\.csus\.edu'
+        replace: 'packages'
+
+    - name: add packages to hosts file
+      tags: packages
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^10\.3\.3\.209'
+        line: "10.3.3.209	packages"
+
+    - name: update ssl certificate for packages
+      tags: packages
+      copy: src=files/packages.pem dest=/usr/local/share/ca-certificates/packages.crt
+      notify: update-ca-certificates
+
+    - meta: flush_handlers
+      tags: packages
+
+    - name: install required packages
+      tags: packages
+      apt: pkg={{item}} state=present
+      with_items:
+        - autoconf
+        - automake
+        - git
+        - gcc
+        - g++
+        - make
+        - zip
+        - unzip
+        - php
+        - php-cli
+        - php-gd
+        - php-curl
+        - php-mysql
+        - php-json
+        - php-mcrypt
+        - php-gmp
+        - php-zip
+        - php-mbstring
+        - bsdmainutils
+        - libcgroup-dev
+        - libcurl4-gnutls-dev
+        - libjsoncpp-dev
+        - libmagic-dev
+        - composer
+        - debootstrap
+
+    - name: configure git as domjudge user
+      become: yes
+      become_user: domjudge
+      #command: git config --global {{item.name}} "{{item.value}}"
+      ini_file: dest=/home/domjudge/.gitconfig section=user option="{{item.name}}" value="{{item.value}}"
+      with_items:
+        - { name: 'email', value: 'team@domjudge.org' }
+        - { name: 'name', value: 'DOMjudge @ ICPC WF' }
+
+    #- name: create bare repository
+    #  become: yes
+    #  become_user: domjudge
+    #  git: bare=yes repo=http://github.com/domjudge/domjudge dest=/home/domjudge/domjudge-bare.git
+    #  register: create_bare_repo
+
+    - name: sync domjudge git repo from this workstation to the host
+      register: create_bare_repo
+      become: no
+      synchronize:
+        src: files/domjudge-bare.git/
+        dest: /home/domjudge/domjudge-bare.git
+        use_ssh_args: true
+        rsync_path: sudo rsync
+
+
+    - name: create working copy from the bare repo
+      become: yes
+      become_user: domjudge
+      git: repo=/home/domjudge/domjudge-bare.git dest={{DJDIR}} version=ICPC-live
+      when: create_bare_repo.changed
+
+    - name: Copy in composer dependencies
+      become: no
+      synchronize:
+        src: files/lib/vendor/
+        dest: "{{DJDIR}}/lib/vendor/"
+        use_ssh_args: true
+        rsync_path: sudo rsync
+
+    - name: fix permissions on composer directory
+      file: path="{{DJDIR}}/lib/vendor/" group=domjudge owner=domjudge recurse=yes
+
+    - name: run configure-conf
+      become: yes
+      become_user: domjudge
+      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build'
+      register: dj_configured
+      args:
+        chdir: "{{DJDIR}}"
+        creates: "{{DJDIR}}/paths.mk"
+    - name: check if domjudge is built
+      stat: path="{{DJDIR}}/judge/judgedaemon"
+      register: judgedaemon_binary
+
+    - name: build domjudge
+      become: yes
+      become_user: domjudge
+      shell: make dist && make maintainer-install chdir={{DJDIR}}
+      when: create_bare_repo.changed or dj_configured.changed or not judgedaemon_binary.stat.exists
+
+    - name: fix permissions on things
+      file: path={{DJDIR}}/etc/dbpasswords.secret group=www-data mode=g+r
+    - name: copy domjudge-sudoers file
+      copy: remote_src=True src={{DJDIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/sudoers-domjudge mode=0440 owner=root group=root
+
+    - name: template out the restapi secret file
+      template: src=files/restapi.secret.j2 dest={{DJDIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
+
+
+    - name: add domserver to hosts file
+      tags: domserver
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^.*domserver$'
+        line: "{{DOMSERVER_IP}}	domserver"
+    - name: install server certificate
+      copy: src=files/domserver.crt dest=/usr/local/share/ca-certificates/domserver.crt
+      notify: update-ca-certificates
+
+    - name: create chroot
+      command: "{{DJDIR}}/misc-tools/dj_make_chroot"
+      args:
+        creates: "/chroot/domjudge"
+
+
+    - name: fix kernel parameters
+      lineinfile:
+        dest: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
+      notify: update-grub
+
+
+    - name: copy systemd unit files for starting judgedaemon
+      copy: src=files/judgedaemon.service dest=/etc/systemd/system/
+      tags: updateservice
+    - name: copy systemd unit for creating cgroups
+      copy: src=files/create_cgroups.service dest=/etc/systemd/system/
+
+    - name: enable the services we just copied
+      service: name={{item}} enabled=yes
+      with_items:
+        - judgedaemon
+        - create_cgroups
+
+    - name: make sure directory exists
+      file: dest=/home/domjudge/.config/autostart state=directory owner=domjudge group=domjudge
+      tags: fix_autostart
+
+    - name: add shortcut to autostart terminal tailing the log file
+      copy: src=files/taillog.desktop dest=/home/domjudge/.config/autostart/taillog.desktop owner=domjudge group=domjudge mode=0755
+
+    - name: add shortcut to autostart screen rotation
+      copy: src=files/rotate.desktop dest=/home/domjudge/.config/autostart/rotate.desktop owner=domjudge group=domjudge mode=0755

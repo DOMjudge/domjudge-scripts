@@ -1,0 +1,11 @@
+[domserver]
+#domjudge-judgehost1 ansible_host=10.2.2.192 ansible_user=root
+domjudge-judgehost2 ansible_host=10.2.2.193 ansible_user=root
+#domjudge-judgehost3 ansible_host=10.2.2.194 ansible_user=root
+domjudge-judgehost4 ansible_host=10.2.2.195 ansible_user=root
+domjudge-judgehost5 ansible_host=10.2.2.196 ansible_user=root
+domjudge-judgehost6 ansible_host=10.2.2.197 ansible_user=root
+domjudge-judgehost7 ansible_host=10.2.2.198 ansible_user=root
+domjudge-judgehost8 ansible_host=10.2.2.199 ansible_user=root
+domjudge-judgehost9 ansible_host=10.2.2.200 ansible_user=root
+domjudge-judgehost10 ansible_host=10.2.2.201 ansible_user=root

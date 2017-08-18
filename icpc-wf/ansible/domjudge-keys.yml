@@ -1,0 +1,17 @@
+---
+
+- name: setup domserver
+  hosts: all
+  tasks:
+    - name: give domjudge a decent shell
+      user: name=domjudge shell=/bin/bash
+    - name: copy root public key to domjudge user
+      authorized_key:
+        user: domjudge
+        state: present
+        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDJx0GmoGYvxPoFpSjJinfE3UkN+SZjlN7MpHeeuruIT55iJsF6NqypylfVNt6JEuaWEUmwEL1+7Bu2A1gbEEnBfQ/T3zVrYj7q0qu3XvFQ2+C+xw1omBbpJLb/oIuHiwoY9s8UP4MmM7+U9PjT164NKnjamvXtcoqjEi5lH8XIcIScF0nX2F5vtgPECfdgwdQ6cJ15pRwVsGjiTSBsShgarVGsFkQlPcLcFhJWxFOpLXDJy4SFlZGLNzmWMK2e9tQP2b/Z9gUtSezAtlfnmnplE3CtGxEYD2YAb/a0HN5ok71X6/PFbfv1Ci4xSO0erna7iaRBaQ6r2fe+rX0/aeh0V842JSkar1KUBsBiRtZKCsyRkITGTliPHFo0mZsz7+z2HW9vIo9f6St5VVlfcEp1BLwJvf7aWmOdDyoipDIMSmMxSoJK7tXqbMWrc2ncnKzDjrk3G1yTFm5tr3S+LdYWsYXbtUXCarWH0iLV9tbGilEnkfrfF0+X99/ZVX3lSgch+0fQKNc+tEyQnEU79eJ5m0r+KMHCZaLHdSc96MngRjm7ItFSvcV4DSaZPVZRD5+dIXp+iDoGnOLeaJ8pmQa765ITdKz0QLbjV0WdqOREZkc0N/ZdeA3B9pNPFO54xCJdcPSBUcyvmN5oCP6dkQltWgcbXYEMCXwY+L2uQLupRw== root@domserver
+    - name: copy domjudge public key to domjudge user
+      authorized_key:
+        user: domjudge
+        state: present
+        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCvMJFJRGoF56yI9DcP6B+9pOnbkv41izEM+NcCVHa3I7bDzbQ02JMLHdUz6zkG3xkkNrasMKj94vUXREtNOqPIptNP1cezsK522DLblMLRaKeBp1q7zE+zuntzxsoVWXGTfdC467g3gEHUzyWM4r5gHfo7smxynE+vZ4CRMNPf6e0Mq95tO3DvJuYoc+tRqrGVemNnnQ1VCJV6+Vhd1AKFDDYlT7OgWsGhVLOVULU+GFNH2MWlNP89zpugbRPzYzF4jW64MXKWYrkmyWDVl0IrbU8tABdNK101YPYwBbf8+oRMp2TfwLeg/w57KPEAoW9h5F8xIIMIkGWRZsBrtijDFG8QQZusr9PAsIzjejVwPipm5FwiB6119jLOWtdzPYNYIz8M9vUvUMGUAyAiFmNoK3E+OJzTGVzm4KLyKJrpiXQAQufACAmf1Bk8AHkZn9nT+BjByd5a/7O70mIYwAZO/U3xTuWava/bYaiEjzdaxLfqHkBPFG5mxl5YUGCiy+FuGfC98BYdr6CdgHIEHGRE6SSvk5EaHRupj1KjeSvZd3ETRU1bImP5f40LifIDGc61LYkEqG6hvepDffRS1vdcdMpN8R0o6a/HZDdNFtQn6UcktbViBXkh8EVKCn1ePRECVOiD5FhtAtSzQb3uiLSR1O4gDfgwVvGIEXMWnrDX7w== domjudge@domserver

@@ -1,0 +1,186 @@
+---
+
+- name: setup domserver
+  hosts: all
+  become: yes
+  vars:
+    DJDIR: /home/domjudge/domjudge
+    COLOR: '#ddddff'
+  handlers:
+    - name: restart mysql
+      service: name=mysql state=restarted
+    - name: restart apache2
+      service: name=apache2 state=restarted
+  tasks:
+    - name: install public key
+      authorized_key:
+        user: icpc2017
+        state: present
+        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCsQqeY+oNN50KjnHQDg0U1nrOQoQxibZBgHs7oA26Tmg3tsp46+jNNZoB9WWwQZff/bEusmn6VKy5MVx8syXvXDUoLc6MhHn4mxZuOJ8EYidoAbO5DGIGZFgSHJ1sj8cp+4Wc4jYaXLtatsWaUCa1sLnztL7+9Dtz7lYl/R4/MtAHnyICwSX+G1Q8gqZuq8ftmmbVAEj6GL280F06iFfzZNPAvo7fAzwV76cvWFOAn5HnffKVM7ckryRmg5C7y3z5ygIRURDDbmhcwKw9/I7T0fckkjRbAb0x75topF7c1ihim4dOQrzLpB5U7Ag82ov+ZXyaxsq60jwdNm2mePWo+hzhK6lA44rbx2em7IW+NNXAQrPsfInp2lA+3vCRcsiF+cIbGilkXHMB/gNH6tu+jFa6ZxYk9dhys6uajduINOmvunLIMPIZXU1/A6Hcb+W1L4HFW2v5k80wScbR/84Cc14jARJ6UVa91KZUDvuJ3M1cv20eWoiWBjBgmLZXVnsLDW0ZfyVa9id/IzHpVcV+1zEgMdJSbF6rcZBwp40w41lmBNUS0GssO5HA2bw2TN6Rf/HyAo5R3Kc++apPxmPA34Z6FaafU0S8QzUg/khxLtxmxcc32CwxHHbnz1GQX4Nf3yIKuebc06O7Paul0kHbDGWLAQ05ghWQhSElEJcjRRw== kjohnson
+
+    - name: Allow 'sudo' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    - name: create domjudge user
+      user:
+        name: domjudge
+    - name: install required packages
+      apt: pkg={{item}} state=present
+      with_items:
+        - autoconf
+        - automake
+        - git
+        - gcc
+        - g++
+        - make
+        - zip
+        - unzip
+        - mysql-server
+        - apache2
+        - php
+        - php-cli
+        - libapache2-mod-php
+        - php-gd
+        - php-curl
+        - php-mysql
+        - php-json
+        - php-mcrypt
+        - php-gmp
+        - php-zip
+        - bsdmainutils
+        - phpmyadmin
+        - ntp
+        - libcgroup-dev
+        - libcurl4-gnutls-dev
+        - libjsoncpp-dev
+        - libmagic-dev
+        - composer
+
+    - name: enable php modules
+      command: phpenmod {{item}}
+      args:
+        creates: /etc/php/7.0/apache2/conf.d/20-{{item}}.ini
+      with_items:
+        - mcrypt
+        - zip
+    - name: update systemd so mysql has bigger limits
+      copy: src=files/mysql.override.cnf dest=/etc/systemd/system/mysql.service.d/override.conf
+    - name: update mysql max connections
+      lineinfile:
+        regexp: '^.*max_connections'
+        line: 'max_connections = 1000'
+        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+      notify: restart mysql
+    - name: update mysql max open files
+      lineinfile:
+        regexp: '^.*open_files_limit'
+        line: 'open_files_limit = 10000'
+        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+      notify: restart mysql
+
+    - name: configure git as domjudge user
+      become: yes
+      become_user: domjudge
+      #command: git config --global {{item.name}} "{{item.value}}"
+      ini_file: dest=/home/domjudge/.gitconfig section=user option="{{item.name}}" value="{{item.value}}"
+      with_items:
+        - { name: 'email', value: 'team@domjudge.org' }
+        - { name: 'name', value: 'DOMjudge @ ICPC WF' }
+
+    - name: create bare repository
+      become: yes
+      become_user: domjudge
+      git: bare=yes repo=http://github.com/domjudge/domjudge dest=/home/domjudge/domjudge-bare.git
+      register: create_bare_repo
+
+    - name: create working copy from the bare repo
+      become: yes
+      become_user: domjudge
+      git: repo=/home/domjudge/domjudge-bare.git dest={{DJDIR}} version=ICPC-live
+      when: create_bare_repo.changed
+
+    - name: Copy in composer dependencies
+      #copy: src=files/lib/vendor/ dest={{DJDIR}}/lib/vendor/ owner=domjudge group=domjudge
+      become: no
+      tags: sync
+      synchronize:
+        src: files/lib/vendor/
+        dest: "{{DJDIR}}/lib/vendor/"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
+
+    - name: fix permissions on composer directory
+      file: path="{{DJDIR}}/lib/vendor/" group=domjudge owner=domjudge recurse=yes
+
+    - name: run configure-conf
+      become: yes
+      become_user: domjudge
+      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build'
+      register: dj_configured
+      args:
+        chdir: "{{DJDIR}}"
+        creates: "{{DJDIR}}/paths.mk"
+    - name: build domjudge
+      become: yes
+      become_user: domjudge
+      shell: make dist && make maintainer-install chdir={{DJDIR}}
+      when: dj_configured.changed
+
+    - name: fix permissions on things
+      file: path={{DJDIR}}/etc/dbpasswords.secret group=www-data mode=g+r
+    - name: copy domjudge-sudoers file
+      copy: remote_src=True src={{DJDIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/sudoers-domjudge mode=0440 owner=root group=root
+
+    - name: check if the database is configured
+      command: "{{DJDIR}}/bin/dj_setup_database -u root status"
+      register: db_status
+      ignore_errors: true
+    - name: make sure the database is configured
+      command: "{{DJDIR}}/bin/dj_setup_database -u root bare-install"
+      when: "'failed' in db_status.stdout"
+
+    - name: fix background color
+      lineinfile:
+        line: "background-color: {{COLOR}}"
+        regexp: '^background-color'
+        dest: "{{DJDIR}}/www/style.css"
+
+    - name: create a self signed cert
+      shell: "openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out /etc/ssl/certs/domjudge.crt -keyout /etc/ssl/private/domjudge.pem -subj /CN={{ansible_hostname}}"
+      args:
+        creates: /etc/ssl/private/domjudge.pem
+    #- name: update apache to use new cert
+    #  lineinfile:
+
+    - name: Update servername in apache config
+      lineinfile:
+        insertbefore: '^#Global config'
+        line: 'Servername {{ansible_hostname}}'
+        dest: /etc/apache2/apache2.conf
+      notify: restart apache2
+    - name: link in domjudge apache conf
+      file: src={{DJDIR}}/etc/apache.conf dest=/etc/apache2/conf-available/domjudge.conf state=link
+      notify: restart apache2
+
+    - name: enable apache2 conf for domjudge
+      file: src=/etc/apache2/conf-available/domjudge.conf dest=/etc/apache2/conf-enabled/domjudge.conf state=link
+      notify: restart apache2
+
+    - name: enable apache2 modules
+      apache2_module: name=ssl state=present
+      notify: restart apache2
+
+    - name: disable default apache site
+      file: state=absent path=/etc/apache2/sites-enabled/000-default
+      notify: restart apache2
+
+    - name: enable default-ssl apache site
+      file: src=/etc/apache2/sites-available/default-ssl.conf dest=/etc/apache2/sites-enabled/000-default-ssl state=link
+      notify: restart apache2
+
+
+
