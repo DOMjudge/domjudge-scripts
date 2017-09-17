@@ -95,6 +95,11 @@ if [ -n "$NEWERTHAN" ]; then
 	fi
 fi
 
+# First rename some files to keep Coverity scan happy:
+for i in tests/test-compile-error.* lib/vendor/symfony/symfony/src/Symfony/Component/PropertyInfo/Tests/Fixtures/Php71Dummy.php ; do
+	mv $i $i-coverity-renamed
+done
+
 COVOPTS='--dir cov-int --fs-capture-search ./'
 if [ -n "$QUIET" ]; then
 	cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | \
@@ -102,6 +107,11 @@ if [ -n "$QUIET" ]; then
 else
 	cov-build $COVOPTS make $QUIETMAKE coverity-build
 fi
+
+# Revert renamed files:
+for i in `find . -name \*-coverity-renamed` ; do
+	mv $i ${i%-coverity-renamed}
+done
 
 DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
 # Read variables again for files produced by coverity-build:
