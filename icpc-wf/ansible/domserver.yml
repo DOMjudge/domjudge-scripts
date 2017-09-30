@@ -143,8 +143,9 @@
 
     - name: fix background color
       lineinfile:
-        line: "background-color: {{BACKGROUND_COLOR}}"
-        regexp: '^background-color'
+        regexp: '^(\s*background-color):\s+white\s*;'
+        line: '\1: {{BACKGROUND_COLOR}};'
+        backrefs: yes
         dest: "{{DJDIR}}/webapp/web/style.css"
       when: BACKGROUND_COLOR is defined
 
