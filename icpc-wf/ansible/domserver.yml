@@ -3,15 +3,15 @@
 - name: setup domserver
   hosts: all
   become: yes
-  vars:
-    DJDIR: /home/domjudge/domjudge
-    COLOR: '#ddddff'
   handlers:
     - name: restart mysql
       service: name=mysql state=restarted
     - name: restart apache2
       service: name=apache2 state=restarted
   tasks:
+    - name: include global variables
+      include_vars: variables.yml
+
     - name: install public key
       authorized_key:
         user: icpc2017
@@ -145,9 +145,10 @@
 
     - name: fix background color
       lineinfile:
-        line: "background-color: {{COLOR}}"
+        line: "background-color: {{BACKGROUND_COLOR}}"
         regexp: '^background-color'
-        dest: "{{DJDIR}}/www/style.css"
+        dest: "{{DJDIR}}/webapp/web/style.css"
+      when: BACKGROUND_COLOR is defined
 
     - name: create a self signed cert
       shell: "openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out /etc/ssl/certs/domjudge.crt -keyout /etc/ssl/private/domjudge.pem -subj /CN={{ansible_hostname}}"

@@ -3,22 +3,19 @@
 - name: setup judgehost
   hosts: all
   become: yes
-  vars:
-    DJDIR: /home/domjudge/domjudge
-    DOMSERVER: https://domserver/domjudge/api
-    DOMSERVER_IP: 10.3.3.215
-    DOMSERVER_JH_PASS: RESTAPI_PASSWORD
-    DOMJUDGE_USER_PASS: SYSTEM_PASSWORD_HASHED
   handlers:
     - name: update-grub
       command: update-grub
     - name: update-ca-certificates
       command: update-ca-certificates
   tasks:
+    - name: include global variables
+      include_vars: variables.yml
+
     - name: create domjudge user
       user:
         name: domjudge
-        password: {{DOMJUDGE_USER_PASS}}
+        password: "{{DOMJUDGE_USER_PASS}}"
     - name: create domjudge-run users
       user: name={{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
       with_items:

@@ -1,0 +1,14 @@
+# Directory of the domjudge repository checkout.
+DJDIR: /home/domjudge/domjudge
+
+# Set this to change the web interface background color.
+#BACKGROUND_COLOR: '#ddddff'
+
+# URL and IP of domserver from judgehosts. A hostname 'domserver' with
+# DOMSERVER_IP will be added to the judgehost /etc/hosts file.
+DOMSERVER: https://domserver/domjudge/api
+DOMSERVER_IP: 10.3.3.215
+
+# Credentials for the REST API and system user.
+DOMSERVER_JH_PASS: RESTAPI_PASSWORD
+DOMJUDGE_USER_PASS: SYSTEM_PASSWORD_HASHED
