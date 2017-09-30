@@ -1,6 +1,6 @@
 ---
 
-- name: setup domserver
+- name: setup judgehost
   hosts: all
   become: yes
   vars:
