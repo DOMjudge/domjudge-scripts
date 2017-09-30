@@ -66,8 +66,6 @@
         - php-curl
         - php-mysql
         - php-json
-        - php-mcrypt
-        - php-gmp
         - php-zip
         - php-mbstring
         - bsdmainutils

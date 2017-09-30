@@ -47,8 +47,6 @@
         - php-curl
         - php-mysql
         - php-json
-        - php-mcrypt
-        - php-gmp
         - php-zip
         - bsdmainutils
         - phpmyadmin
