@@ -131,7 +131,7 @@
     - name: fix permissions on things
       file: path={{DJDIR}}/etc/dbpasswords.secret group=www-data mode=g+r
     - name: copy domjudge-sudoers file
-      copy: remote_src=True src={{DJDIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/sudoers-domjudge mode=0440 owner=root group=root
+      copy: remote_src=True src={{DJDIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/domjudge mode=0440 owner=root group=root
 
     - name: check if the database is configured
       command: "{{DJDIR}}/bin/dj_setup_database -u root status"
