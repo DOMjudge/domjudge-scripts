@@ -26,28 +26,6 @@
     - name: create domjudge-run group
       group: name=domjudge-run state=present
 
-    - name: fix apt sources list
-      tags: packages
-      replace:
-        dest: /etc/apt/sources.list
-        regexp: 'pc2cancer\.ecs\.csus\.edu'
-        replace: 'packages'
-
-    - name: add packages to hosts file
-      tags: packages
-      lineinfile:
-        dest: /etc/hosts
-        regexp: '^10\.3\.3\.209'
-        line: "10.3.3.209	packages"
-
-    - name: update ssl certificate for packages
-      tags: packages
-      copy: src=files/packages.pem dest=/usr/local/share/ca-certificates/packages.crt
-      notify: update-ca-certificates
-
-    - meta: flush_handlers
-      tags: packages
-
     - name: install required packages
       tags: packages
       apt: pkg={{item}} state=present
@@ -85,27 +63,11 @@
         - { name: 'email', value: 'team@domjudge.org' }
         - { name: 'name', value: 'DOMjudge @ NWERC' }
 
-    #- name: create bare repository
-    #  become: yes
-    #  become_user: domjudge
-    #  git: bare=yes repo=http://github.com/domjudge/domjudge dest=/home/domjudge/domjudge-bare.git
-    #  register: create_bare_repo
-
     - name: sync domjudge git repo from this workstation to the host
-      register: create_bare_repo
-      become: no
-      synchronize:
-        src: files/domjudge-bare.git/
-        dest: /home/domjudge/domjudge-bare.git
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
-
-    - name: create working copy from the bare repo
       become: yes
       become_user: domjudge
-      git: repo=/home/domjudge/domjudge-bare.git dest={{DJDIR}} version=ICPC-live
-      when: create_bare_repo.changed
+      git: repo={{DOMSERVER_IP}}:domjudge dest={{DJDIR}} version=master
+      register: create_repo
 
     - name: Copy in composer dependencies
       become: no
@@ -134,7 +96,7 @@
       become: yes
       become_user: domjudge
       shell: make dist && make maintainer-install chdir={{DJDIR}}
-      when: create_bare_repo.changed or dj_configured.changed or not judgedaemon_binary.stat.exists
+      when: create_repo.changed or dj_configured.changed or not judgedaemon_binary.stat.exists
 
     - name: fix permissions on things
       file: path={{DJDIR}}/etc/dbpasswords.secret group=www-data mode=g+r
@@ -151,8 +113,9 @@
         dest: /etc/hosts
         regexp: '^.*domserver$'
         line: "{{DOMSERVER_IP}}	domserver"
+
     - name: install server certificate
-      copy: src=files/domserver.crt dest=/usr/local/share/ca-certificates/domserver.crt
+      copy: src=/etc/ssl/certs/ukiepc-judge.bath.ac.uk.pem dest=/etc/ssl/certs/ukiepc-judge.bath.ac.uk.pem
       notify: update-ca-certificates
 
     - name: create chroot
@@ -180,13 +143,3 @@
       with_items:
         - judgedaemon
         - create_cgroups
-
-    - name: make sure directory exists
-      file: dest=/home/domjudge/.config/autostart state=directory owner=domjudge group=domjudge
-      tags: fix_autostart
-
-    - name: add shortcut to autostart terminal tailing the log file
-      copy: src=files/taillog.desktop dest=/home/domjudge/.config/autostart/taillog.desktop owner=domjudge group=domjudge mode=0755
-
-    - name: add shortcut to autostart screen rotation
-      copy: src=files/rotate.desktop dest=/home/domjudge/.config/autostart/rotate.desktop owner=domjudge group=domjudge mode=0755

@@ -82,17 +82,17 @@
         - { name: 'email', value: 'team@domjudge.org' }
         - { name: 'name', value: 'DOMjudge @ NWERC' }
 
-    - name: create bare repository
+    - name: create domjudge git repo
       become: yes
       become_user: domjudge
-      git: bare=yes repo=http://github.com/domjudge/domjudge dest=/home/domjudge/domjudge-bare.git
-      register: create_bare_repo
+      git: repo=https://github.com/DOMjudge/domjudge.git dest={{DJDIR}} version=master update=no
+      register: create_repo
 
-    - name: create working copy from the bare repo
+# Update separately to preserve local (un)committed changes:
+    - name: update domjudge git repo
       become: yes
       become_user: domjudge
-      git: repo=/home/domjudge/domjudge-bare.git dest={{DJDIR}} version=ICPC-live
-      when: create_bare_repo.changed
+      shell: cd {{DJDIR}} && git stash && git pull --rebase && git stash pop || true
 
     - name: Copy in composer dependencies
       #copy: src=files/lib/vendor/ dest={{DJDIR}}/lib/vendor/ owner=domjudge group=domjudge
