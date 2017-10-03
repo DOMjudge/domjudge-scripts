@@ -1,4 +1,7 @@
 [domserver]
+localhost ansible_user=root
+
+[judgehost]
 #domjudge-judgehost1 ansible_host=10.2.2.192 ansible_user=root
 domjudge-judgehost2 ansible_host=10.2.2.193 ansible_user=root
 #domjudge-judgehost3 ansible_host=10.2.2.194 ansible_user=root

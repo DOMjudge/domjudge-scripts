@@ -1,7 +1,7 @@
 ---
 
 - name: setup judgehost
-  hosts: all
+  hosts: judgehost
   become: yes
   handlers:
     - name: update-grub

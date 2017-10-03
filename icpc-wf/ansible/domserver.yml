@@ -1,7 +1,7 @@
 ---
 
 - name: setup domserver
-  hosts: all
+  hosts: domserver
   become: yes
   handlers:
     - name: restart mysql
