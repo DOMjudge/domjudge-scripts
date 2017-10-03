@@ -108,20 +108,6 @@
       become_user: domjudge
       shell: cd {{DJDIR}} && git stash && git pull --rebase && git stash pop || true
 
-    - name: Copy in composer dependencies
-      #copy: src=files/lib/vendor/ dest={{DJDIR}}/lib/vendor/ owner=domjudge group=domjudge
-      become: no
-      tags: sync
-      synchronize:
-        src: files/lib/vendor/
-        dest: "{{DJDIR}}/lib/vendor/"
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
-    - name: fix permissions on composer directory
-      file: path="{{DJDIR}}/lib/vendor/" group=domjudge owner=domjudge recurse=yes
-
     - name: run maintainer-conf
       become: yes
       become_user: domjudge
@@ -130,6 +116,11 @@
       args:
         chdir: "{{DJDIR}}"
         creates: "{{DJDIR}}/paths.mk"
+
+    - name: clear symfony cache
+      command: rm -rf {{DJDIR}}/webapp/var/cache/dev {{DJDIR}}/webapp/var/cache/prod
+      when: dj_configured.changed
+
     - name: build domjudge
       become: yes
       become_user: domjudge

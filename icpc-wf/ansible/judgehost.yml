@@ -75,17 +75,6 @@
       git: repo={{DOMSERVER_IP}}:domjudge dest={{DJDIR}} version=master
       register: create_repo
 
-    - name: Copy in composer dependencies
-      become: no
-      synchronize:
-        src: files/lib/vendor/
-        dest: "{{DJDIR}}/lib/vendor/"
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
-    - name: fix permissions on composer directory
-      file: path="{{DJDIR}}/lib/vendor/" group=domjudge owner=domjudge recurse=yes
-
     - name: run maintainer-conf
       become: yes
       become_user: domjudge
