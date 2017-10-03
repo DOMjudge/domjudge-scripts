@@ -40,6 +40,7 @@
         - git
         - gcc
         - g++
+        - openjdk-8-jdk-headless
         - make
         - zip
         - unzip
@@ -50,6 +51,7 @@
         - php-curl
         - php-mysql
         - php-json
+        - php-xml
         - php-zip
         - php-mbstring
         - bsdmainutils
@@ -57,6 +59,7 @@
         - libcurl4-gnutls-dev
         - libjsoncpp-dev
         - libmagic-dev
+        - linuxdoc-tools
         - composer
         - debootstrap
 
