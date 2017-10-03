@@ -133,13 +133,6 @@
         dest: "{{DJDIR}}/webapp/web/style.css"
       when: BACKGROUND_COLOR is defined
 
-    - name: create a self signed cert
-      shell: "openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out /etc/ssl/certs/domjudge.crt -keyout /etc/ssl/private/domjudge.pem -subj /CN={{ansible_hostname}}"
-      args:
-        creates: /etc/ssl/private/domjudge.pem
-    #- name: update apache to use new cert
-    #  lineinfile:
-
     - name: Update servername in apache config
       lineinfile:
         insertbefore: '^#Global config'
