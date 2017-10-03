@@ -26,18 +26,24 @@
     - name: create domjudge-run group
       group: name=domjudge-run state=present
 
+    - name: set timezone
+      timezone:
+        name: Europe/London
+
     - name: install required packages
       tags: packages
       apt: pkg={{item}} state=present
       with_items:
         - autoconf
         - automake
+        - curl
         - git
         - gcc
         - g++
         - make
         - zip
         - unzip
+        - ntp
         - php
         - php-cli
         - php-gd
