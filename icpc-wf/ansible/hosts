@@ -2,13 +2,11 @@
 localhost ansible_user=root
 
 [judgehost]
-#domjudge-judgehost1 ansible_host=10.2.2.192 ansible_user=root
-domjudge-judgehost2 ansible_host=10.2.2.193 ansible_user=root
-#domjudge-judgehost3 ansible_host=10.2.2.194 ansible_user=root
-domjudge-judgehost4 ansible_host=10.2.2.195 ansible_user=root
-domjudge-judgehost5 ansible_host=10.2.2.196 ansible_user=root
-domjudge-judgehost6 ansible_host=10.2.2.197 ansible_user=root
-domjudge-judgehost7 ansible_host=10.2.2.198 ansible_user=root
-domjudge-judgehost8 ansible_host=10.2.2.199 ansible_user=root
-domjudge-judgehost9 ansible_host=10.2.2.200 ansible_user=root
-domjudge-judgehost10 ansible_host=10.2.2.201 ansible_user=root
+judge-a ansible_host=172.25.37.12 ansible_user=root
+judge-b ansible_host=172.25.37.13 ansible_user=root
+judge-c ansible_host=172.25.37.14 ansible_user=root
+judge-d ansible_host=172.25.37.15 ansible_user=root
+judge-e ansible_host=172.25.37.16 ansible_user=root
+judge-f ansible_host=172.25.37.17 ansible_user=root
+judge-g ansible_host=172.25.37.18 ansible_user=root
+judge-h ansible_host=172.25.37.19 ansible_user=root
