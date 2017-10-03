@@ -28,13 +28,18 @@ git clone -q --no-checkout --depth 1 --single-branch --branch "$TAG" "$GITURL" d
 
 cd domjudge
 
-VERSION="`cat README | head -n 1 | sed 's/.*version //'`"
-CHLOG="`grep ^Version ChangeLog | head -n 1`"
+VERSION="$(cat README* | head -n 10 | grep ' version ' | sed 's/.*version //')"
+CHLOG="$(grep ^Version ChangeLog | head -n 1)"
 
 # Check for non-release version
 if [ "${VERSION%DEV}" != "${VERSION}" ] || \
    [ "${VERSION%SVN}" != "${VERSION}" ]; then
 	echo "WARNING: version string contains 'DEV' or 'SVN', should probably be changed!"
+fi
+
+CHLOG_VERSION="$(echo $CHLOG | sed -r 's/^Version ([0-9\.]+) .*$/\1/')"
+if [ "$VERSION" != "$CHLOG_VERSION" ]; then
+	echo "WARNING: version strings in README* and ChangeLog differ: '$VERSION' != '$CHLOG_VERSION'"
 fi
 
 # Check for renamed SQL upgrade file
