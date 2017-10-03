@@ -65,26 +65,11 @@
         - libmagic-dev
         - composer
 
-    - name: enable php modules
-      command: phpenmod {{item}}
-      args:
-        creates: /etc/php/7.0/apache2/conf.d/20-{{item}}.ini
-      with_items:
-        - mcrypt
-        - zip
-    - name: update systemd so mysql has bigger limits
-      copy: src=files/mysql.override.cnf dest=/etc/systemd/system/mysql.service.d/override.conf
     - name: update mysql max connections
       lineinfile:
         regexp: '^.*max_connections'
         line: 'max_connections = 1000'
-        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
-      notify: restart mysql
-    - name: update mysql max open files
-      lineinfile:
-        regexp: '^.*open_files_limit'
-        line: 'open_files_limit = 10000'
-        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+        dest: /etc/mysql/mariadb.conf.d/50-server.cnf
       notify: restart mysql
 
     - name: configure git as domjudge user
@@ -166,20 +151,30 @@
       notify: restart apache2
 
     - name: enable apache2 conf for domjudge
-      file: src=/etc/apache2/conf-available/domjudge.conf dest=/etc/apache2/conf-enabled/domjudge.conf state=link
+      file:
+        src:  /etc/apache2/conf-available/domjudge.conf
+        dest: /etc/apache2/conf-enabled/domjudge.conf
+        state: link
       notify: restart apache2
 
     - name: enable apache2 modules
-      apache2_module: name=ssl state=present
+      apache2_module: name={{item}} state=present
+      with_items:
+        - ssl
+        - php7.0
       notify: restart apache2
 
-    - name: disable default apache site
-      file: state=absent path=/etc/apache2/sites-enabled/000-default
+    - name: apache2 http redirect
+      lineinfile:
+        dest: /etc/apache2/sites-available/000-default.conf
+        state: present
+        insertafter: '^\s*DocumentRoot\s'
+        line: '	Redirect permanent / {{DOMSERVER}}/'
       notify: restart apache2
 
-    - name: enable default-ssl apache site
-      file: src=/etc/apache2/sites-available/default-ssl.conf dest=/etc/apache2/sites-enabled/000-default-ssl state=link
+    - name: enable apache2 default site
+      file:
+        src:  /etc/apache2/sites-available/000-default.conf
+        dest: /etc/apache2/sites-enabled/000-default.conf
+        state: link
       notify: restart apache2
-
-
-
