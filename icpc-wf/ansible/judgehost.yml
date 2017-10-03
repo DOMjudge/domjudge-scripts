@@ -141,3 +141,6 @@
       with_items:
         - judgedaemon
         - create_cgroups
+
+    - name: restart judgedaemon
+      service: name=judgedaemon state=restarted
