@@ -113,7 +113,7 @@
       when: dj_configured.changed
 
     - name: fix permissions on things
-      file: path={{DJDIR}}/etc/dbpasswords.secret group=www-data mode=g+r
+      shell: make -C {{DJDIR}} maintainer-postinstall-permissions
     - name: copy domjudge-sudoers file
       copy: remote_src=True src={{DJDIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/domjudge mode=0440 owner=root group=root
 
