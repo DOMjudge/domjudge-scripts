@@ -37,4 +37,4 @@ on the account `domjudge@vm-domjudge`):
  1. Don't forget to push everything to the central Git repository
     (especially the release tags, since these are not pushed by default),
     e.g. with
-        git push origin <x.y> refs/tags/<x.y.z>
+        git push origin ${TAG%.?} refs/tags/$TAG
