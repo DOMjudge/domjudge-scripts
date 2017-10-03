@@ -118,7 +118,7 @@
     - name: fix permissions on composer directory
       file: path="{{DJDIR}}/lib/vendor/" group=domjudge owner=domjudge recurse=yes
 
-    - name: run configure-conf
+    - name: run maintainer-conf
       become: yes
       become_user: domjudge
       command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build'
