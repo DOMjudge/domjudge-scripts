@@ -83,7 +83,7 @@
       ini_file: dest=/home/domjudge/.gitconfig section=user option="{{item.name}}" value="{{item.value}}"
       with_items:
         - { name: 'email', value: 'team@domjudge.org' }
-        - { name: 'name', value: 'DOMjudge @ ICPC WF' }
+        - { name: 'name', value: 'DOMjudge @ NWERC' }
 
     #- name: create bare repository
     #  become: yes
