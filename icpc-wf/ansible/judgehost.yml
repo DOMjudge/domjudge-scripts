@@ -40,6 +40,7 @@
         - git
         - gcc
         - g++
+        - openjdk-8-jdk
         - openjdk-8-jdk-headless
         - make
         - zip
@@ -62,6 +63,14 @@
         - linuxdoc-tools
         - composer
         - debootstrap
+
+    - name: copy ICPC kotlin deb package
+      copy: src=files/icpc-kotlinc_1.1.4-3~icpc_all.deb dest=/root/
+      register: copy_debs
+
+    - name: install ICPC kotlin deb package
+      apt: deb=/root/icpc-kotlinc_1.1.4-3~icpc_all.deb
+      when: copy_debs.changed
 
     - name: configure git as domjudge user
       become: yes
@@ -117,7 +126,7 @@
       notify: update-ca-certificates
 
     - name: create chroot
-      command: "{{DJDIR}}/misc-tools/dj_make_chroot"
+      shell: "{{DJDIR}}/misc-tools/dj_make_chroot -i openjdk-8-jdk -l /root/icpc-kotlinc_*.deb"
       args:
         creates: "/chroot/domjudge"
 
