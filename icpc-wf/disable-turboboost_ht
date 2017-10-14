@@ -1,35 +1,23 @@
 #!/bin/bash -e
 
-# let's disable threads on different cores
-cpu0=$(cat /sys/devices/system/cpu/cpu0/topology/core_id)
-cpu1=$(cat /sys/devices/system/cpu/cpu1/topology/core_id)
-cpu2=$(cat /sys/devices/system/cpu/cpu2/topology/core_id)
-cpu3=$(cat /sys/devices/system/cpu/cpu3/topology/core_id)
-
 # set governor to performance
-echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-echo performance > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-echo performance > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-echo performance > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+for i in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+	echo performance > $i
+done
 
 # do not allow changes later on
 chmod -w /sys/devices/system/cpu/cpu?/cpufreq/scaling_governor
 
-# disable last thread
-echo 0 > /sys/devices/system/cpu/cpu3/online
-
-# disable thread with different core id
-if [ $cpu3 -ne $cpu2 ]; then
-        echo 0 > /sys/devices/system/cpu/cpu2/online
-elif [ $cpu3 -ne $cpu1 ]; then
-        echo 0 > /sys/devices/system/cpu/cpu1/online
-elif [ $cpu3 -ne $cpu0 ]; then
-        echo 0 > /sys/devices/system/cpu/cpu0/online
-else
-        # found no thread with different core id
-        exit -1
-fi
-
+# disable all but on thread on each core
+declare -A core_ids
+for i in /sys/devices/system/cpu/cpu?/topology/core_id; do
+	core_id=$(cat $i)
+	if [[ ${core_ids[$core_id]} ]]; then
+		echo 0 > $(dirname $i)/../online
+	else
+		core_ids[$core_id]=1
+	fi
+done
 
 # now disable turbo boost
 echo -n 1 > /sys/devices/system/cpu/intel_pstate/no_turbo
