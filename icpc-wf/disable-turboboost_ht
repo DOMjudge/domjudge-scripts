@@ -1,19 +1,24 @@
 #!/bin/bash -e
 
-# set governor to performance
-for i in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
-	echo performance > $i
-done
+shopt -s extglob
 
-# do not allow changes later on
-chmod -w /sys/devices/system/cpu/cpu?/cpufreq/scaling_governor
-
-# disable all but on thread on each core
 declare -A core_ids
-for i in /sys/devices/system/cpu/cpu?/topology/core_id; do
-	core_id=$(cat $i)
+
+for cpu in /sys/devices/system/cpu/cpu* ; do
+	[[ $(basename $cpu) =~ '^cpu[0-9]+$' ]] || continue
+
+	# Reenable stuff in case we are rerunning this script.
+	chmod u+w $cpu/cpufreq/scaling_governor
+	[ -f $cpu/online ] && echo 1 > $cpu/online
+
+	# Set governor to performance and do not allow changes later on.
+	echo performance > $cpu/cpufreq/scaling_governor
+	chmod a-w $cpu/cpufreq/scaling_governor
+
+	# Disable all but one thread on each core.
+	core_id=$(cat $cpu/topology/core_id)
 	if [[ ${core_ids[$core_id]} ]]; then
-		echo 0 > $(dirname $i)/../online
+		echo 0 > $cpu/online
 	else
 		core_ids[$core_id]=1
 	fi

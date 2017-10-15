@@ -141,18 +141,29 @@
         line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
       notify: update-grub
 
+    - name: copy script to disable turboboost etc.
+      copy: src=files/disable-turboboost_ht dest={{DJDIR}}/bin/ mode=0755
 
     - name: copy systemd unit files for starting judgedaemon
       copy: src=files/judgedaemon.service dest=/etc/systemd/system/
       tags: updateservice
+
     - name: copy systemd unit for creating cgroups
       copy: src=files/create_cgroups.service dest=/etc/systemd/system/
+
+    - name: copy systemd unit for tuning cpu
+      copy: src=files/tune_cpu.service dest=/etc/systemd/system/
 
     - name: enable the services we just copied
       service: name={{item}} enabled=yes
       with_items:
         - judgedaemon
         - create_cgroups
+        - tune_cpu
 
-    - name: restart judgedaemon
-      service: name=judgedaemon state=restarted
+    - name: restart services
+      service: name={{item}} state=restarted
+      with_items:
+        - create_cgroups
+        - tune_cpu
+        - judgedaemon
