@@ -5,7 +5,7 @@ shopt -s extglob
 declare -A core_ids
 
 for cpu in /sys/devices/system/cpu/cpu* ; do
-	[[ $(basename $cpu) =~ '^cpu[0-9]+$' ]] || continue
+	[[ $(basename $cpu) =~ ^cpu[0-9]+$ ]] || continue
 
 	# Reenable stuff in case we are rerunning this script.
 	chmod u+w $cpu/cpufreq/scaling_governor
