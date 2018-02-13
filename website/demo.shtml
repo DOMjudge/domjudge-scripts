@@ -21,6 +21,7 @@ populated with data from a live contest.</p>
 
 <p>Check out the following interfaces:</p>
 
+<h3>DOMjudge stable branch</h3>
 <ul>
 <li><a href="demoweb/public/">
     <strong>Public interface:</strong></a> shows the scoreboard.</li>
@@ -46,6 +47,19 @@ populated with data from a live contest.</p>
 </ul>
 
 <p><strong>Note:</strong> all passwords are equal to the respective usernames.</p>
+
+<h3>New UI (under development)</h3>
+<p>Here's a preview of the UI changes that are currently under development
+in DOMjudge's master branch.</p>
+
+<ul>
+<li><a href="demoweb-ui/public/">
+    <strong>Public interface:</strong></a> shows the scoreboard.</li>
+<li><a href="demoweb-ui/team/">
+    <strong>Team interface:</strong></a> shows your submissions, clarifications
+    and the scoreboard. Log in with user and password <em>team</em>.</li>
+<li> The other interfaces have not been redesigned yet. 
+</ul>
 
 <h2>Data</h2>
 
