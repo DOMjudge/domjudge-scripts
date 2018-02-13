@@ -26,8 +26,8 @@ example grammar script</a> for more details.</p>
 <p>The checktestdata sources can be found at
 <a href="https://github.com/DOMjudge/checktestdata">GitHub</a>.
 To build checktestdata from repository sources requires
-<a href="http://flexcpp.sourceforge.net/">Flexc++</a> and
-<a href="http://bisoncpp.sourceforge.net/">Bisonc++</a>.
+<a href="https://fbb-git.github.io/flexcpp/">Flexc++</a> and
+<a href="https://fbb-git.github.io/bisoncpp/">Bisonc++</a>.
 Alternatively, the <code>release</code> branch from the checktestdata
 repository contains pregenerated parser source files, which do not
 require Flexc++/Bisonc++. Finally, Debian packages can be installed
