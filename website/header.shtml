@@ -2,25 +2,57 @@
 --><!--#set var="dj_current_branch_date"     value="29 December 2017"
 --><!--#set var="dj_previous_branch_version" value="5.2.2"
 --><!--#set var="dj_previous_branch_date"    value="29 December 2017"--><!DOCTYPE html>
-<html lang="en" xml:lang="en">
+<html lang="en">
 <head>
-<title>DOMjudge - <!--#echo var="dj_page_title" --></title>
-<meta charset="UTF-8">
-<link rel="shortcut icon" href="/favicon.png" type="image/png" />
-<link rel="stylesheet" href="style.css" type="text/css" />
+  <title>DOMjudge - <!--#echo var="dj_page_title" --></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="shortcut icon" href="/favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://www.domjudge.org/demoweb-ui/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.domjudge.org/demoweb-ui/css/octicons/octicons.css">
+  <link rel="stylesheet" href="style_domjudge.css">
 </head>
 <body>
 
-<nav><div id="menutop">
-<a href=".">home</a>
-<a href="intro">intro</a>
-<a href="download" class="new">download (<!--#echo var="dj_current_branch_version" -->)</a>
-<a href="documentation">documentation</a>
-<a href="demo">demo</a>
-<a href="development">development</a>
-<a href="checktestdata">checktestdata</a>
-<a href="about">about</a>
-</div></nav>
+<header>
+  <nav class="navbar navbar-expand-md navbar-light fixed-top">
+  <a class="navbar-brand hidden-sm-down" href="./">DOMjudge</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuDefault" aria-controls="menuDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-<p><img src="DOMjudgelogo_sc.png" alt="DOMjudge logo"
-	width="80" height="169" id="djlogo" /></p>
+  <div class="collapse navbar-collapse" id="menuDefault">
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item"><a
+      class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'about.shtml'" --> active<!--#endif-->"
+      href="about"><span class="octicon octicon-light-bulb"></span> About</a></li>
+    <li class="nav-item"><a
+      class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'documentation.shtml'" --> active<!--#endif-->"
+      href="documentation"><span class="octicon octicon-repo"></span> Documentation</a></li>
+    <li class="nav-item"><a
+      class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'demo.shtml'" --> active<!--#endif-->"
+      href="demo"><span class="octicon octicon-rocket"></span> Demo</a></li>
+    <li class="nav-item"><a
+      class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'development.shtml'" --> active<!--#endif-->"
+      href="development"><span class="octicon octicon-beaker"></span> Development</a></li>
+    <li class="nav-item"><a
+      class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'checktestdata.shtml'" --> active<!--#endif-->"
+      href="checktestdata"><span class="octicon octicon-checklist"></span> Checktestdata</a></li>
+  </ul>
+  </div>
+
+  <div>
+    <a href="download" class="btn btn-info">Download <span class="badge badge-light"><!--#echo var="dj_current_branch_version" --></span></a>
+  </div>
+  </nav>
+</header>
+
+<img src="DOMjudgelogo_sc.png" alt="DOMjudge logo"
+	width="80" height="169" id="domjudgeLogo" class="float-right d-none d-md-block" />
+
+<main class="container">
+
+<!--#if expr="v('DOCUMENT_NAME') != 'index.shtml'" -->
+<h1><!--#echo var="dj_page_title" --></h1>
+<!--#endif-->

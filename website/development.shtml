@@ -1,25 +1,20 @@
 <!--#set var="dj_page_title" value="Development" --><!--#include virtual="/header.shtml" -->
 
-<h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
-
 <p>DOMjudge is open source, free software and has an active development
 community with contributors from around the world. Question, suggestion
 bug or patch? All those are most welcome via the channels below.</p>
 
 <h2>Bugs / feature requests</h2>
 
-<p>Bugs and feature enhancements are tracked at Github, see the <a
-href="https://github.com/DOMjudge/domjudge/issues">Issues</a> page.
-You may report a new issue there. Pull requests are also very welcome.
+<p>Bugs and feature enhancements are tracked at <a href="https://github.com/DOMjudge/domjudge/">our Github project</a>. You may report a new issue there.
+Pull requests are also very welcome.
 If you have a question or you are unsure whether what you're seeing is
 a bug, please discuss it on <kbd>domjudge-devel@domjudge.org</kbd>
 beforehand (see below).</p>
 
 <h2>Mailinglists</h2>
 
-<p>We have a few mailinglists that anyone interested is welcome to subscribe
-to:</p>
-
+<p>You are welcome to subscribe to our mailinglists:</p>
 <p>
 <dl>
 <dt>DOMjudge-announce</dt>
@@ -32,10 +27,6 @@ news.</dd>
 <a href="https://www.domjudge.org/mailman/listinfo/domjudge-devel">development mailinglist</a>
 is used for discussions on development, but is also used for asking general
 questions on using and installing DOMjudge.</dd>
-<dt>DOMjudge-commits</dt>
-<dd>The
-<a href="https://www.domjudge.org/mailman/listinfo/domjudge-commits">commits mailinglist</a>
-receives all (automatic) commit emails from the git repositories.</dd>
 </dl>
 
 <p>Note that only the DOMjudge-devel list can be posted to, and only by
@@ -44,12 +35,12 @@ list members (to prevent spam).</p>
 <h2>Snapshots</h2>
 
 <p>We produce nightly snapshots of the latest DOMjudge sources (the
-<kbd>master</kbd> branch from the main git repository). These can be found in
+<code>master</code> branch from the main git repository). These can be found in
 <a href="/snapshot/">the snapshot directory</a>. Note that our repository
 contains code that might be experimental, buggy or subject to change. Use
 at your own risk.</p>
 
-<h2>Source code management</h2>
+<h2>Source code</h2>
 
 <p>The DOMjudge sources are maintained in Git, in four separate
 <a href="https://github.com/DOMjudge">repositories</a>:</p>
@@ -63,18 +54,10 @@ at your own risk.</p>
   </ul>
 </dd>
 <dt>DOMjudge-packaging</dt>
-<dd>Contains packaging for various (Linux) distributions, currently only for
-<a href="https://www.debian.org/">Debian</a>.
+<dd>Contains packaging for various distributions.
   <ul>
   <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge-packaging.git</kbd></li>
   <li>Public web interface: <a href="https://github.com/DOMjudge/domjudge-packaging">github</a>, <a href="https://www.domjudge.org/gitweb?p=domjudge-packaging.git">gitweb</a></li>
-  </ul>
-</dd>
-<dt>DOMjudge-scripts</dt>
-<dd>Contains various developer/maintainer helper scripts.
-  <ul>
-  <li>Public git repository: <kbd>https://github.com/DOMjudge/domjudge-scripts.git</kbd></li>
-  <li>Public web interface: <a href="https://github.com/DOMjudge/domjudge-scripts">github</a>, <a href="https://www.domjudge.org/gitweb?p=domjudge-scripts.git">gitweb</a></li>
   </ul>
 </dd>
 <dt>Checktestdata</dt>

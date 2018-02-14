@@ -1,73 +1,58 @@
 <!--#set var="dj_page_title" value="Online Demo" --><!--#include virtual="/header.shtml" -->
 
-<h1>DOMjudge <!--#echo var="dj_page_title" --></h1>
-
 <p>We have set up an online demonstration of the DOMjudge web interface,
 populated with data from a live contest.</p>
 
-<p>What it does:</p>
+<div class="row">
+	<div class="col-sm">
+		<p><em>What it does:</em></p>
 <ul>
 <li>Provide an idea of the look and feel of the public, team and jury interfaces</li>
 </ul>
-<p>What it doesn't:</p>
+	</div>
+	<div class="col-sm">
+		<p><em>What it doesn't:</em></p>
 <ul>
 <li>Judge submitted solutions</li>
 <li>Show commandline and daemon interfaces</li>
 </ul>
+	</div>
+</div>
 
-
-
-<h2>Use</h2>
+<h2>How to use it</h2>
 
 <p>Check out the following interfaces:</p>
 
-<h3>DOMjudge stable branch</h3>
-<ul>
-<li><a href="demoweb/public/">
-    <strong>Public interface:</strong></a> shows the scoreboard.</li>
-<li><a href="demoweb/team/">
-    <strong>Team interface:</strong></a> shows your submissions, clarifications
-    and the scoreboard. Log in with user <em>team</em>. You can't
-    actually submit solutions.</li>
-<li><a href="demoweb/jury/">
-    <strong>Jury/admin interface:</strong></a> the full set of options available
-    to judges/admins. Log in with user <em>jury</em> or <em>admin</em> respectively.
-    The admin interface is a superset of the jury interface with additional
-    administrative options.
-    There are no judgehosts running, so things like rejudging have not much effect.
-    Team source code has been replaced with a placeholder, so the source diff
-    function is not useful.</li>
-<li><a href="demoweb/api/">
-    <strong>JSON REST API:</strong></a> this application programming
-    interface allows various clients to request and submit contest
-    data. It is used by the judgedaemon, but can also be used e.g. for
-    an external scoreboard display. The page shows the internal
-    documentation of available functions.
-    <em>This interface is still under development.</em></li>
-</ul>
-
-<p><strong>Note:</strong> all passwords are equal to the respective usernames.</p>
+<dl>
+<dt><a href="demoweb/public/">Public interface</a></dt>
+<dd>Shows the scoreboard and the problemset.</dd>
+<dt><a href="demoweb/team/">Team interface</a></dt>
+<dd>Shows your submissions, submission details, clarifications, the problemset and the scoreboard. Log in with username and password <em>team</em>.
+As this is a demo, you can't actually submit solutions.</dd>
+<dt><a href="demoweb/jury/">Jury/admin interface</a></dt>
+<dd>The full set of options available to judges and administrators.
+Log in with username and password <em>jury</em> or username and password <em>admin</em> respectively. The admin interface is a superset of the jury interface with additional options to configure the contests.
+There are no judgehosts running, so things like rejudging do not have much effect.
+Team source code has been replaced with a placeholder, so the source formatting
+functionality is not useful.</dd>
+</dl>
 
 <h3>New UI (under development)</h3>
 <p>Here's a preview of the UI changes that are currently under development
 in DOMjudge's master branch.</p>
+<dl>
+<dt><a href="demoweb-ui/public/">Public interface</a></dt>
+<dd>Shows the scoreboard and the problemset.</dd>
+<dt><a href="demoweb-ui/team/">Team interface</a></dt>
+<dd>Shows your submissions, submission details, clarifications, the problemset and the scoreboard. Log in with username and password <em>team</em>.
+</dd>
 
-<ul>
-<li><a href="demoweb-ui/public/">
-    <strong>Public interface:</strong></a> shows the scoreboard.</li>
-<li><a href="demoweb-ui/team/">
-    <strong>Team interface:</strong></a> shows your submissions, clarifications
-    and the scoreboard. Log in with user and password <em>team</em>.</li>
-<li> The other interfaces have not been redesigned yet. 
-</ul>
-
-<h2>Data</h2>
+<p>The other interfaces have not been redesigned yet.</p>
 
 <p>The data in the system is reset to a known good state every night, so feel
 free to experiment. Please keep the system in a reasonable state though for
 other visitors that may come by before the reset. The data is from an actual
-contest, NWERC 2007, with some sensitive things removed; this includes all
-submission sources, so unfortunately, submission diff's do not show.</p>
+contest, NWERC 2007, with some sensitive things removed.</p>
 
 <p>If there's something not working, or you've got questions, please contact us
 at <a href="mailto:admin@domjudge.org">admin@domjudge.org</a>.</p>

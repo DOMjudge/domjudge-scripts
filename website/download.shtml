@@ -1,7 +1,5 @@
 <!--#set var="dj_page_title" value="Download" --><!--#include virtual="/header.shtml" -->
 
-<h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
-
 <p>The latest stable release is version
 <strong><!--#echo var="dj_current_branch_version" --></strong>,
 dated <!--#echo var="dj_current_branch_date" -->.</p>
@@ -10,7 +8,17 @@ dated <!--#echo var="dj_current_branch_date" -->.</p>
 <strong><!--#echo var="dj_previous_branch_version" --></strong>,
 dated <!--#echo var="dj_previous_branch_date" -->.</p>
 
-<p><strong><a href="/releases/">download here</a></strong></p>
+<div class="container m-4"><div class="row">
+  <div class="col-sm">
+    <a class="btn btn-primary btn-lg" href="/releases/domjudge-<!--#echo var="dj_current_branch_version"-->.tar.gz"><span class="octicon octicon-desktop-download"></span> current stable</a>
+  </div>
+  <div class="col-sm">
+      <a class="btn btn-secondary btn-lg" href="/releases/domjudge-<!--#echo var="dj_previous_branch_version"-->.tar.gz"><span class="octicon octicon-desktop-download"></span> previous stable</a>
+  </div>
+  <div class="col-sm">
+      <a class="btn btn-outline-info btn-lg" href="/releases/"><span class="octicon octicon-file-directory"></span> release archive</a>
+  </div>
+</div></div>
 
 <p>To get notifications of new releases, subscribe to the low volume
 <a href="https://www.domjudge.org/mailman/listinfo/domjudge-announce">announcements

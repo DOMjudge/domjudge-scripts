@@ -1,32 +1,20 @@
 <!--#set var="dj_page_title" value="Programming Contest Jury System" --><!--#include virtual="/header.shtml" -->
 
-<h1>DOMjudge</h1>
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-5">DOMjudge</h1>
 
-<p>DOMjudge is an automated judge system to run programming contests,
-like the
-<a href="http://icpc.baylor.edu/icpc/">ACM ICPC</a>.
-It has a focus on usability and security, has been used in many live
-contests and is free, open source software.
-</p>
+    <p class="lead">DOMjudge is an automated system to run programming contests, like the
+    <abbr title="Association for Computing Machinery International
+    Collegiate Programming Contest">ACM ICPC</abbr>.</p>
 
-
-<p>Please make your choice:</p>
-
-<ul>
-<li><a href="intro"><b>Intro:</b></a>
-	Read more on what DOMjudge does and what you need to run it</li>
-<li><a href="download"><b>Download:</b></a>
-	Get the latest release</li>
-<li><a href="demo"><b>Demo:</b></a>
-	View an online demo installation</li>
-<li><a href="documentation"><b>Documentation:</b></a>
-	Dive into the manuals for all details</li>
-<li><a href="development"><b>Development:</b></a>
-	Report a bug or check out the latest sources</li>
-<li><a href="about"><b>About:</b></a>
-	Learn about the project backgrounds</li>
-</ul>
-
+    <p>It has a focus on usability and security. It has a modular
+    sysem to plug in languages and has a feature-rich interface for the judges.
+    The system has been used in many live contests and is free, open source
+    software that you can adapt to your needs.</p>
+  <p><a class="btn btn-primary" href="about" role="button">Learn more &raquo;</a></p>
+</div>
+</div>
 
 
 <!--#include virtual="/footer.shtml" -->

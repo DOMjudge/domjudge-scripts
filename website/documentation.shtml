@@ -1,30 +1,20 @@
 <!--#set var="dj_page_title" value="Documentation" --><!--#include virtual="/header.shtml" -->
 
-<h1>DOMjudge - <!--#echo var="dj_page_title" --></h1>
-
-<p>The DOMjudge tarball contains manuals for the administrator, judges and teams, which correspond to that version.</p>
-
-<p>For your convenience, here you can find the documentation from the latest stable release.</p>
+<p>For your convenience, here you can find the documentation from the latest stable release. The DOMjudge tarball contains manuals for the administrator, judges and teams, which correspond to that specific version.</p>
 
 <dl>
 <dt><a href="docs/admin-manual.html">Administrator's manual</a>
-(HTML), or a <a href="docs/admin-manual.pdf">PDF version</a>.</dt>
+(<a href="docs/admin-manual.pdf">PDF</a>)</dt>
 <dd>The complete reference for those setting up and running the DOMjudge system.</dd> 
 <dt><a href="docs/judge-manual.html">Judge's manual</a>
-(HTML), or a <a href="docs/judge-manual.pdf">PDF version</a>.</dt>
+(<a href="docs/judge-manual.pdf">PDF</a>)</dt>
 <dd>Instructions for members of the jury to work with the system.</dd>
-
-<dt><a href="docs/team-manual.pdf">Team manual</a> (PDF)</dt>
+<dt><a href="docs/team-manual.pdf">Team manual</a></dt>
 <dd>Concise manual for participating teams. Only available in Portable 
 Document Format (PDF).</dd> 
 </dl>
 
-<p>Note that a <a href="docs/admin-manual-8.html">
+<p>A <a href="docs/admin-manual-8.html">
 Frequently Asked Questions section</a> is included in the Administrator's manual.</p>
-
-<p>The documentation for the development trunk version is available under
-the <a href="/snapshot/">snapshot directory</a>; note that it might
-differ on details from the documentation of releases.</p>
-
 
 <!--#include virtual="/footer.shtml" -->

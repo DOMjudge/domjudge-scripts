@@ -1,0 +1,16 @@
+body {
+  padding-top: 5rem;
+}
+
+#domjudgeLogo {
+  margin-right: 1rem;
+}
+
+nav {
+  background-color: #eee;
+}
+
+kbd {
+  color: inherit;
+  background-color: transparent;
+}
