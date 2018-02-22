@@ -196,3 +196,6 @@
 
     - name: add shortcut to autostart screen rotation
       copy: src=files/rotate.desktop dest=/home/domjudge/.config/autostart/rotate.desktop owner=domjudge group=domjudge mode=0755
+
+    - name: restart judgedaemon
+      service: name=judgedaemon state=restarted
