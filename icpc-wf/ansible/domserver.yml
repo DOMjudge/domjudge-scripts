@@ -27,15 +27,29 @@
     - name: create domjudge user
       user:
         name: domjudge
+
+    - name: set timezone
+      timezone:
+        name: Asia/Shanghai
+
+    - name: set PHP timezone
+      lineinfile:
+        dest: /etc/php/7.0/apache2/php.ini
+        state: present
+        regexp: 'date\.timezone\s*='
+        line: 'date.timezone = Asia/Shanghai'
+
     - name: install required packages
       apt: pkg={{item}} state=present
       with_items:
         - autoconf
         - automake
+        - curl
         - git
         - gcc
         - g++
         - make
+        - ntp
         - zip
         - unzip
         - mysql-server
