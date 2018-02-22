@@ -3,6 +3,8 @@
 - name: setup judgehost
   hosts: judgehost
   become: yes
+  vars:
+    KOTLINDEB: 'icpc-kotlinc_1.1.4-3~icpc1_all.deb'
   handlers:
     - name: update-grub
       command: update-grub
@@ -81,6 +83,10 @@
         - libmagic-dev
         - composer
         - debootstrap
+
+    - name: copy ICPC kotlin deb package
+      copy: src=files/{{KOTLINDEB}} dest=/root/
+      register: copy_debs
 
     - name: configure git as domjudge user
       become: yes
@@ -162,7 +168,7 @@
       notify: update-ca-certificates
 
     - name: create chroot
-      command: "{{DJDIR}}/misc-tools/dj_make_chroot"
+      shell: "{{DJDIR}}/misc-tools/dj_make_chroot -y -l /root/{{KOTLINDEB}}"
       args:
         creates: "/chroot/domjudge"
 
