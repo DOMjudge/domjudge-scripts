@@ -1,0 +1,7 @@
+[Unit]
+Description=Tune CPU cores: disable turboboost, downclocking, etc.
+
+[Service]
+Type=oneshot
+ExecStart=/home/domjudge/domjudge/bin/disable-turboboost_ht
+RemainAfterExit=true
