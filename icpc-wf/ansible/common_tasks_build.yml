@@ -1,0 +1,27 @@
+# Common tasks to build DOMjudge.
+---
+    - name: run maintainer-conf
+      become: yes
+      become_user: domjudge
+      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build'
+      register: dj_configured
+      args:
+        chdir: "{{DJDIR}}"
+        creates: "{{DJDIR}}/paths.mk"
+
+    - name: check if domjudge is built
+      stat: path="{{DJDIR}}/judge/judgedaemon"
+      register: judgedaemon_binary
+
+    - name: build domjudge
+      become: yes
+      become_user: domjudge
+      shell: make dist && make maintainer-install chdir={{DJDIR}}
+      when: create_bare_repo.changed or dj_configured.changed or not judgedaemon_binary.stat.exists
+
+    - name: fix permissions on things
+      shell: make -C {{DJDIR}} maintainer-postinstall-permissions
+
+    - name: copy domjudge-sudoers file
+      copy: remote_src=True src={{DJDIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/domjudge mode=0440 owner=root group=root
+

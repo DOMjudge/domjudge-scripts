@@ -1,0 +1,92 @@
+# Common tasks before building DOMjudge.
+---
+#     - name: fix apt sources list
+#       tags: packages
+#       replace:
+#         dest: /etc/apt/sources.list
+#         regexp: 'pc2cancer\.ecs\.csus\.edu'
+#         replace: 'packages'
+
+    - name: add packages to hosts file
+      tags: packages
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^10\.3\.3\.209'
+        line: "10.3.3.209	packages"
+
+    - name: update ssl certificate for packages
+      tags: packages
+      copy: src=files/packages.pem dest=/usr/local/share/ca-certificates/packages.crt
+      notify: update-ca-certificates
+
+    - meta: flush_handlers
+      tags: packages
+
+    - name: set timezone
+      timezone:
+        name: Asia/Shanghai
+
+    - name: install common required packages
+      tags: packages
+      apt: pkg={{item}} state=present
+      with_items:
+        - autoconf
+        - automake
+        - curl
+        - git
+        - gcc
+        - g++
+        - make
+        - zip
+        - unzip
+        - ntp
+        - php
+        - php-cli
+        - php-gd
+        - php-curl
+        - php-mysql
+        - php-json
+        - php-zip
+        - php-mbstring
+        - bsdmainutils
+        - libcgroup-dev
+        - libcurl4-gnutls-dev
+        - libjsoncpp-dev
+        - libmagic-dev
+        - composer
+        - debootstrap
+
+    - name: configure git as domjudge user
+      become: yes
+      become_user: domjudge
+      #command: git config --global {{item.name}} "{{item.value}}"
+      ini_file: dest=/home/domjudge/.gitconfig section=user option="{{item.name}}" value="{{item.value}}"
+      with_items:
+        - { name: 'email', value: 'team@domjudge.org' }
+        - { name: 'name', value: 'DOMjudge @ ICPC WF' }
+
+    #- name: create bare repository
+    #  become: yes
+    #  become_user: domjudge
+    #  git: bare=yes repo=http://github.com/domjudge/domjudge dest=/home/domjudge/domjudge-bare.git
+    #  register: create_bare_repo
+
+    - name: create working copy from the bare repo
+      become: yes
+      become_user: domjudge
+      git: repo=/home/domjudge/domjudge-bare.git dest={{DJDIR}} version=ICPC-live
+      when: create_bare_repo.changed
+
+    - name: Copy in composer dependencies
+      become: no
+      tags: sync
+      synchronize:
+        src: files/lib/vendor/
+        dest: "{{DJDIR}}/lib/vendor/"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
+
+    - name: fix permissions on composer directory
+      file: path="{{DJDIR}}/lib/vendor/" group=domjudge owner=domjudge recurse=yes
+

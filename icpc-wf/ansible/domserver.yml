@@ -24,13 +24,12 @@
         state: present
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+
     - name: create domjudge user
       user:
         name: domjudge
 
-    - name: set timezone
-      timezone:
-        name: Asia/Shanghai
+    - include: common_tasks_prebuild.yml
 
     - name: set PHP timezone
       lineinfile:
@@ -39,37 +38,12 @@
         regexp: 'date\.timezone\s*='
         line: 'date.timezone = Asia/Shanghai'
 
-    - name: install required packages
+    - name: install domserver required packages
       apt: pkg={{item}} state=present
       with_items:
-        - autoconf
-        - automake
-        - curl
-        - git
-        - gcc
-        - g++
-        - make
-        - ntp
-        - zip
-        - unzip
         - mysql-server
         - apache2
-        - php
-        - php-cli
         - libapache2-mod-php
-        - php-gd
-        - php-curl
-        - php-mysql
-        - php-json
-        - php-zip
-        - bsdmainutils
-        - phpmyadmin
-        - ntp
-        - libcgroup-dev
-        - libcurl4-gnutls-dev
-        - libjsoncpp-dev
-        - libmagic-dev
-        - composer
 
     - name: enable php modules
       command: phpenmod {{item}}
@@ -78,8 +52,10 @@
       with_items:
         - mcrypt
         - zip
+
     - name: update systemd so mysql has bigger limits
       copy: src=files/mysql.override.cnf dest=/etc/systemd/system/mysql.service.d/override.conf
+
     - name: update mysql max connections
       lineinfile:
         regexp: '^.*max_connections'
@@ -93,59 +69,7 @@
         dest: /etc/mysql/mysql.conf.d/mysqld.cnf
       notify: restart mysql
 
-    - name: configure git as domjudge user
-      become: yes
-      become_user: domjudge
-      #command: git config --global {{item.name}} "{{item.value}}"
-      ini_file: dest=/home/domjudge/.gitconfig section=user option="{{item.name}}" value="{{item.value}}"
-      with_items:
-        - { name: 'email', value: 'team@domjudge.org' }
-        - { name: 'name', value: 'DOMjudge @ ICPC WF' }
-
-    - name: create bare repository
-      become: yes
-      become_user: domjudge
-      git: bare=yes repo=http://github.com/domjudge/domjudge dest=/home/domjudge/domjudge-bare.git
-      register: create_bare_repo
-
-    - name: create working copy from the bare repo
-      become: yes
-      become_user: domjudge
-      git: repo=/home/domjudge/domjudge-bare.git dest={{DJDIR}} version=ICPC-live
-      when: create_bare_repo.changed
-
-    - name: Copy in composer dependencies
-      #copy: src=files/lib/vendor/ dest={{DJDIR}}/lib/vendor/ owner=domjudge group=domjudge
-      become: no
-      tags: sync
-      synchronize:
-        src: files/lib/vendor/
-        dest: "{{DJDIR}}/lib/vendor/"
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
-    - name: fix permissions on composer directory
-      file: path="{{DJDIR}}/lib/vendor/" group=domjudge owner=domjudge recurse=yes
-
-    - name: run maintainer-conf
-      become: yes
-      become_user: domjudge
-      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build'
-      register: dj_configured
-      args:
-        chdir: "{{DJDIR}}"
-        creates: "{{DJDIR}}/paths.mk"
-    - name: build domjudge
-      become: yes
-      become_user: domjudge
-      shell: make dist && make maintainer-install chdir={{DJDIR}}
-      when: dj_configured.changed
-
-    - name: fix permissions on things
-      shell: make -C {{DJDIR}} maintainer-postinstall-permissions
-    - name: copy domjudge-sudoers file
-      copy: remote_src=True src={{DJDIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/domjudge mode=0440 owner=root group=root
+    - include: common_tasks_build.yml
 
     - name: check if the database is configured
       command: "{{DJDIR}}/bin/dj_setup_database -u root status"
