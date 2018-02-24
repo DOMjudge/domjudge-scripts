@@ -52,6 +52,7 @@ $ sudo chmod g+r      $DJDIR/etc/dbpasswords.secret
 $ sudo install -m0440 $DJDIR/etc/sudoers-domjudge /etc/sudoers.d/
 
 Update config, CSS background color, ...
+NOTE: This is only necessary when we have more than one domjudge instance running, e.g. shadow + analytics
 $ sed -i "s/background-color: .*\$/background-color: $COLOR;/" $DJDIR/www/style.css
 
 $ sudo openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out /etc/ssl/certs/$HOST.crt -keyout /etc/ssl/private/$HOST.pem
