@@ -47,9 +47,6 @@
       copy: src=files/packages.pem dest=/usr/local/share/ca-certificates/packages.crt
       notify: update-ca-certificates
 
-    - meta: flush_handlers
-      tags: packages
-
     - name: set timezone
       timezone:
         name: Asia/Shanghai
