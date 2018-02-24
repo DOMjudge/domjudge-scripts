@@ -3,8 +3,6 @@
 - name: setup judgehost
   hosts: judgehost
   become: yes
-  vars:
-    KOTLINDEB: 'icpc-kotlinc_1.1.4-3~icpc1_all.deb'
   handlers:
     - name: update-grub
       command: update-grub
@@ -55,12 +53,8 @@
 
     - include: common_tasks_build.yml
 
-    - name: copy ICPC kotlin deb package
-      copy: src=files/{{KOTLINDEB}} dest=/root/
-      register: copy_debs
-
     - name: create chroot
-      shell: "{{DJDIR}}/misc-tools/dj_make_chroot -y -l /root/{{KOTLINDEB}}"
+      shell: "{{DJDIR}}/misc-tools/dj_make_chroot -y -i icpc-kotlinc"
       args:
         creates: "/chroot/domjudge"
 
