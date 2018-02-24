@@ -54,7 +54,7 @@
     - include: common_tasks_build.yml
 
     - name: create chroot
-      shell: "{{DJDIR}}/misc-tools/dj_make_chroot -y -i icpc-kotlinc"
+      shell: "DEBMIRROR='https://pc2cancer.ecs.csus.edu/ubuntu' {{DJDIR}}/misc-tools/dj_make_chroot -y -i icpc-kotlinc 2>&1 | tee /tmp/dj_make_chroot.log"
       args:
         creates: "/chroot/domjudge"
 
