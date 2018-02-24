@@ -48,6 +48,7 @@
         - php-curl
         - php-mysql
         - php-json
+        - php-xml
         - php-zip
         - php-mbstring
         - bsdmainutils
