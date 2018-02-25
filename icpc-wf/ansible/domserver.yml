@@ -12,12 +12,6 @@
     - name: include global variables
       include_vars: variables.yml
 
-#     - name: install public key
-#       authorized_key:
-#         user: icpc2018
-#         state: present
-#         key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCsQqeY+oNN50KjnHQDg0U1nrOQoQxibZBgHs7oA26Tmg3tsp46+jNNZoB9WWwQZff/bEusmn6VKy5MVx8syXvXDUoLc6MhHn4mxZuOJ8EYidoAbO5DGIGZFgSHJ1sj8cp+4Wc4jYaXLtatsWaUCa1sLnztL7+9Dtz7lYl/R4/MtAHnyICwSX+G1Q8gqZuq8ftmmbVAEj6GL280F06iFfzZNPAvo7fAzwV76cvWFOAn5HnffKVM7ckryRmg5C7y3z5ygIRURDDbmhcwKw9/I7T0fckkjRbAb0x75topF7c1ihim4dOQrzLpB5U7Ag82ov+ZXyaxsq60jwdNm2mePWo+hzhK6lA44rbx2em7IW+NNXAQrPsfInp2lA+3vCRcsiF+cIbGilkXHMB/gNH6tu+jFa6ZxYk9dhys6uajduINOmvunLIMPIZXU1/A6Hcb+W1L4HFW2v5k80wScbR/84Cc14jARJ6UVa91KZUDvuJ3M1cv20eWoiWBjBgmLZXVnsLDW0ZfyVa9id/IzHpVcV+1zEgMdJSbF6rcZBwp40w41lmBNUS0GssO5HA2bw2TN6Rf/HyAo5R3Kc++apPxmPA34Z6FaafU0S8QzUg/khxLtxmxcc32CwxHHbnz1GQX4Nf3yIKuebc06O7Paul0kHbDGWLAQ05ghWQhSElEJcjRRw== kjohnson
-
     - name: Allow 'sudo' group to have passwordless sudo
       lineinfile:
         dest: /etc/sudoers
