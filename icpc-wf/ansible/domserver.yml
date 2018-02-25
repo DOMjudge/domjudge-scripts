@@ -43,6 +43,9 @@
         - mcrypt
         - zip
 
+    - name: create directory for systemd mysql settings
+      file: path=/etc/systemd/system/mysql.service.d/ state=directory
+
     - name: update systemd so mysql has bigger limits
       copy: src=files/mysql.override.cnf dest=/etc/systemd/system/mysql.service.d/override.conf
 
