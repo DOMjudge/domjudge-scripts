@@ -103,7 +103,7 @@ done
 COVOPTS='--dir cov-int --fs-capture-search ./'
 if [ -n "$QUIET" ]; then
 	cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | \
-		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|^The cov-build utility completed successfully.|^\[STATUS\] |^\*+$|^\|[0-9-]+\|$|^\[WARNING\] Path .* looks like an idir\.)' || true
+		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|(JavaScript|PHP) compilation units \(99%\)|^The cov-build utility completed successfully.|^\[STATUS\] |^\*+$|^\|[0-9-]+\|$|^\[WARNING\] Path .* looks like an idir\.)' || true
 else
 	cov-build $COVOPTS make $QUIETMAKE coverity-build
 fi
