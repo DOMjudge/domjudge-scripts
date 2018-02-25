@@ -12,11 +12,6 @@
     - name: include global variables
       include_vars: variables.yml
 
-    - name: create domjudge user
-      user:
-        name: domjudge
-        password: "{{DOMJUDGE_USER_PASS}}"
-
     - name: create domjudge-run users
       user: name={{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
       with_items:

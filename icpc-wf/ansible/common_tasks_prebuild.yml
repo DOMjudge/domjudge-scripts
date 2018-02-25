@@ -59,6 +59,10 @@
         - composer
         - debootstrap
 
+    - name: create domjudge user
+      user:
+        name: domjudge
+
     - name: configure git as domjudge user
       become: yes
       become_user: domjudge

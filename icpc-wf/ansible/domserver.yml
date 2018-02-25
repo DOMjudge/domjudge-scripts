@@ -25,10 +25,6 @@
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
-    - name: create domjudge user
-      user:
-        name: domjudge
-
     - include: common_tasks_prebuild.yml
 
     - name: set PHP timezone
