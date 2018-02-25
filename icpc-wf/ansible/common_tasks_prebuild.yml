@@ -72,12 +72,6 @@
         - { name: 'email', value: 'team@domjudge.org' }
         - { name: 'name', value: 'DOMjudge @ ICPC WF' }
 
-    #- name: create bare repository
-    #  become: yes
-    #  become_user: domjudge
-    #  git: bare=yes repo=http://github.com/domjudge/domjudge dest=/home/domjudge/domjudge-bare.git
-    #  register: create_bare_repo
-
     - name: create working copy from the bare repo
       become: yes
       become_user: domjudge

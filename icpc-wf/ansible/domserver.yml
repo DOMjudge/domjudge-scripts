@@ -19,6 +19,12 @@
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
+    - name: create bare repository
+      register: create_bare_repo
+      become: yes
+      become_user: domjudge
+      git: bare=yes repo=http://github.com/domjudge/domjudge dest=/home/domjudge/domjudge-bare.git
+
     - include: common_tasks_prebuild.yml
 
     - name: set PHP timezone
