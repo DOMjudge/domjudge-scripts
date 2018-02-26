@@ -54,18 +54,10 @@
 
     - name: update systemd so mysql has bigger limits
       copy: src=files/mysql.override.cnf dest=/etc/systemd/system/mysql.service.d/override.conf
-
-    - name: update mysql max connections
-      lineinfile:
-        regexp: '^.*max_connections'
-        line: 'max_connections = 1000'
-        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
       notify: restart mysql
-    - name: update mysql max open files
-      lineinfile:
-        regexp: '^.*open_files_limit'
-        line: 'open_files_limit = 10000'
-        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+
+    - name: add mysql config snippet to increase limit
+      copy: src=files/mysql.domjudge.cnf dest=/etc/mysql/mysql.conf.d/zz_domjudge.cnf
       notify: restart mysql
 
     - include: common_tasks_build.yml

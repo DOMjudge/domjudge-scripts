@@ -1,0 +1,7 @@
+# Installed by DOMjudge ansible script
+
+[mysqld]
+open_files_limit     = 10000
+max_connections      = 1000
+max_allowed_packet   = 256M
+innodb_log_file_size = 1024M
