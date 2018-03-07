@@ -28,7 +28,7 @@
 #     timezone:
 #       name: Asia/Shanghai
 
-    - name: install common required packages
+    - name: install common required/useful packages
       tags: packages
       apt: pkg={{item}} state=present
       with_items:
@@ -58,6 +58,9 @@
         - libmagic-dev
         - composer
         - debootstrap
+        - ack-grep
+        - htop
+        - ncdu
 
     - name: create domjudge user
       user:
