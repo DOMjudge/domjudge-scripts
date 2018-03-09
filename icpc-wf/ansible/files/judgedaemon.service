@@ -1,7 +1,9 @@
 [Unit]
 Description=DOMjudge JudgeDaemon
 Requires=create_cgroups.service
+Requires=tune_cpu.service
 After=create_cgroups.service
+After=tune_cpu.service
 After=network.target
 
 [Service]
