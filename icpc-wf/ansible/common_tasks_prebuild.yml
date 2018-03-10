@@ -61,6 +61,9 @@
         - ack-grep
         - htop
         - ncdu
+        - httpie
+        - mycli
+        - screen
 
     - name: create domjudge user
       user:
