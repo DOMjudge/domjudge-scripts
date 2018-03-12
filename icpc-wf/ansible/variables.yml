@@ -10,5 +10,6 @@ DOMSERVER: https://domserver
 DOMSERVER_IP: 10.3.3.215
 DOMSERVER_URL: "{{DOMSERVER}}/domjudge"
 
-# Credentials for the REST API and system user.
-DOMSERVER_JH_PASS: RESTAPI_PASSWORD
+# Credentials for the REST API.
+API_USER: RESTAPI_USER
+API_PASSWORD: RESTAPI_PASSWORD
