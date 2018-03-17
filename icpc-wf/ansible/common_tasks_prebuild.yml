@@ -97,3 +97,8 @@
     - name: fix permissions on composer directory
       file: path="{{DJDIR}}/lib/vendor/" group=domjudge owner=domjudge recurse=yes
 
+    - name: configure domjudge logging
+      copy: src=files/rsyslog.domjudge.conf dest=/etc/rsyslog.d/domjudge.conf
+
+    - name: configure domjudge logrotate
+      copy: src=files/logrotate.domjudge dest=/etc/logrotate.d/domjudge

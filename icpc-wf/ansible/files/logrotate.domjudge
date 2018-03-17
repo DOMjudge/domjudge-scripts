@@ -1,0 +1,7 @@
+/var/log/domjudge.log {
+    weekly
+    rotate 12
+    compress
+    missingok
+    create 0640 root adm
+}
