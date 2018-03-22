@@ -100,5 +100,8 @@
     - name: configure domjudge logging
       copy: src=files/rsyslog.domjudge.conf dest=/etc/rsyslog.d/domjudge.conf
 
+    - name: restart rsyslog service
+      service: name=rsyslog enabled=yes state=restarted
+
     - name: configure domjudge logrotate
       copy: src=files/logrotate.domjudge dest=/etc/logrotate.d/domjudge
