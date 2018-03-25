@@ -105,17 +105,25 @@ if [ -n "$NEWERTHAN" ]; then
 fi
 
 # First rename some files to keep Coverity scan happy:
-for i in tests/test-compile-error.* lib/vendor/symfony/symfony/src/Symfony/Component/PropertyInfo/Tests/Fixtures/Php71Dummy.php ; do
+for i in tests/test-compile-error.* ; do
 	mv $i $i-coverity-renamed
 done
+# Secondly delete test suites to reduce the size of the build:
+find lib/vendor -name Tests -type d -print0 | xargs -0 /bin/rm -rf
 
 COVOPTS='--dir cov-int --fs-capture-search ./'
 cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | quietfilter
 
-# Revert renamed files:
-for i in `find . -name \*-coverity-renamed` ; do
-	mv $i ${i%-coverity-renamed}
-done
+# Restore renamed/deleted stuff if not running from a temporay git clone:
+if true || [ -z "$GITURL" ]; then
+	for i in `find . -name \*-coverity-renamed` ; do
+		mv $i ${i%-coverity-renamed}
+	done
+	if [ -d lib/vendor ]; then
+		rm -rf lib/vendor/*
+		make $QUIETMAKE composer-dependencies
+	fi
+fi
 
 DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
 # Read variables again for files produced by coverity-build:
