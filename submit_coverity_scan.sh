@@ -81,6 +81,15 @@ git_commit()
 	git rev-parse HEAD | cut -c -12
 }
 
+quietfilter()
+{
+	if [ "$QUIET" ]; then
+		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|(JavaScript|PHP) compilation units \(99%\)|^The cov-build utility completed successfully\.|^Build successfully submitted\.|^\[STATUS\] |^\*+$|^\|[0-9-]+\|$|^\[WARNING\] Path .* looks like an idir\.)' || true
+	else
+		cat
+	fi
+}
+
 if [ -n "$GITURL" ]; then
 	TEMPDIR=`mktemp -d /tmp/cov-scan-XXXXXX`
 	git clone $QUIETOPT "$GITURL" $TEMPDIR
@@ -101,12 +110,7 @@ for i in tests/test-compile-error.* lib/vendor/symfony/symfony/src/Symfony/Compo
 done
 
 COVOPTS='--dir cov-int --fs-capture-search ./'
-if [ -n "$QUIET" ]; then
-	cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | \
-		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|(JavaScript|PHP) compilation units \(99%\)|^The cov-build utility completed successfully\.|^Build successfully submitted\.|^\[STATUS\] |^\*+$|^\|[0-9-]+\|$|^\[WARNING\] Path .* looks like an idir\.)' || true
-else
-	cov-build $COVOPTS make $QUIETMAKE coverity-build
-fi
+cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | quietfilter
 
 # Revert renamed files:
 for i in `find . -name \*-coverity-renamed` ; do
@@ -141,7 +145,8 @@ TMP=`mktemp --tmpdir curl-cov-submit-XXXXXX.html`
 ${DEBUG:+echo} \
 curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
      --form version="$VERSION" --form description="$VERSION - $DESC" \
-     -o $TMP ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT"
+     -o $TMP ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT" 2>&1 \
+	| quietfilter
 
 grep -vE '^[[:space:]]*$' $TMP
 
