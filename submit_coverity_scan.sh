@@ -108,8 +108,8 @@ fi
 for i in tests/test-compile-error.* ; do
 	mv $i $i-coverity-renamed
 done
-# Secondly delete test suites to reduce the size of the build:
-find lib/vendor -name Tests -type d -print0 | xargs -0 /bin/rm -rf
+# Secondly delete all upstream PHP libraries:
+rm -rf lib/vendor/*
 
 COVOPTS='--dir cov-int --fs-capture-search ./'
 cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | quietfilter
