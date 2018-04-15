@@ -16,3 +16,12 @@ REPLICATION_PASSWORD: REPLICATION_PASSWORD
 # Credentials for the REST API.
 API_USER: RESTAPI_USER
 API_PASSWORD: RESTAPI_PASSWORD
+
+# Password for domjudge shell user
+DJ_SHELL_USER_PW: some-hashed-password
+
+# Host where git repo is stored
+DJ_GIT_HOST: 10.3.3.223
+
+# Key for domjudge user
+DJ_SSH_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEW4j7DOQ/BGT6ATtBLAcUHGVuHyydqs7E31DMbcX5uO icpc2018@domjudge-ccsadmin2

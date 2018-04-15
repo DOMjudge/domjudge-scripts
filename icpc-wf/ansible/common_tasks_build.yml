@@ -17,7 +17,7 @@
       become: yes
       become_user: domjudge
       shell: make dist && make maintainer-install chdir={{DJDIR}}
-      when: create_bare_repo.changed or dj_configured.changed or not judgedaemon_binary.stat.exists
+      when: dj_configured.changed or not judgedaemon_binary.stat.exists
 
     - name: fix permissions on things
       shell: make -C {{DJDIR}} maintainer-postinstall-permissions

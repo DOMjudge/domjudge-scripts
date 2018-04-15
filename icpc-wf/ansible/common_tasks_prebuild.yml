@@ -77,6 +77,13 @@
       user:
         name: domjudge
         shell: /bin/bash
+        password: "{{DJ_SHELL_USER_PW}}"
+
+    - name: Add authorized key
+      authorized_key:
+        user: domjudge
+        state: present
+        key: "{{DJ_SSH_KEY}}"
 
     - name: configure git as domjudge user
       become: yes
@@ -93,24 +100,19 @@
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
-    - name: create bare repository
-      become: no
-      synchronize:
-        src: files/domjudge-bare.git
-        dest: /home/domjudge
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-      register: create_bare_repo
+    - name: Create .ssh directory
+      file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
 
-    - name: fix permissions on bare git repositry
-      file: path="/home/domjudge/domjudge-bare.git" group=domjudge owner=domjudge recurse=yes
+    - name: Copy SSH key for git access
+      copy: src=files/dj_ed25519 dest=/home/domjudge/.ssh/dj_ed25519 owner=domjudge group=domjudge mode=0600
 
-    - name: create working copy from the bare repo
+    - name: Create SSH config
+      template: src=files/ssh-config-domjudge.j2 dest=.ssh/config owner=domjudge group=domjudge mode=0600
+
+    - name: create working copy from the repo
       become: yes
       become_user: domjudge
-      git: repo=/home/domjudge/domjudge-bare.git dest={{DJDIR}} version=ICPC-live
-      when: create_bare_repo.changed
+      git: repo=domjudge@{{DJ_GIT_HOST}}:domjudge dest={{DJDIR}} version=ICPC-live accept_hostkey=yes update=yes
 
     - name: Copy in composer dependencies
       become: no

@@ -24,15 +24,6 @@
     - name: create domjudge-run group
       group: name=domjudge-run state=present
 
-    - name: sync domjudge git repo from this workstation to the host
-      register: create_bare_repo
-      become: no
-      synchronize:
-        src: files/domjudge-bare.git/
-        dest: /home/domjudge/domjudge-bare.git
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
     - include: common_tasks_prebuild.yml
 
     - name: template out the restapi secret file
