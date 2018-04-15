@@ -55,7 +55,6 @@
         - make
         - zip
         - unzip
-        - ntp
         - php
         - php-cli
         - php-gd
