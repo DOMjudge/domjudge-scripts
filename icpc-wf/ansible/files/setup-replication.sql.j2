@@ -1,0 +1,13 @@
+-- This should be run on each master to extract File and Position
+-- for setting up the other as slave below.
+SHOW MASTER STATUS;
+
+-- This should be run on the slave after the master is set up.
+-- The MASTER_LOG_{HOST,FILE,POS} have to be taken from the other master.
+SLAVE STOP;
+CHANGE MASTER TO MASTER_HOST='10.3.3.',
+                 MASTER_USER='replicator',
+                 MASTER_PASSWORD='{{REPLICATION_PASSWORD}}',
+                 MASTER_LOG_FILE='',
+                 MASTER_LOG_POS='';
+SLAVE START;

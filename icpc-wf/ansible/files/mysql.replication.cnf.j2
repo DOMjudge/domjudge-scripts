@@ -1,0 +1,11 @@
+# master-master replication setup
+
+[mysqld]
+
+bind-address = 0.0.0.0
+
+log-bin = /var/log/mysql/mysql-bin.log
+binlog_do_db = domjudge
+
+# Host specific replication configuration
+server_id = {{ ansible_default_ipv4.address | regex_replace('^10\.3\.3\.', '') }}
