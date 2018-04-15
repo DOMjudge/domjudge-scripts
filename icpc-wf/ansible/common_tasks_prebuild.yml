@@ -1,11 +1,18 @@
 # Common tasks before building DOMjudge.
 ---
-#     - name: fix apt sources list
-#       tags: packages
-#       replace:
-#         dest: /etc/apt/sources.list
-#         regexp: 'pc2cancer\.ecs\.csus\.edu'
-#         replace: 'packages'
+    - name: fix apt sources list
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list
+        regexp: 'pc2cancer\.ecs\.csus\.edu'
+        replace: 'packages'
+
+    - name: remove pycharm repo
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list
+        regexp: '^([^#].*pycharm.*)$'
+        replace: '# \1'
 
     - name: add packages to hosts file
       tags: packages
@@ -68,6 +75,7 @@
     - name: create domjudge user
       user:
         name: domjudge
+        shell: /bin/bash
 
     - name: configure git as domjudge user
       become: yes
@@ -76,7 +84,26 @@
       ini_file: dest=/home/domjudge/.gitconfig section=user option="{{item.name}}" value="{{item.value}}"
       with_items:
         - { name: 'email', value: 'team@domjudge.org' }
-        - { name: 'name', value: 'DOMjudge @ ICPC WF' }
+
+    - name: Allow 'sudo' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+
+    - name: create bare repository
+      become: no
+      synchronize:
+        src: files/domjudge-bare.git
+        dest: /home/domjudge
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
+      register: create_bare_repo
+
+    - name: fix permissions on bare git repositry
+      file: path="/home/domjudge/domjudge-bare.git" group=domjudge owner=domjudge recurse=yes
 
     - name: create working copy from the bare repo
       become: yes

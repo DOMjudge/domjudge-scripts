@@ -8,7 +8,7 @@ DJDIR: /home/domjudge/domjudge
 # DOMSERVER_IP will be added to the judgehost /etc/hosts file.
 DOMSERVER: https://domserver
 DOMSERVER_IP: 10.3.3.215
-DOMSERVER_URL: "{{DOMSERVER}}/domjudge"
+DOMSERVER_URL: "{{DOMSERVER}}"
 
 # Credentials for the REST API.
 API_USER: RESTAPI_USER

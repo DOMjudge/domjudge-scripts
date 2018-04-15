@@ -12,30 +12,10 @@
     - name: include global variables
       include_vars: variables.yml
 
-    - name: Allow 'sudo' group to have passwordless sudo
-      lineinfile:
-        dest: /etc/sudoers
-        state: present
-        regexp: '^%sudo'
-        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
-
-    - name: create bare repository
-      register: create_bare_repo
-      become: yes
-      become_user: domjudge
-      git: bare=yes repo=http://github.com/domjudge/domjudge dest=/home/domjudge/domjudge-bare.git
-
     - include: common_tasks_prebuild.yml
 
     - name: template out the restapi secret file
       template: src=files/restapi.secret.j2 dest={{DJDIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
-
-    - name: set PHP timezone
-      lineinfile:
-        dest: /etc/php/7.0/apache2/php.ini
-        state: present
-        regexp: 'date\.timezone\s*='
-        line: 'date.timezone = Asia/Shanghai'
 
     - name: install domserver required packages
       apt: pkg={{item}} state=present
@@ -43,6 +23,13 @@
         - mysql-server
         - apache2
         - libapache2-mod-php
+
+    - name: set PHP timezone
+      lineinfile:
+        dest: /etc/php/7.0/apache2/php.ini
+        state: present
+        regexp: 'date\.timezone\s*='
+        line: 'date.timezone = Asia/Shanghai'
 
     - name: enable php modules
       command: phpenmod {{item}}
@@ -81,6 +68,12 @@
         dest: "{{DJDIR}}/webapp/web/style.css"
       when: BACKGROUND_COLOR is defined
 
+    - name: Copy SSL public key file
+      copy: src=files/2018wf-domjudge.crt dest=/etc/ssl/certs/2018wf-domjudge.crt owner=root group=root mode=0600
+
+    - name: Copy SSL private key file
+      copy: src=files/2018wf-domjudge.pem dest=/etc/ssl/private/2018wf-domjudge.pem owner=root group=root mode=0600
+
     - name: Update servername in apache config
       lineinfile:
         insertbefore: '^#Global config'
@@ -95,8 +88,12 @@
       file: src=/etc/apache2/conf-available/domjudge.conf dest=/etc/apache2/conf-enabled/domjudge.conf state=link
       notify: restart apache2
 
-    - name: enable apache2 modules
+    - name: enable apache2 ssl module
       apache2_module: name=ssl state=present
+      notify: restart apache2
+
+    - name: enable apache2 rewrite module
+      apache2_module: name=rewrite state=present
       notify: restart apache2
 
     - name: disable default apache site
