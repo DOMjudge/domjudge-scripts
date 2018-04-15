@@ -6,7 +6,7 @@ DJDIR: /home/domjudge/domjudge
 
 # URL and IP of domserver from judgehosts. A hostname 'domserver' with
 # DOMSERVER_IP will be added to the judgehost /etc/hosts file.
-DOMSERVER: https://domserver
+DOMSERVER: https://domjudge
 DOMSERVER_IP: 10.3.3.215
 DOMSERVER_URL: "{{DOMSERVER}}"
 
