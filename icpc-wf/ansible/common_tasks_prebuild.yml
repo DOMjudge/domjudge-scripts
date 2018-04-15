@@ -120,6 +120,7 @@
       become: yes
       become_user: domjudge
       git: repo=domjudge@{{DJ_GIT_HOST}}:domjudge dest={{DJDIR}} version=ICPC-live accept_hostkey=yes update=yes
+      register: git_working_copy
 
     - name: Copy in composer dependencies
       become: no
