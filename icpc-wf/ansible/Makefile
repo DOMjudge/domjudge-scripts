@@ -13,4 +13,4 @@ files/lib/vendor: files/lib-vendor.tgz
 clean:
 	rm -rf files/lib/vendor
 
-.PHONY: default clean domserver judgehosts
+.PHONY: default clean domserver judgehost
