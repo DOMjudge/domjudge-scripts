@@ -78,6 +78,15 @@
         - mycli
         - screen
 
+    - name: remove some packages
+      tags: packages
+      apt: pkg={{item}} state=absent
+      with_items:
+      - ntp
+
+    - name: restart systemd timesyncd
+      command: systemctl restart systemd-timesyncd
+
     - name: create domjudge user
       user:
         name: domjudge
