@@ -21,6 +21,12 @@
         regexp: '^10\.3\.3\.209'
         line: "10.3.3.209	packages"
 
+    - name: add domjudge to hosts file
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^10\.3\.3\.215'
+        line: "10.3.3.215	domjudge"
+
     - name: update ssl certificate for packages
       tags: packages
       copy: src=files/packages.pem dest=/usr/local/share/ca-certificates/packages.crt
