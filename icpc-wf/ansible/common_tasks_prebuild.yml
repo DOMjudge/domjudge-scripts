@@ -77,6 +77,7 @@
       user:
         name: domjudge
         shell: /bin/bash
+        groups: sudo
         password: "{{DJ_SHELL_USER_PW}}"
 
     - name: Add authorized key
@@ -107,7 +108,7 @@
       copy: src=files/dj_ed25519 dest=/home/domjudge/.ssh/dj_ed25519 owner=domjudge group=domjudge mode=0600
 
     - name: Create SSH config
-      template: src=files/ssh-config-domjudge.j2 dest=.ssh/config owner=domjudge group=domjudge mode=0600
+      template: src=files/ssh-config-domjudge.j2 dest=/home/domjudge/.ssh/config owner=domjudge group=domjudge mode=0600
 
     - name: create working copy from the repo
       become: yes

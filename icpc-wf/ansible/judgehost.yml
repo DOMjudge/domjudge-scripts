@@ -65,6 +65,9 @@
         - tune_cpu
         - judgedaemon
 
+    - name: autologin domjudge user
+      copy: src=files/lightdm-domjudge.conf dest=/etc/lightdm/lightdm.conf.d/domjudge.conf
+
     - name: make sure autostart directory exists
       file: dest=/home/domjudge/.config/autostart state=directory owner=domjudge group=domjudge
       tags: fix_autostart
