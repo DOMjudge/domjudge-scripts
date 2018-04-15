@@ -8,6 +8,8 @@
       service: name=mysql state=restarted
     - name: restart apache2
       service: name=apache2 state=restarted
+    - name: restart collectd
+      service: name=collectd state=restarted
   tasks:
     - name: include global variables
       include_vars: variables.yml
