@@ -4,10 +4,12 @@ SHOW MASTER STATUS;
 
 -- This should be run on the slave after the master is set up.
 -- The MASTER_LOG_{HOST,FILE,POS} have to be taken from the other master.
-SLAVE STOP;
-CHANGE MASTER TO MASTER_HOST='10.3.3.',
-                 MASTER_USER='replicator',
+STOP SLAVE;
+CHANGE MASTER TO MASTER_HOST='10.3.3.XXX',
+                 MASTER_USER='replication',
                  MASTER_PASSWORD='{{REPLICATION_PASSWORD}}',
-                 MASTER_LOG_FILE='',
-                 MASTER_LOG_POS='';
-SLAVE START;
+                 MASTER_LOG_FILE='mysql-bin.000001',
+                 MASTER_LOG_POS=YYY;
+START SLAVE;
+
+SHOW SLAVE STATUS;

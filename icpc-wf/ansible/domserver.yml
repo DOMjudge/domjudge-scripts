@@ -64,7 +64,13 @@
       template: src=files/setup-replication.sql.j2 dest=/tmp/setup-replication.sql
 
     - name: create mysql replication user
-      mysql_user: name=replication host='%' password={{REPLICATION_PASSWORD}} state=present
+      mysql_user:
+        name: replication
+        host: '%'
+        password: "{{REPLICATION_PASSWORD}}"
+        append_privs: true
+        priv: '*.*:REPLICATION SLAVE'
+        state: present
 
     - include: common_tasks_build.yml
 
