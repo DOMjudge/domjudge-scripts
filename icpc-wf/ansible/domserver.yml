@@ -83,13 +83,14 @@
 
     - include: common_tasks_build.yml
 
-    - name: check if the database is configured
-      command: "{{DJDIR}}/bin/dj_setup_database -u root status"
-      register: db_status
-      ignore_errors: true
-    - name: make sure the database is configured
-      command: "{{DJDIR}}/bin/dj_setup_database -u root bare-install"
-      when: "'failed' in db_status.stdout"
+# TODO: find a way to run this correctly when having a master-master setup that doesn't use localhost in the dbpasswords.secret file
+#    - name: check if the database is configured
+#      command: "{{DJDIR}}/bin/dj_setup_database -u root status"
+#      register: db_status
+#      ignore_errors: true
+#    - name: make sure the database is configured
+#      command: "{{DJDIR}}/bin/dj_setup_database -u root bare-install"
+#      when: "'failed' in db_status.stdout"
 
     - name: fix background color
       lineinfile:
