@@ -249,11 +249,11 @@ MYSQL_INNODB_STATUS_MATCHES = {
         'file_writes': 4,
     },
     # ibuf aio reads: 0, log i/o's: 0, sync i/o's: 0
-    'ibuf aio reads': {
-        'pending_ibuf_aio_reads': 3,
-        'pending_aio_log_ios': 6,
-        'pending_aio_sync_ios': 9,
-    },
+    #'ibuf aio reads': {
+    #    'pending_ibuf_aio_reads': 3,
+    #    'pending_aio_log_ios': 6,
+    #    'pending_aio_sync_ios': 9,
+    #},
     # Pending flushes (fsync) log: 0; buffer pool: 0
     'Pending flushes (fsync)': {
         'pending_buf_pool_flushes': 7,

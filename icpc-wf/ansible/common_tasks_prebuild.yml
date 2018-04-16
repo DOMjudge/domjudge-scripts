@@ -150,7 +150,7 @@
       when: "'domjudge-primary' in ansible_hostname or 'domjudge-backup' in ansible_hostname"
 
     - name: copy mysql metrics collection script
-      copy: src=files/collectd-mysql.py dest=/etc/collectd/collectd-python/collectd-mysql.py mode=0755
+      copy: src=files/collectd-mysql.py dest=/etc/collectd/collectd-python/mysql.py mode=0755
       when: "'domjudge-primary' in ansible_hostname or 'domjudge-backup' in ansible_hostname"
 
     - name: fix permissions on composer directory

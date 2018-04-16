@@ -36,6 +36,7 @@ LoadPlugin mysql
 </LoadPlugin>
 <Plugin python>
   ModulePath "/etc/collectd/collectd-python"
+  Import mysql
   <Module "mysql">
     Host "localhost"
     User "collectdstatus"
