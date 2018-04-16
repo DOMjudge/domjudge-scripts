@@ -29,7 +29,19 @@ LoadPlugin mysql
     SlaveStats true
     SlaveNotifications true
   </Database>
+</Plugin>
 
+<LoadPlugin python>
+  Globals true
+</LoadPlugin>
+<Plugin python>
+  ModulePath "/etc/collectd/collectd-python"
+  <Module "mysql">
+    Host "localhost"
+    User "collectdstatus"
+    Password "{{COLLECTD_MYSQL_PASSWORD}}"
+    Port 3306
+  </Module>
 </Plugin>
 {% endif %}
 
