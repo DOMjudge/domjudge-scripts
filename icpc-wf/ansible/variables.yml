@@ -20,6 +20,10 @@ COLLECTD_MYSQL_PASSWORD: password-here
 API_USER: RESTAPI_USER
 API_PASSWORD: RESTAPI_PASSWORD
 
+# Credentials for the REST API as admin.
+API_ADMIN_USER: API_ADMIN_USER
+API_ADMIN_PASSWORD: API_ADMIN_PASSWORD
+
 # Password for domjudge shell user
 DJ_SHELL_USER_PW: some-hashed-password
 
