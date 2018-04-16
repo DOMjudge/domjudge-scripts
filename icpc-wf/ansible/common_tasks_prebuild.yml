@@ -77,6 +77,7 @@
         - httpie
         - mycli
         - screen
+        - qmlscene
 
     - name: remove some packages
       tags: packages
@@ -164,3 +165,6 @@
 
     - name: configure domjudge logrotate
       copy: src=files/logrotate.domjudge dest=/etc/logrotate.d/domjudge
+
+    - name: copy DOMjudge logo binary
+      copy: src=files/domlogo dest=/home/domjudge/domlogo owner=domjudge group=domjudge mode=0755

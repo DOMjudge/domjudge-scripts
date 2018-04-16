@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=domjudgelogo-domserver
+Type=Application
+Exec=bash -c "sleep 10 && /home/domjudge/domlogo"

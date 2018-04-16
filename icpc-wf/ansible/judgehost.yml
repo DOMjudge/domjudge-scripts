@@ -77,3 +77,4 @@
       with_items:
         - taillog
         - rotate
+        - domjudgelogo

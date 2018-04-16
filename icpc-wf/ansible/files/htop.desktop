@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=htop
+Type=Application
+Exec=gnome-terminal --window --geometry 150x18+0+0 -e 'bash -c "sudo htop"'

@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=domjudgelogo
+Type=Application
+Exec=bash -c "sleep 10 && tail -f /home/domjudge/domjudge/output/log/*-0.log | /home/domjudge/domlogo"
