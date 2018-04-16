@@ -102,6 +102,7 @@
         line: 'Servername {{ansible_hostname}}'
         dest: /etc/apache2/apache2.conf
       notify: restart apache2
+
     - name: link in domjudge apache conf
       file: src={{DJDIR}}/etc/apache.conf dest=/etc/apache2/conf-available/domjudge.conf state=link
       notify: restart apache2
@@ -124,4 +125,40 @@
 
     - name: enable default-ssl apache site
       file: src=/etc/apache2/sites-available/default-ssl.conf dest=/etc/apache2/sites-enabled/000-default-ssl state=link
+      notify: restart apache2
+
+    - name: disable apache keepalive
+      replace:
+        dest: /etc/apache2/apache2.conf
+        regexp: 'KeepAlive\s+On'
+        replace: 'KeepAlive Off'
+      notify: restart apache2
+
+    - name: change NPM prefork MinSpareServers
+      replace:
+        dest: /etc/apache2/mods-enabled/mpm_prefork.conf
+        regexp: '^[^#].*MinSpareServers.*$'
+        replace: '\tMinSpareServers   50'
+      notify: restart apache2
+
+    - name: change NPM prefork MaxSpareServers
+      replace:
+        dest: /etc/apache2/mods-enabled/mpm_prefork.conf
+        regexp: '^[^#].*MaxSpareServers.*$'
+        replace: '\tMaxSpareServers   100'
+      notify: restart apache2
+
+    - name: change NPM prefork MaxRequestWorkers
+      replace:
+        dest: /etc/apache2/mods-enabled/mpm_prefork.conf
+        regexp: '^[^#].*MaxRequestWorkers.*$'
+        replace: '\tMaxRequestWorkers 500'
+      notify: restart apache2
+
+    - name: add NPM prefork ServerLimit
+      lineinfile:
+        dest: /etc/apache2/mods-enabled/mpm_prefork.conf
+        regexp: 'ServerLimit'
+        line: '	ServerLimit       500'
+        insertbefore: '/IfModule'
       notify: restart apache2
