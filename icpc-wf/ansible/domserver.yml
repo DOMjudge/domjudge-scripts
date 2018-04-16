@@ -26,6 +26,7 @@
         - apache2
         - libapache2-mod-php
         - python-mysqldb
+        - php-intl
 
     - name: set PHP timezone
       lineinfile:
@@ -41,6 +42,7 @@
       with_items:
         - mcrypt
         - zip
+        - intl
 
     - name: create directory for systemd mysql settings
       file: path=/etc/systemd/system/mysql.service.d/ state=directory
