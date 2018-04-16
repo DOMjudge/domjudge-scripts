@@ -13,6 +13,9 @@ DOMSERVER_URL: "{{DOMSERVER}}"
 # Password for the MySQL replication user.
 REPLICATION_PASSWORD: REPLICATION_PASSWORD
 
+# Password for the collectd MySQL status user.
+COLLECTD_MYSQL_PASSWORD: password-here
+
 # Credentials for the REST API.
 API_USER: RESTAPI_USER
 API_PASSWORD: RESTAPI_PASSWORD

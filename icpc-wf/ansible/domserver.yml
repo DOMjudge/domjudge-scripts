@@ -72,6 +72,15 @@
         priv: '*.*:REPLICATION SLAVE'
         state: present
 
+    - name: create collectd user for mysql status
+      mysql_user:
+        name: collectdstatus
+        host: 'localhost'
+        password: "{{COLLECTD_MYSQL_PASSWORD}}"
+        append_privs: true
+        priv: '*.*:PROCESS/*.*:REPLICATION CLIENT'
+        state: present
+
     - include: common_tasks_build.yml
 
     - name: check if the database is configured
