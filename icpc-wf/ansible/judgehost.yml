@@ -75,3 +75,12 @@
         - taillog
         - rotate
         - domjudgelogo
+
+    - name: disable systemd timers
+      command: systemctl mask {{item}}
+      args:
+        creates: /etc/systemd/system/{{item}}
+      with_items:
+        - apt-daily-upgrade.timer
+        - apt-daily.timer
+        - systemd-tmpfiles-clean.timer
