@@ -35,6 +35,9 @@
 
     - include: common_tasks_build.yml
 
+    - name: enable internal monitor
+      file: path=/usr/share/X11/xorg.conf.d/22-icpc.conf state=absent
+
     - name: create chroot
       shell: "DEBMIRROR='https://packages/ubuntu' {{DJDIR}}/misc-tools/dj_make_chroot -y -i icpc-kotlinc 2>&1 | tee /tmp/dj_make_chroot.log"
       args:
