@@ -106,6 +106,7 @@ fi
 
 # First rename some files to keep Coverity scan happy:
 for i in tests/test-compile-error.* ; do
+	[ -e "$i" ] || continue
 	mv $i $i-coverity-renamed
 done
 # Secondly delete all upstream PHP libraries:
