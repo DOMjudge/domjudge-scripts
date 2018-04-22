@@ -123,12 +123,11 @@
       file: src=/etc/apache2/conf-available/domjudge.conf dest=/etc/apache2/conf-enabled/domjudge.conf state=link
       notify: restart apache2
 
-    - name: enable apache2 ssl module
-      apache2_module: name=ssl state=present
-      notify: restart apache2
-
-    - name: enable apache2 rewrite module
-      apache2_module: name=rewrite state=present
+    - name: enable apache2 modules
+      apache2_module: name={{item}} state=present
+      with_items:
+        - ssl
+        - rewrite
       notify: restart apache2
 
     - name: disable default apache site
