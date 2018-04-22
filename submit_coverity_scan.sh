@@ -84,7 +84,7 @@ git_commit()
 quietfilter()
 {
 	if [ "$QUIET" ]; then
-		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|(JavaScript|PHP) compilation units \(99%\)|^The cov-build utility completed successfully\.|^Build successfully submitted\.|^\[STATUS\] |^\*+$|^\|[0-9-]+\|$|^\[WARNING\] Path .* looks like an idir\.)' || true
+		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|(JavaScript|PHP) compilation units \(99%\)|^The cov-build utility completed successfully\.|^Build successfully submitted\.|^\[STATUS\] |^\*+$|^\|[0-9-]+\|$|^\[WARNING\] (Path .* looks like an idir\.|No source file matches in filesystem capture search directory:|Filesystem capture was enabled but yielded no source file matches\.))' || true
 	else
 		cat
 	fi
@@ -157,7 +157,7 @@ curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
      -o $TMP ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT" 2>&1 \
 	| quietfilter
 
-grep -vE '^[[:space:]]*$' $TMP
+[ -n "QUIET" ] || grep -vE '^[[:space:]]*$' $TMP
 
 rm -f $TMP
 
