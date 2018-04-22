@@ -33,7 +33,7 @@
         dest: /etc/php/7.0/apache2/php.ini
         state: present
         regexp: 'date\.timezone\s*='
-        line: 'date.timezone = Asia/Shanghai'
+        line: 'date.timezone = {{TIMEZONE}}'
 
     - name: enable php modules
       command: phpenmod {{item}}

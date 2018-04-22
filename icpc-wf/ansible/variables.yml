@@ -10,6 +10,8 @@ DOMSERVER: https://domjudge
 DOMSERVER_IP: 10.3.3.215
 DOMSERVER_URL: "{{DOMSERVER}}"
 
+TIMEZONE: "Asia/Shanghai"
+
 # Password for the MySQL replication user.
 REPLICATION_PASSWORD: REPLICATION_PASSWORD
 

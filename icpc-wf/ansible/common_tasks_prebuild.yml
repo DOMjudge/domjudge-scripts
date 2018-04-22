@@ -36,10 +36,10 @@
       tags: packages
 
     - name: set timezone
-      command: timedatectl set-timezone Asia/Shanghai
+      command: timedatectl set-timezone {{TIMEZONE}}
 # With ansible >= 2.2 this can be changed to:
 #     timezone:
-#       name: Asia/Shanghai
+#       name: {{TIMEZONE}}
 
     - name: install common required/useful packages
       tags: packages
