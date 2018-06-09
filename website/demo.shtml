@@ -37,18 +37,6 @@ Team source code has been replaced with a placeholder, so the source formatting
 functionality is not useful.</dd>
 </dl>
 
-<h3>New UI (under development)</h3>
-<p>Here's a preview of the UI changes that are currently under development
-in DOMjudge's master branch.</p>
-<dl>
-<dt><a href="demoweb-ui/public/">Public interface</a></dt>
-<dd>Shows the scoreboard and the problemset.</dd>
-<dt><a href="demoweb-ui/team/">Team interface</a></dt>
-<dd>Shows your submissions, submission details, clarifications, the problemset and the scoreboard. Log in with username and password <em>team</em>.
-</dd>
-
-<p>The other interfaces have not been redesigned yet.</p>
-
 <p>The data in the system is reset to a known good state every night, so feel
 free to experiment. Please keep the system in a reasonable state though for
 other visitors that may come by before the reset. The data is from an actual
