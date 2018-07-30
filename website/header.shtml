@@ -1,7 +1,9 @@
-<!--#set    var="dj_current_branch_version"  value="5.3.2"
---><!--#set var="dj_current_branch_date"     value="29 December 2017"
---><!--#set var="dj_previous_branch_version" value="5.2.2"
---><!--#set var="dj_previous_branch_date"    value="29 December 2017"--><!DOCTYPE html>
+<!--#set    var="dj_current_branch_version"  value="5.3.3"
+--><!--#set var="dj_current_branch_date"     value="30 July 2018"
+--><!--#set var="dj_previous_branch_version" value="5.2.3"
+--><!--#set var="dj_previous_branch_date"    value="30 July 2018"
+--><!--#set var="dj_rc_branch_version"       value="6.0.0RC1"
+--><!--#set var="dj_rc_branch_date"          value="30 July 2018"--><!DOCTYPE html>
 <html lang="en">
 <head>
   <title>DOMjudge - <!--#echo var="dj_page_title" --></title>
