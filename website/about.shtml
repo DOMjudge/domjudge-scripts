@@ -1,6 +1,6 @@
 <!--#set var="dj_page_title" value="About the project" --><!--#include virtual="/header.shtml" -->
 
-<p>DOMjudge is an automated judge system to run programming contests. It 
+<p>DOMjudge is an automated judge system to run programming contests. It
 has a mechanism to submit problem solutions, have them judged fully
 automatically and provides (web)interfaces for teams, the jury and the
 general public.</p>
@@ -11,7 +11,7 @@ where teams are on-site and there is a fixed problem set and timeframe.
 It can however also be adapted to other contexts.
 </p>
 
-<p>The system scales wellL distributed judging is easy and it has a 
+<p>The system scales well: distributed judging is easy and it has a
 modular system for plugging in languages or compilers. The team interface
 is kept simple and efficient, while the administrator's view has many
 features, including rejudging, clarifications, detailed submission/judging
