@@ -11,8 +11,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <link rel="shortcut icon" href="/favicon.png" type="image/png">
-  <link rel="stylesheet" href="https://www.domjudge.org/demoweb-ui/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://www.domjudge.org/demoweb-ui/css/octicons/octicons.css">
+  <link rel="stylesheet" href="https://www.domjudge.org/demoweb/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.domjudge.org/demoweb/css/octicons/octicons.css">
   <link rel="stylesheet" href="style_domjudge.css">
 </head>
 <body>
