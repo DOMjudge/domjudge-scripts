@@ -8,9 +8,11 @@ dated <!--#echo var="dj_current_branch_date" -->.</p>
 <strong><!--#echo var="dj_previous_branch_version" --></strong>,
 dated <!--#echo var="dj_previous_branch_date" -->.</p>
 
+<!--
 <p>A <em>release candidate</em> of the next stable release is also available. It has version
 <strong><!--#echo var="dj_rc_branch_version" --></strong>,
 dated <!--#echo var="dj_rc_branch_date" -->.</p>
+-->
 
 <div class="container m-4"><div class="row">
   <div class="col-sm">
@@ -19,9 +21,11 @@ dated <!--#echo var="dj_rc_branch_date" -->.</p>
   <div class="col-sm">
       <a class="btn btn-secondary btn-lg" href="/releases/domjudge-<!--#echo var="dj_previous_branch_version"-->.tar.gz"><span class="octicon octicon-desktop-download"></span> previous stable</a>
   </div>
+<!--
   <div class="col-sm">
       <a class="btn btn-danger btn-lg" href="/releases/domjudge-<!--#echo var="dj_rc_branch_version"-->.tar.gz"><span class="octicon octicon-desktop-download"></span> release candidate</a>
   </div>
+-->
   <div class="col-sm">
       <a class="btn btn-outline-info btn-lg" href="/releases/"><span class="octicon octicon-file-directory"></span> release archive</a>
   </div>
