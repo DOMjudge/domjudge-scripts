@@ -24,9 +24,14 @@ for cpu in /sys/devices/system/cpu/cpu* ; do
 	fi
 done
 
-# now disable turbo boost
-echo -n 1 > /sys/devices/system/cpu/intel_pstate/no_turbo
+DIR=/sys/devices/system/cpu/intel_pstate
+if [ -d $DIR ]; then
+	# now disable turbo boost
+	echo -n 1 > $DIR/no_turbo
 
-# increase freq from powersaving to normal, but don't overclock
-echo 100 > /sys/devices/system/cpu/intel_pstate/min_perf_pct
-echo 100 > /sys/devices/system/cpu/intel_pstate/max_perf_pct
+	# increase freq from powersaving to normal, but don't overclock
+	echo 100 > $DIR/min_perf_pct
+	echo 100 > $DIR/max_perf_pct
+else
+	echo "Warning: kernel turbo boost config not found in '$DIR'."
+fi
