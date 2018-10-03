@@ -6,7 +6,7 @@ automatically and provides (web)interfaces for teams, the jury and the
 general public.</p>
 
 <p>DOMjudge is primarily focused to be used in programming contests like the
-<a href="http://icpc.baylor.edu/icpc/">ACM ICPC</a> programming contests,
+<a href="http://icpc.baylor.edu/icpc/">ICPC</a> programming contests,
 where teams are on-site and there is a fixed problem set and timeframe.
 It can however also be adapted to other contexts.
 </p>
@@ -25,17 +25,17 @@ needs.</p>
 <p>It has been used in many live contests, a selection:</p>
 
 <ul>
-<li>ACM ICPC Sub-regionals:
+<li>ICPC Sub-regionals:
     <a href="http://www.bapc.eu/">BAPC</a> (since 2004),
     <a href="http://gcpc.nwerc.eu/">GCPC</a> (since 2010)</li>
-<li>ACM ICPC Regionals:
+<li>ICPC Regionals:
     <a href="http://www.nwerc.eu/">NWERC</a> (since 2007),
     <a href="http://www.swerc.eu/">SWERC</a> (since 2008),
     <a href="http://ser.cs.fit.edu/">SER USA</a> (since 2010),
     <a href="http://socalcontest.org/">SOCAL</a> (since 2013),
     <a href="http://org.coloradomesa.edu/~wmacevoy/rmrc/2014/">RMRC</a> (since 2014),
     <a href="http://www.sppregional.org/">South Pacific Regional</a></li>
-<li>ACM ICPC World Finals (since 2012, in 2018 as main system)</li>
+<li>ICPC World Finals (since 2012, in 2018 as main system)</li>
 </ul>
 
 <p>DOMjudge has also been adapted for use in numerous online contests, as

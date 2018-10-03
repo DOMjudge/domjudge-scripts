@@ -5,8 +5,8 @@
     <h1 class="display-5">DOMjudge</h1>
 
     <p class="lead">DOMjudge is an automated system to run programming contests, like the
-    <abbr title="Association for Computing Machinery International
-    Collegiate Programming Contest">ACM ICPC</abbr>.</p>
+    <abbr title="International
+    Collegiate Programming Contest">ICPC</abbr>.</p>
 
     <p>It has a focus on usability and security. It has a modular
     sysem to plug in languages and has a feature-rich interface for the judges.
