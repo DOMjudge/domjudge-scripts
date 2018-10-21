@@ -9,7 +9,7 @@ DBNAME='domjudge_demo'
 
 cd ~/demoweb
 
-# Temporarily stick with pre-revamped user authentication (commit 6991a9a27f4abea)
+# Update the code:
 git stash -q && git pull -q && git stash pop -q
 
 # Rebuild in-place to also make configuration updates visible:
