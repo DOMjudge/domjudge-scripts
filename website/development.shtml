@@ -6,9 +6,9 @@ bug or patch? All those are most welcome via the channels below.</p>
 
 <h2>Bugs / feature requests</h2>
 
-<p>Bugs and feature enhancements are tracked at <a href="https://github.com/DOMjudge/domjudge/">our Github project</a>. You may report a new issue there.
+<p>Bugs and feature enhancements are tracked at <a href="https://github.com/DOMjudge/domjudge/issues">our Github project</a>. You may report a new issue there.
 Pull requests are also very welcome.
-If you have a question or you are unsure whether what you're seeing is
+If you have a <em>question</em> or you are unsure whether what you're seeing is
 a bug, please discuss it on <kbd>domjudge-devel@domjudge.org</kbd>
 beforehand (see below).</p>
 
@@ -86,7 +86,7 @@ at your own risk.</p>
 
 <p>Additional information can be found in the administrator's manual,
 especially the
-<a href="/snapshot/admin-manual/admin-manual-10.html">appendix with developer information</a>.</p>
+<a href="/snapshot/admin-manual/admin-manual-11.html">appendix with developer information</a>.</p>
 
 <p>If you have any questions left, don't hesitate to ask at the <a href="https://www.domjudge.org/mailman/listinfo/domjudge-devel">DOMjudge-devel mailinglist</a>.</p>
 
