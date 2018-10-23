@@ -27,7 +27,8 @@ needs.</p>
 <ul>
 <li>ICPC Sub-regionals:
     <a href="http://www.bapc.eu/">BAPC</a> (since 2004),
-    <a href="http://gcpc.nwerc.eu/">GCPC</a> (since 2010)</li>
+    <a href="http://gcpc.nwerc.eu/">GCPC</a> (since 2010),
+    <a href="http://ukiepc.info/">UKIEPC</a> (since 2015)</li>
 <li>ICPC Regionals:
     <a href="http://www.nwerc.eu/">NWERC</a> (since 2007),
     <a href="http://www.swerc.eu/">SWERC</a> (since 2008),
@@ -54,7 +55,7 @@ If you are using (an adapted version of) DOMjudge, we would be glad to hear abou
 <p>The following is required to run DOMjudge:</p>
 <ul>
 <li>At least one machine running Linux, with root access</li>
-<li>Apache web server with PHP &gt;= 5 and
+<li>Apache (or Nginx) web server with PHP &gt;= 7 and
     PHP command line interface</li>
 <li>MySQL or MariaDB database server version 5.5.3 or newer</li>
 <li>Compilers for the languages you want to support</li>
