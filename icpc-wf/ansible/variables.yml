@@ -1,6 +1,9 @@
 # Directory of the domjudge repository checkout.
 DJ_DIR: /home/domjudge/domjudge
 
+# Branch to checkout and use.
+DJ_BRANCH: master
+
 # Set this to change the web interface background color.
 #BACKGROUND_COLOR: '#ddddff'
 

@@ -91,7 +91,7 @@
     - name: create working copy from the repo
       become: yes
       become_user: domjudge
-      git: repo=domjudge@{{DJ_GIT_HOST}}:domjudge dest={{DJ_DIR}} version=ICPC-live accept_hostkey=yes update=yes
+      git: repo=domjudge@{{DJ_GIT_HOST}}:domjudge dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
       register: git_working_copy
 
     - name: Copy in composer dependencies
