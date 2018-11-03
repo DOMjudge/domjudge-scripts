@@ -1,0 +1,39 @@
+# Common packaging stuff during ICPC World Finals.
+---
+    - name: fix apt sources list
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list
+        regexp: 'pc2cancer\.ecs\.csus\.edu'
+        replace: 'packages'
+
+    - name: remove pycharm repo
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list
+        regexp: '^([^#].*pycharm.*)$'
+        replace: '# \1'
+
+    - name: add packages to hosts file
+      tags: packages
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^10\.3\.3\.209'
+        line: "10.3.3.209	packages"
+
+    - name: update ssl certificate for packages
+      tags: packages
+      copy: src=files/packages.pem dest=/usr/local/share/ca-certificates/packages.crt
+      notify: update-ca-certificates
+
+    - name: remove some packages
+      tags: packages
+      apt: pkg={{item}} state=absent
+      with_items:
+      - ntp
+
+    - meta: flush_handlers
+      tags: packages
+
+    - name: restart systemd timesyncd
+      command: systemctl restart systemd-timesyncd

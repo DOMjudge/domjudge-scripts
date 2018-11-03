@@ -1,43 +1,16 @@
 # Common tasks before building DOMjudge.
 ---
-    - name: fix apt sources list
-      tags: packages
-      replace:
-        dest: /etc/apt/sources.list
-        regexp: 'pc2cancer\.ecs\.csus\.edu'
-        replace: 'packages'
-
-    - name: remove pycharm repo
-      tags: packages
-      replace:
-        dest: /etc/apt/sources.list
-        regexp: '^([^#].*pycharm.*)$'
-        replace: '# \1'
-
-    - name: add packages to hosts file
-      tags: packages
-      lineinfile:
-        dest: /etc/hosts
-        regexp: '^10\.3\.3\.209'
-        line: "10.3.3.209	packages"
-
     - name: add domjudge to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: '^10\.3\.3\.215'
         line: "10.3.3.215	domjudge"
 
-    - name: update ssl certificate for packages
-      tags: packages
-      copy: src=files/packages.pem dest=/usr/local/share/ca-certificates/packages.crt
-      notify: update-ca-certificates
-
-    - meta: flush_handlers
-      tags: packages
-
     - name: set timezone
       timezone:
         name: "{{TIMEZONE}}"
+
+    - include: common_tasks_packages_icpc-wf.yml
 
     - name: install common required/useful packages
       tags: packages
@@ -76,15 +49,6 @@
         - mycli
         - screen
         - qmlscene
-
-    - name: remove some packages
-      tags: packages
-      apt: pkg={{item}} state=absent
-      with_items:
-      - ntp
-
-    - name: restart systemd timesyncd
-      command: systemctl restart systemd-timesyncd
 
     - name: create domjudge user
       user:
