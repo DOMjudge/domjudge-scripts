@@ -58,12 +58,14 @@
     - name: add mysql config snippet for replication
       template: src=files/mysql.replication.cnf.j2 dest=/etc/mysql/conf.d/zzz_replication.cnf
       notify: restart mysql
+      when: REPLICATION_PASSWORD is defined
 
     - name: make sure mysql is restarted
       meta: flush_handlers
 
     - name: copy mysql setup script for replication
       template: src=files/setup-replication.sql.j2 dest=/tmp/setup-replication.sql
+      when: REPLICATION_PASSWORD is defined
 
     - name: create mysql replication user
       mysql_user:
@@ -73,6 +75,7 @@
         append_privs: true
         priv: '*.*:REPLICATION SLAVE'
         state: present
+      when: REPLICATION_PASSWORD is defined
 
     - name: create collectd user for mysql status
       mysql_user:
@@ -82,6 +85,7 @@
         append_privs: true
         priv: '*.*:PROCESS/*.*:REPLICATION CLIENT'
         state: present
+      when: COLLECTD_MYSQL_PASSWORD is defined
 
     - include: common_tasks_build.yml
 

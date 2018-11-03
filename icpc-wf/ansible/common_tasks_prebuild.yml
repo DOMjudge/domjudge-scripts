@@ -145,17 +145,19 @@
     - name: copy collectd configuration
       template: src=files/collectd.conf.j2 dest=/etc/collectd/collectd.conf
       notify: restart collectd
+      when: COLLECTD_MYSQL_PASSWORD is defined
 
     - name: create directory for collectd mysql modules
       file: path=/etc/collectd/collectd-python state=directory mode=0755
-      when: "'domjudge-primary' in ansible_hostname or 'domjudge-backup' in ansible_hostname"
+      when:
+        - COLLECTD_MYSQL_PASSWORD is defined
+        - "'domjudge-primary' in ansible_hostname or 'domjudge-backup' in ansible_hostname"
 
     - name: copy mysql metrics collection script
       copy: src=files/collectd-mysql.py dest=/etc/collectd/collectd-python/mysql.py mode=0755
-      when: "'domjudge-primary' in ansible_hostname or 'domjudge-backup' in ansible_hostname"
-
-    - name: fix permissions on composer directory
-      file: path="{{DJDIR}}/lib/vendor/" group=domjudge owner=domjudge recurse=yes
+      when:
+        - COLLECTD_MYSQL_PASSWORD is defined
+        - "'domjudge-primary' in ansible_hostname or 'domjudge-backup' in ansible_hostname"
 
     - name: configure domjudge logging
       copy: src=files/rsyslog.domjudge.conf dest=/etc/rsyslog.d/domjudge.conf

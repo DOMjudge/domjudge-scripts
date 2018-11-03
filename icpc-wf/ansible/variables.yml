@@ -13,10 +13,12 @@ DOMSERVER_URL: "{{DOMSERVER}}"
 TIMEZONE: "Asia/Shanghai"
 
 # Password for the MySQL replication user.
-REPLICATION_PASSWORD: REPLICATION_PASSWORD
+# Set this to enable master-master replication between two domservers.
+#REPLICATION_PASSWORD: REPLICATION_PASSWORD
 
 # Password for the collectd MySQL status user.
-COLLECTD_MYSQL_PASSWORD: password-here
+# Set this to enable collectd for system statistics collection.
+#COLLECTD_MYSQL_PASSWORD: password-here
 
 # Credentials for the REST API.
 API_USER: RESTAPI_USER
