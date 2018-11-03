@@ -22,6 +22,13 @@
     - name: fix permissions on things
       shell: make -C {{DJDIR}} maintainer-postinstall-permissions
 
+    - name: do not run webserver in dev-mode
+      lineinfile:
+        dest: "{{DJDIR}}/etc/apache.conf"
+        regexp: "^(RewriteRule .*) app_dev\\.php (.*)$"
+        line: '\1 app.php \2'
+        backrefs: yes
+
     - name: copy domjudge-sudoers file
       copy: remote_src=True src={{DJDIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/domjudge mode=0440 owner=root group=root
 
