@@ -1,5 +1,5 @@
 # Directory of the domjudge repository checkout.
-DJDIR: /home/domjudge/domjudge
+DJ_DIR: /home/domjudge/domjudge
 
 # Set this to change the web interface background color.
 #BACKGROUND_COLOR: '#ddddff'

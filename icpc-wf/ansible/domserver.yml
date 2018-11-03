@@ -21,7 +21,7 @@
     - include: common_tasks_prebuild.yml
 
     - name: template out the restapi secret file
-      template: src=files/restapi.secret-domserver.j2 dest={{DJDIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
+      template: src=files/restapi.secret-domserver.j2 dest={{DJ_DIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
 
     - name: install domserver required packages
       apt: pkg={{item}} state=present
@@ -95,11 +95,11 @@
 
 # TODO: find a way to run this correctly when having a master-master setup that doesn't use localhost in the dbpasswords.secret file
 #    - name: check if the database is configured
-#      command: "{{DJDIR}}/bin/dj_setup_database -u root status"
+#      command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
 #      register: db_status
 #      ignore_errors: true
 #    - name: make sure the database is configured
-#      command: "{{DJDIR}}/bin/dj_setup_database -u root bare-install"
+#      command: "{{DJ_DIR}}/bin/dj_setup_database -u root bare-install"
 #      when: "'failed' in db_status.stdout"
 
     - name: fix background color
@@ -107,7 +107,7 @@
         regexp: '^(\s*background-color):\s+white\s*;'
         line: '\1: {{BACKGROUND_COLOR}};'
         backrefs: yes
-        dest: "{{DJDIR}}/webapp/web/style.css"
+        dest: "{{DJ_DIR}}/webapp/web/style.css"
       when: BACKGROUND_COLOR is defined
 
     - name: Copy SSL public key file
@@ -124,7 +124,7 @@
       notify: restart apache2
 
     - name: link in domjudge apache conf
-      file: src={{DJDIR}}/etc/apache.conf dest=/etc/apache2/conf-available/domjudge.conf state=link
+      file: src={{DJ_DIR}}/etc/apache.conf dest=/etc/apache2/conf-available/domjudge.conf state=link
       notify: restart apache2
 
     - name: enable apache2 conf for domjudge

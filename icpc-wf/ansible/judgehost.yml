@@ -31,7 +31,7 @@
     - include: common_tasks_prebuild.yml
 
     - name: template out the restapi secret file
-      template: src=files/restapi.secret.j2 dest={{DJDIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
+      template: src=files/restapi.secret.j2 dest={{DJ_DIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
 
     - name: install server certificate
       copy: src=files/domserver.crt dest=/usr/local/share/ca-certificates/domserver.crt
@@ -43,7 +43,7 @@
       file: path=/usr/share/X11/xorg.conf.d/22-icpc.conf state=absent
 
     - name: create chroot
-      shell: "DEBMIRROR='https://packages/ubuntu' {{DJDIR}}/misc-tools/dj_make_chroot -y -i icpc-kotlinc 2>&1 | tee /tmp/dj_make_chroot.log"
+      shell: "DEBMIRROR='https://packages/ubuntu' {{DJ_DIR}}/misc-tools/dj_make_chroot -y -i icpc-kotlinc 2>&1 | tee /tmp/dj_make_chroot.log"
       args:
         creates: "/chroot/domjudge"
 
