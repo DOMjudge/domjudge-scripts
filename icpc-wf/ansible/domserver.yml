@@ -52,11 +52,11 @@
       notify: restart mysql
 
     - name: add mysql config snippet to increase limit
-      copy: src=files/mysql.domjudge.cnf dest=/etc/mysql/mysql.conf.d/zz_domjudge.cnf
+      copy: src=files/mysql.domjudge.cnf dest=/etc/mysql/conf.d/zz_domjudge.cnf
       notify: restart mysql
 
     - name: add mysql config snippet for replication
-      template: src=files/mysql.replication.cnf.j2 dest=/etc/mysql/mysql.conf.d/zzz_replication.cnf
+      template: src=files/mysql.replication.cnf.j2 dest=/etc/mysql/conf.d/zzz_replication.cnf
       notify: restart mysql
 
     - name: make sure mysql is restarted
