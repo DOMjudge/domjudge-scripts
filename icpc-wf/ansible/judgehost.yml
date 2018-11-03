@@ -50,6 +50,9 @@
         line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
       notify: update-grub
 
+    - name: copy script to disable turboboost and hyperthreading
+      copy: src=files/disable-turboboost_ht dest=/usr/local/sbin/ mode=0755
+
     - name: copy systemd unit files
       copy: src=files/{{item}}.service dest=/etc/systemd/system/
       tags: updateservice

@@ -3,5 +3,5 @@ Description=Tune CPU cores: disable turboboost, downclocking, etc.
 
 [Service]
 Type=oneshot
-ExecStart=/root/disable_turboboost_ht.sh
+ExecStart=/usr/local/sbin/disable-turboboost_ht
 RemainAfterExit=true
