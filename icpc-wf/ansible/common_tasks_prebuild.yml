@@ -55,7 +55,7 @@
         name: domjudge
         shell: /bin/bash
         groups: sudo
-        password: "{{DJ_SHELL_USER_PW}}"
+        password: "{{DJ_SHELL_USER_PW | default(omit)}}"
 
     - name: Add authorized key
       authorized_key:

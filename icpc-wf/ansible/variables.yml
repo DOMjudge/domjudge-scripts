@@ -32,7 +32,9 @@ API_ADMIN_USER: API_ADMIN_USER
 API_ADMIN_PASSWORD: API_ADMIN_PASSWORD
 
 # Password for domjudge shell user
-DJ_SHELL_USER_PW: some-hashed-password
+# Set this to enable a password on the 'domjudge' shell accounts
+# created on the domserver and judgehosts.
+#DJ_SHELL_USER_PW: some-hashed-password
 
 # Host where git repo is stored
 DJ_GIT_HOST: 10.3.3.223
