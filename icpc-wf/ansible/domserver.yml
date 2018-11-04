@@ -192,13 +192,6 @@
         insertbefore: '/IfModule'
       notify: restart apache2
 
-    - name: autologin domjudge user
-      copy: src=files/lightdm-domjudge.conf dest=/etc/lightdm/lightdm.conf.d/domjudge.conf
-
-    - name: make sure autostart directory exists
-      file: dest=/home/domjudge/.config/autostart state=directory owner=domjudge group=domjudge
-      tags: fix_autostart
-
     - name: add autostart shortcuts
       copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
       with_items:
