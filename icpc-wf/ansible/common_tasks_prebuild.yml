@@ -23,6 +23,7 @@
         - git
         - gcc
         - g++
+        - default-jdk-headless
         - make
         - zip
         - unzip
