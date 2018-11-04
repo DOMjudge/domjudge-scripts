@@ -48,7 +48,21 @@
       copy: src=files/domserver.crt dest=/usr/local/share/ca-certificates/domserver.crt
       notify: update-ca-certificates
 
+    - name: disable clearing Symfony cache when building
+      lineinfile:
+        dest: "{{DJ_DIR}}/Makefile"
+        regexp: "^(.*-C webapp clear-cache)$"
+        line: '#\1'
+        backrefs: yes
+
     - include: common_tasks_build.yml
+
+    - name: re-enable clearing Symfony cache when building
+      lineinfile:
+        dest: "{{DJ_DIR}}/Makefile"
+        regexp: "^#(.*-C webapp clear-cache)$"
+        line: '\1'
+        backrefs: yes
 
     - name: enable internal monitor
       file: path=/usr/share/X11/xorg.conf.d/22-icpc.conf state=absent
