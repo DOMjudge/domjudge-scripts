@@ -1,4 +1,0 @@
-[Desktop Entry]
-Name=rotatescreen
-Type=Application
-Exec=xrandr --output DP1 --rotate left

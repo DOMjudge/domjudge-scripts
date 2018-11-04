@@ -1,4 +1,0 @@
-[Desktop Entry]
-Name=taillog
-Type=Application
-Exec=gnome-terminal --window --full-screen -e 'bash -c "tail -f /home/domjudge/domjudge/output/log/*-1.log"'
