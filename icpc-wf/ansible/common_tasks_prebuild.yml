@@ -146,3 +146,14 @@
     - name: make sure autostart directory exists
       file: dest=/home/domjudge/.config/autostart state=directory owner=domjudge group=domjudge
       tags: fix_autostart
+
+    - name: install SSL server certificates
+      copy:
+        src: "{{ item }}"
+        dest: /etc/ssl/certs/
+        owner: root
+        group: root
+        mode: 0644
+      with_fileglob:
+        - files/ssl/*.crt
+      notify: update-ca-certificates

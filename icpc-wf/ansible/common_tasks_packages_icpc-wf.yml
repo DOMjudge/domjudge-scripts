@@ -21,11 +21,6 @@
         regexp: '^10\.3\.3\.209'
         line: "10.3.3.209	packages"
 
-    - name: update ssl certificate for packages
-      tags: packages
-      copy: src=files/packages.pem dest=/usr/local/share/ca-certificates/packages.crt
-      notify: update-ca-certificates
-
     - name: remove some packages
       tags: packages
       apt: pkg={{item}} state=absent

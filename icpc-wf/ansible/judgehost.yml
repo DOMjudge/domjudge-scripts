@@ -44,10 +44,6 @@
     - name: template out the restapi secret file
       template: src=files/restapi.secret.j2 dest={{DJ_DIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
 
-    - name: install server certificate
-      copy: src=files/domserver.crt dest=/usr/local/share/ca-certificates/domserver.crt
-      notify: update-ca-certificates
-
     - name: disable clearing Symfony cache when building
       lineinfile:
         dest: "{{DJ_DIR}}/Makefile"

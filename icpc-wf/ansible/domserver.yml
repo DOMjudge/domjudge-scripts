@@ -8,6 +8,8 @@
       service: name=mysql state=restarted
     - name: restart apache2
       service: name=apache2 state=restarted
+    - name: update-ca-certificates
+      command: update-ca-certificates
     - name: restart collectd
       service: name=collectd state=restarted
     - name: restart rsyslog
@@ -120,11 +122,16 @@
         dest: "{{DJ_DIR}}/webapp/web/style.css"
       when: BACKGROUND_COLOR is defined
 
-    - name: Copy SSL public key file
-      copy: src=files/2018wf-domjudge.crt dest=/etc/ssl/certs/2018wf-domjudge.crt owner=root group=root mode=0600
-
-    - name: Copy SSL private key file
-      copy: src=files/2018wf-domjudge.pem dest=/etc/ssl/private/2018wf-domjudge.pem owner=root group=root mode=0600
+    - name: install SSL private key files
+      copy:
+        src: "{{ item }}"
+        dest: /etc/ssl/private/
+        owner: root
+        group: root
+        mode: 0600
+      with_fileglob:
+        - files/ssl/*.key
+      notify: update-ca-certificates
 
     - name: Update servername in apache config
       lineinfile:
