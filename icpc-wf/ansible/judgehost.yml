@@ -2,6 +2,8 @@
 
 - name: setup judgehost
   hosts: judgehost
+  vars:
+    host_type: judgehost
   become: yes
   handlers:
     - name: update-grub
@@ -30,17 +32,6 @@
 
     - include: common_tasks_prebuild.yml
 
-    - name: copy DEB packages to install
-      copy: src=files/install-{{item}} dest=/tmp/dj_ansible/
-      with_items:
-        - judgehost
-        - chroot
-      register: local_deb_packages
-
-    - name: install local DEB packages
-      shell: "dpkg -i /tmp/dj_ansible/install-judgehost/*.deb"
-      when: local_deb_packages.changed
-
     - name: template out the restapi secret file
       template: src=files/restapi.secret.j2 dest={{DJ_DIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
 
@@ -62,6 +53,9 @@
 
     - name: enable internal monitor
       file: path=/usr/share/X11/xorg.conf.d/22-icpc.conf state=absent
+
+    - name: copy chroot DEB packages to install
+      copy: src=files/install-chroot dest=/tmp/dj_ansible/
 
     - name: create chroot
       shell: "{{DJ_DIR}}/misc-tools/dj_make_chroot -y -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log"

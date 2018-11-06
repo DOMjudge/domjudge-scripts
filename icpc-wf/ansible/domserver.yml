@@ -2,6 +2,8 @@
 
 - name: setup domserver
   hosts: domserver
+  vars:
+    host_type: domserver
   become: yes
   handlers:
     - name: restart mysql
@@ -33,16 +35,6 @@
         - libapache2-mod-php
         - python-mysqldb
         - php-intl
-
-    - name: copy DEB packages to install
-      copy: src=files/install-{{item}} dest=/tmp/dj_ansible/
-      with_items:
-        - domserver
-      register: local_deb_packages
-
-    - name: install local DEB packages
-      shell: "dpkg -i /tmp/dj_ansible/install-domserver/*.deb"
-      when: local_deb_packages.changed
 
     - name: set PHP timezone
       lineinfile:

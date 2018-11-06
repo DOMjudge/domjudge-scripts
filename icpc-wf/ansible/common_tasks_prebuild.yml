@@ -51,6 +51,11 @@
         - screen
         - qmlscene
 
+    - name: install local DEB packages
+      include: install-local-package.yml
+      with_fileglob:
+        - files/install-{{host_type}}/*.deb
+
     - name: create domjudge user
       user:
         name: domjudge

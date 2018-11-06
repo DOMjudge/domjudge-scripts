@@ -1,0 +1,10 @@
+# Install a single local DEB package.
+---
+    - name: copy DEB package to remote
+      copy: src={{item}} dest="/tmp/dj_ansible/{{item|basename}}"
+      register: deb_copied
+
+    - name: install DEB package {{item|basename}}
+      apt: deb="/tmp/dj_ansible/{{item|basename}}"
+      when: deb_copied.changed
+
