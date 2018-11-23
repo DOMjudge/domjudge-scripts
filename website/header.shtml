@@ -12,7 +12,7 @@
 
   <link rel="shortcut icon" href="/favicon.png" type="image/png">
   <link rel="stylesheet" href="https://www.domjudge.org/demoweb/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://www.domjudge.org/demoweb/css/octicons/octicons.css">
+  <link rel="stylesheet" href="https://www.domjudge.org/demoweb/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="style_domjudge.css">
 </head>
 <body>
@@ -28,19 +28,19 @@
   <ul class="navbar-nav mr-auto">
     <li class="nav-item"><a
       class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'about.shtml'" --> active<!--#endif-->"
-      href="about"><span class="octicon octicon-light-bulb"></span> About</a></li>
+      href="about"><i class="far fa-lightbulb"></i> About</a></li>
     <li class="nav-item"><a
       class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'documentation.shtml'" --> active<!--#endif-->"
-      href="documentation"><span class="octicon octicon-repo"></span> Documentation</a></li>
+      href="documentation"><i class="fas fa-book-open"></i> Documentation</a></li>
     <li class="nav-item"><a
       class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'demo.shtml'" --> active<!--#endif-->"
-      href="demo"><span class="octicon octicon-rocket"></span> Demo</a></li>
+      href="demo"><i class="fas fa-rocket"></i> Demo</a></li>
     <li class="nav-item"><a
       class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'development.shtml'" --> active<!--#endif-->"
-      href="development"><span class="octicon octicon-beaker"></span> Development</a></li>
+      href="development"><i class="fas fa-flask"></i> Development</a></li>
     <li class="nav-item"><a
       class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'checktestdata.shtml'" --> active<!--#endif-->"
-      href="checktestdata"><span class="octicon octicon-checklist"></span> Checktestdata</a></li>
+      href="checktestdata"><i class="fas fa-clipboard-check"></i> Checktestdata</a></li>
   </ul>
   </div>
 
