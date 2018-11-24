@@ -1,5 +1,5 @@
 </main>
 <script src="https://www.domjudge.org/demoweb/js/jquery.min.js"></script>
-<script src="https://www.domjudge.org/demoweb/js/bootstrap.min.js"></script>
+<script src="https://www.domjudge.org/demoweb/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
