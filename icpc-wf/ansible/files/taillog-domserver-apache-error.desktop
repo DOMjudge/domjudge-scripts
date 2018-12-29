@@ -1,4 +1,0 @@
-[Desktop Entry]
-Name=taillog-domserver-apache-error
-Type=Application
-Exec=gnome-terminal --window --geometry 74x17+0+400 -e 'bash -c "sudo tail -F /var/log/apache2/error.log"'
