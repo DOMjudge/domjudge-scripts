@@ -16,8 +16,6 @@
       service: name=rsyslog enabled=yes state=restarted
     - name: restart systemctl
       shell: systemctl daemon-reload
-    - name: restart gdm
-      service: name=gdm3 enabled=yes state=restarted
   tasks:
     - name: include global variables
       include_vars: variables.yml
@@ -53,9 +51,6 @@
         line: '\1'
         backrefs: yes
 
-    - name: enable internal monitor
-      file: path=/usr/share/X11/xorg.conf.d/22-icpc.conf state=absent
-
     - name: copy chroot DEB packages to install
       copy: src=files/install-chroot dest=/tmp/dj_ansible/
 
@@ -64,7 +59,7 @@
       environment:
         DEBMIRROR: http://packages/ubuntu
       args:
-        creates: "/chroot/domjudge"
+        creates: "/chroot/domjudge-systest"
 
     - name: fix kernel parameters
       lineinfile:
@@ -73,16 +68,11 @@
         line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
       notify: update-grub
 
-    - name: copy script to disable turboboost and hyperthreading
-      copy: src=files/disable-turboboost_ht dest=/usr/local/sbin/ mode=0755
-
     - name: copy systemd unit files
       copy: src=files/{{item}}.service dest=/etc/systemd/system/
       tags: updateservice
       with_items:
-        - create_cgroups
-        - tune_cpu
-        - judgedaemon
+        - judgedaemon-systest
       notify: restart systemctl
 
     - name: make sure systemctl is restarted
@@ -91,22 +81,4 @@
     - name: enable and restart the services we just copied
       service: name={{item}} enabled=yes state=restarted
       with_items:
-        - create_cgroups
-        - tune_cpu
-        - judgedaemon
-
-    - name: add autostart shortcuts
-      copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
-      with_items:
-        - taillog
-        - rotate
-        - domjudgelogo
-
-    - name: disable systemd timers
-      command: systemctl mask {{item}}
-      args:
-        creates: /etc/systemd/system/{{item}}
-      with_items:
-        - apt-daily-upgrade.timer
-        - apt-daily.timer
-        - systemd-tmpfiles-clean.timer
+        - judgedaemon-systest

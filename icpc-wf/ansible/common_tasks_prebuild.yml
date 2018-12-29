@@ -1,17 +1,5 @@
 # Common tasks before building DOMjudge.
 ---
-    - name: add domjudge to hosts file
-      lineinfile:
-        dest: /etc/hosts
-        regexp: 'domserver$'
-        line: "{{DOMSERVER_IP}}	domserver"
-
-    - name: set timezone
-      timezone:
-        name: "{{TIMEZONE}}"
-
-    - include: common_tasks_packages_icpc-wf.yml
-
     - name: install common required/useful packages
       tags: packages
       apt: pkg={{item}} state=present
@@ -83,13 +71,6 @@
         - { name: 'email', value: 'team@domjudge.org' }
         - { name: 'name', value: 'DOMjudge team' }
 
-    - name: Allow 'sudo' group to have passwordless sudo
-      lineinfile:
-        dest: /etc/sudoers
-        state: present
-        regexp: '^%sudo'
-        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
-
     - name: Create .ssh directory
       file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
 
@@ -151,57 +132,3 @@
 
     - name: configure domjudge logrotate
       copy: src=files/logrotate.domjudge dest=/etc/logrotate.d/domjudge
-
-    - name: copy DOMjudge logo binary
-      copy: src=files/domlogo dest=/home/domjudge/domlogo owner=domjudge group=domjudge mode=0755
-
-    - name: make sure lightdm config directory exists
-      file: path=/etc/lightdm/lightdm.conf.d state=directory
-
-    - name: enable GDM autologin
-      lineinfile:
-        path: /etc/gdm3/custom.conf
-        regexp: 'AutomaticLoginEnable'
-        line: 'AutomaticLoginEnable=true'
-      notify: restart gdm
-
-    - name: Automatically login domjudge user
-      lineinfile:
-        path: /etc/gdm3/custom.conf
-        regexp: 'AutomaticLogin'
-        line: 'AutomaticLogin=domjudge'
-      notify: restart gdm
-
-    - name: make sure autostart directory exists
-      file: dest=/home/domjudge/.config/autostart state=directory owner=domjudge group=domjudge
-      tags: fix_autostart
-
-    - name: install SSL server certificates
-      copy:
-        src: "{{ item }}"
-        dest: /etc/ssl/certs/
-        owner: root
-        group: root
-        mode: 0644
-      with_fileglob:
-        - files/ssl/*.crt
-      notify: update-ca-certificates
-
-    - name: create ca certificates shared directory
-      file:
-        dest: /usr/local/share/ca-certificates
-        state: directory
-        owner: root
-        group: root
-
-    - name: install SSL server certificates into CA certificates
-      copy:
-        src: "{{ item }}"
-        dest: /usr/local/share/ca-certificates
-        owner: root
-        group: root
-        mode: 0644
-      with_fileglob:
-        - files/ssl/*.crt
-      notify: update-ca-certificates
-

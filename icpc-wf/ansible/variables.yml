@@ -1,5 +1,5 @@
 # Directory of the domjudge repository checkout.
-DJ_DIR: /home/domjudge/domjudge
+DJ_DIR: /opt/domjudge-systest
 
 # Branch to checkout and use.
 DJ_BRANCH: master
@@ -9,13 +9,13 @@ DJ_BRANCH: master
 
 # URL and IP of domserver from judgehosts. A hostname 'domserver' with
 # DOMSERVER_IP will be added to the judgehost /etc/hosts file.
-DOMSERVER: https://domjudge
-DOMSERVER_IP: 10.3.3.215
+DOMSERVER: https://systest.domjudge.org
+DOMSERVER_IP: 131.155.69.89
 DOMSERVER_URL: "{{DOMSERVER}}"
-DOMSERVER_SSL_CERT: /etc/ssl/certs/domserver.crt
-DOMSERVER_SSL_KEY: /etc/ssl/private/domserver.key
+DOMSERVER_SSL_CERT: /etc/letsencrypt/live/systest.domjudge.org/fullchain.pem
+DOMSERVER_SSL_KEY: /etc/letsencrypt/live/systest.domjudge.org/privkey.pem
 
-TIMEZONE: "Europe/Lisbon"
+TIMEZONE: "Europe/Amsterdam"
 
 PHP_FPM_MAX_CHILDREN: 300
 PHP_MEMORY_LIMIT: 1024M
@@ -44,11 +44,7 @@ API_ADMIN_PASSWORD: API_ADMIN_PASSWORD
 #DJ_SHELL_USER_PW: some-hashed-password
 
 # Git repo URL
-DJ_GIT_REPO: domjudge@10.3.3.223:domjudge
-
-# If using a Git repo which requires a SSH key, set the host and key here
-DJ_GIT_HOST: 10.3.3.223
-DJ_GIT_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKayJQxbraoLvi7iYQ7TmTN08Spr1eFfcU/eqyfmacXDVSUMOn/LwwA0nh/bjkbtZSM6CFjQl2L9SXvlxSG9bYV2gYfOL4COxiVGPdVk783FcQlt3x+y4zFRZgz5FgJuGfRxWAqZstsjYceg1xQKkIFQLm+gup1EnLBcwKPARonDkRIa+5XYoKsGaRu1HFrzgGNIR1gmDXP1UAUgHz8MkELazNp1zTt7s7szFhNWhIdtBWbghrnRMss1W+qlx6umhd3T6y4EeJLxoUDYhbIQUCcBx+Rpf5sj/4LmgdCbHQS2OkXjaYtM4MGxEvfSrNT14rIV7HKrCr7BovVoj+p2El nicky@dyn070180.nbw.tue.nl
+DJ_GIT_REPO: https://github.com/DOMjudge/domjudge
 
 # Key for domjudge user
 DJ_SSH_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEW4j7DOQ/BGT6ATtBLAcUHGVuHyydqs7E31DMbcX5uO icpc2018@domjudge-ccsadmin2

@@ -3,7 +3,7 @@
     - name: run maintainer-conf
       become: yes
       become_user: domjudge
-      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build'
+      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build --with-judgehost_chrootdir=/chroot/domjudge-systest'
       register: dj_configured
       args:
         chdir: "{{DJ_DIR}}"
@@ -23,5 +23,5 @@
       shell: make -C {{DJ_DIR}} maintainer-postinstall-permissions
 
     - name: copy domjudge-sudoers file
-      copy: remote_src=True src={{DJ_DIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/domjudge mode=0440 owner=root group=root
+      copy: remote_src=True src={{DJ_DIR}}/etc/sudoers-domjudge dest=/etc/sudoers.d/domjudge-systest mode=0440 owner=root group=root
 

@@ -20,16 +20,11 @@
       service: name=rsyslog enabled=yes state=restarted
     - name: restart systemctl
       shell: systemctl daemon-reload
-    - name: restart gdm
-      service: name=gdm3 enabled=yes state=restarted
   tasks:
     - name: include global variables
       include_vars: variables.yml
 
     - include: common_tasks_prebuild.yml
-
-    - name: template out the restapi secret file
-      template: src=files/restapi.secret-domserver.j2 dest={{DJ_DIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
 
     - name: install domserver required packages
       apt: pkg={{item}} state=present
@@ -124,28 +119,17 @@
         dest: "{{DJ_DIR}}/webapp/web/style.css"
       when: BACKGROUND_COLOR is defined
 
-    - name: install SSL private key files
-      copy:
-        src: "{{ item }}"
-        dest: /etc/ssl/private/
-        owner: root
-        group: root
-        mode: 0600
-      with_fileglob:
-        - files/ssl/*.key
-      notify: update-ca-certificates
-
     - name: copy in domjudge FPM conf
       copy: src={{DJ_DIR}}/etc/domjudge-fpm.conf remote_src=yes dest=/etc/php/7.2/fpm/pool.d/domjudge.conf
       notify: restart PHP FPM
 
     - name: copy in domjudge nginx conf
-      copy: src={{DJ_DIR}}/etc/nginx-conf remote_src=yes dest=/etc/nginx/sites-available/domjudge.conf
+      copy: src={{DJ_DIR}}/etc/nginx-conf remote_src=yes dest=/etc/nginx/sites-available/domjudge-systest
       notify: restart nginx
 
     - name: remove HTTP host
       blockinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
+        path: /etc/nginx/sites-available/domjudge-systest
         marker: "{mark}"
         marker_begin: "### http host config ###"
         marker_end: "# Alternatively, use HTTPS and redirect HTTP to HTTPS:"
@@ -153,43 +137,58 @@
 
     - name: enable HTTP redirect and HTTPS blocks
       replace:
-        path: /etc/nginx/sites-available/domjudge.conf
+        path: /etc/nginx/sites-available/domjudge-systest
         after: 'upstream domjudge \{'
         regexp: '^# ?(.*)'
         replace: '\1'
       notify: restart nginx
 
+    - name: remove HTTP redirect host
+      blockinfile:
+        path: /etc/nginx/sites-available/domjudge-systest
+        marker: "{mark}"
+        marker_begin: 	listen   80;"
+        marker_end: "server {"
+      notify: restart nginx
+
+    - name: Set system test hostname
+      lineinfile:
+        path: /etc/nginx/sites-available/domjudge-systest
+        regexp: 'server_name'
+        line: "\tserver_name systest.domjudge.org;"
+      notify: restart nginx
+
     - name: remove IPv6 listens
       lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
+        path: /etc/nginx/sites-available/domjudge-systest
         regexp: 'listen\s+\[.*\]:\d+;'
         state: absent
       notify: restart nginx
 
     - name: change IPv4 HTTP listen to default server
       lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
+        path: /etc/nginx/sites-available/domjudge-systest
         regexp: 'listen.*80;'
         line: "\tlisten 80 default_server;"
       notify: restart nginx
 
     - name: change IPv4 HTTPS listen to all interfaces
       lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
+        path: /etc/nginx/sites-available/domjudge-systest
         regexp: 'listen.*443;'
         line: "\tlisten 443 ssl http2 default_server;"
       notify: restart nginx
 
     - name: increase max body size to upload size
       lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
+        path: /etc/nginx/sites-available/domjudge-systest
         regexp: 'client_max_body_size'
         line: "\tclient_max_body_size {{PHP_UPLOAD_MAX_FILESIZE}};"
       notify: restart nginx
 
     - name: remove prefixed domjudge location
       blockinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
+        path: /etc/nginx/sites-available/domjudge-systest
         marker: "{mark}"
         marker_begin: "	# Or you can install it with a prefix"
         marker_end: "	}"
@@ -197,20 +196,20 @@
 
     - name: configure SSL certificate
       lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
+        path: /etc/nginx/sites-available/domjudge-systest
         regexp: 'ssl_certificate (.*)'
         line: "\tssl_certificate {{DOMSERVER_SSL_CERT}};"
       notify: restart nginx
 
     - name: configure SSL key
       lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
+        path: /etc/nginx/sites-available/domjudge-systest
         regexp: 'ssl_certificate_key (.*)'
         line: "\tssl_certificate_key {{DOMSERVER_SSL_KEY}};"
       notify: restart nginx
 
     - name: enable nginx conf for domjudge
-      file: src=/etc/nginx/sites-available/domjudge.conf dest=/etc/nginx/sites-enabled/domjudge.conf state=link
+      file: src=/etc/nginx/sites-available/domjudge-systest dest=/etc/nginx/sites-enabled/domjudge-systest state=link
       notify: restart nginx
 
     - name: disable default nginx site
@@ -228,12 +227,3 @@
         - { key: 'php_admin_value[upload_max_filesize]', regexp: '^php_admin_value\[upload_max_filesize\]', value: '{{PHP_UPLOAD_MAX_FILESIZE}}' }
         - { key: 'php_admin_value[post_max_size]', regexp: '^php_admin_value\[post_max_size\]', value: '{{PHP_POST_MAX_SIZE}}' }
       notify: restart PHP FPM
-
-    - name: add autostart shortcuts
-      copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
-      with_items:
-        - htop
-        - taillog-domserver-nginx-error
-        - taillog-domserver-symfony-error
-        - domjudgelogo-domserver
-
