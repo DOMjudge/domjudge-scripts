@@ -58,7 +58,7 @@
       copy: src=files/install-chroot dest=/tmp/dj_ansible/
 
     - name: create chroot
-      shell: "{{DJ_DIR}}/misc-tools/dj_make_chroot -y -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log"
+      shell: "{{DJ_DIR}}/misc-tools/dj_make_chroot -y -i icpc-kotlinc -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log"
       args:
         creates: "/chroot/domjudge"
 

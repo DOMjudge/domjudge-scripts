@@ -8,8 +8,10 @@
   handlers:
     - name: restart mysql
       service: name=mysql state=restarted
-    - name: restart apache2
-      service: name=apache2 state=restarted
+    - name: restart nginx
+      service: name=nginx state=restarted
+    - name: restart PHP FPM
+      service: name=php7.2-fpm state=restarted
     - name: update-ca-certificates
       command: update-ca-certificates
     - name: restart collectd
@@ -31,14 +33,21 @@
       apt: pkg={{item}} state=present
       with_items:
         - mysql-server
-        - apache2
-        - libapache2-mod-php
+        - nginx
+        - php-fpm
         - python-mysqldb
         - php-intl
 
-    - name: set PHP timezone
+    - name: set PHP timezone for FPM
       lineinfile:
-        dest: /etc/php/7.0/apache2/php.ini
+        dest: /etc/php/7.2/fpm/php.ini
+        state: present
+        regexp: 'date\.timezone\s*='
+        line: 'date.timezone = {{TIMEZONE}}'
+
+    - name: set PHP timezone for CLI
+      lineinfile:
+        dest: /etc/php/7.2/cli/php.ini
         state: present
         regexp: 'date\.timezone\s*='
         line: 'date.timezone = {{TIMEZONE}}'
@@ -46,7 +55,7 @@
     - name: enable php modules
       command: phpenmod {{item}}
       args:
-        creates: /etc/php/7.0/apache2/conf.d/20-{{item}}.ini
+        creates: /etc/php/7.2/fpm/conf.d/20-{{item}}.ini
       with_items:
         - mcrypt
         - zip
@@ -125,71 +134,28 @@
         - files/ssl/*.key
       notify: update-ca-certificates
 
-    - name: Update servername in apache config
+    - name: link in domjudge FPM conf
+      file: src={{DJ_DIR}}/etc/domjudge-fpm.conf dest=/etc/php/7.2/fpm/pool.d/domjudge.conf state=link
+      notify: restart PHP FPM
+
+    - name: copy in domjudge nginx conf
+      file: src={{DJ_DIR}}/etc/nginx-conf dest=/etc/nginx/sites-available/domjudge.conf
+      notify: restart nginx
+
+    - name: enable nginx conf for domjudge
+      file: src=/etc/nginx/sites-available/domjudge.conf dest=/etc/nginx/sites-enabled/domjudge.conf state=link
+      notify: restart nginx
+
+    - name: disable default nginx site
+      file: state=absent path=/etc/nginx/sites-enabled/default
+      notify: restart nginx
+
+    - name: Increase PM max children for PHP FPM
       lineinfile:
-        insertbefore: '^#Global config'
-        line: 'Servername {{ansible_hostname}}'
-        dest: /etc/apache2/apache2.conf
-      notify: restart apache2
-
-    - name: link in domjudge apache conf
-      file: src={{DJ_DIR}}/etc/apache.conf dest=/etc/apache2/conf-available/domjudge.conf state=link
-      notify: restart apache2
-
-    - name: enable apache2 conf for domjudge
-      file: src=/etc/apache2/conf-available/domjudge.conf dest=/etc/apache2/conf-enabled/domjudge.conf state=link
-      notify: restart apache2
-
-    - name: enable apache2 modules
-      apache2_module: name={{item}} state=present
-      with_items:
-        - ssl
-        - rewrite
-      notify: restart apache2
-
-    - name: disable default apache site
-      file: state=absent path=/etc/apache2/sites-enabled/000-default
-      notify: restart apache2
-
-    - name: enable default-ssl apache site
-      file: src=/etc/apache2/sites-available/default-ssl.conf dest=/etc/apache2/sites-enabled/000-default-ssl state=link
-      notify: restart apache2
-
-    - name: disable apache keepalive
-      replace:
-        dest: /etc/apache2/apache2.conf
-        regexp: 'KeepAlive\s+On'
-        replace: 'KeepAlive Off'
-      notify: restart apache2
-
-    - name: change NPM prefork MinSpareServers
-      replace:
-        dest: /etc/apache2/mods-enabled/mpm_prefork.conf
-        regexp: '^[^#].*MinSpareServers.*$'
-        replace: '\tMinSpareServers   50'
-      notify: restart apache2
-
-    - name: change NPM prefork MaxSpareServers
-      replace:
-        dest: /etc/apache2/mods-enabled/mpm_prefork.conf
-        regexp: '^[^#].*MaxSpareServers.*$'
-        replace: '\tMaxSpareServers   100'
-      notify: restart apache2
-
-    - name: change NPM prefork MaxRequestWorkers
-      replace:
-        dest: /etc/apache2/mods-enabled/mpm_prefork.conf
-        regexp: '^[^#].*MaxRequestWorkers.*$'
-        replace: '\tMaxRequestWorkers 500'
-      notify: restart apache2
-
-    - name: add NPM prefork ServerLimit
-      lineinfile:
-        dest: /etc/apache2/mods-enabled/mpm_prefork.conf
-        regexp: 'ServerLimit'
-        line: '	ServerLimit       500'
-        insertbefore: '/IfModule'
-      notify: restart apache2
+        dest: /etc/php/7.2/fpm/pool.d/domjudge.conf
+        regexp: '^pm\.max_children'
+        line: 'pm.max_children = 300'
+      notify: restart PHP FPM
 
     - name: add autostart shortcuts
       copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755

@@ -3,8 +3,8 @@
     - name: add domjudge to hosts file
       lineinfile:
         dest: /etc/hosts
-        regexp: '^10\.3\.3\.215'
-        line: "10.3.3.215	domjudge"
+        regexp: 'domserver$'
+        line: "{{DOMSERVER_IP}}	domserver"
 
     - name: set timezone
       timezone:
@@ -97,7 +97,7 @@
     - name: create working copy from the repo
       become: yes
       become_user: domjudge
-      git: repo=domjudge@{{DJ_GIT_HOST}}:domjudge dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
+      git: repo={{DJ_GIT_REPO}} dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
       register: git_working_copy
 
     - name: Check composer dependencies present

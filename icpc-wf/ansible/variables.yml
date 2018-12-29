@@ -13,7 +13,7 @@ DOMSERVER: https://domjudge
 DOMSERVER_IP: 10.3.3.215
 DOMSERVER_URL: "{{DOMSERVER}}"
 
-TIMEZONE: "Asia/Shanghai"
+TIMEZONE: "Europe/Lisbon"
 
 # Password for the MySQL replication user.
 # Set this to enable master-master replication between two domservers.
@@ -36,8 +36,8 @@ API_ADMIN_PASSWORD: API_ADMIN_PASSWORD
 # created on the domserver and judgehosts.
 #DJ_SHELL_USER_PW: some-hashed-password
 
-# Host where git repo is stored
-DJ_GIT_HOST: 10.3.3.223
+# Git repo URL
+DJ_GIT_REPO: https://github.com/DOMjudge/domjudge
 
 # Key for domjudge user
 DJ_SSH_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEW4j7DOQ/BGT6ATtBLAcUHGVuHyydqs7E31DMbcX5uO icpc2018@domjudge-ccsadmin2
