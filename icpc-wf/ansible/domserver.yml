@@ -179,13 +179,6 @@
         state: absent
       notify: restart nginx
 
-    - name: change IPv4 HTTP listen to default server
-      lineinfile:
-        path: /etc/nginx/sites-available/domjudge-systest
-        regexp: 'listen.*80;'
-        line: "\tlisten 80 default_server;"
-      notify: restart nginx
-
     - name: change IPv4 HTTPS listen to all interfaces
       lineinfile:
         path: /etc/nginx/sites-available/domjudge-systest
