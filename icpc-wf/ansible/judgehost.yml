@@ -56,8 +56,6 @@
 
     - name: create chroot
       shell: "{{DJ_DIR}}/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log"
-      environment:
-        DEBMIRROR: http://packages/ubuntu
       args:
         creates: "/chroot/domjudge-systest"
 
