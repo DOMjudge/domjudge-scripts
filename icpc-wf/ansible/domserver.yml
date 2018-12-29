@@ -158,13 +158,6 @@
         line: "upstream domjudgesystest {"
       notify: restart nginx
 
-    - name: rename fastcgi pass
-      lineinfile:
-        path: /etc/nginx/sites-available/domjudge-systest
-        regexp: 'fastcgi_pass'
-        line: "\t\tfastcgi_pass domjudgesystest;"
-      notify: restart nginx
-
     - name: Set system test hostname
       lineinfile:
         path: /etc/nginx/sites-available/domjudge-systest
@@ -199,6 +192,13 @@
         marker: "{mark}"
         marker_begin: "	# Or you can install it with a prefix"
         marker_end: "	}"
+      notify: restart nginx
+
+    - name: rename fastcgi pass
+      lineinfile:
+        path: /etc/nginx/sites-available/domjudge-systest
+        regexp: 'fastcgi_pass'
+        line: "\t\tfastcgi_pass domjudgesystest;"
       notify: restart nginx
 
     - name: configure SSL certificate
