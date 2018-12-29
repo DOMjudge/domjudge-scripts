@@ -147,8 +147,22 @@
       blockinfile:
         path: /etc/nginx/sites-available/domjudge-systest
         marker: "{mark}"
-        marker_begin: 	listen   80;"
+        marker_begin: "	listen   80;"
         marker_end: "server {"
+      notify: restart nginx
+
+    - name: rename upstream
+      lineinfile:
+        path: /etc/nginx/sites-available/domjudge-systest
+        regexp: '^upstream'
+        line: "upstream domjudgesystest {"
+      notify: restart nginx
+
+    - name: rename fastcgi pass
+      lineinfile:
+        path: /etc/nginx/sites-available/domjudge-systest
+        regexp: 'fastcgi_pass'
+        line: "\t\tfastcgi_pass domjudgesystest;"
       notify: restart nginx
 
     - name: Set system test hostname
