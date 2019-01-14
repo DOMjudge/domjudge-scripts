@@ -122,7 +122,7 @@ if true || [ -z "$GITURL" ]; then
 	done
 	if [ -d lib/vendor ]; then
 		rm -rf lib/vendor/*
-		make $QUIETMAKE composer-dev
+		make $QUIETMAKE composer-dependencies
 	fi
 fi
 
