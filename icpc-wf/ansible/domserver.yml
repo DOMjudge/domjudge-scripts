@@ -216,9 +216,9 @@
 
     - name: rename fastcgi pass
       lineinfile:
-        path: /etc/nginx/sites-available/domjudge-systest
+        path: /etc/nginx/snippets/domjudge-inner
         regexp: 'fastcgi_pass'
-        line: "\t\tfastcgi_pass domjudgesystest;"
+        line: "\tfastcgi_pass domjudgesystest;"
       notify: restart nginx
 
     - name: configure SSL certificate
