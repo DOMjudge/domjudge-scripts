@@ -164,9 +164,9 @@
 
     - name: Set system test hostname
       lineinfile:
-        path: /etc/nginx/sites-available/domjudge-systest
+        path: /etc/nginx/snippets/domjudge-inner
         regexp: 'server_name'
-        line: "\tserver_name systest.domjudge.org;"
+        line: "server_name systest.domjudge.org;"
       notify: restart nginx
 
     - name: remove IPv6 listens
