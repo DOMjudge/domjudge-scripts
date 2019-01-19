@@ -28,9 +28,6 @@
 
     - include: common_tasks_prebuild.yml
 
-    - name: template out the restapi secret file
-      template: src=files/restapi.secret-domserver.j2 dest={{DJ_DIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
-
     - name: install domserver required packages
       apt: pkg={{item}} state=present
       with_items:
