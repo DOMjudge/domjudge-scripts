@@ -127,6 +127,10 @@
       copy: src={{DJ_DIR}}/etc/nginx-conf remote_src=yes dest=/etc/nginx/sites-available/domjudge-systest
       notify: restart nginx
 
+    - name: copy in domjudge inner nginx conf
+      copy: src={{DJ_DIR}}/etc/nginx-conf-inner remote_src=yes dest=/etc/nginx/snippets/domjudge-inner
+      notify: restart nginx
+
     - name: remove HTTP host
       blockinfile:
         path: /etc/nginx/sites-available/domjudge-systest
@@ -181,17 +185,33 @@
 
     - name: increase max body size to upload size
       lineinfile:
-        path: /etc/nginx/sites-available/domjudge-systest
+        path: /etc/nginx/snippets/domjudge-inner
         regexp: 'client_max_body_size'
-        line: "\tclient_max_body_size {{PHP_UPLOAD_MAX_FILESIZE}};"
+        line: "client_max_body_size {{PHP_UPLOAD_MAX_FILESIZE}};"
       notify: restart nginx
 
     - name: remove prefixed domjudge location
       blockinfile:
-        path: /etc/nginx/sites-available/domjudge-systest
+        path: /etc/nginx/snippets/domjudge-inner
         marker: "{mark}"
-        marker_begin: "	# Or you can install it with a prefix"
-        marker_end: "	}"
+        marker_begin: "# Or you can install it with a prefix"
+        marker_end: "location @domjudgeFront {"
+        block: "# --- This block has been removed in favor of the 'location /' block ---"
+      notify: restart nginx
+
+    - name: run DOMjudge in root
+      replace:
+        path: /etc/nginx/snippets/domjudge-inner
+        after: '# Uncomment to run it out of the root of your system'
+        regexp: '^# ?(location|\t|})(.*)'
+        replace: '\1\2'
+      notify: restart nginx
+
+    - name: set prefix to be empty
+      lineinfile:
+        path: /etc/nginx/snippets/domjudge-inner
+        regexp: 'prefix .*;'
+        line: "set $prefix '';"
       notify: restart nginx
 
     - name: rename fastcgi pass
@@ -213,6 +233,13 @@
         path: /etc/nginx/sites-available/domjudge-systest
         regexp: 'ssl_certificate_key (.*)'
         line: "\tssl_certificate_key {{DOMSERVER_SSL_KEY}};"
+      notify: restart nginx
+
+    - name: use our own inner nginx configuration
+      lineinfile:
+        path: /etc/nginx/sites-available/domjudge-systest
+        regexp: 'include (.*)nginx-conf-inner;'
+        line: "\tinclude /etc/nginx/snippets/domjudge-inner;"
       notify: restart nginx
 
     - name: enable nginx conf for domjudge
