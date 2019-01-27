@@ -23,6 +23,7 @@
         - php-xml
         - php-zip
         - php-mbstring
+        - php-intl
         - bsdmainutils
         - libcgroup-dev
         - libcurl4-gnutls-dev
