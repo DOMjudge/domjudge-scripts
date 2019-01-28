@@ -2,7 +2,7 @@
 DJ_DIR: /opt/domjudge-systest
 
 # Branch to checkout and use.
-DJ_BRANCH: master
+DJ_BRANCH: wf2019
 
 # Set this to change the web interface background color.
 #BACKGROUND_COLOR: '#ddddff'

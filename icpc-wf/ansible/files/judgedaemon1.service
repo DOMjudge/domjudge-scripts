@@ -1,0 +1,16 @@
+[Unit]
+Description=DOMjudge JudgeDaemon
+After=network.target
+
+[Service]
+Type=simple
+
+ExecStart=/opt/domjudge-systest/bin/judgedaemon -n 1
+User=domjudge
+
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+

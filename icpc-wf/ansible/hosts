@@ -2,4 +2,4 @@
 domjudge-primary ansible_host=calca ansible_user=root
 
 [judgehost]
-domjudge-judgehost ansible_host=calca ansible_user=root
+systest-judge ansible_host=systest-judge.domjudge.letstalk.nl ansible_user=root

@@ -27,6 +27,8 @@
         - domjudge-run-1
         - domjudge-run-2
         - domjudge-run-3
+        - domjudge-run-4
+        - domjudge-run-5
     - name: create domjudge-run group
       group: name=domjudge-run state=present
 
@@ -70,7 +72,12 @@
       copy: src=files/{{item}}.service dest=/etc/systemd/system/
       tags: updateservice
       with_items:
-        - judgedaemon-systest
+        - judgedaemon0
+        - judgedaemon1
+        - judgedaemon2
+        - judgedaemon3
+        - judgedaemon4
+        - judgedaemon5
       notify: restart systemctl
 
     - name: make sure systemctl is restarted
@@ -79,4 +86,9 @@
     - name: enable and restart the services we just copied
       service: name={{item}} enabled=yes state=restarted
       with_items:
-        - judgedaemon-systest
+        - judgedaemon0
+        - judgedaemon1
+        - judgedaemon2
+        - judgedaemon3
+        - judgedaemon4
+        - judgedaemon5

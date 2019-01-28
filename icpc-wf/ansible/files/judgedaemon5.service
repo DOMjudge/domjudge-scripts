@@ -1,11 +1,11 @@
 [Unit]
-Description=DOMjudge JudgeDaemon for System Test
+Description=DOMjudge JudgeDaemon
 After=network.target
 
 [Service]
 Type=simple
 
-ExecStart=/opt/domjudge-systest/bin/judgedaemon -n 0
+ExecStart=/opt/domjudge-systest/bin/judgedaemon -n 5
 User=domjudge
 
 Restart=always
