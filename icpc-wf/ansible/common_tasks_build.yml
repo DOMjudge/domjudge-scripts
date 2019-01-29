@@ -3,7 +3,7 @@
     - name: run maintainer-conf
       become: yes
       become_user: domjudge
-      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build --with-judgehost_chrootdir=/chroot/domjudge-systest'
+      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build --with-judgehost_chrootdir=/chroot/domjudge-systest --with-baseurl=https://systest.domjudge.org/'
       register: dj_configured
       args:
         chdir: "{{DJ_DIR}}"
