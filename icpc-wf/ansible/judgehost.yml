@@ -74,6 +74,7 @@
       copy: src=files/{{item}}.service dest=/etc/systemd/system/
       tags: updateservice
       with_items:
+        - create_cgroups
         - judgedaemon0
         - judgedaemon1
         - judgedaemon2
@@ -88,6 +89,7 @@
     - name: enable and restart the services we just copied
       service: name={{item}} enabled=yes state=restarted
       with_items:
+        - create_cgroups
         - judgedaemon0
         - judgedaemon1
         - judgedaemon2

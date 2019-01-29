@@ -1,6 +1,8 @@
 [Unit]
 Description=DOMjudge JudgeDaemon
 After=network.target
+Requires=create_cgroups.service
+After=create_cgroups.service
 
 [Service]
 Type=simple
