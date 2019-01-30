@@ -241,11 +241,11 @@
       file: state=absent path=/etc/nginx/sites-enabled/default
       notify: restart nginx
 
-    - name: Increase PM max children for PHP FPM
+    - name: Set PHP settings
       lineinfile:
         dest: /etc/php/7.2/fpm/pool.d/domjudge.conf
-        regexp: '^pm\.max_children'
-        line: 'pm.max_children = 300'
+        regexp: "{{item.regexp}}"
+        line: "{{item.key}} = {{item.value}}"
       with_items:
         - { key: 'pm.max_children', regexp: '^pm\.max_children', value: '{{PHP_FPM_MAX_CHILDREN}}' }
         - { key: 'php_admin_value[memory_limit]', regexp: '^php_admin_value\[memory_limit\]', value: '{{PHP_MEMORY_LIMIT}}' }
