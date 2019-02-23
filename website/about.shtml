@@ -7,7 +7,7 @@ general public.</p>
 
 <p>DOMjudge is primarily focused to be used in programming contests like the
 <a href="http://icpc.baylor.edu/icpc/">ICPC</a> programming contests,
-where teams are on-site and there is a fixed problem set and timeframe.
+where teams are on-site and there is a fixed problem set and time frame.
 It can however also be adapted to other contexts.
 </p>
 
@@ -72,7 +72,7 @@ Johnson, Thijs Kinkhorst, and Tobias Werth, with contributions from
 many other people.
 Anyone interested is welcome to <a href="development">contribute to DOMjudge</a>.</p>
 
-<p>The project is licenced under the GNU General Public License. This gives
+<p>The project is licensed under the GNU General Public Licence. This gives
 you the freedom to use it for any purpose, without cost, make changes
 that you require and share those with the community.</p>
 

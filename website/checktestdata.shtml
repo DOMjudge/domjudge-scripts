@@ -32,7 +32,7 @@ require Flexc++/Bisonc++. Finally, Debian packages can be installed
 straight from our APT repository, see <a href="download">our download page</a>.
 </p>
 
-<p>Checktestdata is licenced under the 2-clause BSD License. This gives
+<p>Checktestdata is licensed under the 2-clause BSD Licence. This gives
 you the freedom to use it for any purpose, without cost, make changes
 that you require and include it in your own project. The checktestdata
 language specification is dedicated to the public domain.</p>
