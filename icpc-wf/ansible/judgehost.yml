@@ -6,8 +6,6 @@
     host_type: judgehost
   become: yes
   handlers:
-    - name: update-grub
-      command: update-grub
     - name: update-ca-certificates
       command: update-ca-certificates
     - name: restart collectd
@@ -77,7 +75,25 @@
         dest: /etc/default/grub
         regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
         line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
-      notify: update-grub
+      register: kernel_params
+        
+    - name: update grub
+      shell: "update-grub"
+      when: kernel_params.changed
+
+    - name: Reboot after grub change
+      shell: "sleep 5 && reboot"
+      async: 1
+      poll: 0
+      when: kernel_params.changed
+
+    - name: Wait for the reboot to complete
+      wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+      when: kernel_params.changed
 
     - name: copy script to disable turboboost and hyperthreading
       copy: src=files/disable-turboboost_ht dest=/usr/local/sbin/ mode=0755
