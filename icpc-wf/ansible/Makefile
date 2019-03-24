@@ -3,6 +3,7 @@ default:
 	@echo
 	@echo " - make domserver"
 	@echo " - make judgehost"
+	@echo " - make admin"
 
 LIBVENDORTGZ='files/lib-vendor.tgz'
 
@@ -12,7 +13,7 @@ else
 LIBVENDOR='files/lib/vendor'
 endif
 
-domserver judgehost: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR)
+domserver judgehost admin: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR)
 	ansible-playbook -i hosts $<
 
 files/lib/vendor: $(LIBVENDORTGZ)
@@ -21,4 +22,4 @@ files/lib/vendor: $(LIBVENDORTGZ)
 clean:
 	rm -rf $(LIBVENDOR)
 
-.PHONY: default clean domserver judgehost
+.PHONY: default clean domserver judgehost admin

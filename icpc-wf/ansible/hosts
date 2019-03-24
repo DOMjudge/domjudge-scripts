@@ -13,3 +13,9 @@ domjudge-judgehost7 ansible_host=10.2.2.198 ansible_user=root
 domjudge-judgehost8 ansible_host=10.2.2.199 ansible_user=root
 domjudge-judgehost9 ansible_host=10.2.2.200 ansible_user=root
 domjudge-judgehost10 ansible_host=10.2.2.201 ansible_user=root
+
+[admin]
+domjudge-ccsadmin1 ansible_host=10.2.2.180 ansible_user=root
+domjudge-ccsadmin2 ansible_host=10.2.2.181 ansible_user=root
+domjudge-ccsadmin3 ansible_host=10.2.2.182 ansible_user=root
+domjudge-ccsadmin4 ansible_host=10.2.2.183 ansible_user=root
