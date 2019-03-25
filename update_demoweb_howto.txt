@@ -1,0 +1,8 @@
+To make updates to the demoweb DB (for example if the SQL structure changed):
+
+- run update_demoweb.sh to ensure the DB state is fresh
+- make the necessary changes
+- run dump_demoweb_db.sh to create a new file ~/demoweb/domjudge_demo-YYYY-MM-DD.sql
+- check that the new file differs from the previous dump in the expected way
+- update the symlink ~/demoweb/domjudge_demo.sql to point to the new dump
+- run update_demoweb.sh to test that the new file is loaded correctly
