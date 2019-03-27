@@ -40,3 +40,11 @@
     - name: Create SSH config
       template: src=files/ssh-config-domjudge.j2 dest=/home/domjudge/.ssh/config owner=domjudge group=domjudge mode=0600
       when: DJ_GIT_HOST is defined
+
+    - name: add all hosts to hosts file
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '{{ item }}$'
+        line: "{{ hostvars[item].ansible_host }}	{{ item }}"
+      loop: "{{ groups['all'] }}"
+
