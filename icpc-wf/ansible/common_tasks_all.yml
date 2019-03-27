@@ -1,0 +1,42 @@
+# Common tasks applied to all hosts, including admin ones
+---
+    - name: set timezone
+      timezone:
+        name: "{{TIMEZONE}}"
+
+    - include: common_tasks_packages_icpc-wf.yml
+
+    - name: install common required/useful packages
+      tags: packages
+      apt: pkg={{item}} state=present
+      with_items:
+        - git
+        - screen
+
+    - name: configure git as domjudge user
+      ini_file:
+        dest: /home/domjudge/.gitconfig
+        section: user
+        option: "{{item.name}}"
+        value: "{{item.value}}"
+        owner: domjudge
+        group: domjudge
+      with_items:
+        - { name: 'email', value: 'team@domjudge.org' }
+        - { name: 'name', value: 'DOMjudge team' }
+
+    - name: Create .ssh directory
+      file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
+
+    - name: Copy SSH key for git access
+      copy:
+        content: "{{DJ_GIT_SSH_KEY}}"
+        dest: /home/domjudge/.ssh/dj_git_ssh_key
+        owner: domjudge
+        group: domjudge
+        mode: 0600
+      when: DJ_GIT_SSH_KEY is defined
+
+    - name: Create SSH config
+      template: src=files/ssh-config-domjudge.j2 dest=/home/domjudge/.ssh/config owner=domjudge group=domjudge mode=0600
+      when: DJ_GIT_HOST is defined
