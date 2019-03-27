@@ -22,3 +22,27 @@
       # We use a different directory here to have one single 'upstream' and not have issues with it
       git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=yes
       register: git_working_copy
+
+    - name: create clusterssh config file
+      file:
+        path: /etc/clusters
+        state: touch
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: create clusterssh 'all' config group
+      lineinfile:
+        dest: /etc/clusters
+        regexp: '^all'
+        line: "all {{ groups['all'] | join(' ') }}"
+
+    - name: create clusterssh config groups
+      lineinfile:
+        dest: /etc/clusters
+        regexp: '^{{ item }}s'
+        line: "{{item}}s {{ groups[item] | join(' ') }}"
+      with_items:
+        - domserver
+        - judgehost
+        - admin
