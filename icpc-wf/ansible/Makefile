@@ -5,19 +5,19 @@ default:
 	@echo " - make judgehost"
 	@echo " - make admin"
 
-LIBVENDORTGZ='files/lib-vendor.tgz'
+LIBVENDORTGZ=files/lib-vendor.tgz
 
 ifeq ($(wildcard $(LIBVENDORTGZ)),)
 LIBVENDOR=
 else
-LIBVENDOR='files/lib/vendor'
+LIBVENDOR=files/lib/vendor
 endif
 
 domserver judgehost admin: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR)
 	ansible-playbook -i hosts $<
 
 files/lib/vendor: $(LIBVENDORTGZ)
-	-cd files && tar xzf $(basename $<)
+	-cd files && tar xzf $(notdir $<)
 
 clean:
 	rm -rf $(LIBVENDOR)
