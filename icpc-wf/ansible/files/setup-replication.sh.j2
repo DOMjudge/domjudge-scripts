@@ -20,13 +20,13 @@ if [ -z "$MASTER_SERVER_ID" ]; then
     exit 1
 fi
 
+echo "Recreating empty database..."
 mysql -e 'STOP SLAVE; DROP DATABASE domjudge;'
-
-/home/domjudge/domjudge/sql/dj_setup_database create-db-users
+{{DJ_DIR}}/sql/dj_setup_database create-db-users
 
 ssh "$MASTER" "service php7.2-fpm stop"
 
-MASTER_STATUS=$(ssh "$MASTER" "mysql -e 'SHOW MASTER STATUS;'")
+MASTER_STATUS=$(ssh "$MASTER" "mysql -e 'SHOW MASTER STATUS;'" | tail -n1)
 MASTER_BINLOG=$(echo "$MASTER_STATUS" | cut -f 1)
 MASTER_LOGPOS=$(echo "$MASTER_STATUS" | cut -f 2)
 
@@ -35,11 +35,11 @@ if [ -z "$MASTER_BINLOG" -o -z "$MASTER_LOGPOS" ]; then
     exit 1
 fi
 
-{{DJ_DIR}}/sql/dj_setup_database create-db-users
-
 TMPFILE="/tmp/dj_setup_replication.$MASTER.$$.sql"
-ssh "$MASTER" "mysqldump --opt domjudge" | pv | tee "$TMPFILE" | mysql domjudge
+echo "Loading SQL from '$MASTER', also storing into '$TMPFILE'..."
+ssh "$MASTER" "mysqldump --opt domjudge" | tee "$TMPFILE" | pv | mysql domjudge
 
+echo "Setting up replication..."
 mysql -e "
 CHANGE MASTER TO MASTER_HOST='10.3.3.${MASTER_SERVER_ID}',
                  MASTER_USER='replication',
@@ -50,6 +50,6 @@ START SLAVE;"
 
 ssh "$MASTER" "service php7.2-fpm start"
 
-mysql -e 'SHOW SLAVE STATUS\g'
+mysql -e 'SHOW SLAVE STATUS\G'
 
 exit 0
