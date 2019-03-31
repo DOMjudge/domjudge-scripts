@@ -36,6 +36,10 @@
         - php-fpm
         - python-mysqldb
         - php-intl
+        - mycli
+
+    - name: copy in MySQL config
+      copy: src=files/my.cnf dest=/root/.my.cnf
 
     - name: set PHP timezone for FPM
       lineinfile:

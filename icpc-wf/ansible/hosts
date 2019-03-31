@@ -19,3 +19,4 @@ domjudge-ccsadmin1 ansible_host=10.3.3.223 ansible_user=root
 domjudge-ccsadmin2 ansible_host=10.3.3.224 ansible_user=root
 domjudge-ccsadmin3 ansible_host=10.3.3.225 ansible_user=root
 domjudge-ccsadmin4 ansible_host=10.3.3.226 ansible_user=root
+domjudge-ccsadmin5 ansible_host=10.3.3.227 ansible_user=root

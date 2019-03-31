@@ -24,15 +24,15 @@ PHP_POST_MAX_SIZE: 256M
 
 # Password for the MySQL replication user.
 # Set this to enable master-master replication between two domservers.
-#REPLICATION_PASSWORD: REPLICATION_PASSWORD
+REPLICATION_PASSWORD: some-replication-password
 
 # Password for the collectd MySQL status user.
 # Set this to enable collectd for system statistics collection.
 #COLLECTD_MYSQL_PASSWORD: password-here
 
 # Credentials for the REST API.
-API_USER: RESTAPI_USER
-API_PASSWORD: RESTAPI_PASSWORD
+API_USER: judgehost
+API_PASSWORD: some-judgehost-password
 
 # Password for domjudge shell user
 # Set this to enable a password on the 'domjudge' shell accounts
@@ -44,7 +44,11 @@ DJ_GIT_REPO: domjudge@10.3.3.223:domjudge
 
 # If using a Git repo which requires a SSH key, set the host and key here
 DJ_GIT_HOST: 10.3.3.223
-DJ_GIT_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKayJQxbraoLvi7iYQ7TmTN08Spr1eFfcU/eqyfmacXDVSUMOn/LwwA0nh/bjkbtZSM6CFjQl2L9SXvlxSG9bYV2gYfOL4COxiVGPdVk783FcQlt3x+y4zFRZgz5FgJuGfRxWAqZstsjYceg1xQKkIFQLm+gup1EnLBcwKPARonDkRIa+5XYoKsGaRu1HFrzgGNIR1gmDXP1UAUgHz8MkELazNp1zTt7s7szFhNWhIdtBWbghrnRMss1W+qlx6umhd3T6y4EeJLxoUDYhbIQUCcBx+Rpf5sj/4LmgdCbHQS2OkXjaYtM4MGxEvfSrNT14rIV7HKrCr7BovVoj+p2El nicky@dyn070180.nbw.tue.nl
+DJ_GIT_SSH_KEY: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    ENTER SSH PRIVATE KEY HERE
+    -----END OPENSSH PRIVATE KEY-----
+
 
 # Key for domjudge user
-DJ_SSH_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEW4j7DOQ/BGT6ATtBLAcUHGVuHyydqs7E31DMbcX5uO icpc2018@domjudge-ccsadmin2
+DJ_SSH_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPsTOPgh8QYBudu7IOLETq4ek13RBB+pM/spOboCK1wO domjudge@domjudge-ccsadmin1
