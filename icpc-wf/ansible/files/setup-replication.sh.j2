@@ -1,0 +1,52 @@
+#!/bin/sh -e
+
+MASTER=$1
+
+if [ -z "$MASTER" ]; then
+    echo "Error: specify master host to slave to."
+    exit 1
+fi
+
+if [ $(id -un) != 'root' ]; then
+    echo "Error: this script must be run as root."
+    exit 1
+fi
+
+MASTER_SERVER_ID=$(ssh "$MASTER" "cat /etc/mysql/conf.d/zzz_replication.cnf" | \
+		       grep server_id | sed 's/.*server_id *= *//')
+
+if [ -z "$MASTER_SERVER_ID" ]; then
+    echo "Error: cannot fetch master server_id."
+    exit 1
+fi
+
+mysql -e 'STOP SLAVE; DROP DATABASE domjudge;'
+
+/home/domjudge/domjudge/sql/dj_setup_database create-db-users
+
+ssh "$MASTER" "service php7.2-fpm stop"
+
+MASTER_STATUS=$(ssh "$MASTER" "mysql -e 'SHOW MASTER STATUS;'")
+MASTER_BINLOG=$(echo "$MASTER_STATUS" | cut -d '\t' -f 1)
+MASTER_LOGPOS=$(echo "$MASTER_STATUS" | cut -d '\t' -f 2)
+
+if [ -z "$MASTER_BINLOG" -o -z "$MASTER_LOGPOS" ]; then
+    echo "Error: cannot fetch master status."
+    exit 1
+fi
+
+ssh "$MASTER" "mysqldump --opt domjudge" | mysql domjudge
+
+mysql -e "
+CHANGE MASTER TO MASTER_HOST='10.3.3.${MASTER_SERVER_ID}',
+                 MASTER_USER='replication',
+                 MASTER_PASSWORD='{{REPLICATION_PASSWORD}}',
+                 MASTER_LOG_FILE='${MASTER_BINLOG}',
+                 MASTER_LOG_POS=${MASTER_LOGPOS};
+START SLAVE;"
+
+ssh "$MASTER" "service php7.2-fpm start"
+
+mysql -e 'SHOW SLAVE STATUS\g'
+
+exit 0

@@ -79,8 +79,8 @@
         replace: '#bind-address ='
       when: REPLICATION_PASSWORD is defined
 
-    - name: copy mysql setup script for replication
-      template: src=files/setup-replication.sql.j2 dest=/tmp/setup-replication.sql
+    - name: copy script to setup replication
+      template: src=files/setup-replication.sh.j2 dest=/tmp/setup-replication.sh
       when: REPLICATION_PASSWORD is defined
 
     - name: create mysql replication user
@@ -108,15 +108,14 @@
 
     - include: common_tasks_build.yml
 
-# TODO: find a way to run this correctly when having a master-master setup that
-# doesn't use localhost in the dbpasswords.secret file.
-#    - name: check if the database is configured
-#      command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
-#      register: db_status
-#      ignore_errors: true
-#    - name: make sure the database is configured
-#      command: "{{DJ_DIR}}/bin/dj_setup_database -u root bare-install"
-#      when: "'failed' in db_status.stdout"
+# When using replication, the DB will be dropped and recreated on the slave later.
+    - name: check if the database is configured
+      command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
+      register: db_status
+      ignore_errors: true
+    - name: make sure the database is configured
+      command: "{{DJ_DIR}}/bin/dj_setup_database -u root bare-install"
+      when: "'failed' in db_status.stdout"
 
     - name: fix background color
       lineinfile:
