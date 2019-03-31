@@ -74,7 +74,7 @@
 
     - name: disable mysql listen on localhost only
       replace:
-        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
         regexp: '^bind-address\s*='
         replace: '#bind-address ='
       when: REPLICATION_PASSWORD is defined
