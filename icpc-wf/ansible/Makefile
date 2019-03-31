@@ -2,7 +2,9 @@ default:
 	@echo "No default target available, run one of:"
 	@echo
 	@echo " - make domserver"
+	@echo " - make domserver-only-code"
 	@echo " - make judgehost"
+	@echo " - make judgehost-only-code"
 	@echo " - make admin"
 
 LIBVENDORTGZ=files/lib-vendor.tgz
@@ -13,7 +15,7 @@ else
 LIBVENDOR=files/lib/vendor
 endif
 
-domserver judgehost admin: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR)
+domserver domserver-only-code judgehost judgehost-only-code admin: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR)
 	ansible-playbook -i hosts $<
 
 files/lib/vendor: $(LIBVENDORTGZ)
@@ -22,4 +24,4 @@ files/lib/vendor: $(LIBVENDORTGZ)
 clean:
 	rm -rf $(LIBVENDOR)
 
-.PHONY: default clean domserver judgehost admin
+.PHONY: default clean domserver domserver-only-code judgehost judgehost-only-code admin
