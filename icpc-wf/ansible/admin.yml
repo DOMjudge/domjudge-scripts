@@ -25,6 +25,7 @@
         - makepasswd
         - tig
         - httpie
+        - ncdu
 
    - name: create working copy from the repo
      become: yes
