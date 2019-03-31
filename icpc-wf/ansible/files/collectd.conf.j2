@@ -17,7 +17,7 @@ LoadPlugin processes
 LoadPlugin aggregation
 LoadPlugin match_regex
 
-{% if "domjudge-primary" in ansible_hostname or "domjudge-backup" in ansible_hostname %}
+{% if "domjudge" == ansible_hostname or "domjudge-backup" in ansible_hostname %}
 LoadPlugin mysql
 <Plugin "mysql">
   <Database "domjudge">
