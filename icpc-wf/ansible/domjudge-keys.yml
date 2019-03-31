@@ -9,9 +9,10 @@
       authorized_key:
         user: domjudge
         state: present
-        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUosn5IjiXW13IoReEIBLnXzQCe0U6Bu0KKXZqJOAJX/YOqHJSdM5tlAN4GK5JjicY/f//YL61gmOsbdli5270Y6cIsbbO73w4YUj9D8uqydbSSTKGwp+pHjWNqDBUtaTechRIToRnmIEwEubrGHSfvPo83Y1T9SyQgXRTt7fsh5CSUtwKOdKhUR34j+fdGf/9J1de/1fsXEGiT/Ns9ScGu6mJgro0hIdQpA3qANu5DcXUm0lvA8OY7vwlN4E02qVLZwQdbswdr4FzuiRlVJ1/5EfB/aNad8L65iF9vCO6ZV9pTlFEnrgvVtkuI6jgCU16Bwi+uYvQqs6BRkkd+L/P root@pc2finals3
+        key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWz3OEhwRBxO9+Sc0EJHRu0Y/gGy6H9Xd3s4x6WZ941 root@domjudge-ccsadmin1
     - name: copy domjudge public key to domjudge user
       authorized_key:
         user: domjudge
         state: present
-        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCy5V5qu7Lki+gnJxGvStqUE7mJT148psWd96eDT0JRs3K2c6+J5IgD7jpd9abHFAeQ+WT0FKF1vNuV1CSZoRcBcUK37GfacyExPWG0zUdJBPvPULGQGNtVJgHPPUzCmnP7bTdsDejZ/yxFXd70vw0VUuEVXSpjjlYLS1EiTEnhrnWFj/KrhEqwKL2zwReJdNaf0jvp/WsWH6B/5pO38vo8WyworoMLcMk5qShOkyY2/ZWib+3ewZbBh8OR/p683F8tP1OFysShUgAglnm2CDbI1LyC4UimsEr1QTGc/cKIwx2WR8ICml6RfB1rVdGRiCO+FdbJVTMFQa1vnSaASOg9 domjudge@pc2finals3
+        key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPsTOPgh8QYBudu7IOLETq4ek13RBB+pM/spOboCK1wO domjudge@domjudge-ccsadmin1
+

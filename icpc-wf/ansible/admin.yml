@@ -9,6 +9,13 @@
 
     - include: common_tasks_all.yml
 
+    - name: fix root ssh key permissions
+      file:
+        path: /root/.ssh/id_ed25519
+        mode: 0600
+        owner: root
+        group: root
+    
     - name: install common required/useful packages
       tags: packages
       apt: pkg={{item}} state=present
@@ -21,6 +28,13 @@
       become_user: domjudge
       # We use a different directory here to have one single 'upstream' and not have issues with it
       git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=yes
+      register: git_working_copy
+
+    - name: create working copy from the domjudge-scripts repo
+      become: yes
+      become_user: domjudge
+      # We use a different directory here to have one single 'upstream' and not have issues with it
+      git: repo=domjudge@10.3.3.223:domjudge-scripts dest=/home/domjudge/domjudge-scripts-checkout version=master accept_hostkey=yes update=yes
       register: git_working_copy
 
     - name: create clusterssh config file

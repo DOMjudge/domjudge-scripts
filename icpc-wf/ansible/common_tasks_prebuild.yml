@@ -6,6 +6,19 @@
         regexp: 'domserver$'
         line: "{{DOMSERVER_IP}}	domserver"
 
+    - name: create domjudge user
+      user:
+        name: domjudge
+        shell: /bin/bash
+        groups: sudo
+        password: "{{DJ_SHELL_USER_PW | default(omit)}}"
+    - name: fix domjudge home directory ownership
+      file:
+        path: /home/domjudge
+        owner: domjudge
+        group: domjudge
+        mode: 0755
+
     - include: common_tasks_all.yml
 
     - name: install common required/useful packages
@@ -53,13 +66,6 @@
       with_fileglob:
         - files/install-{{host_type}}/*.deb
 
-    - name: create domjudge user
-      user:
-        name: domjudge
-        shell: /bin/bash
-        groups: sudo
-        password: "{{DJ_SHELL_USER_PW | default(omit)}}"
-
     - name: Add authorized key
       authorized_key:
         user: domjudge
@@ -95,6 +101,13 @@
         rsync_path: sudo rsync
       when: libvendor.stat.exists
 
+    - name: fix ownership of lib/vendor
+      file:
+        path: "{{DJ_DIR}}/lib/vendor"
+        recurse: yes
+        owner: domjudge
+        group: domjudge
+      
     - name: copy collectd configuration
       template: src=files/collectd.conf.j2 dest=/etc/collectd/collectd.conf
       notify: restart collectd
