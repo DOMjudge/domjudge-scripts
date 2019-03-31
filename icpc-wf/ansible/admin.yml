@@ -22,6 +22,7 @@
       with_items:
         - htop
         - clusterssh
+	- makepasswd
 
     - name: create working copy from the repo
       become: yes
