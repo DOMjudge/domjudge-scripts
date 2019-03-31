@@ -40,6 +40,28 @@
       git: repo=domjudge@10.3.3.223:domjudge-scripts dest=/home/domjudge/domjudge-scripts-checkout version=master accept_hostkey=yes update=yes
       register: git_working_copy
 
+    - name: Check composer dependencies present
+      local_action: stat path=files/lib/vendor
+      register: libvendor
+      become: no
+
+    - name: Copy in composer dependencies (if they exist locally)
+      tags: sync
+      synchronize:
+        src: files/lib/vendor/
+        dest: "/home/domjudge/domjudge-checkout/lib/vendor/"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
+      when: libvendor.stat.exists
+
+    - name: fix ownership of lib/vendor
+      file:
+        path: "/home/domjudge/domjudge-checkout/lib/vendor"
+        recurse: yes
+        owner: domjudge
+        group: domjudge
+
     - name: create clusterssh config file
       file:
         path: /etc/clusters
@@ -63,3 +85,28 @@
         - domserver
         - judgehost
         - admin
+
+    - name: Copy in PHPStorm
+      become: no
+      tags: sync
+      synchronize:
+        src: files/phpstorm/PhpStorm-191.6183.95
+        dest: "/phpstorm"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
+    
+    - name: Create PHPStorm stuff directory
+      file: path="/home/domjudge/phpstorm-stuff" group=domjudge owner=domjudge mode=0700 state=directory
+      
+    - name: Copy in PHPStorm stuff
+      become: yes
+      become_user: domjudge
+      copy:
+        src: files/phpstorm/{{ item }}
+        dest: /home/domjudge/phpstorm-stuff/{{ item }}
+      with_items:
+        - BIGNM3NHDL.txt
+        - PHP_Annotations-5.3.3.zip
+        - php-toolbox.jar
+        - Symfony_Plugin-0.17.172.zip
