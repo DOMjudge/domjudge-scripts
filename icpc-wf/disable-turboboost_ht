@@ -31,7 +31,11 @@ done
 DIR=/sys/devices/system/cpu/intel_pstate
 if [ -d $DIR ]; then
 	# now disable turbo boost
-	echo -n 1 > $DIR/no_turbo
+	echo -n 1 > $DIR/no_turbo || true
+	if [ $(cat $DIR/no_turbo) -ne 1 ]; then
+		echo "Error: turboboost still enabled!"
+		exit 1
+	fi
 
 	# increase freq from powersaving to normal, but don't overclock
 	echo 100 > $DIR/min_perf_pct
