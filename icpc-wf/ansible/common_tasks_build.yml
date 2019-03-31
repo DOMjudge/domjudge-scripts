@@ -3,7 +3,7 @@
     - name: run maintainer-conf
       become: yes
       become_user: domjudge
-      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build'
+      command: make maintainer-conf CONFIGURE_FLAGS='--disable-doc-build --with-baseurl=https://domjudge/'
       register: dj_configured
       args:
         chdir: "{{DJ_DIR}}"
