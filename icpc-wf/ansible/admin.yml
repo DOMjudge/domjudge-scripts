@@ -164,3 +164,6 @@
       copy:
         src: files/phpstorm/jetbrains-phpstorm.desktop
         dest: /home/domjudge/.local/share/applications/jetbrains-phpstorm.desktop
+
+    - name: Install netrc file
+      template: src=files/netrc.j2 dest=/home/domjudge/.netrc owner=domjudge group=domjudge mode=0600

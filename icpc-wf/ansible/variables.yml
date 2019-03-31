@@ -34,6 +34,10 @@ REPLICATION_PASSWORD: some-replication-password
 API_USER: judgehost
 API_PASSWORD: some-judgehost-password
 
+# Username and password to be used in .netrc files on admin machines
+ADMIN_USER: admin
+ADMIN_PASSWORD: some-admin-password
+
 # Password for domjudge shell user
 # Set this to enable a password on the 'domjudge' shell accounts
 # created on the domserver and judgehosts.
