@@ -35,7 +35,10 @@ if [ -z "$MASTER_BINLOG" -o -z "$MASTER_LOGPOS" ]; then
     exit 1
 fi
 
-ssh "$MASTER" "mysqldump --opt domjudge" | mysql domjudge
+{{DJ_DIR}}/sql/dj_setup_database create-db-users
+
+TMPFILE="/tmp/dj_setup_replication.$MASTER.$$.sql"
+ssh "$MASTER" "mysqldump --opt domjudge" | pv | tee "$TMPFILE" | mysql domjudge
 
 mysql -e "
 CHANGE MASTER TO MASTER_HOST='10.3.3.${MASTER_SERVER_ID}',
