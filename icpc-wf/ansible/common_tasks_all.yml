@@ -15,6 +15,7 @@
         - htop
         - httpie
         - ncdu
+        - pv
         - screen
 
     - name: configure git as domjudge user
