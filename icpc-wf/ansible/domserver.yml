@@ -79,8 +79,12 @@
       notify: restart mysql
       when: REPLICATION_PASSWORD is defined
 
-    - name: make sure mysql is restarted
-      meta: flush_handlers
+    - name: disable mysql listen on localhost only
+      replace:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: '^bind-address\s*='
+        replace: '#bind-address ='
+      when: REPLICATION_PASSWORD is defined
 
     - name: copy mysql setup script for replication
       template: src=files/setup-replication.sql.j2 dest=/tmp/setup-replication.sql
@@ -96,6 +100,9 @@
         state: present
       when: REPLICATION_PASSWORD is defined
 
+    - name: make sure mysql is restarted
+      meta: flush_handlers
+
     - name: create collectd user for mysql status
       mysql_user:
         name: collectdstatus
@@ -108,7 +115,8 @@
 
     - include: common_tasks_build.yml
 
-# TODO: find a way to run this correctly when having a master-master setup that doesn't use localhost in the dbpasswords.secret file
+# TODO: find a way to run this correctly when having a master-master setup that
+# doesn't use localhost in the dbpasswords.secret file.
 #    - name: check if the database is configured
 #      command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
 #      register: db_status
