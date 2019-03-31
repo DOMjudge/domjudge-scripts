@@ -102,7 +102,7 @@
         host: 'localhost'
         password: "{{COLLECTD_MYSQL_PASSWORD}}"
         append_privs: true
-        priv: '*.*:PROCESS/*.*:REPLICATION CLIENT'
+        priv: '*.*:PROCESS,REPLICATION CLIENT'
         state: present
       when: COLLECTD_MYSQL_PASSWORD is defined
 
