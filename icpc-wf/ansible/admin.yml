@@ -23,6 +23,8 @@
         - htop
         - clusterssh
         - makepasswd
+        - tig
+        - httpie
 
     - name: create working copy from the repo
       become: yes
