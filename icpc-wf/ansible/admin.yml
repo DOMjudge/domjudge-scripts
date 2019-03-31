@@ -157,6 +157,7 @@
         - PHP_Annotations-5.3.3.zip
         - php-toolbox.jar
         - Symfony_Plugin-0.17.172.zip
+        - mysql-connector-java-8.0.13.jar
       
     - name: Copy in PHPStorm Desktop icon
       become: yes
