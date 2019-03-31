@@ -25,6 +25,15 @@
         - { name: 'email', value: 'team@domjudge.org' }
         - { name: 'name', value: 'DOMjudge team' }
 
+    - name: configure git to rebase on pull
+      ini_file:
+        dest: /home/domjudge/.gitconfig
+        section: branch
+        option: "autosetuprebase"
+        value: "remote"
+        owner: domjudge
+        group: domjudge
+
     - name: Create .ssh directory
       file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
 
