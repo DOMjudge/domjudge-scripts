@@ -20,12 +20,11 @@
       tags: packages
       apt: pkg={{item}} state=present
       with_items:
-        - htop
         - clusterssh
+        - gitk
+        - git-gui
         - makepasswd
         - tig
-        - httpie
-        - ncdu
 
    - name: create working copy from the repo
      become: yes

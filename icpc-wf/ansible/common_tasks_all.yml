@@ -10,7 +10,11 @@
       tags: packages
       apt: pkg={{item}} state=present
       with_items:
+        - ack-grep
         - git
+        - htop
+        - httpie
+        - ncdu
         - screen
 
     - name: configure git as domjudge user
