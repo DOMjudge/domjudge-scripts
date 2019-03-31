@@ -27,8 +27,8 @@ mysql -e 'STOP SLAVE; DROP DATABASE domjudge;'
 ssh "$MASTER" "service php7.2-fpm stop"
 
 MASTER_STATUS=$(ssh "$MASTER" "mysql -e 'SHOW MASTER STATUS;'")
-MASTER_BINLOG=$(echo "$MASTER_STATUS" | cut -d '\t' -f 1)
-MASTER_LOGPOS=$(echo "$MASTER_STATUS" | cut -d '\t' -f 2)
+MASTER_BINLOG=$(echo "$MASTER_STATUS" | cut -f 1)
+MASTER_LOGPOS=$(echo "$MASTER_STATUS" | cut -f 2)
 
 if [ -z "$MASTER_BINLOG" -o -z "$MASTER_LOGPOS" ]; then
     echo "Error: cannot fetch master status."
