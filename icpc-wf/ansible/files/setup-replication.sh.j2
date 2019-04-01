@@ -57,9 +57,9 @@ fi
 
 echo "Tracking slave synchronization, press ctrl+c to stop."
 while true ; do
-    SLAVE_LOGPOS=$(mysql -e 'SHOW SLAVE STATUS\G' | grep 'Exec_Master_Log_Pos:' | cut -d ' ' -f 2)
+    SLAVE_LOGPOS=$(mysql -e 'SHOW SLAVE STATUS\G' | grep 'Exec_Master_Log_Pos:' | sed 's/.*: *//')
     echo "Slave synchronized to log position $SLAVE_LOGPOS / $MASTER_LOGPOS ..."
-    if  [ $SLAVE_LOGPOS -ge $MASTER_LOGPOS ]; then
+    if  [ "$SLAVE_LOGPOS" -ge "$MASTER_LOGPOS" ]; then
 	break
     fi
     sleep 1
