@@ -25,6 +25,16 @@
         - git-gui
         - makepasswd
         - tig
+    - name: add cds to hosts file
+      lineinfile:
+        dest: /etc/hosts
+        regexp: 'cds$'
+        line: "10.3.3.207	cds"
+    - name: add kattis to hosts file
+      lineinfile:
+        dest: /etc/hosts
+        regexp: 'kattis$'
+        line: "10.3.3.212	kattis"
 
    - name: create working copy from the repo
      become: yes
