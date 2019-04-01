@@ -72,13 +72,13 @@
       file: path=/etc/collectd/collectd-python state=directory mode=0755
       when:
         - COLLECTD_MYSQL_PASSWORD is defined
-        - "'domjudge' == ansible_hostname or 'domjudge-backup' in ansible_hostname"
+        - "'domjudge' == ansible_hostname or 'domjudge-laptop' in ansible_hostname or 'domjudge-backup' in ansible_hostname"
 
     - name: copy mysql metrics collection script
       copy: src=files/collectd-mysql.py dest=/etc/collectd/collectd-python/mysql.py mode=0755
       when:
         - COLLECTD_MYSQL_PASSWORD is defined
-        - "'domjudge' == ansible_hostname or 'domjudge-backup' in ansible_hostname"
+        - "'domjudge' == ansible_hostname or 'domjudge-laptop' in ansible_hostname or 'domjudge-backup' in ansible_hostname"
 
     - name: copy DOMjudge logo binary
       copy: src=files/domlogo dest=/home/domjudge/domlogo owner=domjudge group=domjudge mode=0755
