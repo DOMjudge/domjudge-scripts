@@ -50,6 +50,19 @@ START SLAVE;"
 
 ssh "$MASTER" "service php7.2-fpm start"
 
-mysql -e 'SHOW SLAVE STATUS\G'
+if ! mysql -e 'SHOW SLAVE STATUS\G' | grep 'Slave_SQL_Running: Yes' ; then
+    echo "Error: slave SQL replication not running."
+    exit 1
+fi
+
+echo "Tracking slave synchronization, press ctrl+c to stop."
+while true ; do
+    SLAVE_LOGPOS=$(mysql -e 'SHOW SLAVE STATUS\G' | grep 'Exec_Master_Log_Pos:' | cut -d ' ' -f 2)
+    echo "Slave synchronized to log position $SLAVE_LOGPOS / $MASTER_LOGPOS ..."
+    if  [ $SLAVE_LOGPOS -ge $MASTER_LOGPOS ]; then
+	break
+    fi
+    sleep 1
+done
 
 exit 0
