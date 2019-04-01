@@ -3,11 +3,31 @@
   vars:
     host_type: admin
   become: yes
+  handlers:
+    - name: restart mysql
+      service: name=mysql state=restarted
+    - name: restart nginx
+      service: name=nginx state=restarted
+    - name: restart PHP FPM
+      service: name=php7.2-fpm state=restarted
+    - name: update-ca-certificates
+      command: update-ca-certificates
+    - name: restart rsyslog
+      service: name=rsyslog enabled=yes state=restarted
+    - name: restart systemctl
+      shell: systemctl daemon-reload
   tasks:
     - name: include global variables
       include_vars: variables.yml
 
     - include: common_tasks_all.yml
+
+    - name: Allow 'sudo' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
     - name: fix root ssh key permissions
       file:
@@ -16,15 +36,8 @@
         owner: root
         group: root
 
-    - name: install common required/useful packages
-      tags: packages
-      apt: pkg={{item}} state=present
-      with_items:
-        - clusterssh
-        - gitk
-        - git-gui
-        - makepasswd
-        - tig
+<<<<<<< HEAD
+=======
     - name: add cds to hosts file
       lineinfile:
         dest: /etc/hosts
@@ -35,16 +48,183 @@
         dest: /etc/hosts
         regexp: 'kattis$'
         line: "10.3.3.212	kattis"
+
+>>>>>>> Add domjudge installation to admin machines
+    - name: install common required/useful packages
+      tags: packages
+      apt: pkg={{item}} state=present
+      with_items:
+        - clusterssh
+        - gitk
+        - git-gui
+        - makepasswd
+        - tig
+        - mariadb-server
+        - nginx
+        - php-fpm
+        - python-mysqldb
+        - php-intl
+        - mycli
+
+    - name: copy in MySQL config
+      copy: src=files/my.cnf dest=/root/.my.cnf
+
+    - name: set PHP timezone for FPM
+      lineinfile:
+        dest: /etc/php/7.2/fpm/php.ini
+        state: present
+        regexp: 'date\.timezone\s*='
+        line: 'date.timezone = {{TIMEZONE}}'
+
+    - name: enable php modules
+      command: phpenmod {{item}}
+      args:
+        creates: /etc/php/7.2/fpm/conf.d/20-{{item}}.ini
+      with_items:
+        - zip
+        - intl
+
+    - name: create directory for systemd mysql settings
+      file: path=/etc/systemd/system/mysql.service.d/ state=directory
+
+    - name: update systemd so mysql has bigger limits
+      copy: src=files/mysql.override.cnf dest=/etc/systemd/system/mysql.service.d/override.conf
+      notify: restart mysql
+
+    - name: add mysql config snippet to increase limit
+      copy: src=files/mysql.domjudge.cnf dest=/etc/mysql/mariadb.conf.d/zz_domjudge.cnf
+      notify: restart mysql
+
+    - name: add mysql config snippet for replication
+      template: src=files/mysql.replication.cnf.j2 dest=/etc/mysql/mariadb.conf.d/zzz_replication.cnf
+      notify: restart mysql
+      when: REPLICATION_PASSWORD is defined
+
+    - name: make sure mysql is restarted
+      meta: flush_handlers
+
+    - include: common_tasks_build.yml
+      vars:
+        DJ_DIR: /home/domjudge/domjudge-checkout
+
+    - name: check if the database is configured
+      command: "/home/domjudge/domjudge-checkout/bin/dj_setup_database -u root status"
+      register: db_status
+      ignore_errors: true
+
+    - name: make sure the database is configured
+      command: "/home/domjudge/domjudge-checkout/bin/dj_setup_database -u root bare-install"
+      when: "'failed' in db_status.stdout"
+
+    - name: install SSL server certificates
+      copy:
+        src: "{{ item }}"
+        dest: /etc/ssl/certs/
+        owner: root
+        group: root
+        mode: 0644
+      with_fileglob:
+        - files/ssl/*.crt
+      notify: update-ca-certificates
+
+    - name: trust localhost SSL certificate
+      copy:
+        src: /etc/ssl/certs/localhost.crt
+        dest: /usr/local/share/ca-certificates/
+        owner: root
+        group: root
+        mode: 0644
+      notify: update-ca-certificates
+
+    - include: nginx-setup.yml
+      vars:
+        DJ_DIR: /home/domjudge/domjudge-checkout
+        DOMSERVER_SSL_CERT: /etc/ssl/certs/localhost.crt
+        DOMSERVER_SSL_KEY: /etc/ssl/private/localhost.key
+
+    - name: create domjudge-run users
+      user: name={{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
+      with_items:
+        - domjudge-run-0
+    - name: create domjudge-run group
+      group: name=domjudge-run state=present
+
+    - name: template out the restapi secret file
+      template: src=files/restapi.secret.admin.j2 dest=/home/domjudge/domjudge-checkout/etc/restapi.secret owner=domjudge group=domjudge mode=0600
+
+    - name: add kattis to hosts file
+      lineinfile:
+        dest: /etc/hosts
+        regexp: 'kattis$'
+        line: "10.3.3.212	kattis"
+
     - name: add domjudge-laptop to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: 'domjudge-laptop$'
         line: "10.3.3.200	domjudge-laptop"
+
     - name: add nisprint to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: 'printsrv$'
         line: "10.3.3.211	nisprint nismaster printsrv"
+
+    - name: remove apt-transport-https from bionic debootstrap file
+        lineinfile:
+        path: /usr/share/debootstrap/scripts/bionic
+        regexp: 'ca-certificates'
+        line: '                base="$base ca-certificates"'
+
+    - name: copy chroot DEB packages to install
+      copy: src=files/install-chroot dest=/tmp/dj_ansible/
+
+    - name: create chroot
+      shell: "/home/domjudge/domjudge-checkout/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log"
+      environment:
+        DEBMIRROR: https://packages/ubuntu
+      args:
+        creates: "/chroot/domjudge"
+
+    - name: fix kernel parameters
+      lineinfile:
+        dest: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
+      register: kernel_params
+
+    - name: update grub
+      shell: "update-grub"
+      when: kernel_params.changed
+
+    - name: copy script to disable turboboost and hyperthreading
+      copy: src=files/disable-turboboost_ht dest=/usr/local/sbin/ mode=0755
+
+    - name: copy systemd unit files
+      copy: src=files/{{item}}.service dest=/etc/systemd/system/
+      tags: updateservice
+      with_items:
+        - create_cgroups_admin
+        - tune_cpu
+      notify: restart systemctl
+
+    - name: make sure systemctl is restarted
+      meta: flush_handlers
+
+    - name: enable and restart the services we just copied
+      service: name={{item}} enabled=yes state=restarted
+      with_items:
+        - create_cgroups_admin
+        - tune_cpu
+
+    - name: disable systemd timers
+      command: systemctl mask {{item}}
+      args:
+        creates: /etc/systemd/system/{{item}}
+      with_items:
+        - apt-daily-upgrade.timer
+        - apt-daily.timer
+        - systemd-tmpfiles-clean.timer
 
    - name: create working copy from the repo
      become: yes
@@ -116,52 +296,52 @@
         - judgehost
         - admin
 
-    - name: Copy in PHPStorm
-      become: no
-      tags: sync
-      synchronize:
-        src: files/phpstorm/PhpStorm-191.6183.95
-        dest: "/phpstorm"
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
-    - name: Copy in PHPStorm config
-      become: no
-      tags: sync
-      synchronize:
-        src: files/phpstorm/.PhpStorm2019.1
-        dest: "/home/domjudge"
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
-    - name: fix ownership of PHPStorm config
-      file:
-        path: "/home/domjudge/.PhpStorm2019.1"
-        recurse: yes
-        owner: domjudge
-        group: domjudge
+#    - name: Copy in PHPStorm
+#      become: no
+#      tags: sync
+#      synchronize:
+#        src: files/phpstorm/PhpStorm-191.6183.95
+#        dest: "/phpstorm"
+#        owner: no
+#        use_ssh_args: true
+#        rsync_path: sudo rsync
+#
+#    - name: Copy in PHPStorm config
+#      become: no
+#      tags: sync
+#      synchronize:
+#        src: files/phpstorm/.PhpStorm2019.1
+#        dest: "/home/domjudge"
+#        owner: no
+#        use_ssh_args: true
+#        rsync_path: sudo rsync
+#
+#    - name: fix ownership of PHPStorm config
+#      file:
+#        path: "/home/domjudge/.PhpStorm2019.1"
+#        recurse: yes
+#        owner: domjudge
+#        group: domjudge
     
     - name: Create PHPStorm stuff directory
       file: path="/home/domjudge/phpstorm-stuff" group=domjudge owner=domjudge mode=0700 state=directory
 
-    - name: Copy in PHPStorm settings for repo
-      become: no
-      tags: sync
-      synchronize:
-        src: files/phpstorm/.idea
-        dest: "/home/domjudge/domjudge-checkout"
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
-    - name: fix ownership of PHPStorm config
-      file:
-        path: "/home/domjudge/domjudge-checkout/.idea"
-        recurse: yes
-        owner: domjudge
-        group: domjudge
+#    - name: Copy in PHPStorm settings for repo
+#      become: no
+#      tags: sync
+#      synchronize:
+#        src: files/phpstorm/.idea
+#        dest: "/home/domjudge/domjudge-checkout"
+#        owner: no
+#        use_ssh_args: true
+#        rsync_path: sudo rsync
+#
+#    - name: fix ownership of PHPStorm config
+#      file:
+#        path: "/home/domjudge/domjudge-checkout/.idea"
+#        recurse: yes
+#        owner: domjudge
+#        group: domjudge
     
     - name: Create PHPStorm stuff directory
       file: path="/home/domjudge/phpstorm-stuff" group=domjudge owner=domjudge mode=0700 state=directory
@@ -178,6 +358,7 @@
         - php-toolbox.jar
         - Symfony_Plugin-0.17.172.zip
         - mysql-connector-java-8.0.13.jar
+        - IdeaVim-0.51.zip
       
     - name: Copy in PHPStorm Desktop icon
       become: yes

@@ -17,6 +17,48 @@
         - ncdu
         - pv
         - screen
+        - autoconf
+        - automake
+        - collectd-core
+        - curl
+        - gcc
+        - g++
+        - default-jdk-headless
+        - make
+        - zip
+        - unzip
+        - php-cli
+        - php-gd
+        - php-curl
+        - php-mysql
+        - php-json
+        - php-xml
+        - php-zip
+        - php-mbstring
+        - php-intl
+        - bsdmainutils
+        - libcgroup-dev
+        - libcurl4-gnutls-dev
+        - libjsoncpp-dev
+        - libmagic-dev
+        - composer
+        - debootstrap
+        - qmlscene
+        - texlive-latex-recommended
+        - texlive-latex-extra
+        - apache2-utils
+
+    - name: set PHP timezone for CLI
+      lineinfile:
+        dest: /etc/php/7.2/cli/php.ini
+        state: present
+        regexp: 'date\.timezone\s*='
+        line: 'date.timezone = {{TIMEZONE}}'
+
+    - name: install local DEB packages
+      include: install-local-package.yml
+      with_fileglob:
+        - files/install-{{host_type}}/*.deb
 
     - name: configure git as domjudge user
       ini_file:
@@ -62,3 +104,9 @@
         line: "{{ hostvars[item].ansible_host }}	{{ item }}"
       loop: "{{ groups['all'] }}"
 
+    - name: configure domjudge logging
+      copy: src=files/rsyslog.domjudge.conf dest=/etc/rsyslog.d/domjudge.conf
+      notify: restart rsyslog
+
+    - name: configure domjudge logrotate
+      copy: src=files/logrotate.domjudge dest=/etc/logrotate.d/domjudge
