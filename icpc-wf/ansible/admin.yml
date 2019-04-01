@@ -142,6 +142,13 @@
         DOMSERVER_SSL_CERT: /etc/ssl/certs/localhost.crt
         DOMSERVER_SSL_KEY: /etc/ssl/private/localhost.key
 
+    - name: Use Symfony dev-mode
+      lineinfile:
+        path: /etc/nginx/snippets/domjudge-inner
+        regexp: 'frontController .*;'
+        line: "set $frontController app_dev.php;"
+      notify: restart nginx
+
     - name: create domjudge-run users
       user: name={{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
       with_items:
