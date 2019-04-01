@@ -133,5 +133,3 @@
         - htop
         - taillog-domserver-nginx-error
         - taillog-domserver-symfony-error
-        - domjudgelogo-domserver
-
