@@ -316,7 +316,7 @@
 #        recurse: yes
 #        owner: domjudge
 #        group: domjudge
-    
+
     - name: Create PHPStorm stuff directory
       file: path="/home/domjudge/phpstorm-stuff" group=domjudge owner=domjudge mode=0700 state=directory
 
@@ -336,10 +336,10 @@
 #        recurse: yes
 #        owner: domjudge
 #        group: domjudge
-    
+
     - name: Create PHPStorm stuff directory
       file: path="/home/domjudge/phpstorm-stuff" group=domjudge owner=domjudge mode=0700 state=directory
-      
+
     - name: Copy in PHPStorm stuff
       become: yes
       become_user: domjudge
@@ -353,7 +353,7 @@
         - Symfony_Plugin-0.17.172.zip
         - mysql-connector-java-8.0.13.jar
         - IdeaVim-0.51.zip
-      
+
     - name: Copy in PHPStorm Desktop icon
       become: yes
       become_user: domjudge
