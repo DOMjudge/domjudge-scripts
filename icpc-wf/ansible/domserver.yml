@@ -80,7 +80,7 @@
       when: REPLICATION_PASSWORD is defined
 
     - name: copy script to setup replication
-      template: src=files/setup-replication.sh.j2 dest=/tmp/setup-replication.sh
+      template: src=files/setup-replication.sh.j2 dest=/tmp/setup-replication.sh mode=0755
       when: REPLICATION_PASSWORD is defined
 
     - name: create mysql replication user
