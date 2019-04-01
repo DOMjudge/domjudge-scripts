@@ -1,6 +1,7 @@
 [domserver]
 domjudge             ansible_host=10.3.3.215 ansible_user=root
 domjudge-backup      ansible_host=10.3.3.216 ansible_user=root
+domjudge-laptop      ansible_host=10.3.3.200 ansible_user=root
 
 [judgehost]
 domjudge-judgehost1  ansible_host=10.2.2.192 ansible_user=root
