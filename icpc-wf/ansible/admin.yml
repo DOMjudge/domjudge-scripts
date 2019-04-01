@@ -170,7 +170,7 @@
         line: "10.3.3.211	nisprint nismaster printsrv"
 
     - name: remove apt-transport-https from bionic debootstrap file
-        lineinfile:
+      lineinfile:
         path: /usr/share/debootstrap/scripts/bionic
         regexp: 'ca-certificates'
         line: '                base="$base ca-certificates"'
