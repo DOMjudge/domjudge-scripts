@@ -76,7 +76,7 @@
         regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
         line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
       register: kernel_params
-        
+
     - name: update grub
       shell: "update-grub"
       when: kernel_params.changed
