@@ -135,5 +135,6 @@
 	<file>133.png</file>
 	<file>134.png</file>
 	<file>135.png</file>
+	<file>dummy.png</file>
 </qresource>
 </RCC>

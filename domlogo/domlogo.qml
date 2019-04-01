@@ -102,7 +102,8 @@ Window {
 	}
 	function team(tid) {
 		if (tid == "") {
-			team.opacity = 0
+			team.opacity = 1
+			team.source = "dummy.png"
 		} else {
 			team.source = tid + ".png"
 			team.opacity = 1

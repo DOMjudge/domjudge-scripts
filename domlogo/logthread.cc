@@ -22,7 +22,7 @@ namespace {
 	bool goodTeam(const std::string& s) {
 		try {
 			int id = std::stoi(s);
-			if (id <= 140) {
+			if (id <= 135) {
 				return true;
 			}
 		} catch (const std::exception& e) {}
