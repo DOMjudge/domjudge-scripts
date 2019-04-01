@@ -36,20 +36,6 @@
         owner: root
         group: root
 
-<<<<<<< HEAD
-=======
-    - name: add cds to hosts file
-      lineinfile:
-        dest: /etc/hosts
-        regexp: 'cds$'
-        line: "10.3.3.207	cds"
-    - name: add kattis to hosts file
-      lineinfile:
-        dest: /etc/hosts
-        regexp: 'kattis$'
-        line: "10.3.3.212	kattis"
-
->>>>>>> Add domjudge installation to admin machines
     - name: install common required/useful packages
       tags: packages
       apt: pkg={{item}} state=present
@@ -158,6 +144,12 @@
 
     - name: template out the restapi secret file
       template: src=files/restapi.secret.admin.j2 dest=/home/domjudge/domjudge-checkout/etc/restapi.secret owner=domjudge group=domjudge mode=0600
+
+    - name: add cds to hosts file
+      lineinfile:
+        dest: /etc/hosts
+        regexp: 'cds$'
+        line: "10.3.3.207	cds"
 
     - name: add kattis to hosts file
       lineinfile:
