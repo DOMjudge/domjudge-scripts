@@ -51,6 +51,7 @@
         - python-mysqldb
         - php-intl
         - mycli
+        - mmv
 
     - name: copy in MySQL config
       copy: src=files/my.cnf dest=/root/.my.cnf
