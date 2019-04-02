@@ -1,0 +1,8 @@
+#!/bin/sh
+# Convert team photos to max 1000px in any direction and move to the
+# names used by DOMjudge.
+# You can place the result under domjudge-checkout/webapp/web/images/teams/
+
+mogrify -scale 1000x1000 Team*.jpg
+mmv 'Team-[0]*.jpg' '#2.jpg'
+mmv 'Team-[^0]*.jpg' '#1#2.jpg'
