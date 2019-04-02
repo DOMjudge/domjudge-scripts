@@ -59,7 +59,7 @@ void LogThread::run() {
 			if (goodTeam(teamid)) {
 				emit team(QString::fromStdString(teamid));
 			} else {
-				emit team("");
+				emit team("none");
 			}
 			continue;
 		}

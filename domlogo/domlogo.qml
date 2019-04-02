@@ -19,19 +19,19 @@ import QtQuick.Window 2.2
 
 Window {
 	flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
-	color: "black"
-	x: 1000
-	y: 60
+        color: "transparent"
+	x: 500
+	y: 160
 	id: "window"
-	minimumHeight: domjudge.height + uni.height
-	height: domjudge.height + uni.height
-	width: height / (dummy.paintedHeight+dummy.paintedWidth) * dummy.paintedWidth;
+	minimumHeight: 580
+	height: 580
+	width: 1000
 	Image {
 		id: "dummy"
 		source: "DOMjudgelogo_sticker.svg"
 		fillMode: Image.PreserveAspectFit
-		width: 100
-		height: 100
+		width: 180
+		height: 180
 		visible: false
 	}
 	function correct() {
@@ -49,8 +49,8 @@ Window {
 		repeat: true
 		running: true
 		onTriggered: {
-			window.x = 1000
-			window.y = 50
+			window.x = 500
+			window.y = 160
 		}
 	}
 	Timer {
@@ -65,8 +65,9 @@ Window {
 		id: "domjudge"
 		color: "transparent"
 		anchors.left: parent.left
-		anchors.right: parent.right
-		height: 480
+		anchors.top: parent.top
+		height: 400
+		width: 180
 		Image {
 			id: "image"
 			anchors.fill: parent
@@ -101,25 +102,55 @@ Window {
 		}
 	}
 	function team(tid) {
-		if (tid == "") {
+		if (tid == "none") {
 			team.opacity = 1
 			team.source = "dummy.png"
+                        photo.opacity = 1
+			photo.source = "eindhoven.jpg"
+		} else if (tid == "") {
+			team.opacity = 0
+                        photo.opacity = 0
+                        uni.color = "transparent"
 		} else {
 			team.source = tid + ".png"
 			team.opacity = 1
+                        photo.opacity = 1
+			photo.source = tid + ".jpg"
+                        uni.color = "black"
 		}
 	}
 	Rectangle {
 		id: "uni"
-		color: "transparent"
+		color: "black"
 		height: {
-			width
+			181
 		}
-		width: image.paintedWidth
-		anchors.horizontalCenter: domjudge.horizontalCenter
+		width: 181
+		anchors.left: domjudge.left
 		anchors.top: domjudge.bottom
 		Image {
 			id: "team"
+			anchors.fill: parent
+			source: ""
+			sourceSize.width: width
+			sourceSize.height: height
+			opacity: 0
+			Behavior on opacity {
+				NumberAnimation {}
+			}
+		}
+	}
+	Rectangle {
+		id: "photorectangle"
+		color: "transparent"
+		height: {
+			580
+		}
+		width: 870
+		anchors.left: uni.right;
+		anchors.bottom: uni.bottom
+		Image {
+			id: "photo"
 			anchors.fill: parent
 			source: ""
 			sourceSize.width: width
