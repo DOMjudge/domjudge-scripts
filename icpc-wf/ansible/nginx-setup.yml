@@ -127,6 +127,7 @@
         line: "{{item.key}} = {{item.value}}"
       with_items:
         - { key: 'pm.max_children', regexp: '^pm\.max_children', value: '{{PHP_FPM_MAX_CHILDREN}}' }
+        - { key: 'pm.max_requests', regexp: '^pm\.max_requests', value: '{{PHP_FPM_MAX_REQUESTS}}' }
         - { key: 'php_admin_value[memory_limit]', regexp: '^php_admin_value\[memory_limit\]', value: '{{PHP_MEMORY_LIMIT}}' }
         - { key: 'php_admin_value[upload_max_filesize]', regexp: '^php_admin_value\[upload_max_filesize\]', value: '{{PHP_UPLOAD_MAX_FILESIZE}}' }
         - { key: 'php_admin_value[post_max_size]', regexp: '^php_admin_value\[post_max_size\]', value: '{{PHP_POST_MAX_SIZE}}' }
