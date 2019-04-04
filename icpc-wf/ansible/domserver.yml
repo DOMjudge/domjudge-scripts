@@ -37,6 +37,7 @@
         - python-mysqldb
         - php-intl
         - mycli
+        - macchanger
 
     - name: copy in MySQL config
       copy: src=files/my.cnf dest=/root/.my.cnf
