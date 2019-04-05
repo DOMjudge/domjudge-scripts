@@ -291,52 +291,52 @@
         - judgehost
         - admin
 
-#    - name: Copy in PHPStorm
-#      become: no
-#      tags: sync
-#      synchronize:
-#        src: files/phpstorm/PhpStorm-191.6183.95
-#        dest: "/phpstorm"
-#        owner: no
-#        use_ssh_args: true
-#        rsync_path: sudo rsync
-#
-#    - name: Copy in PHPStorm config
-#      become: no
-#      tags: sync
-#      synchronize:
-#        src: files/phpstorm/.PhpStorm2019.1
-#        dest: "/home/domjudge"
-#        owner: no
-#        use_ssh_args: true
-#        rsync_path: sudo rsync
-#
-#    - name: fix ownership of PHPStorm config
-#      file:
-#        path: "/home/domjudge/.PhpStorm2019.1"
-#        recurse: yes
-#        owner: domjudge
-#        group: domjudge
+   - name: Copy in PHPStorm
+     become: no
+     tags: sync
+     synchronize:
+       src: files/phpstorm/PhpStorm-191.6183.95
+       dest: "/phpstorm"
+       owner: no
+       use_ssh_args: true
+       rsync_path: sudo rsync
+
+   - name: Copy in PHPStorm config
+     become: no
+     tags: sync
+     synchronize:
+       src: files/phpstorm/.PhpStorm2019.1
+       dest: "/home/domjudge"
+       owner: no
+       use_ssh_args: true
+       rsync_path: sudo rsync
+
+   - name: fix ownership of PHPStorm config
+     file:
+       path: "/home/domjudge/.PhpStorm2019.1"
+       recurse: yes
+       owner: domjudge
+       group: domjudge
 
     - name: Create PHPStorm stuff directory
       file: path="/home/domjudge/phpstorm-stuff" group=domjudge owner=domjudge mode=0700 state=directory
 
-#    - name: Copy in PHPStorm settings for repo
-#      become: no
-#      tags: sync
-#      synchronize:
-#        src: files/phpstorm/.idea
-#        dest: "/home/domjudge/domjudge-checkout"
-#        owner: no
-#        use_ssh_args: true
-#        rsync_path: sudo rsync
-#
-#    - name: fix ownership of PHPStorm config
-#      file:
-#        path: "/home/domjudge/domjudge-checkout/.idea"
-#        recurse: yes
-#        owner: domjudge
-#        group: domjudge
+   - name: Copy in PHPStorm settings for repo
+     become: no
+     tags: sync
+     synchronize:
+       src: files/phpstorm/.idea
+       dest: "/home/domjudge/domjudge-checkout"
+       owner: no
+       use_ssh_args: true
+       rsync_path: sudo rsync
+
+   - name: fix ownership of PHPStorm config
+     file:
+       path: "/home/domjudge/domjudge-checkout/.idea"
+       recurse: yes
+       owner: domjudge
+       group: domjudge
 
     - name: Create PHPStorm stuff directory
       file: path="/home/domjudge/phpstorm-stuff" group=domjudge owner=domjudge mode=0700 state=directory
