@@ -33,14 +33,14 @@ As this is a demo, you can't actually submit solutions.</dd>
 <dd>The full set of options available to judges and administrators.
 Log in with username and password <em>jury</em> or username and password <em>admin</em> respectively. The admin interface is a superset of the jury interface with additional options to configure the contests.
 There are no judgehosts running, so things like rejudging do not have much effect.
-Team source code has been replaced with a placeholder, so the source formatting
-functionality is not useful.</dd>
+Team source code and testdata in/output has been replaced with a placeholder, so the source formatting
+and testdata diff functionality is not useful.</dd>
 </dl>
 
 <p>The data in the system is reset to a known good state every night, so feel
 free to experiment. Please keep the system in a reasonable state though for
 other visitors that may come by before the reset. The data is from an actual
-contest, NWERC 2007, with some sensitive things removed.</p>
+contest, NWERC 2018, with some sensitive things removed.</p>
 
 <p>If there's something not working, or you've got questions, please contact us
 at <a href="mailto:admin@domjudge.org">admin@domjudge.org</a>.</p>
