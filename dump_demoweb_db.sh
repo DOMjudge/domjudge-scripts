@@ -4,7 +4,7 @@
 
 set -e
 
-DBNAME='domjudge_demo'
+DBNAME='domjudge_demo2018'
 DUMPFILE=~/demoweb/${DBNAME}-$(date +%F).sql
 
 mysqldump $DBNAME | process-mysqldump > $DUMPFILE

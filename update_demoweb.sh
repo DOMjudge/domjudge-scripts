@@ -5,7 +5,7 @@
 set -e
 
 MYSQLOPTS=''
-DBNAME='domjudge_demo'
+DBNAME='domjudge_demo2018'
 
 cd ~/demoweb
 
