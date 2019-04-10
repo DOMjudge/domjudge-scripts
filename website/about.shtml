@@ -81,11 +81,11 @@ that you require and share those with the community.</p>
 This is also the place to get help with your questions about installing
 or using DOMjudge.</p>
 
-<p>A number of developers and users of DOMjudge linger on the IRC channel
-dedicated to DOMjudge on the Freenode network:
-server <kbd>irc.freenode.net</kbd>, channel <kbd>#domjudge</kbd>.
+<p>DOMjudge has a <a href="chat">Slack workspace</a> where
+a number of developers and users of DOMjudge linger.
 Feel free to drop by with your questions and comments, but note that
-it may sometimes take a bit longer than a few minutes to get a response.</p>
+it may sometimes take a bit longer than a few minutes to get a response,
+partly because people might be in different timezones.</p>
 
 <p>If you want to privately report a security issue, please send it to
 <a href="mailto:team@domjudge.org">team@domjudge.org</a>.</p>
