@@ -30,6 +30,9 @@
       class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'about.shtml'" --> active<!--#endif-->"
       href="about"><i class="far fa-lightbulb"></i> About</a></li>
     <li class="nav-item"><a
+      class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'chat.shtml'" --> active<!--#endif-->"
+      href="chat"><i class="fab fa-slack"></i> Chat</a></li>
+    <li class="nav-item"><a
       class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'documentation.shtml'" --> active<!--#endif-->"
       href="documentation"><i class="fas fa-book-open"></i> Documentation</a></li>
     <li class="nav-item"><a

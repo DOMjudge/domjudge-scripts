@@ -1,0 +1,19 @@
+<!--#set var="dj_page_title" value="Chat" --><!--#include virtual="/header.shtml" -->
+
+<p>
+    DOMjudge offers a Slack workspace where developers and users can chat about
+    any questions, comments, ideas and other DOMjudge related things they want.
+</p>
+<p>
+    Our workspace can be found at
+    <a href="https://domjudge-org.slack.com/" target="_blank">https://domjudge-org.slack.com/</a>.
+    To join as a new member, you can use
+    <a href="/slack/join" target="_blank">this page to sign up</a>.
+</p>
+<p>
+    Once you have joined the Slack workspace, feel free to ask any DOMjudge-related
+    questions you might have. Please do note that it may sometimes take a bit longer
+    than a few minutes to get a response, partly because people might be in different timezones.
+</p>
+
+<!--#include virtual="/footer.shtml" -->
