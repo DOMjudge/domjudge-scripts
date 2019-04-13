@@ -33,7 +33,7 @@ cd ~
 
 # Validate DOMjudge webpages running from uptodate git checkout
 # (we cannot use a fresh checkout due to missing website config)
-cd $LIVESYSTEMDIR && git pull -q --autostash
+cd $LIVESYSTEMDIR && git pull -q --rebase --autostash
 
 URLS='
 .

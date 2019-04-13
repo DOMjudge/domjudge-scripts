@@ -10,7 +10,7 @@ DBNAME='domjudge_demo2018'
 cd ~/demoweb
 
 # Update the code:
-git pull -q --autostash
+git pull -q --rebase --autostash
 
 # Rebuild in-place to also make configuration updates visible:
 make QUIET=1 maintainer-clean
