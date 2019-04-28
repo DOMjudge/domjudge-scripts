@@ -1,16 +1,5 @@
 <!--#set var="dj_page_title" value="Programming Contest Jury System" --><!--#include virtual="/header.shtml" -->
 
-<div class="alert alert-success" role="alert">
-  <div class="container">
-	  <h4 class="alert-heading">DOMjudge Open Online Contest - 28 April</h4>
-	    <p>On Sunday 28 April, the DOMjudge team is running an
-	    open online contest, based on the very latest and greatest
-	    version of DOMjudge. Participate to help test out our latest code, or just to have some practice or fun!
-	    </p>
-	    <p><a class="btn btn-success" role="button" href="https://contest.domjudge.org/register">Register now &raquo;</a></p>
-  </div>
-</div>
-
 <div class="jumbotron">
   <div class="container">
     <h1 class="display-5">DOMjudge</h1>
