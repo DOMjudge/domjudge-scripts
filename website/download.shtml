@@ -62,11 +62,8 @@ section(s) <code>main contrib non-free</code>.
 <a href="/live/">
 DOMjudge-live images</a> to run DOMjudge straight from an USB stick,
 as virtual machine, or to be written to harddisk.
-See <a href="https://github.com/DOMjudge/domjudge-packaging/blob/master/live-image/files/README">
-this README file</a> (which is also available in the
-<a href="https://github.com/DOMjudge/domjudge-packaging/">DOMjudge
-packaging</a> Git repository and as <code>/README</code> on the image)
-for more details on how use these.
+See <a href="https://github.com/DOMjudge/domjudge-packaging/tree/master/live-image">
+the documentation here</a> for more details on how use these.
 </p>
 
 <h3>DOMjudge docker images</h3>
