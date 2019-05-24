@@ -104,27 +104,8 @@ if [ -n "$NEWERTHAN" ]; then
 	fi
 fi
 
-# First rename some files to keep Coverity scan happy:
-for i in tests/test-compile-error.* ; do
-	[ -e "$i" ] || continue
-	mv $i $i-coverity-renamed
-done
-# Secondly delete all upstream PHP libraries:
-rm -rf lib/vendor/*
-
 COVOPTS='--dir cov-int --fs-capture-search ./'
 cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | quietfilter
-
-# Restore renamed/deleted stuff if not running from a temporay git clone:
-if true || [ -z "$GITURL" ]; then
-	for i in `find . -name \*-coverity-renamed` ; do
-		mv $i ${i%-coverity-renamed}
-	done
-	if [ -d lib/vendor ]; then
-		rm -rf lib/vendor/*
-		make $QUIETMAKE composer-dependencies
-	fi
-fi
 
 DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
 # Read variables again for files produced by coverity-build:
