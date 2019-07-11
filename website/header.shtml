@@ -1,5 +1,5 @@
-<!--#set    var="dj_current_branch_version"  value="7.0.2"
---><!--#set var="dj_current_branch_date"     value="4 June 2019"
+<!--#set    var="dj_current_branch_version"  value="7.0.3"
+--><!--#set var="dj_current_branch_date"     value="11 July 2019"
 --><!--#set var="dj_previous_branch_version" value="6.0.3"
 --><!--#set var="dj_previous_branch_date"    value="15 December 2018"
 --><!--#set var="dj_rc_branch_version"       value="6.0.0RC1"
