@@ -1,4 +1,5 @@
-#!/bin/sh -e
+#!/bin/bash -e
+set -o pipefail
 
 # Run a Coverity scan on the local directory (which must be in a
 # configured DOMjudge or Checktestdata source-tree root) and submit
@@ -84,7 +85,7 @@ git_commit()
 quietfilter()
 {
 	if [ "$QUIET" ]; then
-		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|(JavaScript|PHP) compilation units \(99%\)|^Looking for translation units|^The cov-build utility completed successfully\.|^Build successfully submitted\.|^\[STATUS\] |^\*+$|^\|[0-9-]+\|$|^\[WARNING\] (Path .* looks like an idir\.|No source file matches in filesystem capture search directory:|Filesystem capture was enabled but yielded no source file matches\.))' || true
+		grep -vE '(^Coverity Build Capture|^Internal version numbers:|^[[:space:]]*$|compilation units \(100%\)|PHP compilation units \(9[5-9]%\)|^Looking for translation units|^The cov-build utility completed successfully\.|^Build successfully submitted\.|^\[STATUS\] |^\*+$|^\|[0-9-]+\|$|^\[WARNING\] (Path .* looks like an idir\.|No source file matches in filesystem capture search directory:|Filesystem capture was enabled but yielded no source file matches\.))' || true
 	else
 		cat
 	fi
