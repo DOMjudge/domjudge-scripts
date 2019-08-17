@@ -40,7 +40,7 @@ mailing list</a>.</p>
 <p>There are also <a href="https://www.debian.org">Debian GNU/Linux</a> packages
 available for the amd64 architecture; other architectures might be buildable
 from the source packages.
-The packages work on Wheezy and newer, and also on the various versions
+The packages work on Stretch and newer, and also on the various versions
 of Ubuntu.</p>
 
 <p>To install these packages, add our
@@ -58,10 +58,8 @@ section(s) <code>main contrib non-free</code>.
 
 <h3>DOMjudge-live images</h3>
 
-<p>We also provide
-<a href="/live/">
-DOMjudge-live images</a> to run DOMjudge straight from an USB stick,
-as virtual machine, or to be written to harddisk.
+<p>We also provide <a href="/live/">DOMjudge-live images</a> to run DOMjudge
+straight from an USB stick, as virtual machine, or to be written to harddisk.
 See <a href="https://github.com/DOMjudge/domjudge-packaging/tree/master/live-image">
 the documentation here</a> for more details on how use these.
 </p>
@@ -69,8 +67,8 @@ the documentation here</a> for more details on how use these.
 <h3>DOMjudge docker images</h3>
 
 <p>Official Docker images for both the domserver and judgehost are also available.
-See the <a href="https://hub.docker.com/r/domjudge/domserver/">Docker Hub repository for the DOMserver</a>
-to get started.
+See the <a href="https://hub.docker.com/r/domjudge/domserver/">Docker Hub
+repository for the DOMserver</a> to get started.
 </p>
 
 <h3>Other downloads</h3>
