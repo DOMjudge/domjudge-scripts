@@ -23,5 +23,7 @@ composer auto-scripts >/dev/null 2>&1
 mysql $MYSQLOPTS "$DBNAME" < domjudge_demo_remove.sql
 mysql $MYSQLOPTS "$DBNAME" < domjudge_demo.sql
 
-# Check that Git code and SQL dumpfile DB structures are in sync:
-~/bin/check_db-struct.sh -o "$MYSQLOPTS" -d "$DBNAME" -l sql/mysql_db_structure.sql
+# Upgrade the database to the latest structure
+DBUSER=$(cat ~/.my.cnf  | grep user | grep -oP '\w+$')
+DBPASS=$(cat ~/.my.cnf  | grep password | grep -oP '\w+$')
+./sql/dj_setup_database -q -u $DBUSER -p $DBPASS upgrade
