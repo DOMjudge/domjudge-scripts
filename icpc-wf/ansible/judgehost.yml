@@ -98,13 +98,21 @@
     - name: copy script to disable turboboost and hyperthreading
       copy: src=files/disable-turboboost_ht dest=/usr/local/sbin/ mode=0755
 
-    - name: copy systemd unit files
+    - name: copy custom systemd unit files
       copy: src=files/{{item}}.service dest=/etc/systemd/system/
       tags: updateservice
       with_items:
-        - create_cgroups
         - tune_cpu
-        - judgedaemon
+      notify: restart systemctl
+
+    - name: copy create-cgroups systemd unit file
+      copy: src={{DJ_DIR}}/misc-tools/create-cgroups.service dest=/etc/systemd/system/
+      tags: updateservice
+      notify: restart systemctl
+
+    - name: copy judgedaemon systemd unit file
+      copy: src={{DJ_DIR/judge/domjudge-judgehost.service dest=/etc/systemd/system/
+      tags: updateservice
       notify: restart systemctl
 
     - name: make sure systemctl is restarted
