@@ -24,6 +24,4 @@ mysql $MYSQLOPTS "$DBNAME" < domjudge_demo_remove.sql
 mysql $MYSQLOPTS "$DBNAME" < domjudge_demo.sql
 
 # Upgrade the database to the latest structure
-DBUSER=$(cat ~/.my.cnf  | grep user | grep -oP '\w+$')
-DBPASS=$(cat ~/.my.cnf  | grep password | grep -oP '\w+$')
-./sql/dj_setup_database -q -u $DBUSER -p $DBPASS upgrade
+./sql/dj_setup_database -q upgrade
