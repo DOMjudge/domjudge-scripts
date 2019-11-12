@@ -44,11 +44,8 @@ gzip -9 $DJDIR.tar
 
 if [ -n "$PUBDIR" ]; then
 	rm -rf $PUBDIR/*
-	mkdir -p $PUBDIR/admin-manual $PUBDIR/judge-manual
-	cp $DJDIR/doc/admin/admin-manual*.html \
-	   $DJDIR/doc/admin/admin-manual.pdf     $PUBDIR/admin-manual/
-	cp $DJDIR/doc/judge/judge-manual*.html \
-	   $DJDIR/doc/judge/judge-manual.pdf     $PUBDIR/judge-manual/
+	mkdir -p $PUBDIR/manual
+	cp -r $DJDIR/doc/manual/build/html/*     $PUBDIR/manual/
 	cp $DJDIR/doc/team/team-manual.pdf       $PUBDIR/
 	cp $DJDIR.tar.gz $DJDIR/ChangeLog        $PUBDIR/
 	cd /
