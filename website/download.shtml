@@ -4,11 +4,11 @@
 <strong><!--#echo var="dj_current_branch_version" --></strong>,
 dated <!--#echo var="dj_current_branch_date" -->.</p>
 
-<!--
 <p>Also available is the previous release series
 <strong><!--#echo var="dj_previous_branch_version" --></strong>,
 dated <!--#echo var="dj_previous_branch_date" -->.</p>
 
+<!--
 <p>A <em>release candidate</em> of the next stable release is also available. It has version
 <strong><!--#echo var="dj_rc_branch_version" --></strong>,
 dated <!--#echo var="dj_rc_branch_date" -->.</p>
@@ -18,10 +18,10 @@ dated <!--#echo var="dj_rc_branch_date" -->.</p>
   <div class="col-sm">
     <a class="btn btn-primary btn-lg" href="/releases/domjudge-<!--#echo var="dj_current_branch_version"-->.tar.gz"><i class="fas fa-download"></i> current stable</a>
   </div>
-<!--
   <div class="col-sm">
       <a class="btn btn-secondary btn-lg" href="/releases/domjudge-<!--#echo var="dj_previous_branch_version"-->.tar.gz"><i class="fas fa-download"></i> previous stable</a>
   </div>
+<!--
   <div class="col-sm">
       <a class="btn btn-danger btn-lg" href="/releases/domjudge-<!--#echo var="dj_rc_branch_version"-->.tar.gz"><i class="fas fa-download"></i> release candidate</a>
   </div>
