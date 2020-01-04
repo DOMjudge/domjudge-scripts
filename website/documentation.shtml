@@ -3,12 +3,8 @@
 <p>For your convenience, here you can find the documentation from the latest stable release. The DOMjudge tarball contains manuals for the administrator, judges and teams, which correspond to that specific version.</p>
 
 <dl>
-<dt><a href="docs/admin-manual.html">Administrator's manual</a>
-(<a href="docs/admin-manual.pdf">PDF</a>)</dt>
-<dd>The complete reference for those setting up and running the DOMjudge system.</dd>
-<dt><a href="docs/judge-manual.html">Judge's manual</a>
-(<a href="docs/judge-manual.pdf">PDF</a>)</dt>
-<dd>Instructions for members of the jury to work with the system.</dd>
+<dt><a href="docs/manual/index.html">DOMjudge manual</a></dt>
+<dd>The complete reference for those setting up and running the DOMjudge system as well as the jury.</dd>
 <dt><a href="docs/team-manual.pdf">Team manual</a></dt>
 <dd>Concise manual for participating teams. Only available in Portable
 Document Format (PDF).</dd>
