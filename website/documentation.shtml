@@ -10,9 +10,6 @@
 Document Format (PDF).</dd>
 </dl>
 
-<p>A <a href="docs/admin-manual-8.html">
-Frequently Asked Questions section</a> is included in the Administrator's manual.</p>
-
 <h2>API documentation</h2>
 
 <p>DOMjudge provides a JSON REST API that can be used to query contest
