@@ -54,7 +54,7 @@ If you are using (an adapted version of) DOMjudge, we would be glad to hear abou
 <p>The following is required to run DOMjudge:</p>
 <ul>
 <li>At least one machine running Linux, with root access</li>
-<li>Apache (or Nginx) web server with PHP &gt;= 7 and
+<li>Apache (or Nginx) web server with PHP &gt;= 7.1.3 and
     PHP command line interface</li>
 <li>MySQL or MariaDB database server version 5.5.3 or newer</li>
 <li>Compilers for the languages you want to support</li>
