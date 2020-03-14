@@ -23,9 +23,9 @@
 
     - name: remove some packages
       tags: packages
-      apt: pkg={{item}} state=absent
-      with_items:
-      - ntp
+      apt:
+        pkg: ntp
+        state: absent
 
     - meta: flush_handlers
       tags: packages

@@ -38,8 +38,9 @@
 
     - name: install common required/useful packages
       tags: packages
-      apt: pkg={{item}} state=present
-      with_items:
+      apt:
+        state: present
+        pkg:
         - clusterssh
         - gitk
         - git-gui

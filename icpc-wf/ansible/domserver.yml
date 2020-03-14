@@ -29,8 +29,9 @@
     - include: common_tasks_prebuild.yml
 
     - name: install domserver required packages
-      apt: pkg={{item}} state=present
-      with_items:
+      apt:
+        state: present
+        pkg:
         - mariadb-server
         - nginx
         - php-fpm
