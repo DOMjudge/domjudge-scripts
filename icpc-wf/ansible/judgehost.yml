@@ -106,12 +106,12 @@
       notify: restart systemctl
 
     - name: copy create-cgroups systemd unit file
-      copy: src={{DJ_DIR}}/misc-tools/create-cgroups.service dest=/etc/systemd/system/
+      copy: src={{DJ_DIR}}/misc-tools/create-cgroups.service dest=/etc/systemd/system/ remote_src=yes
       tags: updateservice
       notify: restart systemctl
 
     - name: copy judgedaemon systemd unit file
-      copy: src={{DJ_DIR}}/judge/domjudge-judgehost.service dest=/etc/systemd/system/
+      copy: src={{DJ_DIR}}/judge/domjudge-judgehost.service dest=/etc/systemd/system/ remote_src=yes
       tags: updateservice
       notify: restart systemctl
 
@@ -121,9 +121,9 @@
     - name: enable and restart the services we just copied
       service: name={{item}} enabled=yes state=restarted
       with_items:
-        - create_cgroups
+        - create-cgroups
         - tune_cpu
-        - judgedaemon
+        - domjudge-judgehost
 
     - name: add autostart shortcuts
       copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
