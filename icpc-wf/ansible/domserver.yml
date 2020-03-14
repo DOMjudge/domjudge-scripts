@@ -127,6 +127,12 @@
         dest: "{{DJ_DIR}}/webapp/web/style.css"
       when: BACKGROUND_COLOR is defined
 
+    - name: disable developer mode
+      lineinfile:
+        regexp: '^APP_ENV=dev'
+        state: absent
+        dest: "{{DJ_DIR}}/webapp/.env.local"
+
     - include: nginx-setup.yml
 
     - name: add autostart shortcuts
