@@ -1,23 +1,27 @@
+[all:vars]
+ansible_user=root
+ansible_python_interpreter=/usr/bin/python3
+
 [domserver]
-domjudge             ansible_host=10.3.3.215 ansible_user=root
-domjudge-backup      ansible_host=10.3.3.216 ansible_user=root
-domjudge-laptop      ansible_host=10.3.3.200 ansible_user=root
+domjudge             ansible_host=10.3.3.215
+domjudge-backup      ansible_host=10.3.3.216
+domjudge-laptop      ansible_host=10.3.3.200
 
 [judgehost]
-domjudge-judgehost1  ansible_host=10.2.2.192 ansible_user=root
-domjudge-judgehost2  ansible_host=10.2.2.193 ansible_user=root
-domjudge-judgehost3  ansible_host=10.2.2.194 ansible_user=root
-domjudge-judgehost4  ansible_host=10.2.2.195 ansible_user=root
-domjudge-judgehost5  ansible_host=10.2.2.196 ansible_user=root
-domjudge-judgehost6  ansible_host=10.2.2.197 ansible_user=root
-domjudge-judgehost7  ansible_host=10.2.2.198 ansible_user=root
-domjudge-judgehost8  ansible_host=10.2.2.199 ansible_user=root
-domjudge-judgehost9  ansible_host=10.2.2.200 ansible_user=root
-domjudge-judgehost10 ansible_host=10.2.2.201 ansible_user=root
+domjudge-judgehost1  ansible_host=10.2.2.192
+domjudge-judgehost2  ansible_host=10.2.2.193
+domjudge-judgehost3  ansible_host=10.2.2.194
+domjudge-judgehost4  ansible_host=10.2.2.195
+domjudge-judgehost5  ansible_host=10.2.2.196
+domjudge-judgehost6  ansible_host=10.2.2.197
+domjudge-judgehost7  ansible_host=10.2.2.198
+domjudge-judgehost8  ansible_host=10.2.2.199
+domjudge-judgehost9  ansible_host=10.2.2.200
+domjudge-judgehost10 ansible_host=10.2.2.201
 
 [admin]
-domjudge-ccsadmin1 ansible_host=10.3.3.223 ansible_user=root
-domjudge-ccsadmin2 ansible_host=10.3.3.224 ansible_user=root
-domjudge-ccsadmin3 ansible_host=10.3.3.225 ansible_user=root
-domjudge-ccsadmin4 ansible_host=10.3.3.226 ansible_user=root
-domjudge-ccsadmin5 ansible_host=10.3.3.227 ansible_user=root
+domjudge-ccsadmin1 ansible_host=10.3.3.223
+domjudge-ccsadmin2 ansible_host=10.3.3.224
+domjudge-ccsadmin3 ansible_host=10.3.3.225
+domjudge-ccsadmin4 ansible_host=10.3.3.226
+domjudge-ccsadmin5 ansible_host=10.3.3.227
