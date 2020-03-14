@@ -2,7 +2,7 @@
 DJ_DIR: /home/domjudge/domjudge
 
 # Branch to checkout and use.
-DJ_BRANCH: wf2019
+DJ_BRANCH: master
 
 # Set this to change the web interface background color.
 #BACKGROUND_COLOR: '#ddddff'
@@ -15,7 +15,7 @@ DOMSERVER_URL: "{{DOMSERVER}}"
 DOMSERVER_SSL_CERT: /etc/ssl/certs/domserver.crt
 DOMSERVER_SSL_KEY: /etc/ssl/private/domserver.key
 
-TIMEZONE: "Europe/Lisbon"
+TIMEZONE: "Europe/Moscow"
 
 PHP_FPM_MAX_CHILDREN: 400
 PHP_FPM_MAX_REQUESTS: 500
