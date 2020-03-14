@@ -111,7 +111,7 @@
       notify: restart systemctl
 
     - name: copy judgedaemon systemd unit file
-      copy: src={{DJ_DIR/judge/domjudge-judgehost.service dest=/etc/systemd/system/
+      copy: src={{DJ_DIR}}/judge/domjudge-judgehost.service dest=/etc/systemd/system/
       tags: updateservice
       notify: restart systemctl
 
