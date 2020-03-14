@@ -23,12 +23,12 @@
       copy: src={{DJ_DIR}}/etc/nginx-conf-inner remote_src=yes dest=/etc/nginx/snippets/domjudge-inner
       notify: restart nginx
 
-    - name: remove HTTP host
+    - name: remove HTTP host and HTTP->HTTPS redirect
       blockinfile:
         path: /etc/nginx/sites-available/domjudge.conf
         marker: "{mark}"
         marker_begin: "### http host config ###"
-        marker_end: "# Alternatively, use HTTPS and redirect HTTP to HTTPS:"
+        marker_end: "# Or block all HTTP requests"
       notify: restart nginx
 
     - name: enable HTTP redirect and HTTPS blocks
