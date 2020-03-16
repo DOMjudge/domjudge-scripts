@@ -28,7 +28,7 @@
         path: /etc/nginx/sites-available/domjudge.conf
         marker: "{mark}"
         marker_begin: "### http host config ###"
-        marker_end: "# Or block all HTTP requests"
+        marker_end: "# Or block all cleartext HTTP requests"
       notify: restart nginx
 
     - name: enable HTTP redirect and HTTPS blocks
@@ -37,27 +37,6 @@
         after: 'upstream domjudge \{'
         regexp: '^# ?(.*)'
         replace: '\1'
-      notify: restart nginx
-
-    - name: remove IPv6 listens
-      lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
-        regexp: 'listen\s+\[.*\]:\d+;'
-        state: absent
-      notify: restart nginx
-
-    - name: change IPv4 HTTP listen to default server
-      lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
-        regexp: 'listen.*80;'
-        line: "\tlisten 80 default_server;"
-      notify: restart nginx
-
-    - name: change IPv4 HTTPS listen to all interfaces
-      lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
-        regexp: 'listen.*443;'
-        line: "\tlisten 443 ssl http2 default_server;"
       notify: restart nginx
 
     - name: increase max body size to upload size
