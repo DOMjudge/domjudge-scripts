@@ -1,5 +1,5 @@
 # Directory of the domjudge repository checkout.
-DJ_DIR: /home/domjudge/domjudge
+DJ_DIR: /opt/domjudge
 
 # Branch to checkout and use.
 DJ_BRANCH: master

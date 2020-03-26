@@ -34,6 +34,13 @@
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
+    - name: create working copy directory
+      file:
+        path: "{{DJ_DIR}}"
+        state: directory
+        owner: domjudge
+        group: domjudge
+
     - name: create working copy from the repo
       become: yes
       become_user: domjudge
