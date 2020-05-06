@@ -33,6 +33,8 @@ on the account `domjudge@vm-domjudge`):
     must already be present under `/srv/http/domjudge/releases/`).
  1. If necessary, add a source package of included dash static shell in
     `/srv/http/domjudge/sources/`.
+ 1. Bump the docker containers and build Debian packages (or make someone
+    do this).
  1. Send an email to domjudge-announce@domjudge.org.
  1. Don't forget to push everything to the central Git repository
     (especially the release tags, since these are not pushed by default),
