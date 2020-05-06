@@ -32,20 +32,13 @@ VERSION="$(cat README* | head -n 10 | grep ' version ' | sed 's/.*version //')"
 CHLOG="$(grep ^Version ChangeLog | head -n 1)"
 
 # Check for non-release version
-if [ "${VERSION%DEV}" != "${VERSION}" ] || \
-   [ "${VERSION%SVN}" != "${VERSION}" ]; then
-	echo "WARNING: version string contains 'DEV' or 'SVN', should probably be changed!"
+if [ "${VERSION%DEV}" != "${VERSION}" ]; then
+	echo "WARNING: version string contains 'DEV', should probably be changed!"
 fi
 
 CHLOG_VERSION="$(echo $CHLOG | sed -r 's/^Version ([0-9\.]+) .*$/\1/')"
 if [ "$VERSION" != "$CHLOG_VERSION" ]; then
 	echo "WARNING: version strings in README* and ChangeLog differ: '$VERSION' != '$CHLOG_VERSION'"
-fi
-
-# Check for renamed SQL upgrade file
-if ls sql/upgrade/upgrade_*DEV.sql >/dev/null 2>&1 || \
-      sql/upgrade/upgrade_*SVN.sql >/dev/null 2>&1 ; then
-	echo "WARNING: found SQL upgrade file to DEV/SVN version, should probably be renamed!"
 fi
 
 # Add released tag for revision information:
