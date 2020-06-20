@@ -27,10 +27,10 @@ on the account `domjudge@vm-domjudge`):
     Copy these files to `/srv/http/domjudge/releases/`
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
     repository under `website/` and run `make install` as domjudge@domjudge
- 1. Update the release documentation under `/srv/http/domjudge/docs/`
-    by running `make install-docs` from `~/domjudge-scripts/website/`.
-    (if releasing the latest stable branch; note that the release tarball
-    must already be present under `/srv/http/domjudge/releases/`).
+ 1. If this is a new major or minor version, update the release documentation
+    under `/srv/http/domjudge/docs/manual` by adding a new version to the
+    file `versions.json` and updating the redirect destination in `index.html`.
+    The documentation is regenerated once every hour.
  1. If necessary, add a source package of included dash static shell in
     `/srv/http/domjudge/sources/`.
  1. Bump the docker containers and build Debian packages (or make someone
