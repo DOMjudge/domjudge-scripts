@@ -58,6 +58,9 @@ cd "$OWD"
 mv $TEMPDIR/domjudge-$VERSION.tar.gz .
 rm -rf "$TEMPDIR"
 
+sha256sum domjudge-$VERSION.tar.gz > domjudge-$VERSION.tar.gz.sha256sum
+gpg -a --detach-sign --digest-algo SHA256 domjudge-$VERSION.tar.gz
+
 echo "Release file: 'domjudge-$VERSION.tar.gz'"
 echo "ChangeLog version: '$CHLOG'"
 
