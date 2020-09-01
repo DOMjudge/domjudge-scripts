@@ -23,4 +23,11 @@ and control contest state (with admin role).</p>
 endpoint). It also has some extensions, see the
 <a href="demoweb/api/doc">internal API documentation</a>.</p>
 
+<h2>Wiki</h2>
+
+<p>We also have the
+<a href="https://github.com/DOMjudge/domjudge/wiki">DOMjudge wiki</a>
+which collects other pieces of information about specific configurations
+or integrations.</p>
+
 <!--#include virtual="/footer.shtml" -->
