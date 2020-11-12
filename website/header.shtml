@@ -53,8 +53,8 @@
   </nav>
 </header>
 
-<img src="DOMjudgelogo_sc.png" alt="DOMjudge logo"
-	width="80" height="169" id="domjudgeLogo" class="float-right d-none d-md-block" />
+<img src="DOMjudgelogo.svg" alt="DOMjudge logo"
+	width="80" height="169" id="domjudgeLogo" class="float-right d-none d-md-block">
 
 <main class="container">
 
