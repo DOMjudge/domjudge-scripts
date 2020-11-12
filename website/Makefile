@@ -3,7 +3,7 @@ SHELL = /bin/bash
 WWWDIR = /srv/http/domjudge
 
 install:
-	cp *.shtml *.css *.ico *.png *.pdf $(WWWDIR)/
+	cp *.shtml *.css *.ico *.svg *.pdf $(WWWDIR)/
 
 # This takes the docs from the latest (by string sorting) release and copies
 # these to the directory serving files under www.domjudge.org/docs/.
