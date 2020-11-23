@@ -8,14 +8,14 @@ on the account `domjudge@vm-domjudge`):
     branch).
  1. Create a release version `$TAG` in Git with `$TAG` the version number
     x.y.z:
-        git tag [-a|-s|-u <GPG-key-ID>] -m "Tag release version $TAG." $TAG
+        git tag -s -m "Tag release version $TAG." $TAG
     See `git tag --help` for more details on how to tag with(out) a
     GPG signature.
  1. Create the release tarball by running
-        make_release.sh $TAG [<git-repo-url>]
-    The `<git-repo-url>` defaults to `https://github.com/DOMjudge/domjudge.git`
-    but can be pointed to your local repository, before committing to the
-    central repository.
+        make_release.sh $TAG
+    Optionally add a git-repo-url as second parameter (defaults to
+    `https://github.com/DOMjudge/domjudge.git`) to point it to your local
+    repository, before committing to the central repository.
 
     The tarball is placed in the current dir; check that it looks correct,
     test e.g. by unpacking it and running
