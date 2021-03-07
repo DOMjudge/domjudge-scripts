@@ -140,6 +140,12 @@
         - rotate
         - domjudgelogo
 
+    - name: disable apport service
+      service:
+        name: apport
+        enabled: no
+        state: stopped
+
     - name: disable systemd timers
       command: systemctl mask {{item}}
       args:
