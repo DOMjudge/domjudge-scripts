@@ -11,7 +11,7 @@
     - name: restart nginx
       service: name=nginx state=restarted
     - name: restart PHP FPM
-      service: name=php7.2-fpm state=restarted
+      service: name=php7.4-fpm state=restarted
     - name: update-ca-certificates
       command: update-ca-certificates
     - name: restart collectd
@@ -35,7 +35,7 @@
         - mariadb-server
         - nginx
         - php-fpm
-        - python-mysqldb
+        - python3-mysqldb
         - php-intl
         - mycli
         - macchanger
@@ -45,7 +45,7 @@
 
     - name: set PHP timezone for FPM
       lineinfile:
-        dest: /etc/php/7.2/fpm/php.ini
+        dest: /etc/php/7.4/fpm/php.ini
         state: present
         regexp: 'date\.timezone\s*='
         line: 'date.timezone = {{TIMEZONE}}'
@@ -53,7 +53,7 @@
     - name: enable php modules
       command: phpenmod {{item}}
       args:
-        creates: /etc/php/7.2/fpm/conf.d/20-{{item}}.ini
+        creates: /etc/php/7.4/fpm/conf.d/20-{{item}}.ini
       with_items:
         - zip
         - intl

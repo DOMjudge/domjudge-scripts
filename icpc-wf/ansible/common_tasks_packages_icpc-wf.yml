@@ -4,7 +4,7 @@
       tags: packages
       replace:
         dest: /etc/apt/sources.list
-        regexp: 'pc2cancer\.ecs\.csus\.edu'
+        regexp: 'pc2\.ecs\.csus\.edu'
         replace: 'packages'
 
     - name: remove pycharm repo

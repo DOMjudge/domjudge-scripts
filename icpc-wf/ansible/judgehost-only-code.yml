@@ -11,7 +11,7 @@
     - name: restart nginx
       service: name=nginx state=restarted
     - name: restart PHP FPM
-      service: name=php7.2-fpm state=restarted
+      service: name=php7.4-fpm state=restarted
     - name: update-ca-certificates
       command: update-ca-certificates
     - name: restart collectd

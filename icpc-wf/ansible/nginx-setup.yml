@@ -12,7 +12,7 @@
       notify: update-ca-certificates
 
     - name: copy in domjudge FPM conf
-      copy: src={{DJ_DIR}}/etc/domjudge-fpm.conf remote_src=yes dest=/etc/php/7.2/fpm/pool.d/domjudge.conf
+      copy: src={{DJ_DIR}}/etc/domjudge-fpm.conf remote_src=yes dest=/etc/php/7.4/fpm/pool.d/domjudge.conf
       notify: restart PHP FPM
 
     - name: copy in domjudge nginx conf
@@ -101,7 +101,7 @@
 
     - name: Set PHP settings
       lineinfile:
-        dest: /etc/php/7.2/fpm/pool.d/domjudge.conf
+        dest: /etc/php/7.4/fpm/pool.d/domjudge.conf
         regexp: "{{item.regexp}}"
         line: "{{item.key}} = {{item.value}}"
       with_items:

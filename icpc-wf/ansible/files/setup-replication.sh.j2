@@ -24,7 +24,7 @@ echo "Recreating empty database..."
 mysql -e 'STOP SLAVE; DROP DATABASE domjudge;'
 {{DJ_DIR}}/sql/dj_setup_database create-db-users
 
-ssh "$MASTER" "service php7.2-fpm stop"
+ssh "$MASTER" "service php7.4-fpm stop"
 
 MASTER_STATUS=$(ssh "$MASTER" "mysql -e 'SHOW MASTER STATUS;'" | tail -n1)
 MASTER_BINLOG=$(echo "$MASTER_STATUS" | cut -f 1)
@@ -48,7 +48,7 @@ CHANGE MASTER TO MASTER_HOST='10.3.3.${MASTER_SERVER_ID}',
                  MASTER_LOG_POS=${MASTER_LOGPOS};
 START SLAVE;"
 
-ssh "$MASTER" "service php7.2-fpm start"
+ssh "$MASTER" "service php7.4-fpm start"
 
 if ! mysql -e 'SHOW SLAVE STATUS\G' | grep 'Slave_SQL_Running: Yes' ; then
     echo "Error: slave SQL replication not running."

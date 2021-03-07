@@ -38,7 +38,7 @@
     - name: disable clearing Symfony cache when building
       lineinfile:
         dest: "{{DJ_DIR}}/Makefile"
-        regexp: "^(.*-C webapp clear-cache)$"
+        regexp: "^(.*composer auto-scripts)$"
         line: '#\1'
         backrefs: yes
 
@@ -47,7 +47,7 @@
     - name: re-enable clearing Symfony cache when building
       lineinfile:
         dest: "{{DJ_DIR}}/Makefile"
-        regexp: "^#(.*-C webapp clear-cache)$"
+        regexp: "^#(.*composer auto-scripts)$"
         line: '\1'
         backrefs: yes
 
@@ -106,12 +106,20 @@
       notify: restart systemctl
 
     - name: copy create-cgroups systemd unit file
-      copy: src={{DJ_DIR}}/misc-tools/create-cgroups.service dest=/etc/systemd/system/ remote_src=yes
+      copy: src={{DJ_DIR}}/lib/judge/create-cgroups.service dest=/etc/systemd/system/ remote_src=yes
       tags: updateservice
       notify: restart systemctl
 
+    - name: Change path of create_cgroups file
+      lineinfile:
+        dest: /etc/systemd/system/create-cgroups.service
+        state: present
+        regexp: 'ExecStart'
+        line: 'ExecStart={{DJ_DIR}}/judge/create_cgroups'
+      notify: restart systemctl
+
     - name: copy judgedaemon systemd unit file
-      copy: src={{DJ_DIR}}/judge/domjudge-judgehost.service dest=/etc/systemd/system/ remote_src=yes
+      copy: src={{DJ_DIR}}/lib/judge/domjudge-judgehost.service dest=/etc/systemd/system/ remote_src=yes
       tags: updateservice
       notify: restart systemctl
 
