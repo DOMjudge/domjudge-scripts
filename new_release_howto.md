@@ -18,10 +18,17 @@ on the account `domjudge@vm-domjudge`):
     The tarball is placed in the current dir; check that it looks correct,
     test e.g. by unpacking it and running
         ./configure && make build
+ 1. Don't forget to push everything to the central Git repository
+    (especially the release tags, since these are not pushed by default),
+    e.g. with
+        `git push origin ${TAG%.?} refs/tags/$TAG`
+ 1. On the server the tarball will be rebuild and signed.
  1. If releasing from the master branch, create a new version branch:
-        git checkout -b x.y
-        git push --set-upstream origin x.y
-        git checkout master
+    ```{sh}
+    git checkout -b x.y
+    git push --set-upstream origin x.y
+    git checkout master
+    ```
  1. Update files above to `{version+1}DEV` and commit.
  1. Copy domjudge-$TAG.tar.gz* to `/srv/http/domjudge/releases/`
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
@@ -32,8 +39,4 @@ on the account `domjudge@vm-domjudge`):
     The documentation is regenerated once every hour.
  1. Bump the docker containers and build Debian packages (or make someone
     do this).
- 1. Send an email to domjudge-announce@domjudge.org.
- 1. Don't forget to push everything to the central Git repository
-    (especially the release tags, since these are not pushed by default),
-    e.g. with
-        git push origin ${TAG%.?} refs/tags/$TAG
+ 1. Send an email to `domjudge-announce@domjudge.org`.
