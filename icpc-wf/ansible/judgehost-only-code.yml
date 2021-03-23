@@ -78,4 +78,4 @@
     - name: enable and restart the services we just copied
       service: name={{item}} enabled=yes state=restarted
       with_items:
-        - judgedaemon
+        - domjudge-judgehost
