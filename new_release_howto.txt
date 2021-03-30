@@ -3,9 +3,7 @@ The following steps should be taken (local directories refer to those
 on the account `domjudge@vm-domjudge`):
 
  1. Test everything. (duh...)
- 1. Commit the correct version number in the `ChangeLog` and `README` files,
-    set `DEBUG=0` in `etc/common-config.php` (if releasing from the `master`
-    branch).
+ 1. Commit the correct version number in the `ChangeLog` and `README` files.
  1. Create a release version `$TAG` in Git with `$TAG` the version number
     x.y.z:
         git tag -s -m "Tag release version $TAG." $TAG
