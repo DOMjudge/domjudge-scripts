@@ -22,7 +22,7 @@ on the account `domjudge@vm-domjudge`):
         git checkout -b x.y
         git push --set-upstream origin x.y
         git checkout master
- 1. Update files above to `{version+1}DEV`, `DEBUG=1`, and commit.
+ 1. Update files above to `{version+1}DEV` and commit.
  1. Copy domjudge-$TAG.tar.gz* to `/srv/http/domjudge/releases/`
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
     repository under `website/` and run `make install` as domjudge@domjudge
