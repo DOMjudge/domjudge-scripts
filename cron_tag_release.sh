@@ -2,6 +2,8 @@
 
 set -eu
 
+. ~/.tagrelease
+
 main=master
 
 RELEASE_DIR="/srv/http/domjudge/releases"
@@ -50,7 +52,7 @@ process_tag () {
 }
 
 # Reset to main branch
-cd ~domjudge/domjudge
+cd ~domjudge/git/domjudge
 git checkout $main
 
 while read -r tag; do
