@@ -79,13 +79,13 @@ rm -rf "$TEMPDIR"
 
 sha256sum "domjudge-$TAG.tar.gz" > "domjudge-$TAG.tar.gz.sha256sum"
 
-GPG_ARGS="-a --detach-sign --digest-algo SHA256 domjudge-$TAG.tar.gz"
-if [ -t 1 ] ; then
-    # Explicit not quoted!
-    gpg $GPG_ARGS
-else
-    gpg --pinentry-mode=loopback --batch --passphrase-file ~domjudge/sign_key_pass $GPG_ARGS
-fi
+#GPG_ARGS="-a --detach-sign --digest-algo SHA256 domjudge-$TAG.tar.gz"
+#if [ -t 1 ] ; then
+#    # Explicit not quoted!
+#    gpg $GPG_ARGS
+#else
+#    gpg --pinentry-mode=loopback --batch --passphrase-file ~domjudge/sign_key_pass $GPG_ARGS
+#fi
 
 echo "Release file: 'domjudge-$VERSION.tar.gz'"
 echo "ChangeLog version: '$CHLOG'"
