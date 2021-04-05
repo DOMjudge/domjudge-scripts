@@ -44,7 +44,7 @@ process_tag () {
            # At this point the tarball should already be locally tested
            ~/domjudge-scripts/make_release.sh "$TAG"
            mv domjudge-$TAG.* $RELEASE_DIR/
-           notify_channel "Tarball finished ($TAG)." "$TAG"
+           notify_channel "Tarball finished ($TAG).\nURL: https://www.domjudge.org/releases/domjudge-$TAG.tar.gz" "$TAG"
        else
            notify_channel "Untrusted tag ($TAG)" "$TAG"
        fi
