@@ -5,7 +5,6 @@ set -eu
 main=master
 
 RELEASE_DIR="/srv/http/domjudge/releases"
-DOWNLOAD_RELEASE_SCRIPT=""
 
 notify_channel () {
     # Local debug
@@ -39,9 +38,7 @@ process_tag () {
        # gpg --search 780355B5EA6BFC8235A99C4B56F61A79401DAC04
        # And if one trusts the internet to be correct
        # gpg --recv-keys 780355B5EA6BFC8235A99C4B56F61A79401DAC04
-       set +e # Some tags are not signed
        if git verify-tag $TAG; then
-           set -e
            # At this point the tarball should already be locally tested
            ~/domjudge-scripts/make_release.sh "$TAG"
            mv domjudge-$TAG.* $RELEASE_DIR/
@@ -57,7 +54,6 @@ cd ~domjudge/domjudge
 git checkout $main
 
 while read -r tag; do
-    #echo "Handling tag: $tag"
     process_tag "$tag"
 done <<< "$(git tag)"
 
