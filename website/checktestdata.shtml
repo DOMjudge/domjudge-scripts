@@ -14,9 +14,9 @@ supports very basic generation of testdata based on the same grammar
 specification; note that this should not be relied on for complete
 testcase coverage!</p>
 
-<p>See the <a href="https://github.com/DOMjudge/checktestdata/blob/master/doc/format-spec.md">
+<p>See the <a href="https://github.com/DOMjudge/checktestdata/blob/main/doc/format-spec.md">
 checktestdata language specification</a> and some
-<a href="https://github.com/DOMjudge/checktestdata/tree/master/examples">
+<a href="https://github.com/DOMjudge/checktestdata/tree/main/examples">
 example grammar scripts</a> for more details.</p>
 
 <h2>Sources and packages</h2>
