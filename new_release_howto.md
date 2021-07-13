@@ -23,11 +23,11 @@ on the account `domjudge@vm-domjudge`):
     e.g. with
         `git push origin ${TAG%.?} refs/tags/$TAG`
  1. On the server the tarball will be rebuild and signed.
- 1. If releasing from the master branch, create a new version branch:
+ 1. If releasing from the main branch, create a new version branch:
     ```{sh}
     git checkout -b x.y
     git push --set-upstream origin x.y
-    git checkout master
+    git checkout main
     ```
  1. Update files above to `{version+1}DEV` and commit.
  1. Copy domjudge-$TAG.tar.gz* to `/srv/http/domjudge/releases/`

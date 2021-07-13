@@ -4,7 +4,7 @@ set -eu
 
 . ~/.tagrelease
 
-main=master
+main=main
 
 RELEASE_DIR="/srv/http/domjudge/releases"
 

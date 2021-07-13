@@ -24,7 +24,7 @@ cd $TEMPDIR
 
 git clone -q --no-checkout --depth 1 "$GITURL" dj-clone
 
-( cd dj-clone && git archive --prefix=domjudge/ --format=tar refs/heads/master ) | tar x
+( cd dj-clone && git archive --prefix=domjudge/ --format=tar refs/heads/main ) | tar x
 
 # Add released tag for revision information:
 sed -i "s/PUBLISHED =.*/PUBLISHED = `date +%Y-%m-%d`/" domjudge/paths.mk.in
