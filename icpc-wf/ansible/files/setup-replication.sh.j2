@@ -12,7 +12,7 @@ if [ $(id -un) != 'root' ]; then
     exit 1
 fi
 
-MASTER_SERVER_ID=$(ssh "$MASTER" "cat /etc/mysql/conf.d/zzz_replication.cnf" | \
+MASTER_SERVER_ID=$(ssh "$MASTER" "cat /etc/mysql/mariadb.conf.d/zzz_replication.cnf" | \
 		       grep server_id | sed 's/.*server_id *= *//')
 
 if [ -z "$MASTER_SERVER_ID" ]; then
