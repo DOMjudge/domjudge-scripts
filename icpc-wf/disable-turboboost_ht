@@ -28,18 +28,26 @@ for cpu in /sys/devices/system/cpu/cpu* ; do
 	fi
 done
 
-DIR=/sys/devices/system/cpu/intel_pstate
-if [ -d $DIR ]; then
+DIR_INTEL=/sys/devices/system/cpu/intel_pstate
+DIR_AMD=/sys/devices/system/cpu/cpufreq
+if [ -d $DIR_INTEL ]; then
 	# now disable turbo boost
-	echo -n 1 > $DIR/no_turbo || echo "Could not write to '$DIR/no_turbo', ignoring for now..."
-	if [ $(cat $DIR/no_turbo) -ne 1 ]; then
+	echo -n 1 > $DIR_INTEL/no_turbo || echo "Could not write to '$DIR_INTEL/no_turbo', ignoring for now..."
+	if [ $(cat $DIR_INTEL/no_turbo) -ne 1 ]; then
 		echo "Error: turboboost still enabled!"
 		exit 1
 	fi
 
 	# increase freq from powersaving to normal, but don't overclock
-	echo 100 > $DIR/min_perf_pct
-	echo 100 > $DIR/max_perf_pct
+	echo 100 > $DIR_INTEL/min_perf_pct
+	echo 100 > $DIR_INTEL/max_perf_pct
+elif [ -d $DIR_AMD ]; then
+	# now disable boosting
+	echo -n 0 > $DIR_AMD/turbo || echo "Could not write to '$DIR_AMD/turbo', ignoring for now..."
+	if [ $(cat $DIR_AMD/turbo) -ne 0 ]; then
+		echo "Error: boosting still enabled!"
+		exit 1
+	fi
 else
-	echo "Warning: kernel turbo boost config not found in '$DIR'."
+	echo "Warning: kernel (turbo) boost config not found in '$DIR_INTEL' or '$DIR_AMD'."
 fi
