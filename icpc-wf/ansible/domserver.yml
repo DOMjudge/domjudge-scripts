@@ -119,14 +119,6 @@
       command: "{{DJ_DIR}}/bin/dj_setup_database -u root bare-install"
       when: "'failed' in db_status.stdout"
 
-    - name: fix background color
-      lineinfile:
-        regexp: '^(\s*background-color):\s+white\s*;'
-        line: '\1: {{BACKGROUND_COLOR}};'
-        backrefs: yes
-        dest: "{{DJ_DIR}}/webapp/web/style.css"
-      when: BACKGROUND_COLOR is defined
-
     - name: disable developer mode
       lineinfile:
         regexp: '^APP_ENV=dev'

@@ -4,9 +4,6 @@ DJ_DIR: /opt/domjudge
 # Branch to checkout and use.
 DJ_BRANCH: wf2020
 
-# Set this to change the web interface background color.
-#BACKGROUND_COLOR: '#ddddff'
-
 # URL and IP of domserver from judgehosts. A hostname 'domserver' with
 # DOMSERVER_IP will be added to the judgehost /etc/hosts file.
 DOMSERVER: https://domjudge
