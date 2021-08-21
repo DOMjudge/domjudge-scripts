@@ -29,12 +29,41 @@
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
-    - name: fix root ssh key permissions
+    - name: create working copy directory
       file:
-        path: /root/.ssh/id_ed25519
-        mode: 0600
-        owner: root
-        group: root
+        path: "/home/domjudge/domjudge-checkout"
+        state: directory
+        owner: domjudge
+        group: domjudge
+
+    - name: create working copy from the repo
+      become: yes
+      become_user: domjudge
+      git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=yes
+      register: git_working_copy
+
+    - name: Check composer dependencies present
+      local_action: stat path=files/lib/vendor
+      register: libvendor
+      become: no
+
+    - name: Copy in composer dependencies (if they exist locally)
+      become: no
+      tags: sync
+      synchronize:
+        src: files/lib/vendor/
+        dest: "/home/domjudge/domjudge-checkout/lib/vendor/"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
+      when: libvendor.stat.exists
+
+    - name: fix ownership of lib/vendor
+      file:
+        path: "/home/domjudge/domjudge-checkout/lib/vendor"
+        recurse: yes
+        owner: domjudge
+        group: domjudge
 
     - name: install common required/useful packages
       tags: packages
@@ -112,7 +141,7 @@
 
     - name: trust localhost SSL certificate
       copy:
-        src: /etc/ssl/certs/localhost.crt
+        src: ssl/localhost.crt
         dest: /usr/local/share/ca-certificates/
         owner: root
         group: root
@@ -222,56 +251,44 @@
         - apt-daily.timer
         - systemd-tmpfiles-clean.timer
 
-   - name: create working copy from the repo
-     become: yes
-     become_user: domjudge
-     # We use a different directory here to have one single 'upstream' and not have issues with it
-     git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=yes
-     register: git_working_copy
+    - name: create working copy from the repo
+      become: yes
+      become_user: domjudge
+      # We use a different directory here to have one single 'upstream' and not have issues with it
+      git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=yes
+      register: git_working_copy
 
-   - name: create working copy from the domjudge-scripts repo
-     become: yes
-     become_user: domjudge
-     # We use a different directory here to have one single 'upstream' and not have issues with it
-     git: repo=domjudge@10.3.3.223:domjudge-scripts dest=/home/domjudge/domjudge-scripts-checkout version=master accept_hostkey=yes update=yes
+    - name: create working copy from the domjudge-scripts repo
+      become: yes
+      become_user: domjudge
+      # We use a different directory here to have one single 'upstream' and not have issues with it
+      git: repo=domjudge@10.3.3.223:domjudge-scripts dest=/home/domjudge/domjudge-scripts-checkout version=master accept_hostkey=yes update=yes
 
-   - name: add cds to hosts file
-     lineinfile:
-       dest: /etc/hosts
-       regexp: 'cds$'
-       line: "10.3.3.207	cds"
+    - name: add cds to hosts file
+      lineinfile:
+        dest: /etc/hosts
+        regexp: 'cds$'
+        line: "10.3.3.207	cds"
 
-   - name: create working copy from the wf2019 repo
-     become: yes
-     become_user: domjudge
-     git: repo=git@cds:wf2019 dest=/home/domjudge/wf2019 version=master accept_hostkey=yes update=yes
-
-    - name: Check composer dependencies present
-      local_action: stat path=files/lib/vendor
-      register: libvendor
-      become: no
-
-    - name: Copy in composer dependencies (if they exist locally)
-      tags: sync
-      synchronize:
-        src: files/lib/vendor/
-        dest: "/home/domjudge/domjudge-checkout/lib/vendor/"
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-      when: libvendor.stat.exists
-
-    - name: fix ownership of lib/vendor
-      file:
-        path: "/home/domjudge/domjudge-checkout/lib/vendor"
-        recurse: yes
-        owner: domjudge
-        group: domjudge
+    - name: create working copy from the wf2019 repo
+      become: yes
+      become_user: domjudge
+      git: repo=git@cds:wf2019 dest=/home/domjudge/wf2019 version=master accept_hostkey=yes update=yes
 
     - name: copy custom CSS file for admin machines
       copy:
         src: admin-machine.css
-        dest: "{{DJ_DIR}}/webapp/public/css/custom/admin-machine.css"
+        dest: "/home/domjudge/domjudge-checkout/webapp/public/css/custom/admin-machine.css"
+        owner: domjudge
+        group: domjudge
+        mode: 0644
+      register: css_installed
+
+    - name: Clear application cache
+      command: /home/domjudge/domjudge-checkout/webapp/bin/console cache:clear
+      become: yes
+      become_user: domjudge
+      when: css_installed.changed
 
     - name: create clusterssh config file
       file:
@@ -297,75 +314,73 @@
         - judgehost
         - admin
 
-   - name: Copy in PHPStorm
-     become: no
-     tags: sync
-     synchronize:
-       src: files/phpstorm/PhpStorm-191.6183.95
-       dest: "/phpstorm"
-       owner: no
-       use_ssh_args: true
-       rsync_path: sudo rsync
+    - name: Copy in PHPStorm
+      become: no
+      tags: sync
+      synchronize:
+        src: files/phpstorm/PhpStorm-{{ PHPSTORM_FULL_VERSION }}
+        dest: "/phpstorm"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
 
-   - name: Copy in PHPStorm config
-     become: no
-     tags: sync
-     synchronize:
-       src: files/phpstorm/.PhpStorm2019.1
-       dest: "/home/domjudge"
-       owner: no
-       use_ssh_args: true
-       rsync_path: sudo rsync
+    - name: Copy in PHPStorm config
+      become: no
+      tags: sync
+      synchronize:
+        src: files/phpstorm/PhpStorm{{ PHPSTORM_VERSION }}
+        dest: "/home/domjudge/.config/JetBrains"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
 
-   - name: fix ownership of PHPStorm config
-     file:
-       path: "/home/domjudge/.PhpStorm2019.1"
-       recurse: yes
-       owner: domjudge
-       group: domjudge
+    - name: Copy in PHPStorm jdbc drivers
+      become: no
+      tags: sync
+      synchronize:
+        src: files/phpstorm/jdbc-drivers
+        dest: "/home/domjudge/.config/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}/"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
 
-    - name: Create PHPStorm stuff directory
-      file: path="/home/domjudge/phpstorm-stuff" group=domjudge owner=domjudge mode=0700 state=directory
+    - name: fix ownership of PHPStorm config
+      file:
+        path: "/home/domjudge/.config/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
+        recurse: yes
+        owner: domjudge
+        group: domjudge
 
-   - name: Copy in PHPStorm settings for repo
-     become: no
-     tags: sync
-     synchronize:
-       src: files/phpstorm/.idea
-       dest: "/home/domjudge/domjudge-checkout"
-       owner: no
-       use_ssh_args: true
-       rsync_path: sudo rsync
+    - name: Copy in PHPStorm settings for repo
+      become: no
+      tags: sync
+      synchronize:
+        src: files/phpstorm/.idea
+        dest: "/home/domjudge/domjudge-checkout"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
 
-   - name: fix ownership of PHPStorm config
-     file:
-       path: "/home/domjudge/domjudge-checkout/.idea"
-       recurse: yes
-       owner: domjudge
-       group: domjudge
+    - name: fix ownership of PHPStorm config
+      file:
+        path: "/home/domjudge/domjudge-checkout/.idea"
+        recurse: yes
+        owner: domjudge
+        group: domjudge
 
-    - name: Create PHPStorm stuff directory
-      file: path="/home/domjudge/phpstorm-stuff" group=domjudge owner=domjudge mode=0700 state=directory
-
-    - name: Copy in PHPStorm stuff
+    - name: Create a directory if it does not exist
       become: yes
       become_user: domjudge
-      copy:
-        src: files/phpstorm/{{ item }}
-        dest: /home/domjudge/phpstorm-stuff/{{ item }}
-      with_items:
-        - BIGNM3NHDL.txt
-        - PHP_Annotations-5.3.3.zip
-        - php-toolbox.jar
-        - Symfony_Plugin-0.17.172.zip
-        - mysql-connector-java-8.0.13.jar
-        - IdeaVim-0.51.zip
+      file:
+        path: /home/domjudge/.local/share/applications
+        state: directory
+        mode: '0755'
 
     - name: Copy in PHPStorm Desktop icon
       become: yes
       become_user: domjudge
-      copy:
-        src: files/phpstorm/jetbrains-phpstorm.desktop
+      template:
+        src: files/phpstorm/jetbrains-phpstorm.desktop.j2
         dest: /home/domjudge/.local/share/applications/jetbrains-phpstorm.desktop
 
     - name: Install netrc file
