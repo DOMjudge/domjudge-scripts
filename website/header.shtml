@@ -42,8 +42,8 @@
       class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'development.shtml'" --> active<!--#endif-->"
       href="development"><i class="fas fa-flask"></i> Development</a></li>
     <li class="nav-item"><a
-      class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'checktestdata.shtml'" --> active<!--#endif-->"
-      href="checktestdata"><i class="fas fa-clipboard-check"></i> Checktestdata</a></li>
+      class="nav-link<!--#if expr="v('DOCUMENT_NAME') = 'tools.shtml'" --> active<!--#endif-->"
+      href="tools"><i class="fas fa-puzzle-piece"></i> Tools and extensions</a></li>
   </ul>
   </div>
 
