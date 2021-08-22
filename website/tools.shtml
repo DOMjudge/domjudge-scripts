@@ -1,0 +1,55 @@
+<!--#set var="dj_page_title" value="Tools and extensions" --><!--#include virtual="/header.shtml" -->
+
+<p>
+    This page lists tools and facilities that can work with DOMjudge. They are
+    not in all cases maintained by the DOMjudge team.
+</p>
+
+
+<h2>Creating problemsets</h2>
+
+<h3>Checktestdata</h3>
+
+<p>
+   <a href="checktestdata">checktestdata</a> is a program to syntactically verify
+   testdata according to a grammar file. It also supports generating testdata based
+   on a specification.
+</p>
+
+
+<h2>Contest as a service</h2>
+
+<h3>Cloudcontest</h3>
+
+<p> DOMjudge is free to download and run yourself. Do you prefer a hosted
+    installation of DOMjudge, take a look at
+    <a href="https://cloudcontest.org">cloudcontest.org</a>. They offer a fully
+    online hosted contest that your teams can access over the internet.
+    It's also possible to run the server in the cloud and your judgehosts
+    locally.
+</p>
+
+
+<h2>Scoreboard resolvers and other contest tools</h2>
+
+<h3>ICPC Tools</h3>
+
+<p> <a href="https://tools.icpc.global/">ICPC Tools</a> is a set of (free to use)
+    tools that can work with a CLICS compatible API, like DOMjudge provides. It has a
+    scoreboard display and resolver, balloons utility and various other presentation tools.</p>
+
+<h3>DOMjura</h3>
+
+<p> <a href="https://github.com/DOMjudge/DOMjura">DOMjura</a> (DOMjudge Results Application)
+    is a scoreboard resolver, which can read the DOMjudge API after a contest and present
+    the results.
+</p>
+
+<h3>Carnifex</h3>
+
+<p> <a href="https://github.com/TPolzer/Carnifex">Carnifex</a> presents a live scoreboard
+    and is a scoreboard resolver. It has a server component where various display clients
+    can connect to.
+</p>
+
+<!--#include virtual="/footer.shtml" -->
