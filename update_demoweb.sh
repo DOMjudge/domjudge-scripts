@@ -25,3 +25,6 @@ mysql $MYSQLOPTS "$DBNAME" < domjudge_demo.sql
 
 # Upgrade the database to the latest structure
 ./sql/dj_setup_database -q upgrade
+
+# Reset apache alias to correct state
+sed -i 's|/domjudge|/demoweb|g' etc/apache.conf
