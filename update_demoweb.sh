@@ -27,4 +27,4 @@ mysql $MYSQLOPTS "$DBNAME" < domjudge_demo.sql
 ./sql/dj_setup_database -q upgrade
 
 # Reset apache alias to correct state
-sed -i 's|/domjudge|/demoweb|g' etc/apache.conf
+sed -i 's|Alias /domjudge|Alias /demoweb|g' etc/apache.conf
