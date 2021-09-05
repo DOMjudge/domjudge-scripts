@@ -32,8 +32,9 @@ DIR_INTEL=/sys/devices/system/cpu/intel_pstate
 DIR_AMD=/sys/devices/system/cpu/cpufreq
 if [ -d $DIR_INTEL ]; then
 	# now disable turbo boost
-	echo -n 1 > $DIR_INTEL/no_turbo || echo "Could not write to '$DIR_INTEL/no_turbo', ignoring for now..."
-	if [ $(cat $DIR_INTEL/no_turbo) -ne 1 ]; then
+	FILE=$DIR_INTEL/no_turbo
+	echo -n 1 > $FILE || echo "Could not write to '$FILE', ignoring for now..."
+	if [ $(cat $FILE) -ne 1 ]; then
 		echo "Error: turboboost still enabled!"
 		exit 1
 	fi
@@ -43,9 +44,10 @@ if [ -d $DIR_INTEL ]; then
 	echo 100 > $DIR_INTEL/max_perf_pct
 elif [ -d $DIR_AMD ]; then
 	# now disable boosting
-	echo -n 0 > $DIR_AMD/turbo || echo "Could not write to '$DIR_AMD/turbo', ignoring for now..."
-	if [ $(cat $DIR_AMD/turbo) -ne 0 ]; then
-		echo "Error: boosting still enabled!"
+	FILE=$DIR_AMD/boost
+	echo -n 0 > $FILE || echo "Could not write to '$FILE', ignoring for now..."
+	if [ $(cat $FILE) -ne 0 ]; then
+		echo "Error: turboboost still enabled!"
 		exit 1
 	fi
 else
