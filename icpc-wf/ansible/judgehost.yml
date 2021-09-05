@@ -140,11 +140,11 @@
         - rotate
         - domjudgelogo
 
-    - name: disable apport service
-      service:
-        name: apport
-        enabled: no
-        state: stopped
+    - name: make sure apport is not installed
+      tags: packages
+      apt:
+        pkg: apport
+        state: absent
 
     - name: disable systemd timers
       command: systemctl mask {{item}}
