@@ -11,7 +11,7 @@
       apt:
         state: present
         pkg:
-        - ack-grep
+        - ack
         - git
         - htop
         - httpie
