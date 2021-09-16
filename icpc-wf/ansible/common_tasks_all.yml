@@ -37,6 +37,7 @@
         - php-zip
         - php-mbstring
         - php-intl
+        - prometheus-node-exporter
         - bsdmainutils
         - libcgroup-dev
         - libcurl4-gnutls-dev
