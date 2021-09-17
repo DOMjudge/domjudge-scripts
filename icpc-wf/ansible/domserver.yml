@@ -44,6 +44,8 @@
         - mycli
         - macchanger
         - prometheus-nginx-exporter
+        - prometheus-mysqld-exporter
+        # expects config in /var/lib/prometheus/.my.cnf
 
     - name: copy in MySQL config
       copy: src=files/my.cnf dest=/root/.my.cnf
@@ -112,6 +114,19 @@
         priv: '*.*:PROCESS,REPLICATION CLIENT'
         state: present
       when: COLLECTD_MYSQL_PASSWORD is defined
+
+    - name: Create MySQL authentication file
+      template:
+        src: files/grafana/my.cnf.j2
+        dest: /var/lib/prometheus/.my.cnf
+        owner: prometheus
+      when: COLLECTD_MYSQL_PASSWORD is defined
+
+    - name: Start/enable our services
+      service: name={{ item }} state=started enabled=yes
+      when: COLLECTD_MYSQL_PASSWORD is defined
+      with_items:
+       - prometheus-mysqld-exporter.service
 
     - include: common_tasks_build.yml
 
