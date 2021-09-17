@@ -20,7 +20,7 @@ logging.basicConfig(
 # TODO: allow to specify these args via the command line.
 
 # Point this to the contest you want to submit to.
-contest_api_url = 'http://localhost/domjudge/api/contests/demo'
+contest_api_url = 'https://wf2020.lifo.dev/api/contests/systest_A/'
 
 # Use simulation_speed to speed up the simulation.
 simulation_speed = 200
@@ -45,8 +45,7 @@ for line in accounts_tsv:
     if credentials[0] != 'team':
         continue
     num_teams += 1
-    team_id = int((re.findall(r'\d+', credentials[2]))[0])
-    accounts[team_id] = (credentials[2], credentials[3])
+    accounts[num_teams] = (credentials[2], credentials[3])
 
 problem_to_label = dict()
 for problem in problems:
@@ -82,7 +81,11 @@ for submission in submissions:
     # all the time.
     team_id = submission['team_id']
     problem_id = submission['problem_id']
-    problem_label = problem_to_label[problem_id]
+    # TODO: make this configurable or detect it.
+    # With internal data source: 
+    # problem_label = problem_to_label[problem_id]
+    # With external data source:
+    problem_label = problem_id
     if team_id not in team_problem_team_map:
         team_problem_team_map[team_id] = dict()
     if problem_label not in team_problem_team_map[team_id]:
@@ -95,10 +98,19 @@ for submission in submissions:
         file_tuple = ('code[]', (name, problem_zip.read(name), 'text/plain'))
         files.insert(len(files), file_tuple)
     first_filename = files[0][1][0]
-    logging.info(f'Submitting problem {problem_label} ({first_filename}) on behalf of team t{team_id}.')
+    username = accounts[team_id][0]
+    # We don't allow python2 anymore, let's rewrite it as python3 and try our
+    # best.
+    language_id = submission['language_id']
+    if language_id == 'python2':
+        language_id = 'python3'
+    data = {'problem_id': problem_label, 'language_id': language_id}
+    if 'entry_point' in submission:
+        data['entry_point'] = submission['entry_point']
+    logging.info(f'Submitting problem {problem_label} ({first_filename}) on behalf of user {username}.')
     r = requests.post(
             f'{contest_api_url}/submissions',
-            data = {'problem_id': problem_label, 'language_id': submission['language_id']},
+            data = data,
             auth = accounts[team_id],
             files = files,
     ) 
@@ -106,5 +118,10 @@ for submission in submissions:
         sid = r.json()['id']
         logging.info(f'Success, submission s{sid} received.')
     else:
-        message = r.json()['message']
+        message = '?'
+        try:
+            json = r.json()
+            message = json['message'] if 'message' in json else '?'
+        except:
+            pass
         logging.error(f'\x1b[31;21mSubmission failed with status code {r.status_code}. Message = {message}')
