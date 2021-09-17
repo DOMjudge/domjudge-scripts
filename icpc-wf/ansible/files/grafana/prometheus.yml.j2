@@ -15,3 +15,14 @@ scrape_configs:
 {% for host in groups["judgehost"] %}
         - {{ hostvars[host].ansible_host }}:9100
 {% endfor %}
+  - job_name: domjudge
+    basic_auth:
+      username: admin
+      password: {{ ADMIN_PASSWORD }}
+    metrics_path: /api/v4/metrics/prometheus
+    scheme: https
+    static_configs:
+      - targets:
+{% for host in groups["domserver"] %}
+        - {{ hostvars[host].ansible_host }}
+{% endfor %}
