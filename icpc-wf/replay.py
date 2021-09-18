@@ -4,6 +4,7 @@ from halo import Halo
 import json
 from pprint import pprint
 from zipfile import ZipFile
+from datetime import datetime
 import time
 import sys
 import random
@@ -19,11 +20,37 @@ logging.basicConfig(
 
 # TODO: allow to specify these args via the command line.
 
-# Point this to the contest you want to submit to.
-contest_api_url = 'https://wf2020.lifo.dev/api/contests/systest_A/'
+if len(sys.argv) == 1 or len(sys.argv) > 3:
+    print(f'Usage: {sys.argv[0]} <contest-api-url> [<contest>]')
+    sys.exit(-1)
 
-# Use simulation_speed to speed up the simulation.
-simulation_speed = 200
+api_url = sys.argv[1]
+if len(sys.argv) == 3:
+    contest = sys.argv[2]
+else:
+    contests = requests.get(f'{api_url}/contests').json()
+    if len(contests) == 1:
+        contest = contest['id']
+    else:
+        print('Need to specify contest if there is not exactly one active.')
+        print('Active contests: ' + ', '.join(c['id'] for c in contests))
+        sys.exit(1)
+
+contest_data = requests.get(f'{api_url}/contests/{contest}').json()
+contest_start = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z').timestamp()
+contest_duration = (datetime.strptime(contest_data['duration'], '%H:%M:%S.000') - datetime(1900, 1, 1)).total_seconds()
+now = time.time()
+orig_contest_duration = 5 * 60 * 60
+if contest_start < now:
+    logging.info('Contest start was at '
+            + time.strftime('%X %x %Z', time.localtime(contest_start)) + '.')
+    simulation_speed = orig_contest_duration/(contest_start + contest_duration - now)
+    contest_start = now
+else:
+    logging.info('Contest will be started at '
+            + time.strftime('%X %x %Z', time.localtime(contest_start)) + '.')
+    simulation_speed = orig_contest_duration/contest_duration
+logging.info(f'Simulation speed: {simulation_speed}')
 
 # submissions.json contains a list of submissions with a timestamp relative to
 # contest start. Submission with negative timestamp (most likely jury
@@ -53,12 +80,7 @@ for problem in problems:
 
 team_problem_team_map = dict()
 
-# TODO: allow to use the actual contest start instead of "now".
-contest_start = time.time()
-logging.info('Simulated contest start at '
-        + time.strftime('%X %x %Z', time.localtime(contest_start)) + '.')
-logging.info(f'Simulation speed: {simulation_speed}')
-
+submissions_api_url = f'{api_url}/contests/{contest}/submissions'
 for submission in submissions:
     times = submission['contest_time'].split(':')
     orig_submission_time = int(times[0])*3600 + int(times[1])*60 + float(times[2])
@@ -109,7 +131,7 @@ for submission in submissions:
         data['entry_point'] = submission['entry_point']
     logging.info(f'Submitting problem {problem_label} ({first_filename}) on behalf of user {username}.')
     r = requests.post(
-            f'{contest_api_url}/submissions',
+            submissions_api_url,
             data = data,
             auth = accounts[team_id],
             files = files,
