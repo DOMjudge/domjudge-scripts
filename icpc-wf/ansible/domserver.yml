@@ -24,6 +24,8 @@
       service: name=gdm3 enabled=yes state=restarted
     - name: restart nginx-exporter
       service: name=prometheus-nginx-exporter enabled=yes state=restarted
+    - name: restart php-exporter
+      service: name=php-fpm-exporter enabled=yes state=restarted
   tasks:
     - name: include global variables
       include_vars: variables.yml
@@ -141,6 +143,18 @@
         regexp: '^ARGS=""'
         line: 'ARGS="-nginx.scrape-uri=http://localhost:8080/basic_status"'
       notify: restart nginx-exporter
+
+    - name: Install PHP-fpm exporter binary
+      ansible.builtin.unarchive:
+        src: files/grafana/php-fpm_exporter_2.0.3_linux_arm64.tar.gz
+        dest: /tmp/
+        exclude:
+          - LICENSE
+          - README.md
+
+    - name: Export PHP-FPM metrics
+      copy: src=files/grafana/php-fpm-exporter.service dest=/etc/systemd/system/php-fpm-exporter.service
+      notify: restart php-exporter
 
     - name: add autostart shortcuts
       copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
