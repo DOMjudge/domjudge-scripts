@@ -35,3 +35,9 @@ scrape_configs:
 {% for host in groups["domserver"] %}
         - {{ hostvars[host].ansible_host }}:9113
 {% endfor %}
+  - job_name: 'fpm_domjudge'
+    static_configs:
+      - targets:
+{% for host in groups["domserver"] %}
+        - {{ hostvars[host].ansible_host }}:9253
+{% endfor %}
