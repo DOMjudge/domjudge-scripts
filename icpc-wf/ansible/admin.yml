@@ -74,7 +74,6 @@
         - gitk
         - git-gui
         - makepasswd
-        - tig
         - mariadb-server
         - nginx
         - php-fpm

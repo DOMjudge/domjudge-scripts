@@ -48,6 +48,8 @@
         - texlive-latex-recommended
         - texlive-latex-extra
         - apache2-utils
+        - tig
+        - bat
 
     - name: set PHP timezone for CLI
       lineinfile:
