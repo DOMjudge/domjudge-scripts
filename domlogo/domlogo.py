@@ -14,9 +14,9 @@ current_column = [
     [metadata_text],
     [results_text],
 ]
-cache = [('/tmp/logos/DOMjudge.png', '           \n          ', None) for _ in range(10)]
+cache = [('/tmp/logos/DOMjudge.png', '           \n          ', None, None) for _ in range(10)]
 previous_column = [
-    [sg.Image(filename=c[0]), sg.Text(c[1], font=font)] for c in cache
+    [sg.Image(filename=c[0]), sg.Text(c[1], font=font), sg.Canvas(size=(10,50))] for c in cache
 ]
 layout = [
     [sg.Column(current_column), sg.VerticalSeparator(), sg.Column(previous_column)],
@@ -81,13 +81,18 @@ with open(latest_logfile, 'r') as logfile:
             needs_update = None
             judging_data = requests.get(f'{api_url}/judgements/{jid}', auth=(user,passwd)).json()
             verdict = judging_data['judgement_type_id'] or 'pending'
+            color = 'firebrick1'
             if verdict == 'AC':
                 verdict += ' 🎈'
+                color = 'LightGreen'
+            elif verdict == 'pending':
+                color = 'DeepSkyBlue'
             for i in range(len(cache)-1):
                 cache[i] = cache[i+1]
-            cache[-1] = (f'/tmp/logos/{tid}.png', f's{sid}/j{jid}\n{verdict}', jid)
+            cache[-1] = (f'/tmp/logos/{tid}.png', f's{sid}/j{jid}\n{verdict}', color, jid)
             for i in range(len(cache)):
                 previous_column[i][0].update(filename=cache[i][0])
                 previous_column[i][1].update(cache[i][1])
+                previous_column[i][2].TKCanvas.config(bg=cache[i][2])
 
 window.close()
