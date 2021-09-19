@@ -1,8 +1,0 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-	<file>domlogo.qml</file>
-	<file>DOMjudgelogo_sticker.svg</file>
-	<file>DOMjudgelogo_sticker_red.svg</file>
-	<file>DOMjudgelogo_sticker_green.svg</file>
-</qresource>
-</RCC>
