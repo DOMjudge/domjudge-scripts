@@ -22,6 +22,11 @@
           # We need these for our extra monitoring things
           - prometheus
 
+    - name: copy ssl cert
+      copy: src=files/grafana/grafana.crt dest=/etc/ssl/certs/grafana.crt
+    - name: copy ssl key
+      copy: src=files/grafana/grafana.key dest=/etc/ssl/private/grafana.key
+
     - name: copy default nginx config
       copy: src=files/grafana/nginx.conf dest=/etc/nginx/sites-enabled/grafana.conf
 

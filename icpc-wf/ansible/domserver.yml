@@ -161,8 +161,8 @@
 
     - name: Install PHP-fpm exporter binary
       ansible.builtin.unarchive:
-        src: files/grafana/php-fpm_exporter_2.0.3_linux_arm64.tar.gz
-        dest: /tmp/
+        src: files/grafana/php-fpm_exporter_2.0.3_linux_amd64.tar.gz
+        dest: /usr/bin/
         exclude:
           - LICENSE
           - README.md
