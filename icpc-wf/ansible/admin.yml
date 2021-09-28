@@ -229,7 +229,6 @@
       tags: updateservice
       with_items:
         - create_cgroups_admin
-        - tune_cpu
       notify: restart systemctl
 
     - name: make sure systemctl is restarted
@@ -239,7 +238,6 @@
       service: name={{item}} enabled=yes state=restarted
       with_items:
         - create_cgroups_admin
-        - tune_cpu
 
     - name: disable systemd timers
       command: systemctl mask {{item}}
@@ -261,7 +259,7 @@
       become: yes
       become_user: domjudge
       # We use a different directory here to have one single 'upstream' and not have issues with it
-      git: repo=domjudge@10.3.3.223:domjudge-scripts dest=/home/domjudge/domjudge-scripts-checkout version=master accept_hostkey=yes update=yes
+      git: repo=domjudge@10.3.3.223:domjudge-scripts dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=yes
 
     - name: add cds to hosts file
       lineinfile:
@@ -269,10 +267,10 @@
         regexp: 'cds$'
         line: "10.3.3.207	cds"
 
-    - name: create working copy from the wf2019 repo
+    - name: create working copy from the wf2020 repo
       become: yes
       become_user: domjudge
-      git: repo=git@cds:wf2019 dest=/home/domjudge/wf2019 version=master accept_hostkey=yes update=yes
+      git: repo=git@cds:wf2020 dest=/home/domjudge/wf2020 version=master accept_hostkey=yes update=yes
 
     - name: copy custom CSS file for admin machines
       copy:
@@ -350,6 +348,32 @@
         owner: domjudge
         group: domjudge
 
+    - name: Create local directory
+      become: yes
+      become_user: domjudge
+      file:
+        path: "/home/domjudge/.local/share/JetBrains/"
+        state: directory
+        mode: '0755'
+
+    - name: Copy in PHPStorm local share
+      become: no
+      tags: sync
+      synchronize:
+        src: files/phpstorm/PhpStorm{{ PHPSTORM_VERSION }}-local-share/
+        dest: "/home/domjudge/.local/share/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
+        owner: no
+        recursive: yes
+        use_ssh_args: true
+        rsync_path: sudo rsync
+
+    - name: fix ownership of PHPStorm local share
+      file:
+        path: "/home/domjudge/.local/share/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
+        recurse: yes
+        owner: domjudge
+        group: domjudge
+
     - name: Copy in PHPStorm settings for repo
       become: no
       tags: sync
@@ -379,7 +403,7 @@
       become: yes
       become_user: domjudge
       template:
-        src: files/phpstorm/jetbrains-phpstorm.desktop.j2
+        src: files/jetbrains-phpstorm.desktop.j2
         dest: /home/domjudge/.local/share/applications/jetbrains-phpstorm.desktop
 
     - name: Install netrc file

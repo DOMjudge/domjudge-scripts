@@ -20,7 +20,7 @@
         - screen
         - autoconf
         - automake
-        - collectd-core
+        - efibootmgr
         - curl
         - gcc
         - g++
@@ -51,6 +51,9 @@
         - apache2-utils
         - tig
         - bat
+
+    - name: Re-order PXEboot
+      shell: efibootmgr -o 2,1
 
     - name: set PHP timezone for CLI
       lineinfile:

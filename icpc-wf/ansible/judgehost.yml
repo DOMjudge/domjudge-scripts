@@ -8,8 +8,6 @@
   handlers:
     - name: update-ca-certificates
       command: update-ca-certificates
-    - name: restart collectd
-      service: name=collectd state=restarted
     - name: restart rsyslog
       service: name=rsyslog enabled=yes state=restarted
     - name: restart systemctl
@@ -90,8 +88,8 @@
     - name: Wait for the reboot to complete
       wait_for_connection:
         connect_timeout: 20
-        sleep: 5
-        delay: 5
+        sleep: 10
+        delay: 10
         timeout: 300
       when: kernel_params.changed
 

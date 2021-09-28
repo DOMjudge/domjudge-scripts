@@ -4,8 +4,44 @@
       tags: packages
       replace:
         dest: /etc/apt/sources.list
-        regexp: 'pc2\.ecs\.csus\.edu'
+        regexp: 'pc2\.ecs\.baylor\.edu'
         replace: 'packages'
+
+    - name: fix apt sources list 2
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list.d/microsoft.list
+        regexp: 'pc2\.ecs\.baylor\.edu'
+        replace: 'packages'
+
+    - name: fix apt sources list 3
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list.d/mono.list
+        regexp: 'pc2\.ecs\.baylor\.edu'
+        replace: 'packages'
+
+    - name: fix apt sources list 4
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list.d/vscode.list
+        regexp: 'pc2\.ecs\.baylor\.edu'
+        replace: 'packages'
+
+    - name: fix apt sources list 5
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list.d/pypy-ubuntu-ppa-buster.list
+        regexp: 'pc2\.ecs\.baylor\.edu'
+        replace: 'packages'
+
+    - name: remove unused arch
+      tags: packages
+      command: dpkg --remove-architecture i386
+
+    - name: run apt update
+      tags: packages
+      command: apt update
 
     - name: remove pycharm repo
       tags: packages
@@ -29,6 +65,20 @@
 
     - meta: flush_handlers
       tags: packages
+
+    - name: add NTP servers
+      tags: packages
+      lineinfile:
+        dest: /etc/systemd/timesyncd.conf
+        regexp: '^#?NTP='
+        line: "NTP=10.3.3.208 10.3.3.209"
+
+    - name: remove source line from interfaces
+      tags: packages
+      lineinfile:
+        dest: /etc/network/interfaces
+        regexp: '^source-'
+        state: absent
 
     - name: restart systemd timesyncd
       command: systemctl restart systemd-timesyncd

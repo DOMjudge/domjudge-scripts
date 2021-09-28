@@ -9,3 +9,4 @@ Place in this directory:
   - https://plugins.jetbrains.com/plugin/7320-php-annotations/versions
   - https://plugins.jetbrains.com/plugin/7219-symfony-support/versions
   - https://plugins.jetbrains.com/plugin/7499-gittoolbox/versions
+* The PHPStorm local share directory containing our configuration, as PhpStorm20xx.y-local-share.

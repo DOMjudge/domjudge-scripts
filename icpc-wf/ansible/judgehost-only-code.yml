@@ -14,8 +14,6 @@
       service: name=php7.4-fpm state=restarted
     - name: update-ca-certificates
       command: update-ca-certificates
-    - name: restart collectd
-      service: name=collectd state=restarted
     - name: restart rsyslog
       service: name=rsyslog enabled=yes state=restarted
     - name: restart systemctl

@@ -14,8 +14,6 @@
       service: name=php7.4-fpm state=restarted
     - name: update-ca-certificates
       command: update-ca-certificates
-    - name: restart collectd
-      service: name=collectd state=restarted
     - name: restart rsyslog
       service: name=rsyslog enabled=yes state=restarted
     - name: restart systemctl
@@ -104,16 +102,6 @@
 
     - name: make sure mysql is restarted
       meta: flush_handlers
-
-    - name: create collectd user for mysql status
-      mysql_user:
-        name: collectdstatus
-        host: 'localhost'
-        password: "{{COLLECTD_MYSQL_PASSWORD}}"
-        append_privs: true
-        priv: '*.*:PROCESS,REPLICATION CLIENT'
-        state: present
-      when: COLLECTD_MYSQL_PASSWORD is defined
 
     - name: Create MySQL authentication file
       template:
