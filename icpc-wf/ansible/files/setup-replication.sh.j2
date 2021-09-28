@@ -1,9 +1,14 @@
 #!/bin/sh -e
+# This script sets up MySQL master/master replication on two servers.
+# Run this script as root on the secondary, backup server and specify
+# the primary one as argument.
+#
+# The database on this server will be wiped!
 
-MASTER=$1
+PRIMARY=$1
 
-if [ -z "$MASTER" ]; then
-    echo "Error: specify master host to slave to."
+if [ -z "$PRIMARY" ]; then
+    echo "Error: specify primary host to set up master/master replication with."
     exit 1
 fi
 
@@ -12,11 +17,19 @@ if [ $(id -un) != 'root' ]; then
     exit 1
 fi
 
-MASTER_SERVER_ID=$(ssh "$MASTER" "cat /etc/mysql/mariadb.conf.d/zzz_replication.cnf" | \
-		       grep server_id | sed 's/.*server_id *= *//')
+PRIMARY_SERVER_ID=$(ssh "$PRIMARY" "cat /etc/mysql/mariadb.conf.d/zzz_replication.cnf" | \
+                    grep server_id | sed 's/.*server_id *= *//')
 
-if [ -z "$MASTER_SERVER_ID" ]; then
+OUR_SERVER_ID=$(cat /etc/mysql/mariadb.conf.d/zzz_replication.cnf | \
+                grep server_id | sed 's/.*server_id *= *//')
+
+if [ -z "$PRIMARY_SERVER_ID" ]; then
     echo "Error: cannot fetch master server_id."
+    exit 1
+fi
+
+if [ -z "$OUR_SERVER_ID" ]; then
+    echo "Error: cannot fetch our server_id."
     exit 1
 fi
 
@@ -24,31 +37,31 @@ echo "Recreating empty database..."
 mysql -e 'STOP SLAVE; DROP DATABASE domjudge;'
 {{DJ_DIR}}/sql/dj_setup_database create-db-users
 
-ssh "$MASTER" "service php7.4-fpm stop"
+echo "Stopping PHP on both servers..."
+service php7.4-fpm stop
+ssh "$PRIMARY" "service php7.4-fpm stop"
 
-MASTER_STATUS=$(ssh "$MASTER" "mysql -e 'SHOW MASTER STATUS;'" | tail -n1)
-MASTER_BINLOG=$(echo "$MASTER_STATUS" | cut -f 1)
-MASTER_LOGPOS=$(echo "$MASTER_STATUS" | cut -f 2)
+PRIMARY_STATUS=$(ssh "$PRIMARY" "mysql -e 'SHOW MASTER STATUS;'" | tail -n1)
+PRIMARY_BINLOG=$(echo "$PRIMARY_STATUS" | cut -f 1)
+PRIMARY_LOGPOS=$(echo "$PRIMARY_STATUS" | cut -f 2)
 
-if [ -z "$MASTER_BINLOG" -o -z "$MASTER_LOGPOS" ]; then
-    echo "Error: cannot fetch master status."
+if [ -z "$PRIMARY_BINLOG" -o -z "$PRIMARY_LOGPOS" ]; then
+    echo "Error: cannot fetch primary status."
     exit 1
 fi
 
-TMPFILE="/tmp/dj_setup_replication.$MASTER.$$.sql"
-echo "Loading SQL from '$MASTER', also storing into '$TMPFILE'..."
-ssh "$MASTER" "mysqldump --opt domjudge" | tee "$TMPFILE" | pv | mysql domjudge
+TMPFILE="/tmp/dj_setup_replication.$PRIMARY.$$.sql"
+echo "Loading SQL from '$PRIMARY', also storing into '$TMPFILE'..."
+ssh "$PRIMARY" "mysqldump --opt domjudge" | tee "$TMPFILE" | pv | mysql domjudge
 
-echo "Setting up replication..."
+echo "Setting up replication locally..."
 mysql -e "
-CHANGE MASTER TO MASTER_HOST='10.3.3.${MASTER_SERVER_ID}',
+CHANGE MASTER TO MASTER_HOST='10.3.3.${PRIMARY_SERVER_ID}',
                  MASTER_USER='replication',
                  MASTER_PASSWORD='{{REPLICATION_PASSWORD}}',
-                 MASTER_LOG_FILE='${MASTER_BINLOG}',
-                 MASTER_LOG_POS=${MASTER_LOGPOS};
+                 MASTER_LOG_FILE='${PRIMARY_BINLOG}',
+                 MASTER_LOG_POS=${PRIMARY_LOGPOS};
 START SLAVE;"
-
-ssh "$MASTER" "service php7.4-fpm start"
 
 if ! mysql -e 'SHOW SLAVE STATUS\G' | grep 'Slave_SQL_Running: Yes' ; then
     echo "Error: slave SQL replication not running."
@@ -58,11 +71,28 @@ fi
 echo "Tracking slave synchronization, press ctrl+c to stop."
 while true ; do
     SLAVE_LOGPOS=$(mysql -e 'SHOW SLAVE STATUS\G' | grep 'Exec_Master_Log_Pos:' | sed 's/.*: *//')
-    echo "Slave synchronized to log position $SLAVE_LOGPOS / $MASTER_LOGPOS ..."
-    if  [ "$SLAVE_LOGPOS" -ge "$MASTER_LOGPOS" ]; then
-	break
+    echo "Slave synchronized to log position $SLAVE_LOGPOS / $PRIMARY_LOGPOS ..."
+    if [ "$SLAVE_LOGPOS" -ge "$PRIMARY_LOGPOS" ]; then
+        break
     fi
     sleep 1
 done
+
+OUR_STATUS=$(mysql -e 'SHOW MASTER STATUS;' | tail -n1)
+OUR_BINLOG=$(echo "$OUR_STATUS" | cut -f 1)
+OUR_LOGPOS=$(echo "$OUR_STATUS" | cut -f 2)
+
+echo "Starting replication on $PRIMARY..."
+ssh "$PRIMARY" "mysql -e '
+CHANGE MASTER TO MASTER_HOST=\"10.3.3.${OUR_SERVER_ID}\",
+                 MASTER_USER=\"replication\",
+                 MASTER_PASSWORD=\"{{REPLICATION_PASSWORD}}\",
+                 MASTER_LOG_FILE=\"${OUR_BINLOG}\",
+                 MASTER_LOG_POS=${OUR_LOGPOS};
+START SLAVE;'"
+
+echo "Restarting PHP on both servers..."
+service php7.4-fpm start
+ssh "$PRIMARY" "service php7.4-fpm start"
 
 exit 0
