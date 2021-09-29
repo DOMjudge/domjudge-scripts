@@ -3,9 +3,9 @@ ansible_user=root
 ansible_python_interpreter=/usr/bin/python3
 
 [domserver]
-domjudge             ansible_host=10.3.3.215
-domjudge-backup      ansible_host=10.3.3.216
-domjudge-laptop      ansible_host=10.3.3.200
+domjudge-primary     ansible_host=10.3.3.216 KEEPALIVED_PRIORITY=100
+domjudge-backup      ansible_host=10.3.3.217 KEEPALIVED_PRIORITY=99
+#domjudge-laptop      ansible_host=10.3.3.200
 
 [judgehost]
 domjudge-judgehost1  ansible_host=10.2.2.192

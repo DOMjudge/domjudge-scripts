@@ -41,6 +41,7 @@
         - php-intl
         - mycli
         - macchanger
+        - keepalived
         - prometheus-nginx-exporter
         - prometheus-mysqld-exporter
         # expects config in /var/lib/prometheus/.my.cnf
@@ -165,3 +166,16 @@
         - htop
         - taillog-domserver-nginx-error
         - taillog-domserver-symfony-error
+
+    - name: Configure keepalived for domjudge IP failover
+      template:
+        src: files/keepalived.conf.j2
+        dest: /etc/keepalived/keepalived.conf
+      when: REPLICATION_PASSWORD is defined
+
+    - name: Start but disable keepalived (so it does not fail back to primary)
+      service:
+        name: keepalived
+        enabled: false
+        state: restarted
+      when: REPLICATION_PASSWORD is defined
