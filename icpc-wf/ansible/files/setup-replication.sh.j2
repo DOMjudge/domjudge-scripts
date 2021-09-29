@@ -34,6 +34,7 @@ if [ -z "$OUR_SERVER_ID" ]; then
 fi
 
 echo "Recreating empty database..."
+ssh "$PRIMARY" 'mysql -e "STOP SLAVE;"'
 mysql -e 'STOP SLAVE; DROP DATABASE domjudge;'
 {{DJ_DIR}}/sql/dj_setup_database create-db-users
 
