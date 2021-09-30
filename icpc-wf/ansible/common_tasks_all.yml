@@ -97,6 +97,24 @@
         mode: 0600
       when: DJ_GIT_SSH_KEY is defined
 
+    - name: Copy SSH key for ssh access (root -> domjudge/root)
+      copy:
+        content: "{{DJ_GIT_SSH_KEY}}"
+        dest: /home/domjudge/.ssh/dj_git_ssh_key
+        owner: root
+        group: root
+        mode: 0600
+      when: DJ_GIT_SSH_KEY is defined
+
+    - name: Copy SSH key for ssh access (domjudge -> domjudge/root)
+      copy:
+        content: "{{DJ_GIT_SSH_KEY}}"
+        dest: /home/domjudge/.ssh/dj_git_ssh_key
+        owner: domjudge
+        group: domjudge
+        mode: 0600
+      when: DJ_GIT_SSH_KEY is defined
+
     - name: Create SSH config
       template: src=files/ssh-config-domjudge.j2 dest=/home/domjudge/.ssh/config owner=domjudge group=domjudge mode=0600
       when: DJ_GIT_HOST is defined
