@@ -47,6 +47,13 @@
         replace: '\1'
       notify: restart nginx
 
+    - name: Remove unneeded comment
+      lineinfile:
+        path: /etc/nginx/sites-available/domjudge.conf
+        regexp: '^Or block .*'
+        line: ''
+      notify: restart nginx
+
     - name: increase max body size to upload size
       lineinfile:
         path: /etc/nginx/snippets/domjudge-inner
