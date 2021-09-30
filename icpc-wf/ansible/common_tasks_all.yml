@@ -123,3 +123,9 @@
 
     - name: configure domjudge logrotate
       copy: src=files/logrotate.domjudge dest=/etc/logrotate.d/domjudge
+
+    - name: Force enable alt-tab for switching windows
+      copy: src=files/dconf/ dest=/etc/dconf/
+
+    - name: Update dconf configuration for alt-tab window switching
+      shell: dconf update
