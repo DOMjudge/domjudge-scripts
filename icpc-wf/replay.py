@@ -18,8 +18,6 @@ logging.basicConfig(
         format='%(asctime)s - \x1b[34;1m%(message)s\x1b[0m',
 )
 
-# TODO: allow to specify these args via the command line.
-
 if len(sys.argv) == 1 or len(sys.argv) > 3:
     print(f'Usage: {sys.argv[0]} <contest-api-url> [<contest>]')
     sys.exit(-1)
@@ -30,7 +28,7 @@ if len(sys.argv) == 3:
 else:
     contests = requests.get(f'{api_url}/contests').json()
     if len(contests) == 1:
-        contest = contest['id']
+        contest = contests[0]['id']
     else:
         print('Need to specify contest if there is not exactly one active.')
         print('Active contests: ' + ', '.join(c['id'] for c in contests))
@@ -96,7 +94,8 @@ for submission in submissions:
             time_from_start = time.time() - contest_start
             time_diff = new_submission_time - time_from_start
             spinner.text = f'Sleeping for ~{str(round(time_diff,2))}s'
-        time.sleep(time_diff)
+        if time_diff > 0:
+            time.sleep(time_diff)
         spinner.stop()
 
     # Make sure that for a given team/problem combination we pick the same team
