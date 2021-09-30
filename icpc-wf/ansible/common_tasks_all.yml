@@ -52,6 +52,9 @@
         - tig
         - bat
 
+    - name: Re-order PXEboot
+      shell: efibootmgr -o {{ EFI_ORDER }}
+
     - name: set PHP timezone for CLI
       lineinfile:
         dest: /etc/php/7.4/cli/php.ini
