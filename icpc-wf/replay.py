@@ -18,12 +18,12 @@ logging.basicConfig(
         format='%(asctime)s - \x1b[34;1m%(message)s\x1b[0m',
 )
 
-if len(sys.argv) == 1 or len(sys.argv) > 3:
-    print(f'Usage: {sys.argv[0]} <contest-api-url> [<contest>]')
+if len(sys.argv) == 1 or len(sys.argv) > 4:
+    print(f'Usage: {sys.argv[0]} <contest-api-url> [<contest> [<submissionid>]')
     sys.exit(-1)
 
 api_url = sys.argv[1]
-if len(sys.argv) == 3:
+if len(sys.argv) >= 3:
     contest = sys.argv[2]
 else:
     contests = requests.get(f'{api_url}/contests').json()
@@ -34,27 +34,38 @@ else:
         print('Active contests: ' + ', '.join(c['id'] for c in contests))
         sys.exit(1)
 
-contest_data = requests.get(f'{api_url}/contests/{contest}').json()
-contest_start = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z').timestamp()
-contest_duration = (datetime.strptime(contest_data['duration'], '%H:%M:%S.000') - datetime(1900, 1, 1)).total_seconds()
-now = time.time()
-orig_contest_duration = 5 * 60 * 60
-if contest_start < now:
-    logging.info('Contest start was at '
-            + time.strftime('%X %x %Z', time.localtime(contest_start)) + '.')
-    simulation_speed = orig_contest_duration/(contest_start + contest_duration - now)
-    contest_start = now
-else:
-    logging.info('Contest will be started at '
-            + time.strftime('%X %x %Z', time.localtime(contest_start)) + '.')
-    simulation_speed = orig_contest_duration/contest_duration
-logging.info(f'Simulation speed: {simulation_speed}')
-
 # submissions.json contains a list of submissions with a timestamp relative to
 # contest start. Submission with negative timestamp (most likely jury
 # submissions) are going to be batch-submitted right away.
 submissions = json.load(open('submissions.json'))
 logging.info(f'Loaded {len(submissions)} submissions.')
+
+contest_data = requests.get(f'{api_url}/contests/{contest}').json()
+contest_start = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z').timestamp()
+contest_duration = (datetime.strptime(contest_data['duration'], '%H:%M:%S.000') - datetime(1900, 1, 1)).total_seconds()
+
+now = time.time()
+orig_contest_duration = 5 * 60 * 60
+
+first_submission_time = 0
+if len(sys.argv) == 4:
+    skip_to_submission = int(sys.argv[3])
+    submissions = submissions[skip_to_submission:]
+    logging.info(f'Skipped to submission {skip_to_submission}, {len(submissions)} remaining.')
+    first_submission_time = (datetime.strptime(submissions[0]['contest_time'][:-4], '%H:%M:%S') - datetime(1900, 1, 1)).total_seconds()
+    orig_contest_duration -= first_submission_time
+    logging.info(f'Contest duration shortened to {orig_contest_duration}s.')
+
+if contest_start < now:
+    logging.info('Contest start was at '
+            + time.strftime('%X %x %Z', time.localtime(contest_start)) + '.')
+    simulation_speed = orig_contest_duration/(contest_start + contest_duration - now)
+    contest_start = now - (first_submission_time)/simulation_speed
+else:
+    logging.info('Contest will be started at '
+            + time.strftime('%X %x %Z', time.localtime(contest_start)) + '.')
+    simulation_speed = orig_contest_duration/contest_duration
+logging.info(f'Simulation speed: {simulation_speed}')
 
 # problems.json is necessary to map from problem id to label.
 problems = json.load(open('problems.json'))
