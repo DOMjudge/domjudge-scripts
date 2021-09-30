@@ -18,6 +18,8 @@ domjudge-judgehost7  ansible_host=10.2.2.198
 domjudge-judgehost8  ansible_host=10.2.2.199
 domjudge-judgehost9  ansible_host=10.2.2.200
 domjudge-judgehost10 ansible_host=10.2.2.201
+domjudge-judgehost11 ansible_host=10.2.2.202
+domjudge-judgehost12 ansible_host=10.2.2.203
 
 [admin]
 domjudge-ccsadmin1 ansible_host=10.3.3.223
