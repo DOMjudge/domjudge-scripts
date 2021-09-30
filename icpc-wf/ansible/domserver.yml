@@ -44,6 +44,7 @@
         - keepalived
         - prometheus-nginx-exporter
         - prometheus-mysqld-exporter
+        - molly-guard
         # expects config in /var/lib/prometheus/.my.cnf
 
     - name: copy in MySQL config
