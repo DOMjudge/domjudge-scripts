@@ -133,9 +133,15 @@
         - tune_cpu
         - domjudge-judgehost
 
+    - name: install python3 modules for domlogo
+      apt:
+        state: present
+        pkg:
+        - python3-tk
+
     - name: install domlogo env
       synchronize:
-        src: files/domlogo/lib/
+        src: files/domlogo/lib
         dest: "/home/domjudge/.local/"
         owner: no
         use_ssh_args: true
@@ -143,6 +149,9 @@
 
     - name: install domlogo
       copy: src=files/domlogo/domlogo.py dest=/opt/domjudge/ owner=domjudge group=domjudge mode=0755
+
+    - name: install domlogo images
+      copy: src=files/domlogo-files dest=/opt/domjudge/ owner=domjudge group=domjudge
 
     - name: add autostart shortcuts
       copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
