@@ -135,6 +135,16 @@
         state: absent
         dest: "{{DJ_DIR}}/webapp/.env.local"
 
+    - name: install contest images
+      become: no
+      tags: sync
+      synchronize:
+        src: files/domjudge-public/
+        dest: "{{DJ_DIR}}/public/"
+        owner: no
+        use_ssh_args: true
+        rsync_path: sudo rsync
+
     - include: nginx-setup.yml
 
     - name: Get NGINX status
