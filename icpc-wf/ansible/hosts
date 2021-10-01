@@ -4,7 +4,7 @@ ansible_python_interpreter=/usr/bin/python3
 EFI_ORDER='2,1'
 
 [domserver]
-#domjudge-primary     ansible_host=10.3.3.216 KEEPALIVED_PRIORITY=100
+domjudge-primary     ansible_host=10.3.3.216 KEEPALIVED_PRIORITY=100
 domjudge-backup      ansible_host=10.3.3.217 KEEPALIVED_PRIORITY=99 EFI_ORDER='3\,2'
 #domjudge-laptop      ansible_host=10.3.3.200
 
