@@ -4,9 +4,10 @@ import PySimpleGUI as sg
 import glob
 import os
 import requests
+import re
 
 font = ('Roboto', 14)
-team_image = sg.Image(filename='/tmp/teampix/idle.png')
+team_image = sg.Image(filename='domlogo-files/photos/idle.png')
 metadata_text = sg.Text('No submissions in queue.', font=font)
 results_text = sg.Text('', font=font)
 current_column = [
@@ -14,14 +15,14 @@ current_column = [
     [metadata_text],
     [results_text],
 ]
-cache = [('/tmp/logos/DOMjudge.png', '           \n          ', None, None) for _ in range(10)]
+cache = [('domlogo-files/logos/DOMjudge.png', '           \n          ', None, None) for _ in range(10)]
 previous_column = [
     [sg.Image(filename=c[0]), sg.Text(c[1], font=font), sg.Canvas(size=(10,50))] for c in cache
 ]
 layout = [
     [sg.Column(current_column), sg.VerticalSeparator(), sg.Column(previous_column)],
 ]
-window = sg.Window('DOMlogo', layout)
+window = sg.Window('DOMlogo', layout, location=(1000,0), keep_on_top=True)
 
 with open('etc/restapi.secret', 'r') as secrets:
     while True:
@@ -41,6 +42,7 @@ api_url = f'{api_url}/contests/{cid}'
 print(f'Contest is {cid}.')
 
 latest_logfile = max(glob.glob('output/log/judge.*.log'), key=os.path.getctime)
+print(f'Checking logfile {latest_logfile}')
 with open(latest_logfile, 'r') as logfile:
     # Seeks to the end of the file.
     logfile.seek(0, 2)
@@ -56,18 +58,19 @@ with open(latest_logfile, 'r') as logfile:
             judging_id = token[-1]
             submission_id = token[-2]
             if not last_seen or last_seen[1] != judging_id:
+                print(f'new submission, line was {line}')
                 needs_update = last_seen
                 results = []
                 submission_data = requests.get(f'{api_url}/submissions/{submission_id}', auth=(user,passwd)).json()
                 team_id = submission_data['team_id']
                 last_seen = (submission_id, judging_id, team_id)
-                team_image.update(filename=f'/tmp/teampix/{team_id}.png')
+                team_image.update(filename=f'domlogo-files/photos/{team_id}.png')
                 metadata_text.update(f's{submission_id} / {submission_data["problem_id"]} / {submission_data["language_id"]}')
                 results_text.update('Busy compiling.')
         elif 'No submissions in queue' in line:
             needs_update = last_seen
             last_seen = None
-            team_image.update(filename=f'/tmp/teampix/idle.png')
+            team_image.update(filename=f'domlogo-files/photos/idle.png')
             metadata_text.update('No submissions in queue.')
             results_text.update('')
         elif ' Compilation: ' in line:
@@ -75,7 +78,8 @@ with open(latest_logfile, 'r') as logfile:
         elif ', result: ' in line:
             result = line.split(', result: ')[-1].strip()
             results.append('✔' if result == 'correct' else '✘')
-            results_text.update(' '.join(results))
+            results_text.update('\n'.join(re.findall(
+                '.{1,78}', ' '.join(results))))
         if needs_update:
             sid, jid, tid = needs_update
             needs_update = None
@@ -83,13 +87,12 @@ with open(latest_logfile, 'r') as logfile:
             verdict = judging_data['judgement_type_id'] or 'pending'
             color = 'firebrick1'
             if verdict == 'AC':
-                verdict += ' 🎈'
                 color = 'LightGreen'
             elif verdict == 'pending':
                 color = 'DeepSkyBlue'
             for i in range(len(cache)-1):
                 cache[i] = cache[i+1]
-            cache[-1] = (f'/tmp/logos/{tid}.png', f's{sid}/j{jid}\n{verdict}', color, jid)
+            cache[-1] = (f'domlogo-files/logos/{tid}.png', f's{sid}/j{jid}\n{verdict}', color, jid)
             for i in range(len(cache)):
                 previous_column[i][0].update(filename=cache[i][0])
                 previous_column[i][1].update(cache[i][1])
