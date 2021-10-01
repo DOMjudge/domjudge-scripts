@@ -71,10 +71,8 @@ fi
 echo "Stopping PHP locally..."
 service php7.4-fpm stop
 
-echo "Recreating empty database..."
+echo "Stopping replication on $PRIMARY..."
 ssh "$PRIMARY" 'mysql -e "STOP SLAVE;"'
-mysql -e 'STOP SLAVE; DROP DATABASE domjudge;'
-{{DJ_DIR}}/sql/dj_setup_database create-db-users
 
 PRIMARY_STATUS=$(ssh "$PRIMARY" "mysql -e 'SHOW MASTER STATUS\G'")
 PRIMARY_BINLOG=$(get_field 'File' "$PRIMARY_STATUS")
@@ -85,11 +83,23 @@ if [ -z "$PRIMARY_BINLOG" -o -z "$PRIMARY_LOGPOS" ]; then
     exit 1
 fi
 
-TMPFILE="/tmp/dj_setup_replication.$PRIMARY.$$.sql"
-echo "Loading SQL from '$PRIMARY', also storing into '$TMPFILE'..."
-ssh "$PRIMARY" "mysqldump --skip-lock-tables domjudge" | tee "$TMPFILE" | pv | mysql domjudge
+echo "Stopping MySQL locally..."
+service mysql stop
 
-echo "Setting up replication locally..."
+echo "Copying /var/lib/mysql from '$PRIMARY', keeping old version in /var/lib/mysql-orig..."
+if [ -f /var/lib/mysql-orig ]; then
+    rm -rf /var/lib/mysql-orig
+fi
+mv /var/lib/mysql /var/lib/mysql-orig
+mkdir /var/lib/mysql
+ssh "$PRIMARY" "mariabackup -u root -S /var/run/mysqld/mysqld.sock --backup --slave-info --tmpdir=/tmp --stream=xbstream --parallel=4 --datadir=/var/lib/mysql 2>backup.log" \
+    | pv | mbstream --directory=/var/lib/mysql -x --parallel=4
+chown -R mysql:mysql /var/lib/mysql
+
+echo "Restarting MySQL locally..."
+service mysql start
+
+echo "Starting replication locally..."
 mysql -e "
 CHANGE MASTER TO MASTER_HOST='{{SERVER_IP_PREFIX}}.${PRIMARY_SERVER_ID}',
                  MASTER_USER='replication',

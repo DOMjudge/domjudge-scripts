@@ -37,6 +37,7 @@
         state: present
         pkg:
         - mariadb-server
+        - mariadb-backup
         - nginx
         - php-fpm
         - python3-mysqldb
