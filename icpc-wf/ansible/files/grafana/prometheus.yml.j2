@@ -30,6 +30,8 @@ scrape_configs:
       password: {{ ADMIN_PASSWORD }}
     metrics_path: /api/v4/metrics/prometheus
     scheme: https
+    tls_config:
+      insecure_skip_verify: true
     static_configs:
       - targets:
 {% for host in groups["domserver"] %}
