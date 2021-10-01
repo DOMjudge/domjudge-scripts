@@ -7,6 +7,8 @@
   tasks:
     - name: include global variables
       include_vars: variables.yml
+    - name: include global (secret) variables
+      include_vars: variables-secret.yml
     
     - name: install local DEB packages
       include: install-local-package.yml

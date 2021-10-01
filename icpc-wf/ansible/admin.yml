@@ -19,6 +19,8 @@
   tasks:
     - name: include global variables
       include_vars: variables.yml
+    - name: include global (secret) variables
+      include_vars: variables-secret.yml
 
     - include: common_tasks_all.yml
 
