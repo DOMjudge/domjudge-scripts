@@ -279,13 +279,13 @@
 
     - name: create clusterssh 'all' config group
       lineinfile:
-        dest: /etc/clusters
+        dest: /home/domjudge/.clusterssh/clusters
         regexp: '^all'
         line: "all {{ groups['all'] | join(' ') }}"
 
     - name: create clusterssh config groups
       lineinfile:
-        dest: /etc/clusters
+        dest: /home/domjudge/.clusterssh/clusters
         regexp: '^{{ item }}s'
         line: "{{item}}s {{ groups[item] | join(' ') }}"
       with_items:
