@@ -91,28 +91,10 @@
     - name: Create .ssh directory
       file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
 
-    - name: Copy SSH key for git access
+    - name: Copy shared SSH private key
       copy:
         content: "{{DJ_GIT_SSH_KEY}}"
-        dest: /home/domjudge/.ssh/dj_git_ssh_key
-        owner: domjudge
-        group: domjudge
-        mode: 0600
-      when: DJ_GIT_SSH_KEY is defined
-
-    - name: Copy SSH key for ssh access (root -> domjudge/root)
-      copy:
-        content: "{{DJ_GIT_SSH_KEY}}"
-        dest: /home/domjudge/.ssh/dj_git_ssh_key
-        owner: root
-        group: root
-        mode: 0600
-      when: DJ_GIT_SSH_KEY is defined
-
-    - name: Copy SSH key for ssh access (domjudge -> domjudge/root)
-      copy:
-        content: "{{DJ_GIT_SSH_KEY}}"
-        dest: /home/domjudge/.ssh/dj_git_ssh_key
+        dest: /home/domjudge/.ssh/id_rsa
         owner: domjudge
         group: domjudge
         mode: 0600
