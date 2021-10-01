@@ -91,14 +91,25 @@
     - name: Create .ssh directory
       file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
 
-    - name: Copy shared SSH private key
+    - name: Copy shared SSH private/public key
       copy:
-        content: "{{DJ_GIT_SSH_KEY}}"
-        dest: /home/domjudge/.ssh/id_rsa
+        src: "files/{{ item }}"
+        dest: "/home/domjudge/.ssh/{{ item }}"
         owner: domjudge
         group: domjudge
         mode: 0600
-      when: DJ_GIT_SSH_KEY is defined
+      with_items:
+        - id_rsa
+        - id_rsa.pub
+
+    - name: Add SSH key to authorized keys of domjudge and root
+      authorized_key:
+        user: "{{ item }}"
+        state: present
+        key: "{{ lookup('file', '/home/domjudge/.ssh/id_rsa.pub') }}"
+      with_items:
+        - domjudge
+        - root
 
     - name: add all hosts to hosts file
       lineinfile:

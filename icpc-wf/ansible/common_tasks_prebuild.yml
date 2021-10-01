@@ -21,18 +21,6 @@
 
     - include: common_tasks_all.yml
 
-    - name: Add authorized key (domjudge/root -> domjudge)
-      authorized_key:
-        user: domjudge
-        state: present
-        key: "{{DJ_SSH_KEY}}"
- 
-    - name: Add authorized key (domjudge/root -> root)
-      authorized_key:
-        user: root
-        state: present
-        key: "{{DJ_SSH_KEY}}"
-
     - name: Allow 'sudo' group to have passwordless sudo
       lineinfile:
         dest: /etc/sudoers
