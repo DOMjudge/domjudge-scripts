@@ -5,6 +5,8 @@ Description=Tune CPU cores: disable turboboost, downclocking, etc.
 Type=oneshot
 ExecStart=/usr/local/sbin/disable-turboboost_ht
 RemainAfterExit=true
+ExecStartPre=/bin/sleep 10
+Before=domjudge-judgedaemon.target
 
 [Install]
 WantedBy=multi-user.target
