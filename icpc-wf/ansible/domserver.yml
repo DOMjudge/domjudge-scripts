@@ -203,3 +203,7 @@
         enabled: false
         state: restarted
       when: REPLICATION_PASSWORD is defined
+
+    - name: Install keepalived alert trigger code
+      copy: src=files/failover/ dest=/home/domjudge/ owner=domjudge group=domjudge
+      when: REPLICATION_PASSWORD is defined

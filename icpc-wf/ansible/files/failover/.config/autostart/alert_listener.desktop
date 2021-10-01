@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Alert listener
+Type=Application
+Exec=bash -c "sleep 10 && ~/bin/alert_listener.sh"
