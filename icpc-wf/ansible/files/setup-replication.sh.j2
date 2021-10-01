@@ -17,6 +17,11 @@ if [ $(id -un) != 'root' ]; then
     exit 1
 fi
 
+if ip addr | grep '{{DOMSERVER_IP}}' >/dev/null 2>&1 ; then
+    echo "Error: this host '$(hostname)' has the primary IP '{{DOMSERVER_IP}}'."
+    exit 1
+fi
+
 PRIMARY_SERVER_ID=$(ssh "$PRIMARY" "cat /etc/mysql/mariadb.conf.d/zzz_replication.cnf" | \
                     grep server_id | sed 's/.*server_id *= *//')
 
@@ -33,18 +38,47 @@ if [ -z "$OUR_SERVER_ID" ]; then
     exit 1
 fi
 
+get_field()
+{
+    local field="$1" ; shift
+    local sql_info="$(printf '%s\n' "$@")"
+    echo "$sql_info" | grep "$field:" | sed 's/.*: *//'
+}
+
+check_status()
+{
+    local sql_info="$(printf '%s\n' "$@")"
+    [ $(get_field 'Seconds_Behind_Master' "$sql_info") = '0' ] || return 1
+    [ $(get_field 'Slave_SQL_Running' "$sql_info") = 'Yes' ] || return 1
+    [ $(get_field 'Last_SQL_Errno' "$sql_info") = '0' ] || return 1
+    return 0
+}
+
+check_replication()
+{
+    if ! check_status "$(ssh "$PRIMARY" "mysql -e 'SHOW MASTER STATUS\G SHOW SLAVE STATUS\G'")" ||
+       ! check_status "$(                mysql -e 'SHOW MASTER STATUS\G SHOW SLAVE STATUS\G')" ; then
+        return 1
+    fi
+    return 0
+}
+
+if check_replication ; then
+    echo "Replication already running."
+    exit 0
+fi
+
+echo "Stopping PHP locally..."
+service php7.4-fpm stop
+
 echo "Recreating empty database..."
 ssh "$PRIMARY" 'mysql -e "STOP SLAVE;"'
 mysql -e 'STOP SLAVE; DROP DATABASE domjudge;'
 {{DJ_DIR}}/sql/dj_setup_database create-db-users
 
-echo "Stopping PHP on both servers..."
-service php7.4-fpm stop
-ssh "$PRIMARY" "service php7.4-fpm stop"
-
-PRIMARY_STATUS=$(ssh "$PRIMARY" "mysql -e 'SHOW MASTER STATUS;'" | tail -n1)
-PRIMARY_BINLOG=$(echo "$PRIMARY_STATUS" | cut -f 1)
-PRIMARY_LOGPOS=$(echo "$PRIMARY_STATUS" | cut -f 2)
+PRIMARY_STATUS=$(ssh "$PRIMARY" "mysql -e 'SHOW MASTER STATUS\G'")
+PRIMARY_BINLOG=$(get_field 'File' "$PRIMARY_STATUS")
+PRIMARY_LOGPOS=$(get_field 'Position' "$PRIMARY_STATUS")
 
 if [ -z "$PRIMARY_BINLOG" -o -z "$PRIMARY_LOGPOS" ]; then
     echo "Error: cannot fetch primary status."
@@ -53,47 +87,59 @@ fi
 
 TMPFILE="/tmp/dj_setup_replication.$PRIMARY.$$.sql"
 echo "Loading SQL from '$PRIMARY', also storing into '$TMPFILE'..."
-ssh "$PRIMARY" "mysqldump --opt domjudge" | tee "$TMPFILE" | pv | mysql domjudge
+ssh "$PRIMARY" "mysqldump --skip-lock-tables domjudge" | tee "$TMPFILE" | pv | mysql domjudge
 
 echo "Setting up replication locally..."
 mysql -e "
-CHANGE MASTER TO MASTER_HOST='10.3.3.${PRIMARY_SERVER_ID}',
+CHANGE MASTER TO MASTER_HOST='{{SERVER_IP_PREFIX}}.${PRIMARY_SERVER_ID}',
                  MASTER_USER='replication',
                  MASTER_PASSWORD='{{REPLICATION_PASSWORD}}',
                  MASTER_LOG_FILE='${PRIMARY_BINLOG}',
                  MASTER_LOG_POS=${PRIMARY_LOGPOS};
 START SLAVE;"
 
-if ! mysql -e 'SHOW SLAVE STATUS\G' | grep 'Slave_SQL_Running: Yes' ; then
+if ! mysql -e 'SHOW SLAVE STATUS\G' | grep 'Slave_SQL_Running: Yes' >/dev/null 2>&1 ; then
     echo "Error: slave SQL replication not running."
     exit 1
 fi
 
-echo "Tracking slave synchronization, press ctrl+c to stop."
 while true ; do
-    SLAVE_LOGPOS=$(mysql -e 'SHOW SLAVE STATUS\G' | grep 'Exec_Master_Log_Pos:' | sed 's/.*: *//')
-    echo "Slave synchronized to log position $SLAVE_LOGPOS / $PRIMARY_LOGPOS ..."
-    if [ "$SLAVE_LOGPOS" -ge "$PRIMARY_LOGPOS" ]; then
+    SLAVE_STATUS=$(mysql -e 'SHOW SLAVE STATUS\G')
+    SLAVE_ERROR=$(get_field 'Last_Errno' "$SLAVE_STATUS")
+    SLAVE_BEHIND=$(get_field 'Seconds_Behind_Master' "$SLAVE_STATUS")
+    if [ "$SLAVE_BEHIND" = '0' ]; then
         break
     fi
-    sleep 1
+    if [ "$SLAVE_ERROR" != '0' ]; then
+        echo "Slave error: $SLAVE_ERROR"
+        mysql -e "SET GLOBAL sql_slave_skip_counter=1; START SLAVE;"
+        sleep 0.01
+    else
+        echo "Slave synchronizing, $SLAVE_BEHIND seconds behind ..."
+        sleep 0.3
+    fi
 done
 
-OUR_STATUS=$(mysql -e 'SHOW MASTER STATUS;' | tail -n1)
-OUR_BINLOG=$(echo "$OUR_STATUS" | cut -f 1)
-OUR_LOGPOS=$(echo "$OUR_STATUS" | cut -f 2)
+OUR_STATUS=$(mysql -e 'SHOW MASTER STATUS\G')
+OUR_BINLOG=$(get_field 'File' "$OUR_STATUS")
+OUR_LOGPOS=$(get_field 'Position' "$OUR_STATUS")
 
 echo "Starting replication on $PRIMARY..."
 ssh "$PRIMARY" "mysql -e '
-CHANGE MASTER TO MASTER_HOST=\"10.3.3.${OUR_SERVER_ID}\",
+CHANGE MASTER TO MASTER_HOST=\"{{SERVER_IP_PREFIX}}.${OUR_SERVER_ID}\",
                  MASTER_USER=\"replication\",
                  MASTER_PASSWORD=\"{{REPLICATION_PASSWORD}}\",
                  MASTER_LOG_FILE=\"${OUR_BINLOG}\",
                  MASTER_LOG_POS=${OUR_LOGPOS};
 START SLAVE;'"
 
-echo "Restarting PHP on both servers..."
+echo "Restarting PHP locally..."
 service php7.4-fpm start
-ssh "$PRIMARY" "service php7.4-fpm start"
 
-exit 0
+if check_replication ; then
+    echo "Replication setup done."
+    exit 0
+fi
+
+echo "Failed to set up replication, check manually."
+exit 1
