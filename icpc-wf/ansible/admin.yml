@@ -245,7 +245,7 @@
       become: yes
       become_user: domjudge
       # We use a different directory here to have one single 'upstream' and not have issues with it
-      git: repo=domjudge@10.3.3.223:domjudge-scripts dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
+      git: repo=domjudge@10.3.3.223:domjudge-scripts-bare dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
 
     - name: create working copy of the wf2020 repo
       become: yes
