@@ -47,7 +47,7 @@
         owner: domjudge
         group: domjudge
 
-    - name: create working copy from the repo
+    - name: create working copy of the domjudge repo
       become: yes
       become_user: domjudge
       git: repo={{DJ_GIT_REPO}} dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
