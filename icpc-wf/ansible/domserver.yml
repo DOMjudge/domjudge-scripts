@@ -107,6 +107,16 @@
     - name: make sure mysql is restarted
       meta: flush_handlers
 
+    - name: create collectd user for mysql status
+      mysql_user:
+        name: collectdstatus
+        host: 'localhost'
+        password: "{{COLLECTD_MYSQL_PASSWORD}}"
+        append_privs: true
+        priv: '*.*:PROCESS,REPLICATION CLIENT'
+        state: present
+      when: COLLECTD_MYSQL_PASSWORD is defined
+
     - name: Create MySQL authentication file
       template:
         src: files/grafana/my.cnf.j2
