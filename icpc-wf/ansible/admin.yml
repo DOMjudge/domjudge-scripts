@@ -29,14 +29,7 @@
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
-    - name: create working copy directory
-      file:
-        path: "/home/domjudge/domjudge-checkout"
-        state: directory
-        owner: domjudge
-        group: domjudge
-
-    - name: create working copy from the repo
+    - name: create working copy of the repo
       become: yes
       become_user: domjudge
       git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=yes
@@ -248,14 +241,14 @@
         - apt-daily.timer
         - systemd-tmpfiles-clean.timer
 
-    - name: create working copy from the repo
+    - name: create working copy of the domjudge repo
       become: yes
       become_user: domjudge
       # We use a different directory here to have one single 'upstream' and not have issues with it
       git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=yes
       register: git_working_copy
 
-    - name: create working copy from the domjudge-scripts repo
+    - name: create working copy of the domjudge-scripts repo
       become: yes
       become_user: domjudge
       # We use a different directory here to have one single 'upstream' and not have issues with it
@@ -267,7 +260,7 @@
         regexp: 'cds$'
         line: "10.3.3.207	cds"
 
-    - name: create working copy from the wf2020 repo
+    - name: create working copy of the wf2020 repo
       become: yes
       become_user: domjudge
       git: repo=git@cds:wf2020 dest=/home/domjudge/wf2020 version=master accept_hostkey=yes update=yes
