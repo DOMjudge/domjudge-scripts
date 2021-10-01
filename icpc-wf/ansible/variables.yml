@@ -27,40 +27,9 @@ PHP_UPLOAD_MAX_FILESIZE: 256M
 PHP_POST_MAX_SIZE: 256M
 PHP_MAX_FILE_UPLOADS: 101
 
-# Password for the MySQL replication user.
-# Set this to enable master-master replication between two domservers.
-REPLICATION_PASSWORD: some-replication-password
-
-# Password for the collectd MySQL status user.
-# Set this to enable collectd for system statistics collection.
-COLLECTD_MYSQL_PASSWORD: password-here
-
-# Credentials for the REST API.
-API_USER: judgehost
-API_PASSWORD: some-judgehost-password
-
-# Username and password to be used in .netrc files on admin machines
-ADMIN_USER: admin
-ADMIN_PASSWORD: some-admin-password
-
-# Password for domjudge shell user
-# Set this to enable a password on the 'domjudge' shell accounts
-# created on the domserver and judgehosts.
-#DJ_SHELL_USER_PW: some-hashed-password
-
 # Git repo URL
 DJ_GIT_HOST: "{{MAIN_ADMIN_IP}}"
 DJ_GIT_REPO: "domjudge@{{DJ_GIT_HOST}}:domjudge"
-
-# If using a Git repo which requires a SSH key, set the host and key here
-DJ_GIT_SSH_KEY: |
-    -----BEGIN OPENSSH PRIVATE KEY-----
-    ENTER SSH PRIVATE KEY HERE
-    -----END OPENSSH PRIVATE KEY-----
-
-
-# Key for domjudge user
-DJ_SSH_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPsTOPgh8QYBudu7IOLETq4ek13RBB+pM/spOboCK1wO domjudge@domjudge-ccsadmin1
 
 PHPSTORM_VERSION: 2021.2
 PHPSTORM_FULL_VERSION: 212.5284.49
