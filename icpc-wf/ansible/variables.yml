@@ -5,7 +5,7 @@ DJ_DIR: /opt/domjudge
 DJ_BRANCH: wf2020
 
 # Server VLAN IP prefix.
-SERVER_IP_PREFIX: 10.3.3.
+SERVER_IP_PREFIX: 10.3.3
 
 # IP address of the admin machine used as ansible and git server.
 MAIN_ADMIN_IP: "{{SERVER_IP_PREFIX}}.223"
