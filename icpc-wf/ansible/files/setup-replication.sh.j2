@@ -87,7 +87,7 @@ echo "Stopping MySQL locally..."
 service mysql stop
 
 echo "Copying /var/lib/mysql from '$PRIMARY', keeping old version in /var/lib/mysql-orig..."
-if [ -f /var/lib/mysql-orig ]; then
+if [ -e /var/lib/mysql-orig ]; then
     rm -rf /var/lib/mysql-orig
 fi
 mv /var/lib/mysql /var/lib/mysql-orig
