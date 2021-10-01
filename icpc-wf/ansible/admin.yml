@@ -32,7 +32,7 @@
     - name: create working copy of the repo
       become: yes
       become_user: domjudge
-      git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=yes
+      git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=no
       register: git_working_copy
 
     - name: Check composer dependencies present
@@ -245,12 +245,12 @@
       become: yes
       become_user: domjudge
       # We use a different directory here to have one single 'upstream' and not have issues with it
-      git: repo=domjudge@10.3.3.223:domjudge-scripts dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=yes
+      git: repo=domjudge@10.3.3.223:domjudge-scripts dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
 
     - name: create working copy of the wf2020 repo
       become: yes
       become_user: domjudge
-      git: repo=git@cds:wf2020 dest=/home/domjudge/wf2020 version=master accept_hostkey=yes update=yes
+      git: repo=git@cds:wf2020 dest=/home/domjudge/wf2020 version=master accept_hostkey=yes update=no
 
     - name: copy custom CSS file for admin machines
       copy:
