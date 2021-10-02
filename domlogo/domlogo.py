@@ -41,7 +41,7 @@ cid = latest_contest['id']
 api_url = f'{api_url}/contests/{cid}'
 print(f'Contest is {cid}.')
 
-latest_logfile = max(glob.glob('output/log/judge.*.log'), key=os.path.getctime)
+latest_logfile = max(glob.glob('output/log/judge.*-0.log'), key=os.path.getctime)
 print(f'Checking logfile {latest_logfile}')
 with open(latest_logfile, 'r') as logfile:
     # Seeks to the end of the file.
@@ -64,6 +64,10 @@ with open(latest_logfile, 'r') as logfile:
                 submission_data = requests.get(f'{api_url}/submissions/{submission_id}', auth=(user,passwd)).json()
                 team_id = submission_data['team_id']
                 last_seen = (submission_id, judging_id, team_id)
+                new_filename = f'domlogo-files/photos/{team_id}.png'
+                if team_id>=120:
+                    team_image.update(filename=new_filename)
+                f'domlogo-files/photos/{team_id}.png')
                 team_image.update(filename=f'domlogo-files/photos/{team_id}.png')
                 metadata_text.update(f's{submission_id} / {submission_data["problem_id"]} / {submission_data["language_id"]}')
                 results_text.update('Busy compiling.')

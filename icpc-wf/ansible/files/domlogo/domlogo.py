@@ -5,6 +5,7 @@ import glob
 import os
 import requests
 import re
+import time
 
 font = ('Roboto', 14)
 team_image = sg.Image(filename='domlogo-files/photos/idle.png')
@@ -41,7 +42,7 @@ cid = latest_contest['id']
 api_url = f'{api_url}/contests/{cid}'
 print(f'Contest is {cid}.')
 
-latest_logfile = max(glob.glob('output/log/judge.*.log'), key=os.path.getctime)
+latest_logfile = max(glob.glob('output/log/judge.*-0.log'), key=os.path.getctime)
 print(f'Checking logfile {latest_logfile}')
 with open(latest_logfile, 'r') as logfile:
     # Seeks to the end of the file.
@@ -49,10 +50,12 @@ with open(latest_logfile, 'r') as logfile:
     results = []
     last_seen, needs_update = (None, None)
     while True:
-        event, values = window.read(timeout=10)
+        event, values = window.read(timeout=30)
         if event == sg.WIN_CLOSED:
             break
         line = logfile.readline()
+        if len(line) == 0:
+            time.sleep(0.01)
         if 'Working directory:' in line:
             token = line.strip().split('/')
             judging_id = token[-1]
@@ -64,7 +67,10 @@ with open(latest_logfile, 'r') as logfile:
                 submission_data = requests.get(f'{api_url}/submissions/{submission_id}', auth=(user,passwd)).json()
                 team_id = submission_data['team_id']
                 last_seen = (submission_id, judging_id, team_id)
-                team_image.update(filename=f'domlogo-files/photos/{team_id}.png')
+                new_filename = f'domlogo-files/photos/{team_id}.png'
+                if (int)(team_id) >= 120:
+                    new_filename = f'domlogo-files/photos/crew.png'
+                team_image.update(filename=new_filename)
                 metadata_text.update(f's{submission_id} / {submission_data["problem_id"]} / {submission_data["language_id"]}')
                 results_text.update('Busy compiling.')
         elif 'No submissions in queue' in line:
@@ -92,6 +98,8 @@ with open(latest_logfile, 'r') as logfile:
                 color = 'DeepSkyBlue'
             for i in range(len(cache)-1):
                 cache[i] = cache[i+1]
+            if (int)(tid) >= 120:
+                tid = 'DOMjudge'
             cache[-1] = (f'domlogo-files/logos/{tid}.png', f's{sid}/j{jid}\n{verdict}', color, jid)
             for i in range(len(cache)):
                 previous_column[i][0].update(filename=cache[i][0])
