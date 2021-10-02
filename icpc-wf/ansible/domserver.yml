@@ -153,12 +153,15 @@
       tags: sync
       synchronize:
         src: files/domjudge-public/
-        dest: "{{DJ_DIR}}/public/"
+        dest: "{{DJ_DIR}}/webapp/public"
         owner: no
         use_ssh_args: true
         rsync_path: sudo rsync
 
     - include: nginx-setup.yml
+
+    - name: Add documentation in DOMjudge team interface
+      copy: src=files/docs.yaml dest=/opt/domjudge/etc/docs.yaml
 
     - name: Get NGINX status
       copy: src=files/grafana/nginx-status.conf dest=/etc/nginx/sites-enabled/status.conf
