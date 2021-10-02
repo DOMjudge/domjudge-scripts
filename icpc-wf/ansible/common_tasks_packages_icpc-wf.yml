@@ -1,41 +1,19 @@
 # Common packaging stuff during ICPC World Finals.
 ---
-    - name: fix apt sources list
+    - name: replace pc2.ecs.baylor.edu by packages in apt sources
       tags: packages
       replace:
-        dest: /etc/apt/sources.list
+        dest: "/etc/apt/{{ item }}"
         regexp: 'pc2\.ecs\.baylor\.edu'
         replace: 'packages'
+      with_items:
+        - sources.list
+        - sources.list.d/microsoft.list
+        - sources.list.d/mono.list
+        - sources.list.d/vscode.list
+        - sources.list.d/pypy-ubuntu-ppa-buster.list
 
-    - name: fix apt sources list 2
-      tags: packages
-      replace:
-        dest: /etc/apt/sources.list.d/microsoft.list
-        regexp: 'pc2\.ecs\.baylor\.edu'
-        replace: 'packages'
-
-    - name: fix apt sources list 3
-      tags: packages
-      replace:
-        dest: /etc/apt/sources.list.d/mono.list
-        regexp: 'pc2\.ecs\.baylor\.edu'
-        replace: 'packages'
-
-    - name: fix apt sources list 4
-      tags: packages
-      replace:
-        dest: /etc/apt/sources.list.d/vscode.list
-        regexp: 'pc2\.ecs\.baylor\.edu'
-        replace: 'packages'
-
-    - name: fix apt sources list 5
-      tags: packages
-      replace:
-        dest: /etc/apt/sources.list.d/pypy-ubuntu-ppa-buster.list
-        regexp: 'pc2\.ecs\.baylor\.edu'
-        replace: 'packages'
-
-    - name: remove unused arch
+    - name: remove unused dpkg architecture i386
       tags: packages
       command: dpkg --remove-architecture i386
 
