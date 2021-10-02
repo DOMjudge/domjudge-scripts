@@ -91,14 +91,15 @@
     - name: Create .ssh directory
       file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
 
-    - name: Copy shared SSH private/public key
+    - name: Copy shared SSH private/public key and config
       copy:
-        src: "files/{{ item }}"
+        src: "files/ssh/{{ item }}"
         dest: "/home/domjudge/.ssh/{{ item }}"
         owner: domjudge
         group: domjudge
         mode: 0600
       with_items:
+        - config
         - id_rsa
         - id_rsa.pub
 
