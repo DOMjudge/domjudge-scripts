@@ -125,6 +125,19 @@
         regexp: 'domserver'
         line: "{{DOMSERVER_IP}}	domjudge domserver"
 
+    - name: enable bash completion globally
+      blockinfile:
+        path: /etc/bash.bashrc
+        insertafter: "# enable bash completion in interactive shells"
+        block: |
+          if ! shopt -oq posix; then
+            if [ -f /usr/share/bash-completion/bash_completion ]; then
+              . /usr/share/bash-completion/bash_completion
+            elif [ -f /etc/bash_completion ]; then
+              . /etc/bash_completion
+            fi
+          fi
+
     - name: configure domjudge logging
       copy: src=files/rsyslog.domjudge.conf dest=/etc/rsyslog.d/domjudge.conf
       notify: restart rsyslog
