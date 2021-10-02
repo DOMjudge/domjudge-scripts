@@ -150,3 +150,12 @@
 
     - name: Update dconf configuration for alt-tab window switching
       shell: dconf update
+
+    - name: disable mumble,selfie services
+      service:
+        name: "{{ item }}"
+        state: stopped
+        enabled: no
+      with_items:
+        - mumble-server
+        - selfie
