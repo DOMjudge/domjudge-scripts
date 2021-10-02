@@ -15,6 +15,10 @@
     - name: restart gdm
       service: name=gdm3 enabled=yes state=restarted
   tasks:
+    - pause:
+        prompt: "Did you disable all judges"
+      delegate_to: localhost
+
     - name: include global variables
       include_vars: variables.yml
     - name: include global (secret) variables
