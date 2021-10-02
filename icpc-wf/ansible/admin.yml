@@ -282,12 +282,14 @@
         dest: /home/domjudge/.clusterssh/clusters
         regexp: '^all'
         line: "all {{ groups['all'] | join(' ') }}"
+        create: yes
 
     - name: create clusterssh config groups
       lineinfile:
         dest: /home/domjudge/.clusterssh/clusters
         regexp: '^{{ item }}s'
         line: "{{item}}s {{ groups[item] | join(' ') }}"
+        create: yes
       with_items:
         - domserver
         - judgehost
