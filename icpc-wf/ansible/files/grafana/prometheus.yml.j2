@@ -24,6 +24,22 @@ scrape_configs:
 {% for host in groups["judgehost"] %}
         - {{ hostvars[host].ansible_host }}:9100
 {% endfor %}
+  - job_name: node_kattisjudge
+    static_configs:
+      - targets:
+        - 10.2.2.32:9100
+        - 10.2.2.33:9100
+        - 10.2.2.34:9100
+        - 10.2.2.35:9100
+        - 10.2.2.36:9100
+        - 10.2.2.37:9100
+        - 10.2.2.38:9100
+        - 10.2.2.39:9100
+        - 10.2.2.40:9100
+        - 10.2.2.41:9100
+        - 10.2.2.42:9100
+        - 10.2.2.43:9100
+        - 10.2.2.44:9100
   - job_name: domjudge
     basic_auth:
       username: admin
