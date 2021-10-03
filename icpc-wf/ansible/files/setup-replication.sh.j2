@@ -1,40 +1,88 @@
 #!/bin/sh -e
 # This script sets up MySQL master/master replication on two servers.
-# Run this script as root on the secondary, backup server and specify
-# the primary one as argument.
-#
-# The database on this server will be wiped!
+
+usage()
+{
+	cat <<EOF
+Usage: $0 <primary-host>
+
+This script sets up MySQL master/master replication on two servers.
+Run this script as root on the secondary server and specify the
+primary one as argument. The databases on this server will be wiped!
+
+This script should be run after ansible code has been run, so that
+MySQL replication configuration and users are present on both machines
+and a domjudge database has been initialized on <primary-host> at least.
+Running this script will synchronize the databases on this host to
+that on <primary-host>, including user credentials, so make sure that
+etc/dbpasswords.secret contains the same credentials on each machine.
+
+To recover a machine after it went down and a failover happened:
+
+1. Bring the machine up again with the keepalived service stopped (it
+   boots this way with the default ansible setup).
+
+2. Make sure the machine is fully configured (using ansible).
+
+3. Run this script as root on the machine with argument the active
+   domserver. For example, if the active machine is domjudge-backup
+   and this, failed machine is presumably domjudge-primary, then run:
+       setup-replication domjudge-backup
+   When this script completes successfully (should take ~1-3 minutes
+   when using a Gbit network and about 1-5 GB database size), the two
+   machines are running in master/master replication. If it fails,
+   check manually, for example with the following commands on both
+   hosts:
+       mysql -e "SHOW SLAVE STATUS\G SHOW MASTER STATUS\G"
+       ip addr
+       service keepalived status
+
+4. To fail back from domjudge-backup to domjudge-primary again, run:
+       service keepalived start
+   on domjudge-primary, and check that the domjudge IP correctly
+   returned to domjudge-primary again.
+
+EOF
+
+}
 
 PRIMARY=$1
 
 if [ -z "$PRIMARY" ]; then
     echo "Error: specify primary host to set up master/master replication with."
+    usage
     exit 1
 fi
 
 if [ $(id -un) != 'root' ]; then
     echo "Error: this script must be run as root."
+    usage
     exit 1
 fi
 
 if ip addr | grep '{{DOMSERVER_IP}}' >/dev/null 2>&1 ; then
     echo "Error: this host '$(hostname)' has the primary IP '{{DOMSERVER_IP}}'."
+    usage
     exit 1
 fi
 
-PRIMARY_SERVER_ID=$(ssh "$PRIMARY" "cat /etc/mysql/mariadb.conf.d/zzz_replication.cnf" | \
+MYSQL_REPL_CONFIG='/etc/mysql/mariadb.conf.d/zzz_replication.cnf'
+
+PRIMARY_SERVER_ID=$(ssh "$PRIMARY" "cat $MYSQL_REPL_CONFIG" | \
                     grep server_id | sed 's/.*server_id *= *//')
 
-OUR_SERVER_ID=$(cat /etc/mysql/mariadb.conf.d/zzz_replication.cnf | \
+OUR_SERVER_ID=$(cat $MYSQL_REPL_CONFIG | \
                 grep server_id | sed 's/.*server_id *= *//')
 
 if [ -z "$PRIMARY_SERVER_ID" ]; then
-    echo "Error: cannot fetch master server_id."
+    echo "Error: cannot fetch master server_id from '$MYSQL_REPL_CONFIG'."
+    usage
     exit 1
 fi
 
 if [ -z "$OUR_SERVER_ID" ]; then
-    echo "Error: cannot fetch our server_id."
+    echo "Error: cannot fetch our server_id from '$MYSQL_REPL_CONFIG'."
+    usage
     exit 1
 fi
 
