@@ -39,7 +39,7 @@ cp -a domjudge configured
 ( cd configured && ./configure )
 
 # Test if all the "build-like" targets work independently:
-for i in all build domserver judgehost submitclient docs ; do
+for i in all build domserver judgehost docs ; do
 	cp -a configured $i
 	( cd $i && make $i )
 done
@@ -52,7 +52,7 @@ done
 
 # Check that ./configure && make all && make distclean returns
 # to original state:
-diff -r domjudge distclean
+diff -r -u2 domjudge distclean
 
 if [ "$DEBUG" ]; then
 	echo "Generated files left in $TEMPDIR"
