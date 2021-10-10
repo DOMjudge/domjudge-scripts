@@ -12,12 +12,6 @@
     shell: /bin/bash
     groups: sudo
     password: "{{DJ_SHELL_USER_PW | default(omit)}}"
-- name: fix domjudge home directory ownership
-  file:
-    path: /home/domjudge
-    owner: domjudge
-    group: domjudge
-    mode: 0755
 
 - include: common_tasks_all.yml
 
