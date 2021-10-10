@@ -20,6 +20,7 @@
 
 - name: Re-order PXEboot
   shell: efibootmgr -o {{ EFI_ORDER }}
+  when: EFI_ORDER is defined
 
 - name: set timezone
   timezone:
