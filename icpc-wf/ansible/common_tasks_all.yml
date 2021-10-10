@@ -1,59 +1,28 @@
 # Common tasks applied to all hosts, including admin ones
 ---
-    - name: set timezone
-      timezone:
-        name: "{{TIMEZONE}}"
+    - name: add NTP servers
+      lineinfile:
+        dest: /etc/systemd/timesyncd.conf
+        regexp: '^#?NTP='
+        line: "NTP=10.3.3.208 10.3.3.209"
 
-    - include: common_tasks_packages_icpc-wf.yml
+    - name: remove source line from interfaces
+      lineinfile:
+        dest: /etc/network/interfaces
+        regexp: '^source-'
+        state: absent
 
-    - name: install common required/useful packages
-      tags: packages
-      apt:
-        state: present
-        pkg:
-        - ack
-        - git
-        - htop
-        - httpie
-        - ncdu
-        - pv
-        - screen
-        - autoconf
-        - automake
-        - efibootmgr
-        - curl
-        - gcc
-        - g++
-        - default-jdk-headless
-        - make
-        - zip
-        - unzip
-        - php-cli
-        - php-gd
-        - php-curl
-        - php-mysql
-        - php-json
-        - php-xml
-        - php-zip
-        - php-mbstring
-        - php-intl
-        - prometheus-node-exporter
-        - bsdmainutils
-        - libcgroup-dev
-        - libcurl4-gnutls-dev
-        - libjsoncpp-dev
-        - libmagic-dev
-        - composer
-        - debootstrap
-        - qmlscene
-        - texlive-latex-recommended
-        - texlive-latex-extra
-        - apache2-utils
-        - tig
-        - bat
+    - name: restart systemd timesyncd
+      command: systemctl restart systemd-timesyncd
+
+    - include: common_tasks_packages.yml
 
     - name: Re-order PXEboot
       shell: efibootmgr -o {{ EFI_ORDER }}
+
+    - name: set timezone
+      timezone:
+        name: "{{TIMEZONE}}"
 
     - name: set PHP timezone for CLI
       lineinfile:

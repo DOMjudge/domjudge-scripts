@@ -1,0 +1,89 @@
+# Common packaging stuff during ICPC World Finals.
+---
+    - name: replace pc2.ecs.baylor.edu by packages in apt sources
+      tags: packages
+      replace:
+        dest: "/etc/apt/{{ item }}"
+        regexp: 'pc2\.ecs\.baylor\.edu'
+        replace: 'packages'
+      with_items:
+        - sources.list
+        - sources.list.d/microsoft.list
+        - sources.list.d/mono.list
+        - sources.list.d/vscode.list
+        - sources.list.d/pypy-ubuntu-ppa-buster.list
+
+    - name: add packages to hosts file
+      tags: packages
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^10\.3\.3\.209'
+        line: "10.3.3.209	packages"
+
+    - name: remove unused dpkg architecture i386
+      tags: packages
+      command: dpkg --remove-architecture i386
+
+    - name: run apt update
+      tags: packages
+      command: apt update
+
+    - name: remove pycharm repo
+      tags: packages
+      replace:
+        dest: /etc/apt/sources.list
+        regexp: '^([^#].*pycharm.*)$'
+        replace: '# \1'
+
+    - name: remove some packages
+      tags: packages
+      apt:
+        state: absent
+        pkg:
+        - ntp
+
+    - name: install common required/useful packages
+      tags: packages
+      apt:
+        state: present
+        pkg:
+        - ack
+        - git
+        - htop
+        - httpie
+        - ncdu
+        - pv
+        - screen
+        - autoconf
+        - automake
+        - efibootmgr
+        - curl
+        - gcc
+        - g++
+        - default-jdk-headless
+        - make
+        - zip
+        - unzip
+        - php-cli
+        - php-gd
+        - php-curl
+        - php-mysql
+        - php-json
+        - php-xml
+        - php-zip
+        - php-mbstring
+        - php-intl
+        - prometheus-node-exporter
+        - bsdmainutils
+        - libcgroup-dev
+        - libcurl4-gnutls-dev
+        - libjsoncpp-dev
+        - libmagic-dev
+        - composer
+        - debootstrap
+        - qmlscene
+        - texlive-latex-recommended
+        - texlive-latex-extra
+        - apache2-utils
+        - tig
+        - bat
