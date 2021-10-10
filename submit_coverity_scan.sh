@@ -1,5 +1,4 @@
-#!/bin/bash -e
-set -o pipefail
+#!/bin/sh -eu
 
 # Run a Coverity scan on the local directory (which must be in a
 # configured DOMjudge or Checktestdata source-tree root) and submit
@@ -21,6 +20,14 @@ set -o pipefail
 # -q           Quiet, suppress feedback.
 
 ARCHIVE=coverity-scan.tar.xz
+
+READCONFIG=''
+DEBUG=''
+NEWERTHAN=''
+GITURL=''
+QUIET=''
+QUIETOPT=''
+QUIETMAKE=''
 
 # Parse command-line options:
 while getopts ':c:dn:u:q' OPT ; do

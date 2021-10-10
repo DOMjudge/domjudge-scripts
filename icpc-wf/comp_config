@@ -1,5 +1,4 @@
-#!/bin/bash
-set -e
+#!/bin/bash -eu -o pipefail
 
 # Set credentials in ~/.netrc
 
@@ -8,7 +7,7 @@ HOST_green='https://localhost:3443/domjudge'
 
 COMPILE_SCRIPTS="c cpp java_javac_detect py2 py3"
 
-TMPDIR=`mktemp -d`
+TMPDIR=$(mktemp -d)
 
 mkdir -p $TMPDIR/{blue,green}
 

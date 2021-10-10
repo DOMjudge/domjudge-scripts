@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh -e
+
 echo -n "checking no_turbo: "
 cat /sys/devices/system/cpu/intel_pstate/no_turbo
 

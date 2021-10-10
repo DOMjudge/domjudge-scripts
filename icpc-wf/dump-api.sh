@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 contest=$1
 where=$2
