@@ -5,6 +5,7 @@
     dest: /etc/systemd/timesyncd.conf
     regexp: '^#?NTP='
     line: "NTP=10.3.3.208 10.3.3.209"
+  when: WF_RESTRICTED_NETWORK
 
 - name: remove source line from interfaces
   lineinfile:

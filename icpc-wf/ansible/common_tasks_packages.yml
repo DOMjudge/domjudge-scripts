@@ -12,6 +12,7 @@
     - sources.list.d/mono.list
     - sources.list.d/vscode.list
     - sources.list.d/pypy-ubuntu-ppa-buster.list
+  when: WF_RESTRICTED_NETWORK
 
 - name: add packages to hosts file
   tags: packages
@@ -19,6 +20,7 @@
     dest: /etc/hosts
     regexp: '^10\.3\.3\.209'
     line: "10.3.3.209	packages"
+  when: WF_RESTRICTED_NETWORK
 
 - name: remove unused dpkg architecture i386
   tags: packages
