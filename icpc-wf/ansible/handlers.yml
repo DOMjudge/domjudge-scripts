@@ -18,3 +18,5 @@
   service: name=prometheus-nginx-exporter enabled=yes state=restarted
 - name: restart php-exporter
   service: name=php-fpm-exporter enabled=yes state=restarted
+- name: run apt update
+  command: apt update

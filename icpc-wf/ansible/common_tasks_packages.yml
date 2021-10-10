@@ -12,6 +12,7 @@
     - sources.list.d/mono.list
     - sources.list.d/vscode.list
     - sources.list.d/pypy-ubuntu-ppa-buster.list
+  notify: run apt update
   when: WF_RESTRICTED_NETWORK
 
 - name: add packages to hosts file
@@ -20,15 +21,13 @@
     dest: /etc/hosts
     regexp: '^10\.3\.3\.209'
     line: "10.3.3.209	packages"
+  notify: run apt update
   when: WF_RESTRICTED_NETWORK
 
 - name: remove unused dpkg architecture i386
   tags: packages
   command: dpkg --remove-architecture i386
-
-- name: run apt update
-  tags: packages
-  command: apt update
+  notify: run apt update
 
 - name: remove pycharm repo
   tags: packages
@@ -36,6 +35,10 @@
     dest: /etc/apt/sources.list
     regexp: '^([^#].*pycharm.*)$'
     replace: '# \1'
+  notify: run apt update
+
+- name: flush handlers
+  meta: flush_handlers
 
 - name: remove some packages
   tags: packages
