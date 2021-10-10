@@ -6,20 +6,7 @@
     host_type: judgehost
   become: yes
   handlers:
-    - name: restart mysql
-      service: name=mysql state=restarted
-    - name: restart nginx
-      service: name=nginx state=restarted
-    - name: restart PHP FPM
-      service: name=php7.4-fpm state=restarted
-    - name: update-ca-certificates
-      command: update-ca-certificates
-    - name: restart rsyslog
-      service: name=rsyslog enabled=yes state=restarted
-    - name: restart systemctl
-      shell: systemctl daemon-reload
-    - name: restart gdm
-      service: name=gdm3 enabled=yes state=restarted
+    - include: handlers.yml
   tasks:
     - name: include global variables
       include_vars: variables.yml
