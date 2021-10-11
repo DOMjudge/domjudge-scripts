@@ -45,9 +45,9 @@ gzip -9 $DJDIR.tar
 if [ -n "$PUBDIR" ]; then
 	rm -rf $PUBDIR/*
 	mkdir -p $PUBDIR/manual
-	cp -r $DJDIR/doc/manual/build/html/*                     $PUBDIR/manual/
-	cp $DJDIR/doc/manual/build/team/domjudge-team-manual.pdf $PUBDIR/
-	cp $DJDIR.tar.gz $DJDIR/ChangeLog                        $PUBDIR/
+	cp -r $DJDIR/doc/manual/build/html/*                $PUBDIR/manual/
+	cp $DJDIR/doc/manual/build/domjudge-team-manual.pdf $PUBDIR/
+	cp $DJDIR.tar.gz $DJDIR/ChangeLog                   $PUBDIR/
 	cd /
 fi
 
