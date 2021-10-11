@@ -20,3 +20,6 @@
   service: name=php-fpm-exporter enabled=yes state=restarted
 - name: run apt update
   command: apt update
+- name: update dconf
+  shell: dconf update
+
