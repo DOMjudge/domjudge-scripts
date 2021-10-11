@@ -24,10 +24,16 @@
   notify: run apt update
   when: WF_RESTRICTED_NETWORK
 
+- name: check for dpkg architecture i386
+  tags: packages
+  command: dpkg --print-foreign-architectures
+  register: dpkg_architectures
+
 - name: remove unused dpkg architecture i386
   tags: packages
   command: dpkg --remove-architecture i386
   notify: run apt update
+  when: dpkg_architectures.stdout.find('i386') != -1
 
 - name: remove pycharm repo
   tags: packages
