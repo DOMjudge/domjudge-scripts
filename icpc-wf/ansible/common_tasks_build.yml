@@ -19,7 +19,7 @@
   shell: make maintainer-install chdir={{DJ_DIR}}
   when: (git_working_copy is defined and git_working_copy.changed) or dj_configured.changed or not judgedaemon_binary.stat.exists
 
-- name: fix permissions on things
+- name: fix permissions on domjudge maintainer-install
   shell: make -C {{DJ_DIR}} maintainer-postinstall-permissions
 
 - name: copy domjudge-sudoers file
