@@ -1,0 +1,27 @@
+---
+# These tasks install and configure a MySQL server
+
+- name: install mysql packages
+  apt:
+    state: present
+    pkg:
+      - mariadb-server
+      - python3-mysqldb
+      - mycli
+
+- name: copy in MySQL config
+  copy: src=my.cnf dest=/root/.my.cnf
+
+- name: create directory for systemd mysql settings
+  file: path=/etc/systemd/system/mysql.service.d/ state=directory
+
+- name: update systemd so mysql has bigger limits
+  copy: src=mysql.override.cnf dest=/etc/systemd/system/mysql.service.d/override.conf
+  notify: restart mysql
+
+- name: add mysql config snippet to increase limits
+  copy: src=mysql.domjudge.cnf dest=/etc/mysql/mariadb.conf.d/zz_domjudge.cnf
+  notify: restart mysql
+
+- name: make sure mysql is restarted
+  meta: flush_handlers

@@ -16,8 +16,6 @@
 - name: restart systemd timesyncd
   command: systemctl restart systemd-timesyncd
 
-- include: common_tasks_packages.yml
-
 - name: Re-order PXEboot
   shell: efibootmgr -o {{ EFI_ORDER }}
   when: EFI_ORDER is defined

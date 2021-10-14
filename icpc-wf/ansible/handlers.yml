@@ -1,7 +1,5 @@
 # Common definition of handlers
 ---
-- name: restart mysql
-  service: name=mysql state=restarted
 - name: restart nginx
   service: name=nginx state=restarted
 - name: restart PHP FPM
@@ -18,8 +16,6 @@
   service: name=prometheus-nginx-exporter enabled=yes state=restarted
 - name: restart php-exporter
   service: name=php-fpm-exporter enabled=yes state=restarted
-- name: run apt update
-  command: apt update
 - name: update dconf
   shell: dconf update
 

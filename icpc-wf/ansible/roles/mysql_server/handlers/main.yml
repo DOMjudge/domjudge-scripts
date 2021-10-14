@@ -1,0 +1,5 @@
+---
+# Define here handlers associated to this role.
+
+- name: restart mysql
+  service: name=mysql state=restarted
