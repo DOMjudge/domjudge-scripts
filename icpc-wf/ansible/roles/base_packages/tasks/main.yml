@@ -1,7 +1,7 @@
-# Common packaging stuff during ICPC World Finals.
 ---
+# This task configures packaging and installs various system utilities
+
 - name: replace pc2.ecs.baylor.edu by packages in apt sources
-  tags: packages
   replace:
     dest: "/etc/apt/{{ item }}"
     regexp: 'pc2\.ecs\.baylor\.edu'
@@ -16,7 +16,6 @@
   when: WF_RESTRICTED_NETWORK
 
 - name: add packages to hosts file
-  tags: packages
   lineinfile:
     dest: /etc/hosts
     regexp: '^10\.3\.3\.209'
@@ -25,18 +24,15 @@
   when: WF_RESTRICTED_NETWORK
 
 - name: check for dpkg architecture i386
-  tags: packages
   command: dpkg --print-foreign-architectures
   register: dpkg_architectures
 
 - name: remove unused dpkg architecture i386
-  tags: packages
   command: dpkg --remove-architecture i386
   notify: run apt update
   when: dpkg_architectures.stdout.find('i386') != -1
 
 - name: remove pycharm repo
-  tags: packages
   replace:
     dest: /etc/apt/sources.list
     regexp: '^([^#].*pycharm.*)$'
@@ -47,14 +43,12 @@
   meta: flush_handlers
 
 - name: remove some packages
-  tags: packages
   apt:
     state: absent
     pkg:
     - ntp
 
 - name: install common required/useful packages
-  tags: packages
   apt:
     state: present
     pkg:

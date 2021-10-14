@@ -1,4 +1,5 @@
 ---
+# This playbook installs the DOMjudge server(s)
 
 - name: setup domserver
   hosts: domserver
@@ -7,11 +8,14 @@
   become: yes
   handlers:
     - include: handlers.yml
+  roles:
+    - role: base_packages
+      tags: base_packages
+    - role: mysql_server
+      tags: mysql_server
+    - role: mysql_replication
+      tags: mysql_replication
   tasks:
-    - name: include global variables
-      include_vars: variables.yml
-    - name: include global (secret) variables
-      include_vars: variables-secret.yml
 
     - include: common_tasks_prebuild.yml
 
@@ -19,22 +23,16 @@
       apt:
         state: present
         pkg:
-        - mariadb-server
-        - mariadb-backup
         - nginx
         - php-fpm
         - python3-mysqldb
         - php-intl
-        - mycli
         - macchanger
         - keepalived
         - prometheus-nginx-exporter
         - prometheus-mysqld-exporter
         - molly-guard
         # expects config in /var/lib/prometheus/.my.cnf
-
-    - name: copy in MySQL config
-      copy: src=files/my.cnf dest=/root/.my.cnf
 
     - name: set PHP timezone for FPM
       lineinfile:
@@ -50,46 +48,6 @@
       with_items:
         - zip
         - intl
-
-    - name: create directory for systemd mysql settings
-      file: path=/etc/systemd/system/mysql.service.d/ state=directory
-
-    - name: update systemd so mysql has bigger limits
-      copy: src=files/mysql.override.cnf dest=/etc/systemd/system/mysql.service.d/override.conf
-      notify: restart mysql
-
-    - name: add mysql config snippet to increase limit
-      copy: src=files/mysql.domjudge.cnf dest=/etc/mysql/mariadb.conf.d/zz_domjudge.cnf
-      notify: restart mysql
-
-    - name: add mysql config snippet for replication
-      template: src=files/mysql.replication.cnf.j2 dest=/etc/mysql/mariadb.conf.d/zzz_replication.cnf
-      notify: restart mysql
-      when: REPLICATION_PASSWORD is defined
-
-    - name: disable mysql listen on localhost only
-      replace:
-        path: /etc/mysql/mariadb.conf.d/50-server.cnf
-        regexp: '^bind-address\s*='
-        replace: '#bind-address ='
-      when: REPLICATION_PASSWORD is defined
-
-    - name: copy script to setup replication
-      template: src=files/setup-replication.sh.j2 dest=/usr/local/sbin/setup-replication.sh mode=0755
-      when: REPLICATION_PASSWORD is defined
-
-    - name: create mysql replication user
-      mysql_user:
-        name: replication
-        host: '%'
-        password: "{{REPLICATION_PASSWORD}}"
-        append_privs: true
-        priv: '*.*:REPLICATION SLAVE'
-        state: present
-      when: REPLICATION_PASSWORD is defined
-
-    - name: make sure mysql is restarted
-      meta: flush_handlers
 
     - name: create collectd user for mysql status
       mysql_user:

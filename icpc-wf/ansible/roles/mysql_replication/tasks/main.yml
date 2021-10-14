@@ -1,0 +1,33 @@
+---
+# These tasks configure a MySQL server for master/master replication
+
+- name: install replication helper packages
+  apt:
+    state: present
+    pkg:
+      - mariadb-backup
+
+- name: disable mysql listen on localhost only
+  replace:
+    path: /etc/mysql/mariadb.conf.d/50-server.cnf
+    regexp: '^bind-address\s*='
+    replace: '#bind-address ='
+
+- name: add mysql config snippet for replication
+  template: src=mysql.replication.cnf.j2 dest=/etc/mysql/mariadb.conf.d/zzz_replication.cnf
+  notify: restart mysql
+
+- name: copy script to setup replication
+  template: src=setup-replication.sh.j2 dest=/usr/local/sbin/setup-replication.sh mode=0755
+
+- name: create mysql replication user
+  mysql_user:
+    name: replication
+    host: '%'
+    password: "{{REPLICATION_PASSWORD}}"
+    append_privs: true
+    priv: '*.*:REPLICATION SLAVE'
+    state: present
+
+- name: make sure mysql is restarted
+  meta: flush_handlers
