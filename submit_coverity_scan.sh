@@ -3,8 +3,8 @@
 # Run a Coverity scan on the local directory (which must be in a
 # configured DOMjudge or Checktestdata source-tree root) and submit
 # it, using 'make coverity-build'. Files 'cov-submit-data*.sh' are
-# sourced to read variables PROJECT, EMAIL, TOKEN, COVTOOL, VERSION
-# and optionally DESC, which are used for submission.
+# sourced to read variables PROJECT, EMAIL, TOKEN, COVTOOL and
+# optionally DESC, which are used for submission.
 #
 # The following options are available:
 #
@@ -115,6 +115,7 @@ fi
 COVOPTS='--dir cov-int --fs-capture-search ./'
 cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | quietfilter
 
+VERSION=$(grep '^VERSION' | sed 's/.*= *//')
 DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
 # Read variables again for files produced by coverity-build:
 for i in ./cov-submit-data*.sh ; do
