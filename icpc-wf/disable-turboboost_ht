@@ -22,7 +22,7 @@ for cpu in /sys/devices/system/cpu/cpu* ; do
 
 	# Disable all but one thread on each core.
 	core_id=$(cat $cpu/topology/core_id)
-	if [[ ${core_ids[$core_id]} ]]; then
+	if [[ ${core_ids[$core_id]:-} ]]; then
 		echo 0 > $cpu/online
 	else
 		core_ids[$core_id]=1
