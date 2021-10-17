@@ -115,7 +115,7 @@ fi
 COVOPTS='--dir cov-int --fs-capture-search ./'
 cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | quietfilter
 
-VERSION=$(grep '^VERSION' | sed 's/.*= *//')
+VERSION=$(grep '^VERSION' paths.mk | sed 's/.*= *//')
 DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
 # Read variables again for files produced by coverity-build:
 for i in ./cov-submit-data*.sh ; do
