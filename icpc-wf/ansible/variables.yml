@@ -18,6 +18,11 @@ DOMSERVER_URL: "{{DOMSERVER}}"
 DOMSERVER_SSL_CERT: /etc/ssl/certs/domserver.crt
 DOMSERVER_SSL_KEY: /etc/ssl/private/domserver.key
 
+# Set this when on the blue network at the World Finals where no
+# internet access is available and "packages" must be used as APT repo
+# server.
+WF_RESTRICTED_NETWORK: false
+
 TIMEZONE: "Europe/Moscow"
 
 PHP_FPM_MAX_CHILDREN: 400

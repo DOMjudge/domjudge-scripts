@@ -1,161 +1,140 @@
 # Common tasks applied to all hosts, including admin ones
 ---
-    - name: set timezone
-      timezone:
-        name: "{{TIMEZONE}}"
+- name: add NTP servers
+  lineinfile:
+    dest: /etc/systemd/timesyncd.conf
+    regexp: '^#?NTP='
+    line: "NTP=10.3.3.208 10.3.3.209"
+  when: WF_RESTRICTED_NETWORK
 
-    - include: common_tasks_packages_icpc-wf.yml
+- name: remove source line from interfaces
+  lineinfile:
+    dest: /etc/network/interfaces
+    regexp: '^source-'
+    state: absent
 
-    - name: install common required/useful packages
-      tags: packages
-      apt:
-        state: present
-        pkg:
-        - ack
-        - git
-        - htop
-        - httpie
-        - ncdu
-        - pv
-        - screen
-        - autoconf
-        - automake
-        - efibootmgr
-        - curl
-        - gcc
-        - g++
-        - default-jdk-headless
-        - make
-        - zip
-        - unzip
-        - php-cli
-        - php-gd
-        - php-curl
-        - php-mysql
-        - php-json
-        - php-xml
-        - php-zip
-        - php-mbstring
-        - php-intl
-        - prometheus-node-exporter
-        - bsdmainutils
-        - libcgroup-dev
-        - libcurl4-gnutls-dev
-        - libjsoncpp-dev
-        - libmagic-dev
-        - composer
-        - debootstrap
-        - qmlscene
-        - texlive-latex-recommended
-        - texlive-latex-extra
-        - apache2-utils
-        - tig
-        - bat
+- name: restart systemd timesyncd
+  command: systemctl restart systemd-timesyncd
 
-    - name: Re-order PXEboot
-      shell: efibootmgr -o {{ EFI_ORDER }}
+- include: common_tasks_packages.yml
 
-    - name: set PHP timezone for CLI
-      lineinfile:
-        dest: /etc/php/7.4/cli/php.ini
-        state: present
-        regexp: 'date\.timezone\s*='
-        line: 'date.timezone = {{TIMEZONE}}'
+- name: Re-order PXEboot
+  shell: efibootmgr -o {{ EFI_ORDER }}
+  when: EFI_ORDER is defined
 
-    - name: install local DEB packages
-      include: install-local-package.yml
-      with_fileglob:
-        - files/install-{{host_type}}/*.deb
+- name: set timezone
+  timezone:
+    name: "{{TIMEZONE}}"
 
-    - name: configure git as domjudge user
-      ini_file:
-        dest: /home/domjudge/.gitconfig
-        section: user
-        option: "{{item.name}}"
-        value: "{{item.value}}"
-        owner: domjudge
-        group: domjudge
-      with_items:
-        - { name: 'email', value: 'team@domjudge.org' }
-        - { name: 'name', value: 'DOMjudge team' }
+- name: set PHP timezone for CLI
+  lineinfile:
+    dest: /etc/php/7.4/cli/php.ini
+    state: present
+    regexp: 'date\.timezone\s*='
+    line: 'date.timezone = {{TIMEZONE}}'
 
-    - name: configure git to rebase on pull
-      ini_file:
-        dest: /home/domjudge/.gitconfig
-        section: branch
-        option: "autosetuprebase"
-        value: "remote"
-        owner: domjudge
-        group: domjudge
+- name: install local DEB packages
+  include: install-local-package.yml
+  with_fileglob:
+    - files/install-{{host_type}}/*.deb
 
-    - name: Create .ssh directory
-      file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
+- name: configure git as domjudge user
+  ini_file:
+    dest: /home/domjudge/.gitconfig
+    section: user
+    option: "{{item.name}}"
+    value: "{{item.value}}"
+    owner: domjudge
+    group: domjudge
+  with_items:
+    - { name: 'email', value: 'team@domjudge.org' }
+    - { name: 'name', value: 'DOMjudge team' }
 
-    - name: Copy shared SSH private/public key and config
-      copy:
-        src: "files/ssh/{{ item }}"
-        dest: "/home/domjudge/.ssh/{{ item }}"
-        owner: domjudge
-        group: domjudge
-        mode: 0600
-      with_items:
-        - config
-        - id_rsa
-        - id_rsa.pub
+- name: configure git to rebase on pull
+  ini_file:
+    dest: /home/domjudge/.gitconfig
+    section: branch
+    option: "autosetuprebase"
+    value: "remote"
+    owner: domjudge
+    group: domjudge
 
-    - name: Add SSH key to authorized keys of domjudge and root
-      authorized_key:
-        user: "{{ item }}"
-        state: present
-        key: "{{ lookup('file', '/home/domjudge/.ssh/id_rsa.pub') }}"
-      with_items:
-        - domjudge
-        - root
+- name: Create .ssh directory
+  file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
 
-    - name: add all hosts to hosts file
-      lineinfile:
-        dest: /etc/hosts
-        regexp: '{{ item }}$'
-        line: "{{ hostvars[item].ansible_host }}	{{ item }}"
-      loop: "{{ groups['all'] }}"
+- name: Copy shared SSH private/public key and config to domjudge
+  copy:
+    src: "files/ssh/{{ item }}"
+    dest: "/home/domjudge/.ssh/{{ item }}"
+    owner: domjudge
+    group: domjudge
+    mode: 0600
+  with_items:
+    - config
+    - id_rsa
+    - id_rsa.pub
 
-    - name: add domjudge in hosts file
-      lineinfile:
-        dest: /etc/hosts
-        regexp: 'domserver'
-        line: "{{DOMSERVER_IP}}	domjudge domserver"
+- name: Copy shared SSH private/public key and config to root
+  copy:
+    src: "files/ssh/{{ item }}"
+    dest: "/root/.ssh/{{ item }}"
+    mode: 0600
+  with_items:
+    - config
+    - id_rsa
+    - id_rsa.pub
 
-    - name: enable bash completion globally
-      blockinfile:
-        path: /etc/bash.bashrc
-        insertafter: "# enable bash completion in interactive shells"
-        block: |
-          if ! shopt -oq posix; then
-            if [ -f /usr/share/bash-completion/bash_completion ]; then
-              . /usr/share/bash-completion/bash_completion
-            elif [ -f /etc/bash_completion ]; then
-              . /etc/bash_completion
-            fi
-          fi
+- name: Add SSH key to authorized keys of domjudge and root
+  authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', 'files/ssh/id_rsa.pub') }}"
+  with_items:
+    - domjudge
+    - root
 
-    - name: configure domjudge logging
-      copy: src=files/rsyslog.domjudge.conf dest=/etc/rsyslog.d/domjudge.conf
-      notify: restart rsyslog
+- name: add all hosts to hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '{{ item }}$'
+    line: "{{ hostvars[item].ansible_host }}	{{ item }}"
+  loop: "{{ groups['all'] }}"
 
-    - name: configure domjudge logrotate
-      copy: src=files/logrotate.domjudge dest=/etc/logrotate.d/domjudge
+- name: add domjudge in hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: 'domserver'
+    line: "{{DOMSERVER_IP}}	domjudge domserver"
 
-    - name: Force enable alt-tab for switching windows
-      copy: src=files/dconf/ dest=/etc/dconf/
+- name: enable bash completion globally
+  blockinfile:
+    path: /etc/bash.bashrc
+    insertafter: "# enable bash completion in interactive shells"
+    block: |
+      if ! shopt -oq posix; then
+        if [ -f /usr/share/bash-completion/bash_completion ]; then
+          . /usr/share/bash-completion/bash_completion
+        elif [ -f /etc/bash_completion ]; then
+          . /etc/bash_completion
+        fi
+      fi
 
-    - name: Update dconf configuration for alt-tab window switching
-      shell: dconf update
+- name: configure domjudge logging
+  copy: src=files/rsyslog.domjudge.conf dest=/etc/rsyslog.d/domjudge.conf
+  notify: restart rsyslog
 
-    - name: disable mumble,selfie services
-      service:
-        name: "{{ item }}"
-        state: stopped
-        enabled: no
-      with_items:
-        - mumble-server
-        - selfie
+- name: configure domjudge logrotate
+  copy: src=files/logrotate.domjudge dest=/etc/logrotate.d/domjudge
+
+- name: Force enable alt-tab for switching windows
+  copy: src=files/dconf/ dest=/etc/dconf/
+  notify: update dconf
+
+- name: disable mumble,selfie services
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items:
+    - mumble-server
+    - selfie

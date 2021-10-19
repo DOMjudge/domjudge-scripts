@@ -16,13 +16,19 @@ else
 LIBVENDOR=files/lib/vendor
 endif
 
-domserver domserver-only-code judgehost judgehost-only-code admin grafana: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR)
+domserver domserver-only-code judgehost judgehost-only-code admin grafana: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR) files/ssh/id_rsa files/ssh/id_rsa.pub
 	ansible-playbook -i hosts $<
 
 files/lib/vendor: $(LIBVENDORTGZ)
 	-cd files && tar xzf $(notdir $<)
 
+files/ssh/id_rsa files/ssh/id_rsa.pub:
+	ssh-keygen -t rsa -f files/ssh/id_rsa -P ''
+
 clean:
 	rm -rf $(LIBVENDOR)
 
-.PHONY: default clean domserver domserver-only-code judgehost judgehost-only-code admin grafana
+distclean: clean
+	rm -rf files/ssh/id_rsa files/ssh/id_rsa.pub
+
+.PHONY: default clean distclean domserver domserver-only-code judgehost judgehost-only-code admin grafana
