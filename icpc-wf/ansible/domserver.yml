@@ -15,6 +15,8 @@
       tags: mysql_server
     - role: mysql_replication
       tags: mysql_replication
+    - role: keepalived
+      tags: keepalived
   tasks:
 
     - include: common_tasks_prebuild.yml
@@ -28,7 +30,6 @@
         - python3-mysqldb
         - php-intl
         - macchanger
-        - keepalived
         - prometheus-nginx-exporter
         - prometheus-mysqld-exporter
         - molly-guard
@@ -134,20 +135,3 @@
         - htop
         - taillog-domserver-nginx-error
         - taillog-domserver-symfony-error
-
-    - name: Configure keepalived for domjudge IP failover
-      template:
-        src: files/keepalived.conf.j2
-        dest: /etc/keepalived/keepalived.conf
-      when: REPLICATION_PASSWORD is defined
-
-    - name: Start but disable keepalived (so it does not fail back to primary)
-      service:
-        name: keepalived
-        enabled: false
-        state: restarted
-      when: REPLICATION_PASSWORD is defined
-
-    - name: Install keepalived alert trigger code
-      copy: src=files/failover/ dest=/home/domjudge/ owner=domjudge group=domjudge
-      when: REPLICATION_PASSWORD is defined

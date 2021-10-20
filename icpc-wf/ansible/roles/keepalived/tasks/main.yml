@@ -1,0 +1,26 @@
+---
+# These tasks install keepalived with IP failover
+
+- name: Install keepalived
+  apt:
+    state: present
+    pkg:
+      - keepalived
+
+- name: Configure keepalived for domjudge IP failover
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+
+- name: Start but disable keepalived (so it does not fail back to primary)
+  service:
+    name: keepalived
+    enabled: false
+    state: restarted
+
+- name: Install keepalived alert trigger code
+  copy:
+    src: alerting/
+    dest: /home/domjudge/
+    owner: domjudge
+    group: domjudge
