@@ -8,6 +8,11 @@
   become: yes
   handlers:
     - include: handlers.yml
+  roles:
+    - role: base_packages
+      tags: base_packages
+    - role: mysql_server
+      tags: mysql_server
   tasks:
 
     - include: common_tasks_all.yml
@@ -57,16 +62,9 @@
         - gitk
         - git-gui
         - makepasswd
-        - mariadb-server
         - nginx
         - php-fpm
-        - python3-mysqldb
-        - php-intl
-        - mycli
         - mmv
-
-    - name: copy in MySQL config
-      copy: src=files/my.cnf dest=/root/.my.cnf
 
     - name: set PHP timezone for FPM
       lineinfile:
@@ -82,20 +80,6 @@
       with_items:
         - zip
         - intl
-
-    - name: create directory for systemd mysql settings
-      file: path=/etc/systemd/system/mysql.service.d/ state=directory
-
-    - name: update systemd so mysql has bigger limits
-      copy: src=files/mysql.override.cnf dest=/etc/systemd/system/mysql.service.d/override.conf
-      notify: restart mysql
-
-    - name: add mysql config snippet to increase limit
-      copy: src=files/mysql.domjudge.cnf dest=/etc/mysql/mariadb.conf.d/zz_domjudge.cnf
-      notify: restart mysql
-
-    - name: make sure mysql is restarted
-      meta: flush_handlers
 
     - include: common_tasks_build.yml
 
