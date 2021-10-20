@@ -1,3 +1,6 @@
+---
+# This playbook an admin machine with a dev DOMjudge instance
+
 - name: setup admin machines
   hosts: admin
   vars:
@@ -6,12 +9,6 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - name: include global variables
-      include_vars: variables.yml
-    - name: include global (secret) variables
-      include_vars: variables-secret.yml
-    - name: override global variables
-      include_vars: variables_admin.yml
 
     - include: common_tasks_all.yml
 
@@ -101,8 +98,6 @@
       meta: flush_handlers
 
     - include: common_tasks_build.yml
-      vars:
-        DJ_DIR: /home/domjudge/domjudge-checkout
 
     - name: check if the database is configured
       command: "/home/domjudge/domjudge-checkout/bin/dj_setup_database -u root status"
