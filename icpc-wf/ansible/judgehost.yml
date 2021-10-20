@@ -7,15 +7,13 @@
   become: yes
   handlers:
     - include: handlers.yml
+  roles:
+    - role: base_packages
+      tags: base_packages
   tasks:
     - pause:
         prompt: "Did you disable all judges"
       delegate_to: localhost
-
-    - name: include global variables
-      include_vars: variables.yml
-    - name: include global (secret) variables
-      include_vars: variables-secret.yml
 
     - name: create domjudge-run users
       user: name={{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
