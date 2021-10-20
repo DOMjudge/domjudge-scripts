@@ -11,47 +11,15 @@
   roles:
     - role: base_packages
       tags: base_packages
+    - role: domjudge_user
+      tags: domjudge_user
+    - role: domjudge_checkout
+      tags: domjudge_checkout
     - role: mysql_server
       tags: mysql_server
   tasks:
 
     - include: common_tasks_all.yml
-
-    - name: Allow 'sudo' group to have passwordless sudo
-      lineinfile:
-        dest: /etc/sudoers
-        state: present
-        regexp: '^%sudo'
-        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
-
-    - name: create working copy of the repo
-      become: yes
-      become_user: domjudge
-      git: repo={{DJ_GIT_REPO}} dest=/home/domjudge/domjudge-checkout version={{DJ_BRANCH}} accept_hostkey=yes update=no
-      register: git_working_copy
-
-    - name: Check composer dependencies present
-      local_action: stat path=files/lib/vendor
-      register: libvendor
-      become: no
-
-    - name: Copy in composer dependencies (if they exist locally)
-      become: no
-      tags: sync
-      synchronize:
-        src: files/lib/vendor/
-        dest: "/home/domjudge/domjudge-checkout/lib/vendor/"
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-      when: libvendor.stat.exists
-
-    - name: fix ownership of lib/vendor
-      file:
-        path: "/home/domjudge/domjudge-checkout/lib/vendor"
-        recurse: yes
-        owner: domjudge
-        group: domjudge
 
     - name: install common required/useful packages
       tags: packages

@@ -8,19 +8,18 @@ default:
 	@echo " - make admin"
 	@echo " - make grafana"
 
-LIBVENDORTGZ=files/lib-vendor.tgz
+LIBVENDORTGZ=roles/domjudge_checkout/files/lib-vendor.tgz
 
 ifeq ($(wildcard $(LIBVENDORTGZ)),)
 LIBVENDOR=
 else
-LIBVENDOR=files/lib/vendor
+LIBVENDOR=roles/domjudge_checkout/files/lib/vendor
+$(LIBVENDOR): $(LIBVENDORTGZ)
+	-cd roles/domjudge_checkout/files && tar xzf $(notdir $<)
 endif
 
 domserver domserver-only-code judgehost judgehost-only-code admin grafana: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR) files/ssh/id_rsa files/ssh/id_rsa.pub
 	ansible-playbook -i hosts $<
-
-files/lib/vendor: $(LIBVENDORTGZ)
-	-cd files && tar xzf $(notdir $<)
 
 files/ssh/id_rsa files/ssh/id_rsa.pub:
 	ssh-keygen -t rsa -f files/ssh/id_rsa -P ''

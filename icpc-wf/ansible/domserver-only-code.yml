@@ -7,24 +7,10 @@
   become: yes
   handlers:
     - include: handlers.yml
+  roles:
+    - role: domjudge_checkout
+      tags: domjudge_checkout
   tasks:
-    - name: include global variables
-      include_vars: variables.yml
-    - name: include global (secret) variables
-      include_vars: variables-secret.yml
-
-    - name: create working copy directory
-      file:
-        path: "{{DJ_DIR}}"
-        state: directory
-        owner: domjudge
-        group: domjudge
-
-    - name: create working copy of the domjudge repo
-      become: yes
-      become_user: domjudge
-      git: repo={{DJ_GIT_REPO}} dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
-      register: git_working_copy
 
     - name: run maintainer-conf
       become: yes

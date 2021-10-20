@@ -11,6 +11,10 @@
   roles:
     - role: base_packages
       tags: base_packages
+    - role: domjudge_user
+      tags: domjudge_user
+    - role: domjudge_checkout
+      tags: domjudge_checkout
     - role: mysql_server
       tags: mysql_server
     - role: mysql_replication

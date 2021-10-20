@@ -1,1 +1,3 @@
+DJ_DIR: /home/domjudge/domjudge-checkout
+
 PHP_FPM_MAX_CHILDREN: 5
