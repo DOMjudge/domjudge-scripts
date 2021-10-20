@@ -1,0 +1,38 @@
+---
+# These tasks create a checkout of the DOMjudge repo
+
+- name: create working copy directory
+  file:
+    path: "{{DJ_DIR}}"
+    state: directory
+    owner: domjudge
+    group: domjudge
+
+- name: create working copy of the domjudge repo
+  become: yes
+  become_user: domjudge
+  git: repo={{DJ_GIT_REPO}} dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
+  register: git_working_copy
+
+- name: Check composer dependencies present
+  local_action: stat path=files/lib/vendor
+  register: libvendor
+  become: no
+
+- name: Copy in composer dependencies (if they exist locally)
+  become: no
+  tags: sync
+  synchronize:
+    src: files/lib/vendor/
+    dest: "{{DJ_DIR}}/lib/vendor/"
+    owner: no
+    use_ssh_args: true
+    rsync_path: sudo rsync
+  when: libvendor.stat.exists
+
+- name: fix ownership of lib/vendor
+  file:
+    path: "{{DJ_DIR}}/lib/vendor"
+    recurse: yes
+    owner: domjudge
+    group: domjudge

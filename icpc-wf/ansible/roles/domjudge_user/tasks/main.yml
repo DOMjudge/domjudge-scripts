@@ -1,0 +1,34 @@
+---
+# These tasks create a domjudge system account and fix sudo/autologin
+
+- name: create domjudge user
+  user:
+    name: domjudge
+    shell: /bin/bash
+    groups: sudo
+    password: "{{DJ_SHELL_USER_PW | default(omit)}}"
+
+- name: Allow 'sudo' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+
+- name: enable GDM autologin
+  lineinfile:
+    path: /etc/gdm3/custom.conf
+    regexp: 'AutomaticLoginEnable'
+    line: 'AutomaticLoginEnable=true'
+    create: yes
+  notify: restart gdm
+
+- name: Automatically login domjudge user
+  lineinfile:
+    path: /etc/gdm3/custom.conf
+    regexp: 'AutomaticLogin'
+    line: 'AutomaticLogin=domjudge'
+  notify: restart gdm
+
+- name: make sure autostart directory exists
+  file: dest=/home/domjudge/.config/autostart state=directory owner=domjudge group=domjudge

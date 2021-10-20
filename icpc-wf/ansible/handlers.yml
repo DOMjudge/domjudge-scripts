@@ -10,8 +10,6 @@
   service: name=rsyslog enabled=yes state=restarted
 - name: restart systemctl
   shell: systemctl daemon-reload
-- name: restart gdm
-  service: name=gdm3 enabled=yes state=restarted
 - name: restart nginx-exporter
   service: name=prometheus-nginx-exporter enabled=yes state=restarted
 - name: restart php-exporter
