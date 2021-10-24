@@ -1,0 +1,5 @@
+---
+# Define here handlers associated to this role.
+
+- name: update-ca-certificates
+  command: update-ca-certificates

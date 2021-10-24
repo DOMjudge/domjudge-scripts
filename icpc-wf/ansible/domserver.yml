@@ -11,6 +11,10 @@
   roles:
     - role: base_packages
       tags: base_packages
+    - role: ssl
+      tags: ssl
+      vars:
+        INSTALL_SSL_PRIVATE_KEYS: true
     - role: domjudge_user
       tags: domjudge_user
     - role: domjudge_checkout

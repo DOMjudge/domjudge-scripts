@@ -11,6 +11,10 @@
   roles:
     - role: base_packages
       tags: base_packages
+    - role: ssl
+      tags: ssl
+      vars:
+        INSTALL_SSL_PRIVATE_KEYS: true
     - role: domjudge_user
       tags: domjudge_user
     - role: domjudge_checkout
@@ -61,26 +65,6 @@
     - name: make sure the database is configured
       command: "/home/domjudge/domjudge-checkout/bin/dj_setup_database -u root bare-install"
       when: "'failed' in db_status.stdout"
-
-    - name: install SSL server certificates
-      copy:
-        src: "{{ item }}"
-        dest: /etc/ssl/certs/
-        owner: root
-        group: root
-        mode: 0644
-      with_fileglob:
-        - files/ssl/*.crt
-      notify: update-ca-certificates
-
-    - name: trust localhost SSL certificate
-      copy:
-        src: ssl/localhost.crt
-        dest: /usr/local/share/ca-certificates/
-        owner: root
-        group: root
-        mode: 0644
-      notify: update-ca-certificates
 
     - include: nginx-setup.yml
       vars:
