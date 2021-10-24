@@ -143,16 +143,14 @@
       args:
         creates: "/chroot/domjudge"
 
-    - name: fix kernel parameters
+    - name: add cgroup kernel parameters
       lineinfile:
         dest: /etc/default/grub
         regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
         line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
-      register: kernel_params
-
-    - name: update grub
-      shell: "update-grub"
-      when: kernel_params.changed
+      notify:
+        - update grub
+        - reboot
 
     - name: copy script to disable turboboost and hyperthreading
       copy: src=files/disable-turboboost_ht dest=/usr/local/sbin/ mode=0755
@@ -164,7 +162,7 @@
         - create_cgroups_admin
       notify: restart systemctl
 
-    - name: make sure systemctl is restarted
+    - name: reboot to activate kernel parameters and load systemd unit files
       meta: flush_handlers
 
     - name: enable and restart the services we just copied

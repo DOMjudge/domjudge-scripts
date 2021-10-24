@@ -16,4 +16,7 @@
   service: name=php-fpm-exporter enabled=yes state=restarted
 - name: update dconf
   shell: dconf update
-
+- name: update grub
+  shell: update-grub
+- name: reboot
+  reboot:
