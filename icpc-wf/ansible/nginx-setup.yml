@@ -1,16 +1,5 @@
 # Tasks to set up the nginx configuration
 ---
-    - name: install SSL private key files
-      copy:
-        src: "{{ item }}"
-        dest: /etc/ssl/private/
-        owner: root
-        group: root
-        mode: 0600
-      with_fileglob:
-        - files/ssl/*.key
-      notify: update-ca-certificates
-
     - name: copy in domjudge FPM conf
       copy: src={{DJ_DIR}}/etc/domjudge-fpm.conf remote_src=yes dest=/etc/php/7.4/fpm/pool.d/domjudge.conf
       notify: restart PHP FPM

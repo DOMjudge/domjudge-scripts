@@ -10,6 +10,8 @@
   roles:
     - role: base_packages
       tags: base_packages
+    - role: ssl
+      tags: ssl
     - role: domjudge_user
       tags: domjudge_user
     - role: domjudge_checkout
