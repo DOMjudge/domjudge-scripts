@@ -1,0 +1,97 @@
+---
+# These tasks install PHPStorm
+
+- name: Copy in PHPStorm
+  become: no
+  tags: sync
+  synchronize:
+    src: PhpStorm-{{ PHPSTORM_FULL_VERSION }}
+    dest: "/phpstorm"
+    owner: no
+    use_ssh_args: true
+    rsync_path: sudo rsync
+
+- name: Copy in PHPStorm config
+  become: no
+  tags: sync
+  synchronize:
+    src: PhpStorm{{ PHPSTORM_VERSION }}
+    dest: "/home/domjudge/.config/JetBrains"
+    owner: no
+    use_ssh_args: true
+    rsync_path: sudo rsync
+
+- name: Copy in PHPStorm jdbc drivers
+  become: no
+  tags: sync
+  synchronize:
+    src: jdbc-drivers
+    dest: "/home/domjudge/.config/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}/"
+    owner: no
+    use_ssh_args: true
+    rsync_path: sudo rsync
+
+- name: fix ownership of PHPStorm config
+  file:
+    path: "/home/domjudge/.config/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
+    recurse: yes
+    owner: domjudge
+    group: domjudge
+
+- name: Create local directory
+  become: yes
+  become_user: domjudge
+  file:
+    path: "/home/domjudge/.local/share/JetBrains/"
+    state: directory
+    mode: '0755'
+
+- name: Copy in PHPStorm local share
+  become: no
+  tags: sync
+  synchronize:
+    src: PhpStorm{{ PHPSTORM_VERSION }}-local-share/
+    dest: "/home/domjudge/.local/share/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
+    owner: no
+    recursive: yes
+    use_ssh_args: true
+    rsync_path: sudo rsync
+
+- name: fix ownership of PHPStorm local share
+  file:
+    path: "/home/domjudge/.local/share/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
+    recurse: yes
+    owner: domjudge
+    group: domjudge
+
+- name: Copy in PHPStorm settings for repo
+  become: no
+  tags: sync
+  synchronize:
+    src: .idea
+    dest: "/home/domjudge/domjudge-checkout"
+    owner: no
+    use_ssh_args: true
+    rsync_path: sudo rsync
+
+- name: fix ownership of PHPStorm config
+  file:
+    path: "/home/domjudge/domjudge-checkout/.idea"
+    recurse: yes
+    owner: domjudge
+    group: domjudge
+
+- name: Create a directory if it does not exist
+  become: yes
+  become_user: domjudge
+  file:
+    path: /home/domjudge/.local/share/applications
+    state: directory
+    mode: '0755'
+
+- name: Copy in PHPStorm Desktop icon
+  become: yes
+  become_user: domjudge
+  template:
+    src: jetbrains-phpstorm.desktop.j2
+    dest: /home/domjudge/.local/share/applications/jetbrains-phpstorm.desktop
