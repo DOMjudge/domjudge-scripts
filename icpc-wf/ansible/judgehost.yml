@@ -31,7 +31,7 @@
     - name: create domjudge-run group
       group: name=domjudge-run state=present
 
-    - include: common_tasks_prebuild.yml
+    - include: common_tasks_all.yml
 
     - name: template out the restapi secret file
       template: src=files/restapi.secret.j2 dest={{DJ_DIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600

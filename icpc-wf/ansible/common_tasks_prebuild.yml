@@ -1,9 +1,0 @@
-# Common tasks before building DOMjudge.
----
-- name: add domjudge to hosts file
-  lineinfile:
-    dest: /etc/hosts
-    regexp: 'domserver$'
-    line: "{{DOMSERVER_IP}}	domserver"
-
-- include: common_tasks_all.yml

@@ -27,7 +27,7 @@
       tags: keepalived
   tasks:
 
-    - include: common_tasks_prebuild.yml
+    - include: common_tasks_all.yml
 
     - name: install domserver required packages
       apt:
