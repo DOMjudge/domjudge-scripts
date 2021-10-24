@@ -192,7 +192,7 @@
     - name: create chroot
       shell: "/home/domjudge/domjudge-checkout/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log"
       environment:
-        DEBMIRROR: https://packages/ubuntu
+        DEBMIRROR: "{{ 'https://packages/ubuntu' if WF_RESTRICTED_NETWORK else '' }}"
       args:
         creates: "/chroot/domjudge"
 
