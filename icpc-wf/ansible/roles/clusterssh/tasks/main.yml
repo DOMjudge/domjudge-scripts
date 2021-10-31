@@ -1,0 +1,35 @@
+---
+# These tasks configure clusterssh
+
+- name: install clusterssh package
+  tags: packages
+  apt:
+    state: present
+    pkg:
+      - clusterssh
+
+- name: create clusterssh config file
+  file:
+    path: /etc/clusters
+    state: touch
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create clusterssh 'all' config group
+  lineinfile:
+    dest: /home/domjudge/.clusterssh/clusters
+    regexp: '^all'
+    line: "all {{ groups['all'] | join(' ') }}"
+    create: yes
+
+- name: create clusterssh config groups
+  lineinfile:
+    dest: /home/domjudge/.clusterssh/clusters
+    regexp: '^{{ item }}s'
+    line: "{{item}}s {{ groups[item] | join(' ') }}"
+    create: yes
+  with_items:
+    - domserver
+    - judgehost
+    - admin
