@@ -31,3 +31,14 @@
     mode: 0440
     owner: root
     group: root
+
+- name: configure domjudge logging
+  copy:
+    src: rsyslog.domjudge.conf
+    dest: /etc/rsyslog.d/domjudge.conf
+  notify: restart rsyslog
+
+- name: configure domjudge logrotate
+  copy:
+    src: logrotate.domjudge
+    dest: /etc/logrotate.d/domjudge

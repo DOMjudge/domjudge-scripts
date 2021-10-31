@@ -17,10 +17,3 @@
     dest: /etc/hosts
     regexp: 'domserver'
     line: "{{DOMSERVER_IP}}	domjudge domserver"
-
-- name: configure domjudge logging
-  copy: src=files/rsyslog.domjudge.conf dest=/etc/rsyslog.d/domjudge.conf
-  notify: restart rsyslog
-
-- name: configure domjudge logrotate
-  copy: src=files/logrotate.domjudge dest=/etc/logrotate.d/domjudge
