@@ -9,6 +9,7 @@ default:
 	@echo " - make grafana"
 
 LIBVENDORTGZ=roles/domjudge_checkout/files/lib-vendor.tgz
+SSHKEY=roles/ssh/files/id_rsa
 
 ifeq ($(wildcard $(LIBVENDORTGZ)),)
 LIBVENDOR=
@@ -18,16 +19,16 @@ $(LIBVENDOR): $(LIBVENDORTGZ)
 	-cd roles/domjudge_checkout/files && tar xzf $(notdir $<)
 endif
 
-domserver domserver-only-code judgehost judgehost-only-code admin grafana: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR) files/ssh/id_rsa files/ssh/id_rsa.pub
+domserver domserver-only-code judgehost judgehost-only-code admin grafana: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
 	ansible-playbook -i hosts $<
 
-files/ssh/id_rsa files/ssh/id_rsa.pub:
-	ssh-keygen -t rsa -f files/ssh/id_rsa -P ''
+$(SSHKEY) $(SSHKEY).pub:
+	ssh-keygen -t rsa -f $(SSHKEY) -P ''
 
 clean:
 	rm -rf $(LIBVENDOR)
 
 distclean: clean
-	rm -rf files/ssh/id_rsa files/ssh/id_rsa.pub
+	rm -rf $(SSHKEY) $(SSHKEY).pub
 
 .PHONY: default clean distclean domserver domserver-only-code judgehost judgehost-only-code admin grafana

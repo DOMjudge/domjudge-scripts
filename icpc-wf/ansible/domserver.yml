@@ -19,6 +19,8 @@
       tags: domjudge_user
     - role: domjudge_checkout
       tags: domjudge_checkout
+    - role: ssh
+      tags: ssh
     - role: mysql_server
       tags: mysql_server
     - role: mysql_replication
