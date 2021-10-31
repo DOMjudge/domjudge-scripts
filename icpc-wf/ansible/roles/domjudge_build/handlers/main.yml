@@ -1,0 +1,8 @@
+---
+# Define here handlers associated to this role.
+
+- name: fix permissions on domjudge maintainer-install
+  shell: make -C {{DJ_DIR}} maintainer-postinstall-permissions
+
+- name: restart rsyslog
+  service: name=rsyslog enabled=yes state=restarted
