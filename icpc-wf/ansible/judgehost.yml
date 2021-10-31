@@ -22,6 +22,8 @@
       tags: domjudge_build
     - role: ssh
       tags: ssh
+    - role: domlogo
+      tags: domlogo
   tasks:
     - pause:
         prompt: "Did you disable all judges"
@@ -122,37 +124,11 @@
         - tune_cpu
         - domjudge-judgehost
 
-    - name: install python3 modules for domlogo
-      apt:
-        state: present
-        pkg:
-        - python3-tk
-
-    - name: install domlogo env
-      synchronize:
-        src: files/domlogo/lib
-        dest: "/home/domjudge/.local/"
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
-    - name: install domlogo
-      copy: src=files/domlogo/domlogo.py dest=/opt/domjudge/ owner=domjudge group=domjudge mode=0755
-
-    - name: install domlogo images
-      synchronize:
-        src: files/domlogo-files
-        dest: "/opt/domjudge/"
-        owner: no
-        use_ssh_args: true
-        rsync_path: sudo rsync
-
     - name: add autostart shortcuts
       copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
       with_items:
         - taillog
         - rotate
-        - domjudgelogo
 
     - name: make sure apport is not installed
       tags: packages
