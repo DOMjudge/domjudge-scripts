@@ -36,27 +36,6 @@
   with_fileglob:
     - files/install-{{host_type}}/*.deb
 
-- name: configure git as domjudge user
-  ini_file:
-    dest: /home/domjudge/.gitconfig
-    section: user
-    option: "{{item.name}}"
-    value: "{{item.value}}"
-    owner: domjudge
-    group: domjudge
-  with_items:
-    - { name: 'email', value: 'team@domjudge.org' }
-    - { name: 'name', value: 'DOMjudge team' }
-
-- name: configure git to rebase on pull
-  ini_file:
-    dest: /home/domjudge/.gitconfig
-    section: branch
-    option: "autosetuprebase"
-    value: "remote"
-    owner: domjudge
-    group: domjudge
-
 - name: Create .ssh directory
   file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
 

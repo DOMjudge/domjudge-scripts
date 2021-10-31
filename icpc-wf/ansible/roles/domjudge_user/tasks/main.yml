@@ -15,6 +15,27 @@
     regexp: '^%sudo'
     line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
+- name: configure git user
+  ini_file:
+    dest: /home/domjudge/.gitconfig
+    section: user
+    option: "{{item.name}}"
+    value: "{{item.value}}"
+    owner: domjudge
+    group: domjudge
+  with_items:
+    - { name: 'email', value: 'team@domjudge.org' }
+    - { name: 'name', value: 'DOMjudge team' }
+
+- name: configure git to rebase on pull
+  ini_file:
+    dest: /home/domjudge/.gitconfig
+    section: branch
+    option: "autosetuprebase"
+    value: "remote"
+    owner: domjudge
+    group: domjudge
+
 - name: enable GDM autologin
   lineinfile:
     path: /etc/gdm3/custom.conf
