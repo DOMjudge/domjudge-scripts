@@ -1,0 +1,57 @@
+---
+# These tasks perform miscellaneous fixes to the base system.
+
+- name: add NTP servers
+  lineinfile:
+    dest: /etc/systemd/timesyncd.conf
+    regexp: '^#?NTP='
+    line: "NTP=10.3.3.208 10.3.3.209"
+  notify: restart systemd timesyncd
+  when: WF_RESTRICTED_NETWORK
+
+- name: remove source line from interfaces
+  lineinfile:
+    dest: /etc/network/interfaces
+    regexp: '^source-'
+    state: absent
+
+- name: Re-order PXEboot
+  shell: efibootmgr -o {{ EFI_ORDER }}
+  when: EFI_ORDER is defined
+
+- name: set timezone
+  timezone:
+    name: "{{TIMEZONE}}"
+
+- name: set PHP timezone for CLI
+  lineinfile:
+    dest: /etc/php/7.4/cli/php.ini
+    state: present
+    regexp: 'date\.timezone\s*='
+    line: 'date.timezone = {{TIMEZONE}}'
+
+- name: enable bash completion globally
+  blockinfile:
+    path: /etc/bash.bashrc
+    insertafter: "# enable bash completion in interactive shells"
+    block: |
+      if ! shopt -oq posix; then
+        if [ -f /usr/share/bash-completion/bash_completion ]; then
+          . /usr/share/bash-completion/bash_completion
+        elif [ -f /etc/bash_completion ]; then
+          . /etc/bash_completion
+        fi
+      fi
+
+- name: Force enable alt-tab for switching windows
+  copy: src=dconf/ dest=/etc/dconf/
+  notify: update dconf
+
+- name: disable mumble,selfie services
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items:
+    - mumble-server
+    - selfie

@@ -10,6 +10,8 @@
   roles:
     - role: base_packages
       tags: base_packages
+    - role: system_fixes
+      tags: system_fixes
     - role: ssl
       tags: ssl
     - role: domjudge_user
