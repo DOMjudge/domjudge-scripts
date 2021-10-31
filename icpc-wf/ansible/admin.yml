@@ -21,6 +21,8 @@
       tags: domjudge_checkout
     - role: mysql_server
       tags: mysql_server
+    - role: clusterssh
+      tags: clusterssh
     - role: phpstorm
       tags: phpstorm
   tasks:
@@ -32,7 +34,6 @@
       apt:
         state: present
         pkg:
-        - clusterssh
         - gitk
         - git-gui
         - makepasswd
@@ -190,32 +191,6 @@
       become: yes
       become_user: domjudge
       when: css_installed.changed
-
-    - name: create clusterssh config file
-      file:
-        path: /etc/clusters
-        state: touch
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: create clusterssh 'all' config group
-      lineinfile:
-        dest: /home/domjudge/.clusterssh/clusters
-        regexp: '^all'
-        line: "all {{ groups['all'] | join(' ') }}"
-        create: yes
-
-    - name: create clusterssh config groups
-      lineinfile:
-        dest: /home/domjudge/.clusterssh/clusters
-        regexp: '^{{ item }}s'
-        line: "{{item}}s {{ groups[item] | join(' ') }}"
-        create: yes
-      with_items:
-        - domserver
-        - judgehost
-        - admin
 
     - name: Install netrc file
       template: src=files/netrc.j2 dest=/home/domjudge/.netrc owner=domjudge group=domjudge mode=0600
