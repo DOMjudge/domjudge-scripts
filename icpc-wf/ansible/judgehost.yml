@@ -18,6 +18,8 @@
       tags: domjudge_user
     - role: domjudge_checkout
       tags: domjudge_checkout
+    - role: domjudge_build
+      tags: domjudge_build
     - role: ssh
       tags: ssh
   tasks:
@@ -46,8 +48,6 @@
         regexp: "^(.*composer auto-scripts)$"
         line: '#\1'
         backrefs: yes
-
-    - include: common_tasks_build.yml
 
     - name: re-enable clearing Symfony cache when building
       lineinfile:

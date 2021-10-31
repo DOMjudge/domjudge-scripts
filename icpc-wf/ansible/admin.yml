@@ -21,6 +21,8 @@
       tags: domjudge_user
     - role: domjudge_checkout
       tags: domjudge_checkout
+    - role: domjudge_build
+      tags: domjudge_build
     - role: ssh
       tags: ssh
     - role: mysql_server
@@ -59,8 +61,6 @@
       with_items:
         - zip
         - intl
-
-    - include: common_tasks_build.yml
 
     - name: check if the database is configured
       command: "/home/domjudge/domjudge-checkout/bin/dj_setup_database -u root status"

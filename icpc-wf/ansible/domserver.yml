@@ -21,6 +21,8 @@
       tags: domjudge_user
     - role: domjudge_checkout
       tags: domjudge_checkout
+    - role: domjudge_build
+      tags: domjudge_build
     - role: ssh
       tags: ssh
     - role: mysql_server
@@ -84,8 +86,6 @@
       when: COLLECTD_MYSQL_PASSWORD is defined
       with_items:
        - prometheus-mysqld-exporter.service
-
-    - include: common_tasks_build.yml
 
 # When using replication, the DB will be dropped and recreated on the slave later.
     - name: check if the database is configured

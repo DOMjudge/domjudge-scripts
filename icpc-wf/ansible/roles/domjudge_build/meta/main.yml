@@ -1,0 +1,5 @@
+# Role dependencies
+---
+dependencies:
+  - role: domjudge_user
+  - role: domjudge_checkout

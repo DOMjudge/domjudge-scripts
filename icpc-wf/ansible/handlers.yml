@@ -4,8 +4,6 @@
   service: name=nginx state=restarted
 - name: restart PHP FPM
   service: name=php7.4-fpm state=restarted
-- name: restart rsyslog
-  service: name=rsyslog enabled=yes state=restarted
 - name: restart systemctl
   shell: systemctl daemon-reload
 - name: restart nginx-exporter
