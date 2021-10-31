@@ -12,8 +12,6 @@
   service: name=prometheus-nginx-exporter enabled=yes state=restarted
 - name: restart php-exporter
   service: name=php-fpm-exporter enabled=yes state=restarted
-- name: update dconf
-  shell: dconf update
 - name: update grub
   shell: update-grub
 - name: reboot
