@@ -1,0 +1,41 @@
+---
+# These tasks configure SSH stuff
+
+- name: Create domjudge .ssh directory
+  file:
+    path: /home/domjudge/.ssh
+    state: directory
+    group: domjudge
+    owner: domjudge
+    mode: 0700
+
+- name: Copy shared SSH private/public key and config to domjudge
+  copy:
+    src: "{{ item }}"
+    dest: /home/domjudge/.ssh/
+    owner: domjudge
+    group: domjudge
+    mode: 0600
+  with_items:
+    - config
+    - id_rsa
+    - id_rsa.pub
+
+- name: Copy shared SSH private/public key and config to root
+  copy:
+    src: "{{ item }}"
+    dest: /root/.ssh/
+    mode: 0600
+  with_items:
+    - config
+    - id_rsa
+    - id_rsa.pub
+
+- name: Add SSH key to authorized keys of domjudge and root
+  authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', 'id_rsa.pub') }}"
+  with_items:
+    - domjudge
+    - root

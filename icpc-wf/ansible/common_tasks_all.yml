@@ -36,40 +36,6 @@
   with_fileglob:
     - files/install-{{host_type}}/*.deb
 
-- name: Create .ssh directory
-  file: path="/home/domjudge/.ssh" group=domjudge owner=domjudge mode=0700 state=directory
-
-- name: Copy shared SSH private/public key and config to domjudge
-  copy:
-    src: "files/ssh/{{ item }}"
-    dest: "/home/domjudge/.ssh/{{ item }}"
-    owner: domjudge
-    group: domjudge
-    mode: 0600
-  with_items:
-    - config
-    - id_rsa
-    - id_rsa.pub
-
-- name: Copy shared SSH private/public key and config to root
-  copy:
-    src: "files/ssh/{{ item }}"
-    dest: "/root/.ssh/{{ item }}"
-    mode: 0600
-  with_items:
-    - config
-    - id_rsa
-    - id_rsa.pub
-
-- name: Add SSH key to authorized keys of domjudge and root
-  authorized_key:
-    user: "{{ item }}"
-    state: present
-    key: "{{ lookup('file', 'files/ssh/id_rsa.pub') }}"
-  with_items:
-    - domjudge
-    - root
-
 - name: add all hosts to hosts file
   lineinfile:
     dest: /etc/hosts

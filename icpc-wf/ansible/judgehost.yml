@@ -16,6 +16,8 @@
       tags: domjudge_user
     - role: domjudge_checkout
       tags: domjudge_checkout
+    - role: ssh
+      tags: ssh
   tasks:
     - pause:
         prompt: "Did you disable all judges"
