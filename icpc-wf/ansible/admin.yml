@@ -118,12 +118,6 @@
         regexp: 'printsrv$'
         line: "10.3.3.211	nisprint nismaster printsrv"
 
-    - name: remove apt-transport-https from bionic debootstrap file
-      lineinfile:
-        path: /usr/share/debootstrap/scripts/bionic
-        regexp: 'ca-certificates'
-        line: '                base="$base ca-certificates"'
-
     - name: copy chroot DEB packages to install
       copy: src=files/install-chroot dest=/tmp/dj_ansible/
 

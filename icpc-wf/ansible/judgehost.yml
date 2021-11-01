@@ -58,15 +58,6 @@
         line: '\1'
         backrefs: yes
 
-    - name: enable internal monitor
-      file: path=/usr/share/X11/xorg.conf.d/22-icpc.conf state=absent
-
-    - name: remove apt-transport-https from bionic debootstrap file
-      lineinfile:
-        path: /usr/share/debootstrap/scripts/bionic
-        regexp: 'ca-certificates'
-        line: '                base="$base ca-certificates"'
-
     - name: copy chroot DEB packages to install
       copy: src=files/install-chroot dest=/tmp/dj_ansible/
 
