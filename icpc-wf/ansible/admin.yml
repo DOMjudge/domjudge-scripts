@@ -65,19 +65,15 @@
         - intl
 
     - name: check if the database is configured
-      command: "/home/domjudge/domjudge-checkout/bin/dj_setup_database -u root status"
+      command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
       register: db_status
       ignore_errors: true
 
     - name: make sure the database is configured
-      command: "/home/domjudge/domjudge-checkout/bin/dj_setup_database -u root bare-install"
+      command: "{{DJ_DIR}}/bin/dj_setup_database -u root bare-install"
       when: "'failed' in db_status.stdout"
 
     - include: nginx-setup.yml
-      vars:
-        DJ_DIR: /home/domjudge/domjudge-checkout
-        DOMSERVER_SSL_CERT: /etc/ssl/certs/localhost.crt
-        DOMSERVER_SSL_KEY: /etc/ssl/private/localhost.key
 
     - name: Use Symfony dev-mode
       lineinfile:
@@ -124,14 +120,14 @@
     - name: copy custom CSS file for admin machines
       copy:
         src: admin-machine.css
-        dest: "/home/domjudge/domjudge-checkout/webapp/public/css/custom/admin-machine.css"
+        dest: "{{DJ_DIR}}/webapp/public/css/custom/admin-machine.css"
         owner: domjudge
         group: domjudge
         mode: 0644
       register: css_installed
 
     - name: Clear application cache
-      command: /home/domjudge/domjudge-checkout/webapp/bin/console cache:clear
+      command: "{{DJ_DIR}}/webapp/bin/console cache:clear"
       become: yes
       become_user: domjudge
       when: css_installed.changed
