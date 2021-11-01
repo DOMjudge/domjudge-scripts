@@ -1,0 +1,11 @@
+---
+# Define here handlers associated to this role.
+
+- name: restart systemctl
+  shell: systemctl daemon-reload
+
+- name: update grub
+  shell: update-grub
+
+- name: reboot
+  reboot:

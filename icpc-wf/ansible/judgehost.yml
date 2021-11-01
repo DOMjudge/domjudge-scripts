@@ -20,6 +20,8 @@
       tags: domjudge_checkout
     - role: domjudge_build
       tags: domjudge_build
+    - role: judgedaemon
+      tags: judgedaemon
     - role: ssh
       tags: ssh
     - role: domlogo
@@ -29,91 +31,7 @@
         prompt: "Did you disable all judges"
       delegate_to: localhost
 
-    - name: create domjudge-run users
-      user: name={{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
-      with_items:
-        - domjudge-run-0
-        - domjudge-run-1
-        - domjudge-run-2
-        - domjudge-run-3
-    - name: create domjudge-run group
-      group: name=domjudge-run state=present
-
     - include: common_tasks_all.yml
-
-    - name: template out the restapi secret file
-      template: src=files/restapi.secret.j2 dest={{DJ_DIR}}/etc/restapi.secret owner=domjudge group=domjudge mode=0600
-
-    - name: disable clearing Symfony cache when building
-      lineinfile:
-        dest: "{{DJ_DIR}}/Makefile"
-        regexp: "^(.*composer auto-scripts)$"
-        line: '#\1'
-        backrefs: yes
-
-    - name: re-enable clearing Symfony cache when building
-      lineinfile:
-        dest: "{{DJ_DIR}}/Makefile"
-        regexp: "^#(.*composer auto-scripts)$"
-        line: '\1'
-        backrefs: yes
-
-    - name: copy chroot DEB packages to install
-      copy: src=files/install-chroot dest=/tmp/dj_ansible/
-
-    - name: create chroot
-      shell: "{{DJ_DIR}}/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log; grep '^Done building chroot in' /tmp/dj_make_chroot.log"
-      environment:
-        DEBMIRROR: "{{ 'https://packages/ubuntu' if WF_RESTRICTED_NETWORK else '' }}"
-      args:
-        creates: "/chroot/domjudge"
-
-    - name: fix kernel parameters
-      lineinfile:
-        dest: /etc/default/grub
-        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
-        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
-      notify:
-        - update grub
-        - reboot
-
-    - name: copy script to disable turboboost and hyperthreading
-      copy: src=files/disable-turboboost_ht dest=/usr/local/sbin/ mode=0755
-
-    - name: copy custom systemd unit files
-      copy: src=files/{{item}}.service dest=/etc/systemd/system/
-      tags: updateservice
-      with_items:
-        - tune_cpu
-      notify: restart systemctl
-
-    - name: copy create-cgroups systemd unit file
-      copy: src={{DJ_DIR}}/lib/judge/create-cgroups.service dest=/etc/systemd/system/ remote_src=yes
-      tags: updateservice
-      notify: restart systemctl
-
-    - name: Change path of create_cgroups file
-      lineinfile:
-        dest: /etc/systemd/system/create-cgroups.service
-        state: present
-        regexp: 'ExecStart'
-        line: 'ExecStart={{DJ_DIR}}/judge/create_cgroups'
-      notify: restart systemctl
-
-    - name: copy judgedaemon systemd unit file
-      copy: src={{DJ_DIR}}/lib/judge/domjudge-judgehost.service dest=/etc/systemd/system/ remote_src=yes
-      tags: updateservice
-      notify: restart systemctl
-
-    - name: reboot to activate kernel parameters and load systemd unit files
-      meta: flush_handlers
-
-    - name: enable and restart the services we just copied
-      service: name={{item}} enabled=yes state=restarted
-      with_items:
-        - create-cgroups
-        - tune_cpu
-        - domjudge-judgehost
 
     - name: add autostart shortcuts
       copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
@@ -126,12 +44,3 @@
       apt:
         pkg: apport
         state: absent
-
-    - name: disable systemd timers
-      command: systemctl mask {{item}}
-      args:
-        creates: /etc/systemd/system/{{item}}
-      with_items:
-        - apt-daily-upgrade.timer
-        - apt-daily.timer
-        - systemd-tmpfiles-clean.timer
