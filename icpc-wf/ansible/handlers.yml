@@ -4,13 +4,7 @@
   service: name=nginx state=restarted
 - name: restart PHP FPM
   service: name=php7.4-fpm state=restarted
-- name: restart systemctl
-  shell: systemctl daemon-reload
 - name: restart nginx-exporter
   service: name=prometheus-nginx-exporter enabled=yes state=restarted
 - name: restart php-exporter
   service: name=php-fpm-exporter enabled=yes state=restarted
-- name: update grub
-  shell: update-grub
-- name: reboot
-  reboot:

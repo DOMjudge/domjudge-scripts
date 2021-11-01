@@ -23,6 +23,8 @@
       tags: domjudge_checkout
     - role: domjudge_build
       tags: domjudge_build
+    - role: judgedaemon
+      tags: judgedaemon
     - role: ssh
       tags: ssh
     - role: mysql_server
@@ -84,16 +86,6 @@
         line: "set $frontController app_dev.php;"
       notify: restart nginx
 
-    - name: create domjudge-run users
-      user: name={{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
-      with_items:
-        - domjudge-run-0
-    - name: create domjudge-run group
-      group: name=domjudge-run state=present
-
-    - name: template out the restapi secret file
-      template: src=files/restapi.secret.admin.j2 dest=/home/domjudge/domjudge-checkout/etc/restapi.secret owner=domjudge group=domjudge mode=0600
-
     - name: add cds to hosts file
       lineinfile:
         dest: /etc/hosts
@@ -117,52 +109,6 @@
         dest: /etc/hosts
         regexp: 'printsrv$'
         line: "10.3.3.211	nisprint nismaster printsrv"
-
-    - name: copy chroot DEB packages to install
-      copy: src=files/install-chroot dest=/tmp/dj_ansible/
-
-    - name: create chroot
-      shell: "/home/domjudge/domjudge-checkout/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log"
-      environment:
-        DEBMIRROR: "{{ 'https://packages/ubuntu' if WF_RESTRICTED_NETWORK else '' }}"
-      args:
-        creates: "/chroot/domjudge"
-
-    - name: add cgroup kernel parameters
-      lineinfile:
-        dest: /etc/default/grub
-        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
-        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
-      notify:
-        - update grub
-        - reboot
-
-    - name: copy script to disable turboboost and hyperthreading
-      copy: src=files/disable-turboboost_ht dest=/usr/local/sbin/ mode=0755
-
-    - name: copy systemd unit files
-      copy: src=files/{{item}}.service dest=/etc/systemd/system/
-      tags: updateservice
-      with_items:
-        - create_cgroups_admin
-      notify: restart systemctl
-
-    - name: reboot to activate kernel parameters and load systemd unit files
-      meta: flush_handlers
-
-    - name: enable and restart the services we just copied
-      service: name={{item}} enabled=yes state=restarted
-      with_items:
-        - create_cgroups_admin
-
-    - name: disable systemd timers
-      command: systemctl mask {{item}}
-      args:
-        creates: /etc/systemd/system/{{item}}
-      with_items:
-        - apt-daily-upgrade.timer
-        - apt-daily.timer
-        - systemd-tmpfiles-clean.timer
 
     - name: create working copy of the domjudge-scripts repo
       become: yes
