@@ -1,0 +1,5 @@
+# Role dependencies
+---
+dependencies:
+  - role: mysql_server
+  - role: domjudge_build

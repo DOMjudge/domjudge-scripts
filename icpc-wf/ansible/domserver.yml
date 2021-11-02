@@ -6,8 +6,6 @@
   vars:
     host_type: domserver
   become: yes
-  handlers:
-    - include: handlers.yml
   roles:
     - role: base_packages
       tags: base_packages
@@ -27,6 +25,8 @@
       tags: ssh
     - role: mysql_server
       tags: mysql_server
+    - role: domserver
+      tags: domserver
     - role: mysql_replication
       tags: mysql_replication
     - role: keepalived
@@ -39,36 +39,9 @@
       apt:
         state: present
         pkg:
-        - nginx
-        - php-fpm
         - python3-mysqldb
-        - php-intl
         - macchanger
         - molly-guard
-
-    - name: set PHP timezone for FPM
-      lineinfile:
-        dest: /etc/php/7.4/fpm/php.ini
-        state: present
-        regexp: 'date\.timezone\s*='
-        line: 'date.timezone = {{TIMEZONE}}'
-
-    - name: enable php modules
-      command: phpenmod {{item}}
-      args:
-        creates: /etc/php/7.4/fpm/conf.d/20-{{item}}.ini
-      with_items:
-        - zip
-        - intl
-
-# When using replication, the DB will be dropped and recreated on the slave later.
-    - name: check if the database is configured
-      command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
-      register: db_status
-      ignore_errors: true
-    - name: make sure the database is configured
-      command: "{{DJ_DIR}}/bin/dj_setup_database -u root bare-install"
-      when: "'failed' in db_status.stdout"
 
     - name: disable developer mode
       lineinfile:
@@ -85,8 +58,6 @@
         owner: no
         use_ssh_args: true
         rsync_path: sudo rsync
-
-    - include: nginx-setup.yml
 
     - name: Add documentation in DOMjudge team interface
       copy: src=files/docs.yaml dest=/opt/domjudge/etc/docs.yaml

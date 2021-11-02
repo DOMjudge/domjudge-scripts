@@ -5,8 +5,6 @@
   vars:
     host_type: judgehost
   become: yes
-  handlers:
-    - include: handlers.yml
   roles:
     - role: base_packages
       tags: base_packages
