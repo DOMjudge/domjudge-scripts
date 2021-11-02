@@ -17,6 +17,10 @@
         INSTALL_SSL_PRIVATE_KEYS: true
     - role: domjudge_user
       tags: domjudge_user
+    - role: ssh
+      tags: ssh
+    - role: mysql_server
+      tags: mysql_server
     - role: domjudge_checkout
       tags: domjudge_checkout
     - role: domjudge_build
@@ -25,10 +29,6 @@
       tags: domserver
     - role: judgedaemon
       tags: judgedaemon
-    - role: ssh
-      tags: ssh
-    - role: mysql_server
-      tags: mysql_server
     - role: clusterssh
       tags: clusterssh
     - role: phpstorm
