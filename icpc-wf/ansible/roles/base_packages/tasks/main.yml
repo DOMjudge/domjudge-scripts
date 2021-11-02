@@ -86,7 +86,6 @@
     - libmagic-dev
     - composer
     - debootstrap
-    - qmlscene
     - texlive-latex-recommended
     - texlive-latex-extra
     - apache2-utils
