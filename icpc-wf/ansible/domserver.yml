@@ -44,10 +44,7 @@
         - python3-mysqldb
         - php-intl
         - macchanger
-        - prometheus-nginx-exporter
-        - prometheus-mysqld-exporter
         - molly-guard
-        # expects config in /var/lib/prometheus/.my.cnf
 
     - name: set PHP timezone for FPM
       lineinfile:
@@ -63,29 +60,6 @@
       with_items:
         - zip
         - intl
-
-    - name: create collectd user for mysql status
-      mysql_user:
-        name: collectdstatus
-        host: 'localhost'
-        password: "{{COLLECTD_MYSQL_PASSWORD}}"
-        append_privs: true
-        priv: '*.*:PROCESS,REPLICATION CLIENT'
-        state: present
-      when: COLLECTD_MYSQL_PASSWORD is defined
-
-    - name: Create MySQL authentication file
-      template:
-        src: files/grafana/my.cnf.j2
-        dest: /var/lib/prometheus/.my.cnf
-        owner: prometheus
-      when: COLLECTD_MYSQL_PASSWORD is defined
-
-    - name: Start/enable our services
-      service: name={{ item }} state=started enabled=yes
-      when: COLLECTD_MYSQL_PASSWORD is defined
-      with_items:
-       - prometheus-mysqld-exporter.service
 
 # When using replication, the DB will be dropped and recreated on the slave later.
     - name: check if the database is configured
@@ -116,30 +90,6 @@
 
     - name: Add documentation in DOMjudge team interface
       copy: src=files/docs.yaml dest=/opt/domjudge/etc/docs.yaml
-
-    - name: Get NGINX status
-      copy: src=files/grafana/nginx-status.conf dest=/etc/nginx/sites-enabled/status.conf
-      notify: restart nginx
-
-    - name: Prometheus nginx exporter
-      lineinfile:
-        dest: /etc/default/prometheus-nginx-exporter
-        state: present
-        regexp: '^ARGS=""'
-        line: 'ARGS="-nginx.scrape-uri=http://localhost:8080/basic_status"'
-      notify: restart nginx-exporter
-
-    - name: Install PHP-fpm exporter binary
-      ansible.builtin.unarchive:
-        src: files/grafana/php-fpm_exporter_2.0.3_linux_amd64.tar.gz
-        dest: /usr/bin/
-        exclude:
-          - LICENSE
-          - README.md
-
-    - name: Export PHP-FPM metrics
-      copy: src=files/grafana/php-fpm-exporter.service dest=/etc/systemd/system/php-fpm-exporter.service
-      notify: restart php-exporter
 
     - name: add autostart shortcuts
       copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
