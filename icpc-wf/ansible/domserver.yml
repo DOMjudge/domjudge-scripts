@@ -17,14 +17,14 @@
         INSTALL_SSL_PRIVATE_KEYS: true
     - role: domjudge_user
       tags: domjudge_user
-    - role: domjudge_checkout
-      tags: domjudge_checkout
-    - role: domjudge_build
-      tags: domjudge_build
     - role: ssh
       tags: ssh
     - role: mysql_server
       tags: mysql_server
+    - role: domjudge_checkout
+      tags: domjudge_checkout
+    - role: domjudge_build
+      tags: domjudge_build
     - role: domserver
       tags: domserver
     - role: mysql_replication
