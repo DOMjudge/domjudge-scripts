@@ -6,8 +6,6 @@
   vars:
     host_type: admin
   become: yes
-  handlers:
-    - include: handlers.yml
   roles:
     - role: base_packages
       tags: base_packages
@@ -23,6 +21,8 @@
       tags: domjudge_checkout
     - role: domjudge_build
       tags: domjudge_build
+    - role: domserver
+      tags: domserver
     - role: judgedaemon
       tags: judgedaemon
     - role: ssh
@@ -45,35 +45,7 @@
         - gitk
         - git-gui
         - makepasswd
-        - nginx
-        - php-fpm
         - mmv
-
-    - name: set PHP timezone for FPM
-      lineinfile:
-        dest: /etc/php/7.4/fpm/php.ini
-        state: present
-        regexp: 'date\.timezone\s*='
-        line: 'date.timezone = {{TIMEZONE}}'
-
-    - name: enable php modules
-      command: phpenmod {{item}}
-      args:
-        creates: /etc/php/7.4/fpm/conf.d/20-{{item}}.ini
-      with_items:
-        - zip
-        - intl
-
-    - name: check if the database is configured
-      command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
-      register: db_status
-      ignore_errors: true
-
-    - name: make sure the database is configured
-      command: "{{DJ_DIR}}/bin/dj_setup_database -u root bare-install"
-      when: "'failed' in db_status.stdout"
-
-    - include: nginx-setup.yml
 
     - name: Use Symfony dev-mode
       lineinfile:
