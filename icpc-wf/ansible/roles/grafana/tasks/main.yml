@@ -1,0 +1,60 @@
+---
+# These tasks install and configure grafana
+
+- name: install domserver required packages
+  apt:
+    state: present
+    pkg:
+      - prometheus-nginx-exporter
+      - prometheus-mysqld-exporter
+
+- name: create collectd user for mysql status
+  mysql_user:
+    name: collectdstatus
+    host: 'localhost'
+    password: "{{COLLECTD_MYSQL_PASSWORD}}"
+    append_privs: true
+    priv: '*.*:PROCESS,REPLICATION CLIENT'
+    state: present
+  when: COLLECTD_MYSQL_PASSWORD is defined
+
+- name: Create MySQL authentication file
+  template:
+    src: my.cnf.j2
+    dest: /var/lib/prometheus/.my.cnf
+    owner: prometheus
+  when: COLLECTD_MYSQL_PASSWORD is defined
+
+- name: Start/enable our services
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - prometheus-mysqld-exporter.service
+  when: COLLECTD_MYSQL_PASSWORD is defined
+
+- name: add nginx status
+  copy:
+    src: nginx-status.conf
+    dest: /etc/nginx/sites-enabled/status.conf
+  notify: restart nginx
+
+- name: Prometheus nginx exporter
+  lineinfile:
+    dest: /etc/default/prometheus-nginx-exporter
+    state: present
+    regexp: '^ARGS=""'
+    line: 'ARGS="-nginx.scrape-uri=http://localhost:8080/basic_status"'
+  notify: restart nginx-exporter
+
+- name: Install PHP-fpm exporter binary
+  ansible.builtin.unarchive:
+    src: php-fpm_exporter_2.0.3_linux_amd64.tar.gz
+    dest: /usr/bin/
+    exclude:
+      - LICENSE
+      - README.md
+
+- name: Export PHP-FPM metrics
+  copy:
+    src: php-fpm-exporter.service
+    dest: /etc/systemd/system/
+  notify: restart php-exporter

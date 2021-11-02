@@ -1,0 +1,8 @@
+---
+# Define here handlers associated to this role.
+
+- name: restart nginx-exporter
+  service: name=prometheus-nginx-exporter enabled=yes state=restarted
+
+- name: restart php-exporter
+  service: name=php-fpm-exporter enabled=yes state=restarted
