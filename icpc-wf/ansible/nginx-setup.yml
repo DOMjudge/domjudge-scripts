@@ -1,106 +1,35 @@
 # Tasks to set up the nginx configuration
 ---
-    - name: copy in domjudge FPM conf
-      copy: src={{DJ_DIR}}/etc/domjudge-fpm.conf remote_src=yes dest=/etc/php/7.4/fpm/pool.d/domjudge.conf
+    - name: copy domjudge FPM conf
+      copy:
+        remote_src: true
+        src: "{{DJ_DIR}}/etc/domjudge-fpm.conf"
+        dest: /etc/php/7.4/fpm/pool.d/domjudge.conf
       notify: restart PHP FPM
 
-    - name: copy in domjudge nginx conf
-      copy: src={{DJ_DIR}}/etc/nginx-conf remote_src=yes dest=/etc/nginx/sites-available/domjudge.conf
+    - name: add domjudge nginx conf
+      template:
+        src: files/nginx-domjudge.conf.j2
+        dest: /etc/nginx/sites-available/domjudge.conf
       notify: restart nginx
 
-    - name: copy in domjudge inner nginx conf
-      copy: src={{DJ_DIR}}/etc/nginx-conf-inner remote_src=yes dest=/etc/nginx/snippets/domjudge-inner
-      notify: restart nginx
-
-    - name: remove HTTP host
-      blockinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
-        marker: "{mark}"
-        marker_begin: "### http host config ###"
-        marker_end: "# Alternatively, use HTTPS and redirect HTTP to HTTPS:"
-      notify: restart nginx
-
-    - name: remove HTTP block
-      blockinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
-        marker: "{mark}"
-        marker_begin: "# Or block all cleartext HTTP requests"
-        marker_end: "HTTP\n# }"
-      notify: restart nginx
-
-    - name: enable HTTP redirect and HTTPS blocks
-      replace:
-        path: /etc/nginx/sites-available/domjudge.conf
-        after: 'upstream domjudge \{'
-        regexp: '^# ?(.*)'
-        replace: '\1'
-      notify: restart nginx
-
-    - name: Remove unneeded comment
-      lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
-        regexp: '^Or block .*'
-        line: ''
-      notify: restart nginx
-
-    - name: increase max body size to upload size
-      lineinfile:
-        path: /etc/nginx/snippets/domjudge-inner
-        regexp: 'client_max_body_size'
-        line: "client_max_body_size {{PHP_UPLOAD_MAX_FILESIZE}};"
-      notify: restart nginx
-
-    - name: remove prefixed domjudge location
-      blockinfile:
-        path: /etc/nginx/snippets/domjudge-inner
-        marker: "{mark}"
-        marker_begin: "# Or you can install it with a prefix"
-        marker_end: "location @domjudgeFront {"
-        block: "# --- This block has been removed in favor of the 'location /' block ---"
-      notify: restart nginx
-
-    - name: run DOMjudge in root
-      replace:
-        path: /etc/nginx/snippets/domjudge-inner
-        after: '# Uncomment to run it out of the root of your system'
-        regexp: '^# ?(location|\t|})(.*)'
-        replace: '\1\2'
-      notify: restart nginx
-
-    - name: set prefix to be empty
-      lineinfile:
-        path: /etc/nginx/snippets/domjudge-inner
-        regexp: 'prefix .*;'
-        line: "set $prefix '';"
-      notify: restart nginx
-
-    - name: configure SSL certificate
-      lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
-        regexp: 'ssl_certificate (.*)'
-        line: "\tssl_certificate {{DOMSERVER_SSL_CERT}};"
-      notify: restart nginx
-
-    - name: configure SSL key
-      lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
-        regexp: 'ssl_certificate_key (.*)'
-        line: "\tssl_certificate_key {{DOMSERVER_SSL_KEY}};"
-      notify: restart nginx
-
-    - name: use our own inner nginx configuration
-      lineinfile:
-        path: /etc/nginx/sites-available/domjudge.conf
-        regexp: 'include (.*)nginx-conf-inner;'
-        line: "\tinclude /etc/nginx/snippets/domjudge-inner;"
+    - name: add domjudge inner nginx conf
+      template:
+        src: files/nginx-domjudge-inner.j2
+        dest: /etc/nginx/snippets/domjudge-inner
       notify: restart nginx
 
     - name: enable nginx conf for domjudge
-      file: src=/etc/nginx/sites-available/domjudge.conf dest=/etc/nginx/sites-enabled/domjudge.conf state=link
+      file:
+        src: /etc/nginx/sites-available/domjudge.conf
+        dest: /etc/nginx/sites-enabled/domjudge.conf
+        state: link
       notify: restart nginx
 
     - name: disable default nginx site
-      file: state=absent path=/etc/nginx/sites-enabled/default
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
       notify: restart nginx
 
     - name: Set PHP settings
