@@ -46,6 +46,7 @@
   apt:
     state: absent
     pkg:
+    - apport
     - ntp
 
 - name: install common required/useful packages

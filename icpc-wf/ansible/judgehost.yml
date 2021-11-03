@@ -37,9 +37,3 @@
       with_items:
         - taillog
         - rotate
-
-    - name: make sure apport is not installed
-      tags: packages
-      apt:
-        pkg: apport
-        state: absent
