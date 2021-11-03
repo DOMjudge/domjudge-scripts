@@ -6,6 +6,7 @@
     state: present
     pkg:
       - prometheus-nginx-exporter
+      - prometheus-node-exporter
       - prometheus-mysqld-exporter
 
 - name: create collectd user for mysql status
