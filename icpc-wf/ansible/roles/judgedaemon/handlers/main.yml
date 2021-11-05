@@ -4,6 +4,15 @@
 - name: restart systemctl
   shell: systemctl daemon-reload
 
+- name: enable and restart tune_cpu
+  service: name=tune_cpu enabled=yes state=restarted
+
+- name: enable and restart create-cgroups
+  service: name=create-cgroups enabled=yes state=restarted
+
+- name: enable and restart judgedaemon
+  service: name=domjudge-judgehost enabled=yes state=restarted
+
 - name: update grub
   shell: update-grub
 

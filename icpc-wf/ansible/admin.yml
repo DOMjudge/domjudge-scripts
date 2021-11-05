@@ -47,12 +47,11 @@
         - makepasswd
         - mmv
 
-    - name: Use Symfony dev-mode
+    - name: enable developer mode
       lineinfile:
-        path: /etc/nginx/snippets/domjudge-inner
-        regexp: 'frontController .*;'
-        line: "set $frontController app_dev.php;"
-      notify: restart nginx
+        regexp: 'APP_ENV='
+        line: 'APP_ENV=dev'
+        dest: "{{DJ_DIR}}/webapp/.env.local"
 
     - name: add cds to hosts file
       lineinfile:

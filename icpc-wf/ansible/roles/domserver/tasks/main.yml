@@ -5,12 +5,14 @@
   template:
     src: dbpasswords.secret.j2
     dest: "{{DJ_DIR}}/etc/dbpasswords.secret"
+  notify: fix permissions on domjudge maintainer-install
 
 # When using replication, the DB will be dropped and recreated on the slave later.
 - name: check if the database is configured
   command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
   register: db_status
   ignore_errors: true
+  changed_when: false
 
 - name: make sure the database is configured
   command: "{{DJ_DIR}}/bin/dj_setup_database -u root bare-install"
@@ -40,13 +42,6 @@
     - zip
     - intl
 
-- name: copy domjudge FPM conf
-  copy:
-    remote_src: true
-    src: "{{DJ_DIR}}/etc/domjudge-fpm.conf"
-    dest: /etc/php/7.4/fpm/pool.d/domjudge.conf
-  notify: restart PHP FPM
-
 - name: add domjudge nginx conf
   template:
     src: nginx-domjudge.conf.j2
@@ -71,6 +66,14 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
   notify: restart nginx
+
+- name: symlink domjudge FPM conf
+  file:
+    path: /etc/php/7.4/fpm/pool.d/domjudge.conf
+    src: "{{DJ_DIR}}/etc/domjudge-fpm.conf"
+    state: link
+    force: yes
+  notify: restart PHP FPM
 
 - name: set PHP settings
   lineinfile:
