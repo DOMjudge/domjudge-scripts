@@ -26,6 +26,7 @@
 - name: check for dpkg architecture i386
   command: dpkg --print-foreign-architectures
   register: dpkg_architectures
+  changed_when: false
 
 - name: remove unused dpkg architecture i386
   command: dpkg --remove-architecture i386

@@ -11,12 +11,13 @@
   template:
     src: keepalived.conf.j2
     dest: /etc/keepalived/keepalived.conf
+  notify: restart keepalived service
 
 - name: Start but disable keepalived (so it does not fail back to primary)
   service:
     name: keepalived
     enabled: false
-    state: restarted
+    state: started
 
 - name: Install keepalived alert trigger code
   copy:
