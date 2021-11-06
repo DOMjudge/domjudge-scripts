@@ -27,7 +27,6 @@
     dest: "{{DJ_DIR}}/lib/vendor/"
     owner: no
     use_ssh_args: true
-    rsync_path: sudo rsync
   when: libvendor.stat.exists
 
 - name: fix ownership of lib/vendor

@@ -21,7 +21,6 @@
     dest: /home/domjudge/.local/
     owner: no
     use_ssh_args: true
-    rsync_path: sudo rsync
 
 - name: install domlogo images
   synchronize:
@@ -29,7 +28,6 @@
     dest: "{{DJ_DIR}}"
     owner: no
     use_ssh_args: true
-    rsync_path: sudo rsync
 
 - name: add autostart shortcuts
   template:

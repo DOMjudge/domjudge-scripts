@@ -9,7 +9,6 @@
     dest: "/phpstorm"
     owner: no
     use_ssh_args: true
-    rsync_path: sudo rsync
 
 - name: Copy in PHPStorm config
   become: no
@@ -19,7 +18,6 @@
     dest: "/home/domjudge/.config/JetBrains"
     owner: no
     use_ssh_args: true
-    rsync_path: sudo rsync
 
 - name: Copy in PHPStorm jdbc drivers
   become: no
@@ -29,7 +27,6 @@
     dest: "/home/domjudge/.config/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}/"
     owner: no
     use_ssh_args: true
-    rsync_path: sudo rsync
 
 - name: fix ownership of PHPStorm config
   file:
@@ -55,7 +52,6 @@
     owner: no
     recursive: yes
     use_ssh_args: true
-    rsync_path: sudo rsync
 
 - name: fix ownership of PHPStorm local share
   file:

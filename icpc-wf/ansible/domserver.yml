@@ -56,7 +56,6 @@
         dest: "{{DJ_DIR}}/webapp/public"
         owner: no
         use_ssh_args: true
-        rsync_path: sudo rsync
 
     - name: Add documentation in DOMjudge team interface
       copy:
