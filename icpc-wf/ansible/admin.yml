@@ -103,4 +103,9 @@
       when: css_installed.changed
 
     - name: Install netrc file
-      template: src=files/netrc.j2 dest=/home/domjudge/.netrc owner=domjudge group=domjudge mode=0600
+      template:
+        src: files/netrc.j2
+        dest: /home/domjudge/.netrc
+        owner: domjudge
+        group: domjudge
+        mode: 0600
