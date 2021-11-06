@@ -1,4 +1,0 @@
-[Desktop Entry]
-Name=domjudgelogo
-Type=Application
-Exec=bash -c "sleep 10 && cd /opt/domjudge && python3 ./domlogo.py 1>/home/domjudge/logo.out 2>/home/domjudge/logo.err"
