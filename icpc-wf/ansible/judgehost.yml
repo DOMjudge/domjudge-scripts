@@ -33,7 +33,21 @@
       delegate_to: localhost
   tasks:
     - name: add autostart shortcuts
-      copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
+      template:
+        src: files/{{item}}.desktop
+        dest: /home/domjudge/.config/autostart/
+        owner: domjudge
+        group: domjudge
+        mode: 0755
+      with_items:
+        - rotate
+
+    - name: add autostart shortcuts from template
+      template:
+        src: files/{{item}}.desktop.j2
+        dest: /home/domjudge/.config/autostart/{{item}}.desktop
+        owner: domjudge
+        group: domjudge
+        mode: 0755
       with_items:
         - taillog
-        - rotate

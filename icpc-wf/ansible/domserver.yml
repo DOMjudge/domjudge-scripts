@@ -59,11 +59,27 @@
         rsync_path: sudo rsync
 
     - name: Add documentation in DOMjudge team interface
-      copy: src=files/docs.yaml dest=/opt/domjudge/etc/docs.yaml
+      copy:
+        src: files/docs.yaml
+        dest: "{{DJ_DIR}}/etc/"
 
     - name: add autostart shortcuts
-      copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
+      copy:
+        src: files/{{item}}.desktop
+        dest: /home/domjudge/.config/autostart/
+        owner: domjudge
+        group: domjudge
+        mode: 0755
       with_items:
         - htop
         - taillog-domserver-nginx-error
+
+    - name: add autostart shortcuts from template
+      template:
+        src: files/{{item}}.desktop.j2
+        dest: /home/domjudge/.config/autostart/{{item}}.desktop
+        owner: domjudge
+        group: domjudge
+        mode: 0755
+      with_items:
         - taillog-domserver-symfony-error

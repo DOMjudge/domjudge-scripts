@@ -32,9 +32,9 @@
     rsync_path: sudo rsync
 
 - name: add autostart shortcuts
-  copy:
-    src: domjudgelogo.desktop
-    dest: /home/domjudge/.config/autostart/
+  template:
+    src: domjudgelogo.desktop.j2
+    dest: /home/domjudge/.config/autostart/domjudgelogo.desktop
     owner: domjudge
     group: domjudge
     mode: 0755

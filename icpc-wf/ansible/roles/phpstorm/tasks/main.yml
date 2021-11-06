@@ -69,14 +69,13 @@
   tags: sync
   synchronize:
     src: .idea
-    dest: "/home/domjudge/domjudge-checkout"
+    dest: "{{DJ_DIR}}"
     owner: no
     use_ssh_args: true
-    rsync_path: sudo rsync
 
 - name: fix ownership of PHPStorm config
   file:
-    path: "/home/domjudge/domjudge-checkout/.idea"
+    path: "{{DJ_DIR}}/.idea"
     recurse: yes
     owner: domjudge
     group: domjudge
