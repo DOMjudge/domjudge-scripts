@@ -1,4 +1,5 @@
 ---
+# This playbook installs the DOMjudge judgehosts
 
 - name: setup judgehost
   hosts: judgehost
