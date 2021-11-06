@@ -7,6 +7,12 @@
     dest: "{{DJ_DIR}}/etc/dbpasswords.secret"
   notify: fix permissions on domjudge maintainer-install
 
+- name: install initial_admin_password.secret file
+  template:
+    src: initial_admin_password.secret.j2
+    dest: "{{DJ_DIR}}/etc/initial_admin_password.secret"
+  notify: fix permissions on domjudge maintainer-install
+
 # When using replication, the DB will be dropped and recreated on the slave later.
 - name: check if the database is configured
   command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
