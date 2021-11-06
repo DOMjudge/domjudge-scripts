@@ -19,7 +19,7 @@ $(LIBVENDOR): $(LIBVENDORTGZ)
 	-cd roles/domjudge_checkout/files && tar xzf $(notdir $<)
 endif
 
-domserver judgehost admin grafana: %: %.yml hosts $(wildcard common_tasks*.yml) $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
+domserver judgehost admin grafana: %: %.yml hosts $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
 	ansible-playbook -i hosts $<
 
 admin: $(SSL_LOCALHOST_FILES)

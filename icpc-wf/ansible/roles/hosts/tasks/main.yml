@@ -1,5 +1,10 @@
-# Common tasks applied to all hosts, including admin ones
 ---
+# These tasks add entries to /etc/hosts
+
+# FIXME: this needs to be cleaned up and done in a way such that the
+# tasks are not marked as "changed" every time they are run, and also
+# work better with ad-hoc editing of the inventory hosts file.
+
 - name: add all hosts to hosts file
   lineinfile:
     dest: /etc/hosts

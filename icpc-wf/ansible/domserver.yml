@@ -11,6 +11,8 @@
       tags: base_packages
     - role: system_fixes
       tags: system_fixes
+    - role: hosts
+      tags: hosts
     - role: ssl
       tags: ssl
       vars:
@@ -32,9 +34,6 @@
     - role: keepalived
       tags: keepalived
   tasks:
-
-    - include: common_tasks_all.yml
-
     - name: install domserver required packages
       apt:
         state: present
