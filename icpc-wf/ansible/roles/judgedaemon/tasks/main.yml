@@ -37,6 +37,11 @@
     dest: /etc/default/grub
     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
+
+- name: check cgroup kernel parameters
+  command: cat /proc/cmdline
+  register: kernel_cmdline
+  changed_when: "'cgroup_enable=memory swapaccount=1' not in kernel_cmdline.stdout"
   notify:
     - update grub
     - reboot
