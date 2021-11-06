@@ -12,14 +12,6 @@
 - name: create domjudge-run group
   group: name=domjudge-run state=present
 
-- name: add the restapi secret file
-  template:
-    src: restapi.secret.j2
-    dest: "{{DJ_DIR}}/etc/restapi.secret"
-    owner: domjudge
-    group: domjudge
-    mode: 0600
-
 - name: create temp package directory
   file:
     path: /tmp/dj_ansible
