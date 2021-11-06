@@ -62,14 +62,6 @@
     dest: /etc/systemd/system/
   notify: restart systemctl
 
-- name: Change path of create_cgroups file
-  lineinfile:
-    dest: /etc/systemd/system/create-cgroups.service
-    state: present
-    regexp: 'ExecStart'
-    line: 'ExecStart={{DJ_DIR}}/judge/create_cgroups'
-  notify: restart systemctl
-
 - name: copy judgedaemon systemd unit file
   copy:
     remote_src: true
