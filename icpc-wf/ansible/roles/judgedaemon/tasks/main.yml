@@ -20,6 +20,14 @@
     group: domjudge
     mode: 0600
 
+- name: create temp package directory
+  file:
+    path: /tmp/dj_ansible
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
 - name: copy chroot DEB packages to install
   copy:
     src: install-chroot
