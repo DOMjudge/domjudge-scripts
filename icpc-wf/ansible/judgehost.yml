@@ -11,6 +11,8 @@
       tags: base_packages
     - role: system_fixes
       tags: system_fixes
+    - role: hosts
+      tags: hosts
     - role: ssl
       tags: ssl
     - role: domjudge_user
@@ -30,9 +32,6 @@
         prompt: "Did you disable all judges"
       delegate_to: localhost
   tasks:
-
-    - include: common_tasks_all.yml
-
     - name: add autostart shortcuts
       copy: src=files/{{item}}.desktop dest=/home/domjudge/.config/autostart/ owner=domjudge group=domjudge mode=0755
       with_items:

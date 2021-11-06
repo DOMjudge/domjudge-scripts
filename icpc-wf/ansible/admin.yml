@@ -11,6 +11,8 @@
       tags: base_packages
     - role: system_fixes
       tags: system_fixes
+    - role: hosts
+      tags: hosts
     - role: ssl
       tags: ssl
       vars:
@@ -34,9 +36,6 @@
     - role: phpstorm
       tags: phpstorm
   tasks:
-
-    - include: common_tasks_all.yml
-
     - name: install common required/useful packages
       tags: packages
       apt:
