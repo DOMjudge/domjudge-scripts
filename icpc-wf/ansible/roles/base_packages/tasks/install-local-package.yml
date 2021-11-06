@@ -1,0 +1,17 @@
+# Install a single local DEB package.
+---
+- name: create temp package directory
+  file:
+    path: /tmp/dj_ansible
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: copy DEB package to remote
+  copy: src={{item}} dest="/tmp/dj_ansible/{{item|basename}}"
+  register: deb_copied
+
+- name: install DEB package {{item|basename}}
+  apt: deb="/tmp/dj_ansible/{{item|basename}}"
+  when: deb_copied.changed
