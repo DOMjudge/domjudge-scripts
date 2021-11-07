@@ -2,8 +2,6 @@
 # These tasks install PHPStorm
 
 - name: Copy in PHPStorm
-  become: no
-  tags: sync
   synchronize:
     src: PhpStorm-{{ PHPSTORM_FULL_VERSION }}
     dest: "/phpstorm"
@@ -11,8 +9,6 @@
     use_ssh_args: true
 
 - name: Copy in PHPStorm config
-  become: no
-  tags: sync
   synchronize:
     src: PhpStorm{{ PHPSTORM_VERSION }}
     dest: "/home/domjudge/.config/JetBrains"
@@ -20,8 +16,6 @@
     use_ssh_args: true
 
 - name: Copy in PHPStorm jdbc drivers
-  become: no
-  tags: sync
   synchronize:
     src: jdbc-drivers
     dest: "/home/domjudge/.config/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}/"
@@ -44,8 +38,6 @@
     mode: '0755'
 
 - name: Copy in PHPStorm local share
-  become: no
-  tags: sync
   synchronize:
     src: PhpStorm{{ PHPSTORM_VERSION }}-local-share/
     dest: "/home/domjudge/.local/share/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
@@ -61,8 +53,6 @@
     group: domjudge
 
 - name: Copy in PHPStorm settings for repo
-  become: no
-  tags: sync
   synchronize:
     src: .idea
     dest: "{{DJ_DIR}}"

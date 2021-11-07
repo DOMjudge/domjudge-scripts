@@ -49,8 +49,6 @@
         dest: "{{DJ_DIR}}/webapp/.env.local"
 
     - name: install contest images
-      become: no
-      tags: sync
       synchronize:
         src: files/domjudge-public/
         dest: "{{DJ_DIR}}/webapp/public"

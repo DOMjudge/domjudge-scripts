@@ -2,7 +2,6 @@
 # These tasks configure clusterssh
 
 - name: install clusterssh package
-  tags: packages
   apt:
     state: present
     pkg:

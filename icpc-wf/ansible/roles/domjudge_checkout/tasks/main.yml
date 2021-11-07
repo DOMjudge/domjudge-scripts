@@ -15,13 +15,11 @@
   register: git_working_copy
 
 - name: Check composer dependencies present
+  become: no
   local_action: stat path=files/lib/vendor
   register: libvendor
-  become: no
 
 - name: Copy in composer dependencies (if they exist locally)
-  become: no
-  tags: sync
   synchronize:
     src: files/lib/vendor/
     dest: "{{DJ_DIR}}/lib/vendor/"
