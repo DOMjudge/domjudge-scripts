@@ -25,7 +25,6 @@
   when: "'failed' in db_status.stdout"
 
 - name: install required packages
-  tags: packages
   apt:
     state: present
     pkg:
