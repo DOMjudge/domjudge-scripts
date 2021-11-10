@@ -38,6 +38,8 @@
       tags: clusterssh
     - role: phpstorm
       tags: phpstorm
+  handlers:
+    - include: handlers.yml
   tasks:
     - name: install common required/useful packages
       tags: packages
@@ -97,13 +99,7 @@
         owner: domjudge
         group: domjudge
         mode: 0644
-      register: css_installed
-
-    - name: Clear application cache
-      command: "{{DJ_DIR}}/webapp/bin/console cache:clear"
-      become: yes
-      become_user: domjudge
-      when: css_installed.changed
+      notify: clear application cache
 
     - name: Install netrc file
       template:
