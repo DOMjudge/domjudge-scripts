@@ -1,8 +1,5 @@
 ---
 # Define here handlers associated to this role.
 
-- name: restart systemd timesyncd
-  command: systemctl restart systemd-timesyncd
-
 - name: update dconf
   shell: dconf update

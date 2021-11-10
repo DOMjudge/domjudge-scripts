@@ -1,24 +1,6 @@
 ---
 # These tasks perform miscellaneous fixes to the base system.
 
-- name: add NTP servers
-  lineinfile:
-    dest: /etc/systemd/timesyncd.conf
-    regexp: '^#?NTP='
-    line: "NTP=10.3.3.208 10.3.3.209"
-  notify: restart systemd timesyncd
-  when: WF_RESTRICTED_NETWORK
-
-- name: remove source line from interfaces
-  lineinfile:
-    dest: /etc/network/interfaces
-    regexp: '^source-'
-    state: absent
-
-- name: Re-order PXEboot
-  shell: efibootmgr -o {{ EFI_ORDER }}
-  when: EFI_ORDER is defined
-
 - name: set timezone
   timezone:
     name: "{{TIMEZONE}}"
@@ -46,12 +28,3 @@
 - name: Force enable alt-tab for switching windows
   copy: src=dconf/ dest=/etc/dconf/
   notify: update dconf
-
-- name: disable mumble,selfie services
-  service:
-    name: "{{ item }}"
-    state: stopped
-    enabled: no
-  with_items:
-    - mumble-server
-    - selfie
