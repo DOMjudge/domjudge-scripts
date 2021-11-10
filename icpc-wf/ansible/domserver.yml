@@ -36,6 +36,8 @@
       tags: mysql_replication
     - role: keepalived
       tags: keepalived
+  handlers:
+    - include: handlers.yml
   tasks:
     - name: install domserver required packages
       apt:
@@ -57,11 +59,13 @@
         dest: "{{DJ_DIR}}/webapp/public"
         owner: no
         use_ssh_args: true
+      notify: clear application cache
 
     - name: Add documentation in DOMjudge team interface
       copy:
         src: files/docs.yaml
         dest: "{{DJ_DIR}}/etc/"
+      notify: clear application cache
 
     - name: add autostart shortcuts
       copy:
