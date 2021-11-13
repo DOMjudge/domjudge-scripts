@@ -21,7 +21,7 @@
     mode: 0700
 
 - name: copy chroot DEB packages to install
-  copy:
+  synchronize:
     src: install-chroot
     dest: /tmp/dj_ansible/
 
