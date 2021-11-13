@@ -47,7 +47,7 @@
 - name: Automatically login domjudge user
   lineinfile:
     path: /etc/gdm3/custom.conf
-    regexp: 'AutomaticLogin'
+    regexp: 'AutomaticLogin='
     line: 'AutomaticLogin=domjudge'
   notify: restart gdm
 
