@@ -92,6 +92,7 @@
     - apache2-utils
     - tig
     - bat
+    - jq
 
 - name: install local DEB packages
   include: install-local-package.yml
