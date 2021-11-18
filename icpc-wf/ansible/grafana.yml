@@ -5,6 +5,9 @@
     host_type: grafana
   become: yes
   tasks:
+    - role: prometheus_target_all
+      tags: prometheus_target_all
+      when: GRAFANA_MONITORING
     - name: include global variables
       include_vars: variables.yml
     - name: include global (secret) variables

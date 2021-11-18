@@ -1,0 +1,8 @@
+---
+# This tasks gathers default system metrics.
+
+- name: install required packages
+  apt:
+    state: present
+    pkg:
+      - prometheus-node-exporter
