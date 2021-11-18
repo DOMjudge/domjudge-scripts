@@ -36,6 +36,12 @@
       tags: mysql_replication
     - role: keepalived
       tags: keepalived
+    - role: prometheus_target_web
+      tags: prometheus_target_web
+      when: GRAFANA_MONITORING
+    - role: prometheus_target_all
+      tags: prometheus_target_all
+      when: GRAFANA_MONITORING
   handlers:
     - include: handlers.yml
   tasks:

@@ -38,6 +38,9 @@
       tags: clusterssh
     - role: phpstorm
       tags: phpstorm
+    - role: prometheus_target_all
+      tags: prometheus_target_all
+      when: GRAFANA_MONITORING
   handlers:
     - include: handlers.yml
   tasks:

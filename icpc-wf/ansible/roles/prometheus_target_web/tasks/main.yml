@@ -1,0 +1,51 @@
+---
+# These tasks configure metric collectors
+
+- name: install required packages
+  apt:
+    state: present
+    pkg:
+      - prometheus-mysqld-exporter
+      - prometheus-nginx-exporter
+
+# Gather PHP-FPM statistics
+# The exporter from this is currently not in deb sources
+# so we need to download this from GitHub see the README in files
+- name: Install PHP-fpm exporter binary
+  ansible.builtin.unarchive:
+    src: php-fpm_exporter.tar.gz
+    dest: /usr/bin/
+    exclude:
+      - LICENSE
+      - README.md
+
+- name: Export PHP-FPM metrics
+  synchronize:
+    src=php-fpm-exporter.service
+    dest=/etc/systemd/system/php-fpm-exporter.service
+  notify: restart php-exporter
+
+# Gather NGINX statistics,
+# Observe that we use the observed process itself in the monitoring
+- name: Get NGINX status
+  synchronize:
+    src=nginx-status.conf
+    dest=/etc/nginx/sites-enabled/nginx-status.conf
+  notify: restart nginx
+
+- name: Prometheus nginx exporter
+  lineinfile:
+    dest: /etc/default/prometheus-nginx-exporter
+    state: present
+    regexp: '^ARGS=""'
+    line: 'ARGS="-nginx.scrape-uri=http://localhost:8080/basic_status"'
+  notify: restart nginx-exporter
+
+# Because the scrape happens inside the same machine we reuse the DB password
+# which is also used for the normal installation
+- name: Create MySQL authentication file
+  template:
+    src: mysqld-exporter-authentication.cnf.j2
+    dest: /var/lib/prometheus/.my.cnf
+    owner: prometheus
+  notify: restart mysqld-exporter
