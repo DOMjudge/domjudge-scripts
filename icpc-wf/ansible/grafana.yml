@@ -4,76 +4,18 @@
   vars:
     host_type: grafana
   become: yes
-  tasks:
+  roles:
+    - role: base_packages
+      tags: base_packages
+    - role: icpc_fixes
+      tags: icpc_fixes
+      when: ICPC_IMAGE
+    - role: system_fixes
+      tags: system_fixes
+    - role: hosts
+      tags: hosts
     - role: prometheus_target_all
       tags: prometheus_target_all
       when: GRAFANA_MONITORING
-    - name: include global variables
-      include_vars: variables.yml
-    - name: include global (secret) variables
-      include_vars: variables-secret.yml
-    
-    - name: install local DEB packages
-      include: install-local-package.yml
-      with_fileglob:
-        - files/install-grafana/*.deb
-    
-    - name: install dependencies
-      apt:
-        state: present
-        install_recommends: no
-        pkg:
-          - nginx
-          # We need these for our extra monitoring things
-          - prometheus
-
-    - name: copy ssl cert
-      copy: src=files/grafana/grafana.crt dest=/etc/ssl/certs/grafana.crt
-    - name: copy ssl key
-      copy: src=files/grafana/grafana.key dest=/etc/ssl/private/grafana.key
-
-    - name: copy default nginx config
-      copy: src=files/grafana/nginx.conf dest=/etc/nginx/sites-enabled/grafana.conf
-
-    - name: restart nginx
-      service: name=nginx state=restarted
-
-    - name: configure grafana
-      copy:
-        src: files/grafana/environment
-        dest: /etc/default/grafana-server
-    
-    - name: set up grafana dashboards
-      copy:
-        src: files/grafana/dashboards.yml
-        dest: /etc/grafana/provisioning/dashboards/default.yml
-    
-    - name: set up grafana datasources
-      copy:
-        src: files/grafana/datasources.yml
-        dest: /etc/grafana/provisioning/datasources/default.yml
-    
-    - name: set up prometheus scrapes
-      template:
-        src: files/grafana/prometheus.yml.j2
-        dest: /etc/prometheus/prometheus.yml
-
-    - name: create dashboard directory
-      file: path=/etc/grafana/dashboards state=directory
-
-    - name: restart prometheus
-      service: name=prometheus state=restarted
-
-    - name: restart grafana
-      service: name=grafana-server state=restarted
-
-    - name: copy grafana dashboards
-      copy:
-        src: files/grafana/dashboards/
-        dest: /etc/grafana/dashboards/
-    
-    - name: Start/enable our services
-      service: name={{ item }} state=started enabled=yes
-      with_items:
-        - grafana-server.service
-        - prometheus.service
+    - role: grafana
+      tags: grafana

@@ -10,6 +10,8 @@ LIBVENDORTGZ=roles/domjudge_checkout/files/lib-vendor.tgz
 SSHKEY=roles/ssh/files/id_rsa
 SSL_LOCALHOST=roles/ssl/files/localhost
 SSL_LOCALHOST_FILES=$(addprefix $(SSL_LOCALHOST),.key .crt)
+SSL_GRAFANA=roles/grafana/files/ssl
+SSL_GRAFANA_FILES=$(addprefix $(SSL_GRAFANA),.key .crt)
 
 ifeq ($(wildcard $(LIBVENDORTGZ)),)
 LIBVENDOR=
@@ -23,6 +25,7 @@ domserver judgehost admin grafana: %: %.yml hosts group_vars/all/secret.yml $(LI
 	ansible-playbook -i hosts $<
 
 admin: $(SSL_LOCALHOST_FILES)
+grafana: $(SSL_GRAFANA_FILES)
 
 $(SSHKEY) $(SSHKEY).pub:
 	ssh-keygen -t rsa -f $(SSHKEY) -P ''
@@ -30,6 +33,9 @@ $(SSHKEY) $(SSHKEY).pub:
 $(SSL_LOCALHOST_FILES):
 	openssl req -x509 -nodes -newkey rsa:4096 -subj "/O=DOMjudge/CN=localhost" \
 		-sha256 -days 365 -keyout $(SSL_LOCALHOST).key -out $(SSL_LOCALHOST).crt
+$(SSL_GRAFANA_FILES):
+	openssl req -x509 -nodes -newkey rsa:4096 -subj "/O=DOMjudge/CN=grafana" \
+		-sha256 -days 365 -keyout $(SSL_GRAFANA).key -out $(SSL_GRAFANA).crt
 
 clean:
 	rm -rf $(LIBVENDOR)
@@ -37,5 +43,6 @@ clean:
 distclean: clean
 	rm -f $(SSHKEY) $(SSHKEY).pub
 	rm -f $(SSL_LOCALHOST_FILES)
+	rm -f $(SSL_GRAFANA_FILES)
 
 .PHONY: default clean distclean domserver judgehost admin grafana
