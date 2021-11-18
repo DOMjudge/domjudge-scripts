@@ -2,4 +2,4 @@
 # Define here handlers associated to this role.
 
 - name: restart mysql
-  service: name=mysql state=restarted
+  service: name=mysql enabled=yes state=restarted
