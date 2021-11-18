@@ -1,0 +1,57 @@
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: 'db'
+    static_configs:
+      - targets:
+{% for host in groups["domserver"] %}
+        - {{ hostvars[host].ansible_host }}:9104
+{% endfor %}
+  - job_name: node_domserver
+    static_configs:
+      - targets:
+{% for host in groups["domserver"] %}
+        - {{ hostvars[host].ansible_host }}:9100
+{% endfor %}
+  - job_name: node_judgehost
+    static_configs:
+      - targets:
+{% for host in groups["judgehost"] %}
+        - {{ hostvars[host].ansible_host }}:9100
+{% endfor %}
+  - job_name: node_grafana
+    static_configs:
+      - targets:
+{% for host in groups["grafana"] %}
+        - {{ hostvars[host].ansible_host }}:9100
+{% endfor %}
+  - job_name: domjudge
+    basic_auth:
+      username: admin
+      password: {{ ADMIN_PASSWORD }}
+    metrics_path: /api/v4/metrics/prometheus
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+      - targets:
+{% for host in groups["domserver"] %}
+        - {{ hostvars[host].ansible_host }}
+{% endfor %}
+  - job_name: 'nginx_domjudge'
+    static_configs:
+      - targets:
+{% for host in groups["domserver"] %}
+        - {{ hostvars[host].ansible_host }}:9113
+{% endfor %}
+  - job_name: 'fpm_domjudge'
+    static_configs:
+      - targets:
+{% for host in groups["domserver"] %}
+        - {{ hostvars[host].ansible_host }}:9253
+{% endfor %}

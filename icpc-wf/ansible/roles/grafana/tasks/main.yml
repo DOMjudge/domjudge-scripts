@@ -1,61 +1,63 @@
 ---
 # These tasks install and configure grafana
 
-- name: install domserver required packages
+- name: install dependencies
   apt:
     state: present
+    install_recommends: no
     pkg:
-      - prometheus-nginx-exporter
-      - prometheus-node-exporter
-      - prometheus-mysqld-exporter
+      - nginx
+      - prometheus
 
-- name: create collectd user for mysql status
-  mysql_user:
-    name: collectdstatus
-    host: 'localhost'
-    password: "{{COLLECTD_MYSQL_PASSWORD}}"
-    append_privs: true
-    priv: '*.*:PROCESS,REPLICATION CLIENT'
-    state: present
-  when: COLLECTD_MYSQL_PASSWORD is defined
-
-- name: Create MySQL authentication file
+# Setup Prometheus, which scrapes all metrics from the monitored machines
+# The client exposes the metrics (on different ports/URIs) and we collect those
+- name: set up prometheus scrapes
   template:
-    src: my.cnf.j2
-    dest: /var/lib/prometheus/.my.cnf
-    owner: prometheus
-  when: COLLECTD_MYSQL_PASSWORD is defined
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
 
-- name: Start/enable our services
-  service: name={{ item }} state=started enabled=yes
-  with_items:
-    - prometheus-mysqld-exporter.service
-  when: COLLECTD_MYSQL_PASSWORD is defined
+- name: restart prometheus
+  service: name=prometheus state=restarted
 
-- name: add nginx status
-  copy:
-    src: nginx-status.conf
-    dest: /etc/nginx/sites-enabled/status.conf
-  notify: restart nginx
+## Setup grafana
+- name: configure grafana
+  synchronize:
+    src: files/grafana/environment
+    dest: /etc/default/grafana-server
 
-- name: Prometheus nginx exporter
-  lineinfile:
-    dest: /etc/default/prometheus-nginx-exporter
-    state: present
-    regexp: '^ARGS=""'
-    line: 'ARGS="-nginx.scrape-uri=http://localhost:8080/basic_status"'
-  notify: restart nginx-exporter
+- name: set up grafana datasources
+  synchronize:
+    src: files/grafana/datasources.yml
+    dest: /etc/grafana/provisioning/datasources/default.yml
 
-- name: Install PHP-fpm exporter binary
-  ansible.builtin.unarchive:
-    src: php-fpm_exporter_2.0.3_linux_amd64.tar.gz
-    dest: /usr/bin/
-    exclude:
-      - LICENSE
-      - README.md
+- name: set up grafana dashboards
+  synchronize:
+    src: files/grafana/dashboards.yml
+    dest: /etc/grafana/provisioning/dashboards/default.yml
 
-- name: Export PHP-FPM metrics
-  copy:
-    src: php-fpm-exporter.service
-    dest: /etc/systemd/system/
-  notify: restart php-exporter
+- name: copy grafana dashboards
+  synchronize:
+    src: dashboards/
+    dest: /etc/grafana/dashboards/
+
+- name: restart grafana
+  service: name=grafana-server state=restarted
+
+# Setup nginx with selfsigned certificate
+- name: copy ssl cert
+  synchronize:
+    src=ssl.crt
+    dest=/etc/ssl/certs/grafana.crt
+
+- name: copy ssl key
+  synchronize:
+    src=ssl.key
+    dest=/etc/ssl/private/grafana.key
+
+- name: copy default nginx config
+  synchronize:
+    src=nginx.conf
+    dest=/etc/nginx/sites-enabled/grafana.conf
+
+- name: restart nginx
+  service: name=nginx enabled=yes state=restarted
