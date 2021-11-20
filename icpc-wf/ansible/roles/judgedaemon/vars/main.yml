@@ -1,0 +1,5 @@
+CPUCORE:
+  - 2
+# Add additional CPU cores to pin judgedaemons on as:
+# - 3
+# - 4

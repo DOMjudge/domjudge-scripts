@@ -2,12 +2,8 @@
 # These tasks configure the DOMjudge judgedaemon with chroot
 
 - name: create domjudge-run users
-  user: name={{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
-  with_items:
-    - domjudge-run-0
-    - domjudge-run-1
-    - domjudge-run-2
-    - domjudge-run-3
+  user: name=domjudge-run-{{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
+  with_items: "{{CPUCORE}}"
 
 - name: create domjudge-run group
   group: name=domjudge-run state=present
@@ -32,16 +28,20 @@
   args:
     creates: "/chroot/domjudge"
 
+- name: Pre-generate the kernel flags for ansible usage
+  set_fact:
+    procline: "cgroup_enable=memory swapaccount=1 isolcpus={{ CPUCORE|join(',') }}"
+
 - name: add cgroup kernel parameters
   lineinfile:
     dest: /etc/default/grub
     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
-    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1"'
+    line: "{{ procline }}"
 
 - name: check cgroup kernel parameters
   command: cat /proc/cmdline
   register: kernel_cmdline
-  changed_when: "'cgroup_enable=memory swapaccount=1' not in kernel_cmdline.stdout"
+  changed_when: procline not in kernel_cmdline.stdout
   notify:
     - update grub
     - reboot
@@ -70,7 +70,7 @@
     dest: /etc/systemd/system/
   with_items:
     - create-cgroups
-    - domjudge-judgehost
+    - domjudge-judgedaemon@
   notify:
     - restart systemctl
     - enable and restart create-cgroups
