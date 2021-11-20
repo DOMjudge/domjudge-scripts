@@ -3,6 +3,10 @@
 
 - name: setup judgehost
   hosts: judgehost
+  serial:
+    - 33% # We always leave 1/3 of the judges online
+    - 33%
+    - 34%
   vars:
     host_type: judgehost
   become: yes
@@ -37,9 +41,11 @@
       tags: prometheus_target_all
       when: GRAFANA_MONITORING
   pre_tasks:
-    - pause:
-        prompt: "Did you disable all judges"
-      delegate_to: localhost
+    - name: Disable all cores
+      service:
+        name="domjudge-judgedaemon@{{item}}"
+        state=stopped
+      with_sequence: start=0 end={{ ansible_processor_vcpus }} format=domjudge-judgedaemon@%1x
   tasks:
     - name: add autostart shortcuts
       template:
