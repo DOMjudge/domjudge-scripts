@@ -11,7 +11,11 @@
   service: name=create-cgroups enabled=yes state=restarted
 
 - name: enable and restart judgedaemon
-  service: name=domjudge-judgehost enabled=yes state=restarted
+  service:
+    name="domjudge-judgedaemon@{{item}}"
+    enabled=yes
+    state=restarted
+  with_items: "{{CPUCORE}}"
 
 - name: update grub
   shell: update-grub
