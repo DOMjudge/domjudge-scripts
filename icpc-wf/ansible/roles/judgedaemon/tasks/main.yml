@@ -36,7 +36,7 @@
   lineinfile:
     dest: /etc/default/grub
     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
-    line: "{{ procline }}"
+    line: "GRUB_CMDLINE_LINUX_DEFAULT=\"{{ procline }}\""
 
 - name: check cgroup kernel parameters
   command: cat /proc/cmdline
