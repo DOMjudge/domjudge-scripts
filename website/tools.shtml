@@ -15,8 +15,10 @@
    testdata according to a grammar file. It also supports generating testdata based
    on a specification.
 </p>
-
-
+<h3>BAPCtools</h3>
+<p><a href="https://github.com/RagnarGrootKoerkamp/BAPCtools">BAPCtools</a>  is a tool for creating and developing problems following the CLICS (DOMjudge/Kattis) problem format.<br>The aim of this tool is to run all necessary compilation, validation, and testing commands while working on an ICPC-style problem. Ideally one should never have to manually run any compilation or testing command themselves.</p>
+<h3>Problemtools</h3>
+<p>The <a href="https://github.com/Kattis/problemtools">Kattis Problem Tool</a> is a collection of tools to create Kattis style problems. DOMjudge is able to import this format.</p>
 <h2>Contest as a service</h2>
 
 <h3>Cloudcontest</h3>
