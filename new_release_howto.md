@@ -4,7 +4,7 @@ on the account `domjudge@vm-domjudge`):
 
  1. Test everything. (duh...)
  1. Commit the correct version number in the `ChangeLog` and `README` files.
- 1. export $TAG=x.y.z
+ 1. `export TAG=x.y.z`
  1. Create a release version `$TAG` in Git with `$TAG` the version number
     x.y.z:
     ```sh
