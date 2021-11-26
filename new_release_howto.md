@@ -30,7 +30,14 @@ on the account `domjudge@vm-domjudge`):
     under `/srv/http/domjudge/docs/manual` by adding a new version to the
     file `versions.json` and updating the redirect destination in `index.html`.
     The documentation is regenerated once every hour.
- 1. Bump the docker containers and build Debian packages (or make someone
+ 1. Bump the Docker images by starting a new pipeline
+    [here](https://gitlab.com/DOMjudge/domjudge-packaging/-/pipelines/new) and
+    setting `DOMJUDGE_VERSION` to the version to release. Set `DOMJUDGE_LATEST`
+    to true if this is the latest version or `false` if it is not. After clicking
+    `Run pipeline`, make sure to click the *play* button next to `release-DOMjudge`
+    to actually build and push the Docker images. You can view the progress by
+    clicking on the job.
+ 1. Build Debian packages (or make someone
     do this).
  1. Put debian packages in `/srv/http/domjudge/debian/mini-dinstall/incoming`
     and run as domjudge@domjudge: `mini-dinstall -b`
