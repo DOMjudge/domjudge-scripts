@@ -38,6 +38,7 @@ while getopts ':c:dn:u:q' OPT ; do
 				echo "Error: cannot read '$OPTARG'."
 				exit 1
 			fi
+			# shellcheck source=/dev/null
 			. "$OPTARG"
 			;;
 		d) DEBUG=1 ;;
@@ -70,6 +71,7 @@ if [ -z "$READCONFIG" ]; then
 	for i in ./cov-submit-data*.sh ; do
 		# Check if the file exists in case the globbing returned nothing:
 		[ -r "$i" ] || continue
+		# shellcheck source=/dev/null
 		. "$i"
 	done
 fi
@@ -78,7 +80,7 @@ export PATH="$PATH:$COVTOOL/bin"
 
 git_dirty()
 {
-	git diff --quiet --exit-code || echo -n '*'
+	git diff --quiet --exit-code || printf '*'
 }
 git_branch()
 {
@@ -99,9 +101,9 @@ quietfilter()
 }
 
 if [ -n "$GITURL" ]; then
-	TEMPDIR=`mktemp -d /tmp/cov-scan-XXXXXX`
-	git clone $QUIETOPT "$GITURL" $TEMPDIR
-	cd $TEMPDIR
+	TEMPDIR=$(mktemp -d /tmp/cov-scan-XXXXXX)
+	git clone $QUIETOPT "$GITURL" "$TEMPDIR"
+	cd "$TEMPDIR"
 	make $QUIETMAKE coverity-conf
 fi
 
@@ -113,6 +115,7 @@ if [ -n "$NEWERTHAN" ]; then
 fi
 
 COVOPTS='--dir cov-int --fs-capture-search ./'
+# shellcheck disable=SC2086
 cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | quietfilter
 
 VERSION=$(grep '^VERSION' paths.mk | sed 's/.*= *//')
@@ -121,11 +124,12 @@ DESC="git: $(git_branch)$(git_dirty) $(git_commit)"
 for i in ./cov-submit-data*.sh ; do
 	# Check if the file exists in case the globbing returned nothing:
 	[ -r "$i" ] || continue
+	# shellcheck source=/dev/null
 	. "$i"
 done
 
 # Check if we have all submission data:
-if [ -z "$PROJECT" -o -z "$EMAIL" -o -z "$TOKEN" ]; then
+if [ -z "$PROJECT" ] || [ -z "$EMAIL" ] || [ -z "$TOKEN" ]; then
 	echo "Error: missing submission data: PROJECT, EMAIL or TOKEN not specified."
 	echo "PROJECT=$PROJECT"
 	echo "EMAIL=$EMAIL"
@@ -139,19 +143,19 @@ tar caf "$ARCHIVE" cov-int
 
 [ -n "$QUIET" ] || echo "Submitting '$VERSION' '$DESC'"
 
-TMP=`mktemp --tmpdir curl-cov-submit-XXXXXX.html`
+TMP=$(mktemp --tmpdir curl-cov-submit-XXXXXX.html)
 
 ${DEBUG:+echo} \
 curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
      --form version="$VERSION" --form description="$VERSION - $DESC" \
-     -o $TMP ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT" 2>&1 \
+     -o "$TMP" ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT" 2>&1 \
 	| quietfilter
 
-[ -n "$QUIET" ] || grep -vE '^[[:space:]]*$' $TMP
+[ -n "$QUIET" ] || grep -vE '^[[:space:]]*$' "$TMP"
 
-rm -f $TMP
+rm -f "$TMP"
 
-if [ -n "$GITURL" -a -z "$DEBUG" ]; then
+if [ -n "$GITURL" ] && [ -z "$DEBUG" ]; then
 	rm -rf "$TEMPDIR"
 fi
 
