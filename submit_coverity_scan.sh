@@ -133,11 +133,11 @@ if [ -z "$PROJECT" -o -z "$EMAIL" -o -z "$TOKEN" ]; then
 	exit 1
 fi
 
-[ -n "QUIET" ] || echo "Compressing scan directory 'cov-int' into '$ARCHIVE'..."
+[ -n "$QUIET" ] || echo "Compressing scan directory 'cov-int' into '$ARCHIVE'..."
 
 tar caf "$ARCHIVE" cov-int
 
-[ -n "QUIET" ] || echo "Submitting '$VERSION' '$DESC'"
+[ -n "$QUIET" ] || echo "Submitting '$VERSION' '$DESC'"
 
 TMP=`mktemp --tmpdir curl-cov-submit-XXXXXX.html`
 
@@ -147,7 +147,7 @@ curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
      -o $TMP ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT" 2>&1 \
 	| quietfilter
 
-[ -n "QUIET" ] || grep -vE '^[[:space:]]*$' $TMP
+[ -n "$QUIET" ] || grep -vE '^[[:space:]]*$' $TMP
 
 rm -f $TMP
 
