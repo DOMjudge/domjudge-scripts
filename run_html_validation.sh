@@ -21,13 +21,13 @@ VNUCHECKER=~/vnu_html_checker/vnu.jar
 quiet()
 {
 	if [ "$DEBUG" ]; then
-		$@
+		"$@"
 	else
-		$@ > /dev/null 2>&1
+		"$@" > /dev/null 2>&1
 	fi
 }
 
-TEMPDIR=`mktemp -d /tmp/dj_html_validate-XXXXXX`
+TEMPDIR=$(mktemp -d /tmp/dj_html_validate-XXXXXX)
 
 cd ~
 
@@ -115,8 +115,8 @@ check_html ()
 {
 	set +e
 	url="$LIVEURLPREFIX$1"
-	TEMP=$TEMPDIR/`echo "$1" | sed 's!/!_!g'`.html
-	curl -s -L -g ${USER:+-u$USER:$PASS} "$url" > $TEMP
+	TEMP="$TEMPDIR/$(echo "$1" | sed 's!/!_!g').html"
+	curl -s -L -g ${USER:+-u$USER:$PASS} "$url" > "$TEMP"
 	# Filter out some unfixable errors and normalize file/URL output:
 	java -jar $VNUCHECKER "$TEMP" 2>&1 | \
 		grep -v 'error: Attribute .*sorttable_customkey.* not allowed on element' | \
@@ -131,6 +131,6 @@ for i in $URLS ; do
 done
 IFS="$OFS"
 
-[ "$DEBUG" ] || rm -rf $TEMPDIR
+[ "$DEBUG" ] || rm -rf "$TEMPDIR"
 
 exit 0

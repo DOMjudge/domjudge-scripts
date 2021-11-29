@@ -12,14 +12,14 @@ notify_channel () {
     echo "$1"
     # When cron is run often one should have time to
     # fix the issue.
-    if [ ! -f /tmp/$2 ]; then
+    if [ ! -f "/tmp/$2" ]; then
         # Write to syslog on server
         logger "$1"
         DATA='{"text":"'"$1"'"}'
         # Notify DOMjudge Slack channel (github-notifications)
         # SLACK_URL should be exported in the .bashrc (it should be secret)
         curl -X POST -H 'Content-type: application/json' --data "$DATA" "$SLACK_URL"
-        touch /tmp/$2
+        touch "/tmp/$2"
     fi
 }
 
@@ -39,10 +39,10 @@ process_tag () {
        # gpg --search 780355B5EA6BFC8235A99C4B56F61A79401DAC04
        # And if one trusts the internet to be correct
        # gpg --recv-keys 780355B5EA6BFC8235A99C4B56F61A79401DAC04
-       if git verify-tag $TAG; then
+       if git verify-tag "$TAG" ; then
            # At this point the tarball should already be locally tested
            ~/domjudge-scripts/make_release.sh "$TAG"
-           mv domjudge-$TAG.* $RELEASE_DIR/
+           mv domjudge-"$TAG".* $RELEASE_DIR/
            notify_channel "Tarball finished ($TAG).\nURL: https://www.domjudge.org/releases/domjudge-$TAG.tar.gz" "$TAG"
        else
            notify_channel "Untrusted tag ($TAG)" "$TAG"

@@ -2,6 +2,8 @@
 # Script to update the DOMjudge demo webinterface
 # at:    https://www.domjudge.org/demoweb/
 
+# shellcheck disable=SC2086 # globally for MYSQLOPTS twice
+
 set -e
 
 MYSQLOPTS=''
