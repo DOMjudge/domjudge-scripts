@@ -7,8 +7,8 @@ TMPDIR=$(mktemp -d -t 'update_docs-XXXXXX')
 DOC_REPO="$TMPDIR/domjudge"
 git clone https://github.com/DOMjudge/domjudge.git "$DOC_REPO"
 
-for version in `cat "${JSON}" | jq -r -c '.[]'`; do
-	rm -rf "${WEBSERVER_PATH}/${version}"
+for version in $(jq -r -c '.[]' < "${JSON}") ; do
+	rm -rf "${WEBSERVER_PATH:?}/${version}"
 	mkdir -p "${WEBSERVER_PATH}/${version}"
 	(
 		cd "$DOC_REPO"

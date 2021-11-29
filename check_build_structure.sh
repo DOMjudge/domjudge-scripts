@@ -13,25 +13,26 @@ GITURL="https://github.com/DOMjudge/domjudge.git"
 quiet()
 {
 	if [ "$DEBUG" ]; then
-		$@
+		"$@"
 	else
-		$@ > /dev/null 2>&1
+		"$@" > /dev/null 2>&1
 	fi
 }
 
-TEMPDIR=`mktemp -d /tmp/domjudge-check_build-XXXXXX`
-cd $TEMPDIR
+TEMPDIR=$(mktemp -d /tmp/domjudge-check_build-XXXXXX)
+cd "$TEMPDIR"
 
 git clone -q --no-checkout --depth 1 "$GITURL" dj-clone
 
 ( cd dj-clone && git archive --prefix=domjudge/ --format=tar refs/heads/main ) | tar x
 
 # Add released tag for revision information:
-sed -i "s/PUBLISHED =.*/PUBLISHED = `date +%Y-%m-%d`/" domjudge/paths.mk.in
+sed -i "s/PUBLISHED =.*/PUBLISHED = $(date +%Y-%m-%d)/" domjudge/paths.mk.in
 
 quiet make -C domjudge dist
 
 # Remove date output from generated file tags to make diffs cleaner:
+# shellcheck disable=SC2016
 sed -i 's/ on `date`//' domjudge/paths.mk.in
 
 cp -a domjudge configured
@@ -57,7 +58,7 @@ diff -r -u2 domjudge distclean
 if [ "$DEBUG" ]; then
 	echo "Generated files left in $TEMPDIR"
 else
-	rm -rf $TEMPDIR
+	rm -rf "$TEMPDIR"
 fi
 
 exit 0

@@ -9,7 +9,7 @@ if [ -z "$CI_USAGE" ]; then
 else
     set -eux
     export PS4='(${0}:): - [$?] $ '
-fi 
+fi
 
 GITURL="https://github.com/DOMjudge/domjudge.git"
 
@@ -54,7 +54,7 @@ CHLOG_VERSION="$(echo "$CHLOG" | sed -r 's/^Version ([0-9\.]+) .*$/\1/')"
 if [ "$VERSION" != "$CHLOG_VERSION" ]; then
     echo "WARNING: version strings in README* and ChangeLog differ:"
     echo "'$VERSION' != '$CHLOG_VERSION'"
-    if [ ! -t 1 && -z ${CI+x} ] ; then
+    if [ ! -t 1 ] && [ -z ${CI+x} ] ; then
         # In the cronjob this would be reason to not release
         exit 1
     fi
