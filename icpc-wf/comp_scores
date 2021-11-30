@@ -1,4 +1,5 @@
 #!/bin/sh -e
+# shellcheck disable=SC2002
 
 # Set credentials in ~/.netrc
 

@@ -1,12 +1,12 @@
 #!/bin/sh -e
 
-echo -n "checking no_turbo: "
+printf "checking no_turbo: "
 cat /sys/devices/system/cpu/intel_pstate/no_turbo
 
-echo -n "min perf pct: "
+printf "min perf pct: "
 cat /sys/devices/system/cpu/intel_pstate/min_perf_pct
 
-echo -n "max perf pct: "
+printf "max perf pct: "
 cat /sys/devices/system/cpu/intel_pstate/max_perf_pct
 
 echo "scaling governors: "
