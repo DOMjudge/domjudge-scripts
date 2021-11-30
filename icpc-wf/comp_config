@@ -1,4 +1,6 @@
 #!/bin/bash
+#shellcheck disable=SC1003,SC2034,SC2086
+
 set -eu -o pipefail
 
 # Set credentials in ~/.netrc
