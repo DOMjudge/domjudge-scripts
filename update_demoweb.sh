@@ -32,5 +32,5 @@ mysql $MYSQLOPTS "$DBNAME" < domjudge_demo.sql
 sed -i 's|Alias /domjudge|Alias /demoweb|g' etc/apache.conf
 
 # Warmup the cache for our first visitor
-./webapp/bin/console cache:clear
-./webapp/bin/console cache:warmup
+./webapp/bin/console -q cache:clear
+./webapp/bin/console -q cache:warmup
