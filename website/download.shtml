@@ -35,7 +35,7 @@ dated <!--#echo var="dj_rc_branch_date" -->.</p>
 </div></div>
 
 <p>To get notifications of new releases, subscribe to the low volume
-<a href="https://www.domjudge.org/mailman/listinfo/domjudge-announce">announcements
+<a href="https://www.domjudge.org/mailman/postorius/lists/domjudge-announce.domjudge.org/">announcements
 mailing list</a>.</p>
 
 <h3>DOMjudge docker images</h3>
