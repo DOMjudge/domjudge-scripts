@@ -1,0 +1,28 @@
+name: Test contest deployment (ansible scripts)
+
+on: [push,pull_request]
+
+jobs:
+  test_domjudge_role:
+    strategy:
+      #matrix:
+      #  os: [ubuntu-latest, ubuntu-20.04]
+      #  role: [domserver,judgehost]
+      matrix:
+        os: [ubuntu-latest]
+        role: [domserver]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Install ansible lint tools
+        run: sudo apt update; sudo apt install ansible
+      - name: Setup the hosts file
+        working-directory: ./icpc-wf/ansible
+        run: sed -i 's/\[${{ matrix.role }}\]/[removed]/g' hosts; printf '\n[${{ matrix.role }}]\ngithub-action\tansible_host=localhost ansible_connection=local' >> hosts
+      - name: Generate insecure credentials
+        working-directory: ./icpc-wf/ansible
+        run: mv group_vars/all/secret.yml{.example,}
+      - name: Run the default deployment method
+        working-directory: ./icpc-wf/ansible
+        run: make ${{ matrix.role }}

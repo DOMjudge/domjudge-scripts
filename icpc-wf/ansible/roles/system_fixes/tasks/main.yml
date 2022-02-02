@@ -28,3 +28,4 @@
 - name: Force enable alt-tab for switching windows
   copy: src=dconf/ dest=/etc/dconf/
   notify: update dconf
+  when: GRAPHICAL

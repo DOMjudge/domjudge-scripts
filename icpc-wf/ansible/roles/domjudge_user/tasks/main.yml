@@ -43,6 +43,7 @@
     line: 'AutomaticLoginEnable=true'
     create: yes
   notify: restart gdm
+  when: GRAPHICAL
 
 - name: Automatically login domjudge user
   lineinfile:
@@ -50,6 +51,7 @@
     regexp: 'AutomaticLogin='
     line: 'AutomaticLogin=domjudge'
   notify: restart gdm
+  when: GRAPHICAL
 
 - name: make sure autostart directory exists
   file: dest=/home/domjudge/.config/autostart state=directory owner=domjudge group=domjudge
