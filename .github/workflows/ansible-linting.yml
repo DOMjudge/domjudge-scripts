@@ -1,0 +1,22 @@
+name: Test contest deployment (ansible scripts) [PIP]
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Install ansible lint tools
+        run: sudo apt update; sudo pip install ansible-lint
+      - name: Lint the different scripts 
+        run: |
+          set -eux
+          ansible-lint --version
+          ansible-lint .
+        working-directory: icpc-wf/ansible
+      - name: Lint the different scripts (Via the script)
+        run: ../../.github/linting.sh
+        working-directory: icpc-wf/ansible
+
