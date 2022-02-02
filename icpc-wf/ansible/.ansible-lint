@@ -1,0 +1,10 @@
+parseable: true
+skip_list:
+  - no-handler     # TODO: this might break existing playbooks
+  - 503            # TODO: this might break existing playbooks
+  - meta-no-info   # We don't publish to galaxy (yet)
+  - 701            # We don't publish to galaxy (yet)
+  - fqcn-builtins  # I see no benefit as we dont use custom roles
+  - 204            # The long line should be re-evaluated
+use_default_rules: true
+verbosity: 1
