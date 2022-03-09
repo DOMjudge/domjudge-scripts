@@ -13,6 +13,14 @@
   become_user: domjudge
   git: repo={{DJ_GIT_REPO}} dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
   register: git_working_copy
+  when: WF_RESTRICTED_NETWORK
+
+- name: create working copy of the domjudge repo
+  become: yes
+  become_user: domjudge
+  git: repo={{DJ_GIT_REPO_UPSTREAM}} dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
+  register: git_working_copy
+  when: WF_RESTRICTED_NETWORK != true
 
 - name: Check composer dependencies present
   become: no

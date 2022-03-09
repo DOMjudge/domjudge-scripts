@@ -38,6 +38,7 @@ PHP_MAX_FILE_UPLOADS: 101
 # Git repo URL
 DJ_GIT_HOST: "{{MAIN_ADMIN_IP}}"
 DJ_GIT_REPO: "domjudge@{{DJ_GIT_HOST}}:domjudge"
+DJ_GIT_REPO_UPSTREAM: "https://github.com/domjudge/domjudge.git"
 DJ_GIT_REPO_SCRIPTS: "domjudge@{{DJ_GIT_HOST}}:domjudge-scripts-bare"
 
 PHPSTORM_VERSION: 2021.2
