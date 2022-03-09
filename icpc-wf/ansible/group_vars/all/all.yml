@@ -2,7 +2,7 @@
 DJ_DIR: /opt/domjudge
 
 # Branch to checkout and use.
-DJ_BRANCH: wf2020
+DJ_BRANCH: main
 
 # Server VLAN IP prefix.
 SERVER_IP_PREFIX: 10.3.3
