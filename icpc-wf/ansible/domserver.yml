@@ -36,6 +36,7 @@
       tags: mysql_replication
     - role: keepalived
       tags: keepalived
+      when: KEEPALIVED_PRIORITY is defined
     - role: prometheus_target_web
       tags: prometheus_target_web
       when: GRAFANA_MONITORING
