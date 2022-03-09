@@ -93,6 +93,17 @@
     - tig
     - bat
     - jq
+    - python3-sphinx
+    - autoconf
+    - automake
+    - bats
+    - python3-sphinx
+    - python3-sphinx-rtd-theme
+    - rst2pdf
+    - fontconfig
+    - python3-yaml
+    - latexmk
+    - acl
 
 - name: install local DEB packages
   include: install-local-package.yml
