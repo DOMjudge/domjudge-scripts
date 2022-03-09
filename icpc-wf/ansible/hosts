@@ -1,7 +1,6 @@
 [all:vars]
 ansible_user=root
 ansible_python_interpreter=/usr/bin/python3
-EFI_ORDER='2,1'
 
 [domserver]
 domjudge-primary     ansible_host=10.3.3.216 KEEPALIVED_PRIORITY=100 EFI_ORDER='0\,1\,3\,4'
