@@ -17,7 +17,6 @@
   become_user: domjudge
   git: repo={{DJ_GIT_REPO}} dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
   register: git_working_copy
-  when: WF_RESTRICTED_NETWORK
 
 - name: Check composer dependencies present
   become: no
