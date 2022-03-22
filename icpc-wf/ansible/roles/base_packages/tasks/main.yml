@@ -85,7 +85,6 @@
     - libcurl4-gnutls-dev
     - libjsoncpp-dev
     - libmagic-dev
-    - composer
     - debootstrap
     - texlive-latex-recommended
     - texlive-latex-extra
@@ -104,6 +103,21 @@
     - python3-yaml
     - latexmk
     - acl
+
+- name: Check if composer is installed
+  stat:
+    path: /usr/local/bin/composer
+  register: composer_file
+
+- name: Download Composer Installer
+  get_url:
+    url: https://getcomposer.org/installer
+    dest: /root/composer-setup.php
+  when: not composer_file.stat.exists
+
+- name: Install composer
+  command: php /root/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+  when: not composer_file.stat.exists
 
 - name: install local DEB packages
   include: install-local-package.yml
