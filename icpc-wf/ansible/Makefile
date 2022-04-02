@@ -5,6 +5,7 @@ default:
 	@echo " - make judgehost"
 	@echo " - make admin"
 	@echo " - make grafana"
+	@echo " - make cds"
 
 LIBVENDORTGZ=roles/domjudge_checkout/files/lib-vendor.tgz
 SSHKEY=roles/ssh/files/id_rsa
@@ -21,7 +22,7 @@ $(LIBVENDOR): $(LIBVENDORTGZ)
 	-cd roles/domjudge_checkout/files && tar xzf $(notdir $<)
 endif
 
-domserver judgehost admin grafana: %: %.yml hosts group_vars/all/secret.yml $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
+domserver judgehost admin grafana cds: %: %.yml hosts group_vars/all/secret.yml $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
 	ansible-playbook -i hosts $<
 
 admin: $(SSL_LOCALHOST_FILES)
@@ -45,4 +46,4 @@ distclean: clean
 	rm -f $(SSL_LOCALHOST_FILES)
 	rm -f $(SSL_GRAFANA_FILES)
 
-.PHONY: default clean distclean domserver judgehost admin grafana
+.PHONY: default clean distclean domserver judgehost admin grafana cds

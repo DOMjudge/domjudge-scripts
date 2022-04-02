@@ -1,0 +1,9 @@
+[Unit]
+Description=CDS
+[Service]
+User=domjudge
+Restart=always
+ExecStart=/home/domjudge/cds/wlp/bin/server run cds
+TimeoutStopSec=20s
+[Install]
+WantedBy=multi-user.target

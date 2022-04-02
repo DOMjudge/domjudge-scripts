@@ -1,0 +1,7 @@
+<cds>
+    {% for contest in CDS_CONTESTS %}
+    <contest location="/home/domjudge/cds/contests/{{ contest.path }}" recordReactions="false">
+        <ccs url="{% if contest.ccs.id is defined %}{{ DOMSERVER_URL }}/api/contests/{{ contest.ccs.id }}{% else %}{{ contest.ccs.url }}{% endif %}" user="{{ contest.ccs.username }}" password="{{ contest.ccs.password }}" />
+    </contest>
+    {% endfor %}
+</cds>
