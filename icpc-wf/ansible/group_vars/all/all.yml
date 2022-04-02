@@ -46,3 +46,11 @@ PHPSTORM_VERSION: 2021.2
 PHPSTORM_FULL_VERSION: 212.5284.49
 
 GRAFANA_MONITORING: false
+
+# Hostname of the CDS. If set, will add an nginx in front of the CDS
+# If not set, will only expose CDS directly
+CDS_HOSTNAME: cds
+
+#  CDS SSL cert and key. Only needed when CDS_HOSTNAME is set
+CDS_SSL_CERT: /etc/ssl/certs/cds.crt
+CDS_SSL_KEY: /etc/ssl/private/cds.key

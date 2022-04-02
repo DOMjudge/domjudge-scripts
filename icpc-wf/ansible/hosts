@@ -35,3 +35,6 @@ domjudge-ccsadmin5 ansible_host=10.3.3.227
 
 [grafana]
 domjudge-prometheus ansible_host=10.3.3.223
+
+[cds]
+domjudge-cds  ansible_host=10.2.2.228

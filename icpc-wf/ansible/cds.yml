@@ -1,0 +1,29 @@
+---
+# This playbook installs the CDS
+
+- name: setup CDS
+  hosts: cds
+  vars:
+    host_type: cds
+  become: yes
+  roles:
+    - role: base_packages
+      tags: base_packages
+    - role: icpc_fixes
+      tags: icpc_fixes
+      when: ICPC_IMAGE
+    - role: system_fixes
+      tags: system_fixes
+    - role: hosts
+      tags: hosts
+    - role: ssl
+      tags: ssl
+      when: CDS_HOSTNAME
+      vars:
+        INSTALL_SSL_PRIVATE_KEYS: true
+    - role: domjudge_user
+      tags: domjudge_user
+    - role: ssh
+      tags: ssh
+    - role: cds
+      tags: cds

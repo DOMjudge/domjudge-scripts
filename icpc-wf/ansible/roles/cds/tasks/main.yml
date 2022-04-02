@@ -1,0 +1,126 @@
+---
+# These tasks configure the CDS
+
+- name: Get the latest CDS release
+  uri:
+    url: https://api.github.com/repos/icpctools/icpctools/releases/latest
+    method: GET
+    return_content: yes
+    status_code: 200
+    body_format: json
+  register: latest_cds_release
+
+- name: Set CDS latest version
+  set_fact:
+    cds_version: "{{ latest_cds_release.json.name | replace('v', '') }}"
+
+- name: Check if CDS is installed
+  stat:
+    path: /home/domjudge/cds/wlp/usr/servers/cds/apps/CDS.war
+  register: cds_war
+
+- name: create CDS directory
+  file:
+    path: /home/domjudge/cds
+    state: directory
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+
+- name: Download and unpack full CDS
+  unarchive:
+    src: https://github.com/icpctools/icpctools/releases/download/v{{ cds_version }}/wlp.CDS-{{ cds_version }}.zip
+    dest: /home/domjudge/cds
+    remote_src: true
+    owner: domjudge
+    group: domjudge
+  when: not cds_war.stat.exists
+  notify: restart cds
+
+- name: Download and unpack CDS WAR
+  unarchive:
+    src: https://github.com/icpctools/icpctools/releases/download/v{{ cds_version }}/CDS-{{ cds_version }}.zip
+    dest: /root
+    remote_src: true
+  when: cds_war.stat.exists
+
+- name: Copy new CDS war
+  copy:
+    src: /root/CDS-2.3/CDS.war
+    dest: /home/domjudge/cds/wlp/usr/servers/cds/apps/CDS.war
+    remote_src: yes
+    owner: domjudge
+    group: domjudge
+  when: cds_war.stat.exists
+  notify: restart cds
+
+- name: Populate CDS users.xml
+  template:
+    src: users.xml.j2
+    dest: /home/domjudge/cds/wlp/usr/servers/cds/users.xml
+    owner: domjudge
+    group: domjudge
+    mode: 0600
+  notify: restart cds
+
+- name: Populate CDS cdsConfig.xml
+  template:
+    src: cdsConfig.xml.j2
+    dest: /home/domjudge/cds/wlp/usr/servers/cds/config/cdsConfig.xml
+    owner: domjudge
+    group: domjudge
+    mode: 0600
+  notify: restart cds
+
+- name: Create contests config directory
+  file:
+    path: /home/domjudge/cds/contests
+    state: directory
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+
+- name: Create contest specific directory
+  file:
+    path: /home/domjudge/cds/contests/{{ item.path }}
+    state: directory
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+  loop: "{{ CDS_CONTESTS }}"
+
+- name: copy cds systemd unit file
+  copy:
+    src: cds.service
+    dest: /etc/systemd/system/
+  notify:
+    - restart systemctl
+    - restart cds
+
+- name: Setup nginx
+  block:
+  - name: install nginx
+    apt:
+      state: present
+      pkg:
+        - nginx
+
+  - name: add CDS nginx conf
+    template:
+      src: cds.conf.j2
+      dest: /etc/nginx/sites-available/cds.conf
+    notify: restart nginx
+
+  - name: enable nginx conf for CDS
+    file:
+      src: /etc/nginx/sites-available/cds.conf
+      dest: /etc/nginx/sites-enabled/cds.conf
+      state: link
+    notify: restart nginx
+
+  - name: disable default nginx site
+    file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
+    notify: restart nginx
+  when: CDS_HOSTNAME
