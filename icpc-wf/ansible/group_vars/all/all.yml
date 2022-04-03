@@ -54,3 +54,9 @@ CDS_HOSTNAME: cds
 #  CDS SSL cert and key. Only needed when CDS_HOSTNAME is set
 CDS_SSL_CERT: /etc/ssl/certs/cds.crt
 CDS_SSL_KEY: /etc/ssl/private/cds.key
+
+# Hostname of the static scoreboard
+STATIC_SCOREBOARD_HOSTNAME: scoreboard
+
+STATIC_SCOREBOARD_SSL_CERT: /etc/ssl/certs/scoreboard.crt
+STATIC_SCOREBOARD_SSL_KEY: /etc/ssl/private/scoreboard.key
