@@ -6,7 +6,7 @@
     dest: "/etc/apt/{{ item }}"
     regexp: 'pc2\.ecs\.baylor\.edu'
     replace: 'packages'
-  with_items:
+  loop:
     - sources.list
     - sources.list.d/microsoft.list
     - sources.list.d/mono.list

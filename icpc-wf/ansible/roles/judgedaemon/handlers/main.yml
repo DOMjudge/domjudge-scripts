@@ -15,7 +15,7 @@
     name="domjudge-judgedaemon@{{item}}"
     enabled=yes
     state=restarted
-  with_items: "{{CPUCORE}}"
+  loop: "{{CPUCORE}}"
 
 - name: update grub
   shell: update-grub

@@ -81,7 +81,7 @@
         owner: domjudge
         group: domjudge
         mode: 0755
-      with_items:
+      loop:
         - htop
         - taillog-domserver-nginx-error
 
@@ -92,5 +92,5 @@
         owner: domjudge
         group: domjudge
         mode: 0755
-      with_items:
+      loop:
         - taillog-domserver-symfony-error

@@ -24,6 +24,6 @@
     name: "{{ item }}"
     state: stopped
     enabled: no
-  with_items:
+  loop:
     - mumble-server
     - selfie
