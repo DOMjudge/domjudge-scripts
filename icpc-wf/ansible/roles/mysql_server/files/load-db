@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+	echo "Usage load-db [name]"
+	echo ".sql.gz will be appended"
+	exit 1
+fi
+
+FILE="/home/domjudge/db-dumps/${1}.sql.gz"
+
+if [ ! -f "${FILE}" ]
+then
+	echo "Error. File ${FILE} not found"
+	exit 1
+fi
+
+pv "${FILE}" | gunzip | sudo mysql domjudge
