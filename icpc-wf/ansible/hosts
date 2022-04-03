@@ -37,4 +37,7 @@ domjudge-ccsadmin5 ansible_host=10.3.3.227
 domjudge-prometheus ansible_host=10.3.3.223
 
 [cds]
-domjudge-cds  ansible_host=10.2.2.228
+domjudge-cds ansible_host=10.2.2.228
+
+[scoreboard]
+domjudge-scoreboard ansible_host=10.2.2.229

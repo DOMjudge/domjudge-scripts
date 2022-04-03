@@ -1,0 +1,8 @@
+#!/bin/sh
+
+for _ in $(seq 1 6)
+do
+    wget -O /tmp/scoreboard-tmp.html '{{DOMSERVER_URL}}/public?static=1'
+    mv /tmp/scoreboard-tmp.html /home/domjudge/scoreboard/index.html
+    sleep 10
+done
