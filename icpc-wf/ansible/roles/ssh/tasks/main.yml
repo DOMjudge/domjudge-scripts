@@ -16,7 +16,7 @@
     owner: domjudge
     group: domjudge
     mode: 0600
-  with_items:
+  loop:
     - config
     - id_rsa
     - id_rsa.pub
@@ -26,7 +26,7 @@
     src: "{{ item }}"
     dest: /root/.ssh/
     mode: 0600
-  with_items:
+  loop:
     - config
     - id_rsa
     - id_rsa.pub
@@ -36,6 +36,6 @@
     user: "{{ item }}"
     state: present
     key: "{{ lookup('file', 'id_rsa.pub') }}"
-  with_items:
+  loop:
     - domjudge
     - root

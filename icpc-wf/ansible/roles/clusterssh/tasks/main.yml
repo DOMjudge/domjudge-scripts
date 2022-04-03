@@ -24,7 +24,7 @@
     regexp: '^{{ item }}s'
     line: "{{item}}s {{ groups[item] | join(' ') }}"
     create: yes
-  with_items:
+  loop:
     - domserver
     - judgehost
     - admin

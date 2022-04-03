@@ -54,7 +54,7 @@
         owner: domjudge
         group: domjudge
         mode: 0755
-      with_items:
+      loop:
         - rotate
 
     - name: add autostart shortcuts from template
@@ -64,5 +64,5 @@
         owner: domjudge
         group: domjudge
         mode: 0755
-      with_items:
+      loop:
         - taillog

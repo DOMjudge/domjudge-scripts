@@ -3,7 +3,7 @@
 
 - name: create domjudge-run users
   user: name=domjudge-run-{{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
-  with_items: "{{CPUCORE}}"
+  loop: "{{CPUCORE}}"
 
 - name: create domjudge-run group
   group: name=domjudge-run state=present
@@ -68,7 +68,7 @@
     remote_src: true
     src: "{{DJ_DIR}}/lib/judge/{{item}}.service"
     dest: /etc/systemd/system/
-  with_items:
+  loop:
     - create-cgroups
     - domjudge-judgedaemon@
   notify:
@@ -80,7 +80,7 @@
   command: systemctl mask {{item}}
   args:
     creates: /etc/systemd/system/{{item}}
-  with_items:
+  loop:
     - apt-daily-upgrade.timer
     - apt-daily.timer
     - systemd-tmpfiles-clean.timer

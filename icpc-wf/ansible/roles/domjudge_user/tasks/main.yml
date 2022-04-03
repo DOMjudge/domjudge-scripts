@@ -23,7 +23,7 @@
     value: "{{item.value}}"
     owner: domjudge
     group: domjudge
-  with_items:
+  loop:
     - { name: 'email', value: 'team@domjudge.org' }
     - { name: 'name', value: 'DOMjudge team' }
 
