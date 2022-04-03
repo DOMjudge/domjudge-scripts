@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+	echo "Usage dump-db [name]"
+	echo ".sql.gz will be appended"
+	exit 1
+fi
+
+sudo mysqldump --opt --skip-lock-tables domjudge | pv | gzip > "/home/domjudge/db-dumps/${1}.sql.gz"

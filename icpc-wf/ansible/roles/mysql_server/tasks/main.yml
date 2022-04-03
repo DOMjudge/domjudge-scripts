@@ -25,3 +25,25 @@
 
 - name: make sure mysql is restarted
   meta: flush_handlers
+
+- name: create directory to store scripts & database dumps
+  file:
+    path: /home/domjudge/{{ item }}
+    owner: domjudge
+    group: domjudge
+    state: directory
+    mode: 0755
+  loop:
+    - db-dumps
+    - bin
+
+- name: copy database dump/load scripts
+  copy:
+    src: "{{ item }}"
+    dest: /home/domjudge/bin/{{ item }}
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+  loop:
+  - load-db
+  - dump-db
