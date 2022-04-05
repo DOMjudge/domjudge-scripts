@@ -12,10 +12,9 @@
 
 - name: enable and restart judgedaemon
   service:
-    name="domjudge-judgedaemon@{{item}}"
+    name="domjudge-judgehost.target"
     enabled=yes
     state=restarted
-  loop: "{{CPUCORE}}"
 
 - name: update grub
   shell: update-grub

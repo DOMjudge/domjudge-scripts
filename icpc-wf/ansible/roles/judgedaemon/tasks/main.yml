@@ -74,6 +74,13 @@
   notify:
     - restart systemctl
     - enable and restart create-cgroups
+
+- name: template judgedaemon template systemd unit file
+  template:
+    src: domjudge-judgehost.target.j2
+    dest: /etc/systemd/system/
+  notify:
+    - restart systemctl
     - enable and restart judgedaemon
 
 - name: disable systemd timers
