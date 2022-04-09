@@ -16,6 +16,7 @@ for version in $(jq -r -c '.[]' < "${JSON}") ; do
 		git clean -df
 		git checkout "$version"
 		rm -rf doc/manual/build/html/
+		rm -rf lib/vendor/
 		if [ "$version" = "main" ]; then
 			sed -i -e "s/^version.*/version = 'main'/" doc/manual/version.py.in
 		fi
