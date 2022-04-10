@@ -1,7 +1,0 @@
-<server description="ICPC contest clients">
-    <basicRegistry>
-    {% for user in CDS_USERS %}
-        <user name="{{ user.username }}" password="{{ user.password }} "/>
-    {% endfor %}
-    </basicRegistry>
-</server>

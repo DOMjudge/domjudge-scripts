@@ -1,18 +1,22 @@
 ---
 # These tasks configure the CDS
 
-- name: Get the latest CDS release
+- name: Get the CDS release
   uri:
-    url: https://api.github.com/repos/icpctools/icpctools/releases/latest
+    url: https://api.github.com/repos/icpctools/icpctools/releases?per_page=1
     method: GET
     return_content: yes
     status_code: 200
     body_format: json
-  register: latest_cds_release
+  register: latest_cds_release_array
 
 - name: Set CDS latest version
   set_fact:
-    cds_version: "{{ latest_cds_release.json.name | replace('v', '') }}"
+    cds_version: "{{ latest_cds_release_array.json[0].name | replace('v', '') }}"
+
+- name: Set CDS minor version
+  set_fact:
+    cds_version_minor: "{{ cds_version | regex_replace('\\.\\d+$', '') }}"
 
 - name: Check if CDS is installed
   stat:
@@ -46,7 +50,7 @@
 
 - name: Copy new CDS war
   copy:
-    src: /root/CDS-2.3/CDS.war
+    src: /root/CDS-{{ cds_version_minor }}/CDS.war
     dest: /home/domjudge/cds/wlp/usr/servers/cds/apps/CDS.war
     remote_src: yes
     owner: domjudge
@@ -54,10 +58,10 @@
   when: cds_war.stat.exists
   notify: restart cds
 
-- name: Populate CDS users.xml
+- name: Populate CDS accounts.json
   template:
-    src: users.xml.j2
-    dest: /home/domjudge/cds/wlp/usr/servers/cds/users.xml
+    src: accounts.json.j2
+    dest: /home/domjudge/cds/wlp/usr/servers/cds/config/accounts.json
     owner: domjudge
     group: domjudge
     mode: 0600
