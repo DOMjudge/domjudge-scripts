@@ -18,7 +18,7 @@
       tags: hosts
     - role: ssl
       tags: ssl
-      when: CDS_HOSTNAME
+      when: CDS_HOSTNAME is defined
       vars:
         INSTALL_SSL_PRIVATE_KEYS: true
     - role: domjudge_user
