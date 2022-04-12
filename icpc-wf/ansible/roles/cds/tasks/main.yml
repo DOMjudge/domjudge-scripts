@@ -127,4 +127,4 @@
       path: /etc/nginx/sites-enabled/default
       state: absent
     notify: restart nginx
-  when: CDS_HOSTNAME
+  when: CDS_HOSTNAME is defined
