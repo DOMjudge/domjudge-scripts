@@ -58,10 +58,10 @@
   when: cds_war.stat.exists
   notify: restart cds
 
-- name: Populate CDS accounts.json
+- name: Populate CDS accounts.yaml
   template:
-    src: accounts.json.j2
-    dest: /home/domjudge/cds/wlp/usr/servers/cds/config/accounts.json
+    src: accounts.yaml.j2
+    dest: /home/domjudge/cds/wlp/usr/servers/cds/config/accounts.yaml
     owner: domjudge
     group: domjudge
     mode: 0600
