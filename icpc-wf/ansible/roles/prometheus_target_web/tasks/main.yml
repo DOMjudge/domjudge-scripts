@@ -1,36 +1,48 @@
 ---
 # These tasks configure metric collectors
 
-- name: install required packages
+- name: Every webserver runs nginx so expose metrics
   apt:
     state: present
     pkg:
       - prometheus-mysqld-exporter
-      - prometheus-nginx-exporter
+  notify: restart nginx-exporter
+
+- name: Expose MariaDB metrics
+  when: MARIADB
+  apt:
+    state: present
+    pkg:
+      - prometheus-mysqld-exporter
+  notify: restart mysqld-exporter
 
 # Gather PHP-FPM statistics
 # The exporter from this is currently not in deb sources
 # so we need to download this from GitHub see the README in files
 - name: Install PHP-fpm exporter binary
+  when: FPM
   ansible.builtin.unarchive:
-    src: php-fpm_exporter.tar.gz
+    src: https://github.com/hipages/php-fpm_exporter/releases/download/v2.0.4/php-fpm_exporter_2.0.4_linux_amd64.tar.gz
     dest: /usr/bin/
+    remote_src: true
     exclude:
       - LICENSE
       - README.md
+  notify: restart php-exporter
 
 - name: Export PHP-FPM metrics
+  when: FPM
   synchronize:
-    src=php-fpm-exporter.service
-    dest=/etc/systemd/system/php-fpm-exporter.service
+    src: php-fpm-exporter.service
+    dest: /etc/systemd/system/php-fpm-exporter.service
   notify: restart php-exporter
 
 # Gather NGINX statistics,
 # Observe that we use the observed process itself in the monitoring
 - name: Get NGINX status
   synchronize:
-    src=nginx-status.conf
-    dest=/etc/nginx/sites-enabled/nginx-status.conf
+    src: nginx-status.conf
+    dest: /etc/nginx/sites-enabled/nginx-status.conf
   notify: restart nginx
 
 - name: Prometheus nginx exporter
@@ -38,12 +50,22 @@
     dest: /etc/default/prometheus-nginx-exporter
     state: present
     regexp: '^ARGS=""'
-    line: 'ARGS="-nginx.scrape-uri=http://localhost:8080/basic_status"'
+    line: 'ARGS="-nginx.scrape-uri=http://localhost:8787/basic_status"'
   notify: restart nginx-exporter
+
+- name: Create storage dir for exporter settings
+  when: MARIADB
+  file:
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0700
+    path: /var/lib/prometheus
 
 # Because the scrape happens inside the same machine we reuse the DB password
 # which is also used for the normal installation
 - name: Create MySQL authentication file
+  when: MARIADB
   template:
     src: mysqld-exporter-authentication.cnf.j2
     dest: /var/lib/prometheus/.my.cnf

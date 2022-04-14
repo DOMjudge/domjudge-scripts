@@ -3,6 +3,9 @@ global:
   evaluation_interval: 15s # By default, scrape targets every 15 seconds.
   # scrape_timeout is set to the global default (10s).
 scrape_configs:
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['localhost:443']
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
@@ -30,6 +33,24 @@ scrape_configs:
 {% for host in groups["grafana"] %}
         - {{ hostvars[host].ansible_host }}:9100
 {% endfor %}
+  - job_name: node_mgmt
+    static_configs:
+      - targets:
+{% for host in groups["mgmt"] %}
+        - {{ hostvars[host].ansible_host }}:9100
+{% endfor %}
+  - job_name: node_scoreboard
+    static_configs:
+      - targets:
+{% for host in groups["scoreboard"] %}
+        - {{ hostvars[host].ansible_host }}:9100
+{% endfor %}
+  - job_name: node_cds
+    static_configs:
+      - targets:
+{% for host in groups["cds"] %}
+        - {{ hostvars[host].ansible_host }}:9100
+{% endfor %}
   - job_name: domjudge
     basic_auth:
       username: admin
@@ -42,6 +63,18 @@ scrape_configs:
       - targets:
 {% for host in groups["domserver"] %}
         - {{ hostvars[host].ansible_host }}
+{% endfor %}
+  - job_name: 'nginx_cds'
+    static_configs:
+      - targets:
+{% for host in groups["cds"] %}
+        - {{ hostvars[host].ansible_host }}:9113
+{% endfor %}
+  - job_name: 'nginx_scoreboard'
+    static_configs:
+      - targets:
+{% for host in groups["scoreboard"] %}
+        - {{ hostvars[host].ansible_host }}:9113
 {% endfor %}
   - job_name: 'nginx_domjudge'
     static_configs:

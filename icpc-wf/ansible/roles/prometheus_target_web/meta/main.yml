@@ -1,4 +1,0 @@
-# Role dependencies
----
-dependencies:
-  - role: domserver
