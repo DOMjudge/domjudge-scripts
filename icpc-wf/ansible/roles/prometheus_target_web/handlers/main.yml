@@ -1,6 +1,4 @@
 ---
-# Define here handlers associated to this role.
-
 - name: restart php-exporter
   service: name=php-fpm-exporter enabled=yes state=restarted
 
