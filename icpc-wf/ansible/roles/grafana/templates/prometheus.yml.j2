@@ -64,25 +64,25 @@ scrape_configs:
 {% for host in groups["domserver"] %}
         - {{ hostvars[host].ansible_host }}
 {% endfor %}
-  - job_name: 'nginx_cds'
+  - job_name: 'web_nginx_cds'
     static_configs:
       - targets:
 {% for host in groups["cds"] %}
         - {{ hostvars[host].ansible_host }}:9113
 {% endfor %}
-  - job_name: 'nginx_scoreboard'
+  - job_name: 'web_nginx_scoreboard'
     static_configs:
       - targets:
 {% for host in groups["scoreboard"] %}
         - {{ hostvars[host].ansible_host }}:9113
 {% endfor %}
-  - job_name: 'nginx_domjudge'
+  - job_name: 'web_nginx_domserver'
     static_configs:
       - targets:
 {% for host in groups["domserver"] %}
         - {{ hostvars[host].ansible_host }}:9113
 {% endfor %}
-  - job_name: 'fpm_domjudge'
+  - job_name: 'web_fpm_domserver'
     static_configs:
       - targets:
 {% for host in groups["domserver"] %}
