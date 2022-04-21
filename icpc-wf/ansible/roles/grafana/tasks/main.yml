@@ -1,5 +1,14 @@
 ---
-# These tasks install and configure grafana
+- name: Add upstream prometheus apt key
+  apt_key:
+    url: https://packagecloud.io/the_asten/prometheus/gpgkey
+    state: present
+
+- name: Add upstream prometheus apt repo
+  apt_repository:
+    repo: deb https://packagecloud.io/the_asten/prometheus/ubuntu/ focal main
+    state: present
+  register: prometheus_repo
 
 - name: install dependencies
   apt:
