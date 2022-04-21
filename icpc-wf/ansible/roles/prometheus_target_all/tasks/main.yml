@@ -6,3 +6,50 @@
     state: present
     pkg:
       - prometheus-node-exporter
+
+# Setup promtail which sends our logs
+- name: Install promtail
+  unarchive:
+    src: https://github.com/grafana/loki/releases/download/v2.5.0/promtail-linux-amd64.zip
+    dest: /usr/bin/
+    remote_src: true
+    owner: domjudge
+    group: domjudge
+  when: PROM
+
+- name: Dir for promtail settings
+  file:
+    state: directory
+    path: /etc/promtail
+    owner: root
+    group: root
+    mode: 0755
+  when: PROM
+
+- name: Set promtail settings
+  copy:
+    src: promtail-local-config.yaml
+    dest: /etc/promtail/
+    owner: root
+    group: root
+    mode: 0644
+  when: PROM
+  notify: restart promtail
+
+- name: Setup promtail systemd
+  copy:
+    src: promtail.service
+    dest: /etc/systemd/system/
+    mode: 0655
+    owner: root
+    group: root
+  when: PROM
+  notify: restart promtail
+
+- name: Start promtail service
+  service:
+    name: promtail
+    state: started
+    enabled: true
+  when: PROM
+

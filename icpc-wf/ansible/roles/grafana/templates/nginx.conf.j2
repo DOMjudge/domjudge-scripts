@@ -9,6 +9,20 @@ server {
       proxy_pass          http://127.0.0.1:3000/;
       proxy_read_timeout  90;
     }
+
+{% if LOKI %}
+    location /loki/ {
+       proxy_set_header X-Forwarded-Proto https;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header X-Forwarded-Host $host;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_pass http://localhost:3099/;
+       proxy_buffering off;
+       proxy_redirect off;
+       proxy_set_header Host $host;
+    }
+{% endif $}
+
     access_log /var/log/nginx/prometheus.log;
     error_log /var/log/nginx/prometheus.log;
 

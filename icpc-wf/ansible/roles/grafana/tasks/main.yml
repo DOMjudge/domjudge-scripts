@@ -26,6 +26,50 @@
     dest: /etc/prometheus/prometheus.yml
   notify: restart prometheus
 
+# Setup loki which gathers our logs
+- name: Install loki
+  unarchive:
+    src: https://github.com/grafana/loki/releases/download/v2.5.0/loki-linux-amd64.zip
+    dest: /usr/bin/
+    remote_src: true
+    owner: domjudge
+    group: domjudge
+  when: LOKI
+
+- name: Dir for loki settings
+  file:
+    state: directory
+    path: /etc/grafana/loki/
+    owner: root
+    group: root
+    mode: 0755
+  when: LOKI
+
+- name: Set loki settings
+  copy:
+    src: loki-local-config.yaml
+    dest: /etc/grafana/loki/
+    owner: root
+    group: root
+    mode: 0644
+  when: LOKI
+  notify: restart loki
+
+- name: Setup loki systemd
+  copy:
+    src: loki.service
+    dest: /etc/systemd/system/
+    mode: 0655
+  when: LOKI
+  notify: restart loki
+
+- name: Start loki service
+  service:
+    name: loki
+    state: started
+    enabled: true
+  when: LOKI
+
 ## Setup grafana
 - name: Install grafana
   apt:
