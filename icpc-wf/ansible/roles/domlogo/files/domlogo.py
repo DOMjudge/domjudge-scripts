@@ -1,1 +1,1 @@
-/home/sitowert/domjudge-scripts/domlogo/domlogo.py
+../../../../../domlogo/domlogo.py
