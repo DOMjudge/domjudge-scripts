@@ -62,4 +62,11 @@
     can connect to.
 </p>
 
+<h3>Autologin for team machines</h3>
+
+<p> <a href="https://github.com/GEHACK/lightdm-qt5-greeter-ccs-api">LightDM CCS autologin</a> makes
+    it possible to automatically log in to team machines when the contest starts in DOMjudge. This
+    is useful to keep problem data secret and to make sharing credentials easier on the organizer.
+</p>
+
 <!--#include virtual="/footer.shtml" -->
