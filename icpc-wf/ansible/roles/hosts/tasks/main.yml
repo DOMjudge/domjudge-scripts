@@ -9,11 +9,11 @@
   lineinfile:
     dest: /etc/hosts
     regexp: '{{ item }}$'
-    line: "{{ hostvars[item].ansible_host }}	{{ item }}"
+    line: "{{ hostvars[item].ansible_host }} {{ item }}"
   loop: "{{ groups['all'] }}"
 
 - name: add domjudge in hosts file
   lineinfile:
     dest: /etc/hosts
     regexp: 'domserver'
-    line: "{{ DOMSERVER_IP }}	domjudge domserver"
+    line: "{{ DOMSERVER_IP }} domjudge domserver"

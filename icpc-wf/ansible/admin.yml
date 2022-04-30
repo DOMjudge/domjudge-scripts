@@ -64,25 +64,25 @@
       lineinfile:
         dest: /etc/hosts
         regexp: 'cds$'
-        line: "10.3.3.207	cds"
+        line: "10.3.3.207 cds"
 
     - name: add kattis to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: 'kattis$'
-        line: "10.3.3.212	kattis"
+        line: "10.3.3.212 kattis"
 
     - name: add domjudge-laptop to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: 'domjudge-laptop$'
-        line: "10.3.3.200	domjudge-laptop"
+        line: "10.3.3.200 domjudge-laptop"
 
     - name: add nisprint to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: 'printsrv$'
-        line: "10.3.3.211	nisprint nismaster printsrv"
+        line: "10.3.3.211 nisprint nismaster printsrv"
 
     - name: Update repo URL based on network
       set_fact:

@@ -19,7 +19,7 @@
   lineinfile:
     dest: /etc/hosts
     regexp: '^10\.3\.3\.209'
-    line: "10.3.3.209	packages"
+    line: "10.3.3.209 packages"
   notify: run apt update
   when: WF_RESTRICTED_NETWORK
 
