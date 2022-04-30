@@ -55,6 +55,7 @@
     remote_src: true
     owner: domjudge
     group: domjudge
+    mode: 0644
   when: cds_war.stat.exists
   notify: restart cds
 
@@ -97,6 +98,7 @@
   copy:
     src: cds.service
     dest: /etc/systemd/system/
+    mode: 0644
   notify:
     - restart cds
 
@@ -112,6 +114,9 @@
       template:
         src: cds.conf.j2
         dest: /etc/nginx/sites-available/cds.conf
+        mode: 0644
+        group: root
+        owner: root
       notify: restart nginx
 
     - name: enable nginx conf for CDS

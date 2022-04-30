@@ -26,5 +26,10 @@
       fi
 
 - name: Force enable alt-tab for switching windows
-  copy: src=dconf/ dest=/etc/dconf/
+  copy:
+    src: dconf/
+    dest: /etc/dconf/
+    owner: root
+    group: root
+    mode: 0755
   notify: update dconf

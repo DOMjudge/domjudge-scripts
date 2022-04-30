@@ -75,6 +75,9 @@
       copy:
         src: files/docs.yaml
         dest: "{{ DJ_DIR }}/etc/"
+        mode: 0644
+        group: root
+        owner: root
       notify: clear application cache
 
     - name: add autostart shortcuts

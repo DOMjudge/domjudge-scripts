@@ -24,6 +24,9 @@
   template:
     src: prometheus.yml.j2
     dest: /etc/prometheus/prometheus.yml
+    mode: 0644
+    owner: root
+    group: root
   notify: restart prometheus
 
 # Setup loki which gathers our logs

@@ -14,7 +14,12 @@
     replace: '#bind-address ='
 
 - name: add mysql config snippet for replication
-  template: src=mysql.replication.cnf.j2 dest=/etc/mysql/mariadb.conf.d/zzz_replication.cnf
+  template:
+    src: mysql.replication.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/zzz_replication.cnf
+    mode: 0644
+    group: root
+    owner: root
   notify: restart mysql
 
 - name: copy script to setup replication

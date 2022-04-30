@@ -59,6 +59,9 @@
   copy:
     src: tune_cpu.service
     dest: /etc/systemd/system/
+    mode: 0644
+    group: root
+    owner: root
   notify:
     - enable and restart tune_cpu
 
@@ -67,6 +70,9 @@
     remote_src: true
     src: "{{ DJ_DIR }}/lib/judge/{{ item }}.service"
     dest: /etc/systemd/system/
+    mode: 0644
+    group: root
+    owner: root
   loop:
     - create-cgroups
     - domjudge-judgedaemon@
@@ -77,6 +83,9 @@
   template:
     src: domjudge-judgehost.target.j2
     dest: /etc/systemd/system/domjudge-judgehost.target
+    mode: 0644
+    group: root
+    owner: root
   notify:
     - enable and restart judgedaemon
 

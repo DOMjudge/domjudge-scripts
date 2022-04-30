@@ -11,6 +11,9 @@
   template:
     src: keepalived.conf.j2
     dest: /etc/keepalived/keepalived.conf
+    mode: 0644
+    group: root
+    owner: root
   notify: restart keepalived service
 
 - name: Start but disable keepalived (so it does not fail back to primary)
@@ -25,3 +28,4 @@
     dest: /home/domjudge/
     owner: domjudge
     group: domjudge
+    mode: 0755

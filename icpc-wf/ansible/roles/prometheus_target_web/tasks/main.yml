@@ -70,4 +70,5 @@
     src: mysqld-exporter-authentication.cnf.j2
     dest: /var/lib/prometheus/.my.cnf
     owner: prometheus
+    mode: 0644
   notify: restart mysqld-exporter

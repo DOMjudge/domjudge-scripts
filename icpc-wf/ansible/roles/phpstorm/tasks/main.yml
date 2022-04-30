@@ -80,3 +80,4 @@
   template:
     src: jetbrains-phpstorm.desktop.j2
     dest: /home/domjudge/.local/share/applications/jetbrains-phpstorm.desktop
+    mode: 0644
