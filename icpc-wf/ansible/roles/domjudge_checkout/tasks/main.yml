@@ -21,7 +21,9 @@
 
 - name: Check composer dependencies present
   become: false
-  local_action: stat path=files/lib/vendor
+  delegate_to: localhost
+  stat:
+    path: files/lib/vendor
   register: libvendor
 
 - name: Copy in composer dependencies (if they exist locally)
