@@ -13,7 +13,7 @@
 - name: install dependencies
   apt:
     state: present
-    install_recommends: no
+    install_recommends: false
     pkg:
       - nginx
       - prometheus
@@ -122,4 +122,3 @@
     group: root
     mode: 0644
   notify: restart nginx
-

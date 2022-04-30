@@ -45,5 +45,5 @@
     group: domjudge
     mode: 0755
   loop:
-  - load-db
-  - dump-db
+    - load-db
+    - dump-db

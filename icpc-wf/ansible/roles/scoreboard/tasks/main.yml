@@ -9,10 +9,10 @@
     group: domjudge
     mode: 0755
   loop:
-  - css
-  - js
-  - webfonts
-  - flags
+    - css
+    - js
+    - webfonts
+    - flags
 
 - name: download required assets
   get_url:
@@ -22,29 +22,29 @@
     group: domjudge
     mode: 0644
   loop:
-  - favicon.ico
-  - css/bootstrap.min.css
-  - css/fontawesome-all.min.css
-  - js/jquery.min.js
-  - js/bootstrap.bundle.min.js
-  - js/domjudge.js
-  - style_domjudge.css
-  - webfonts/fa-brands-400.ttf
-  - webfonts/fa-brands-400.woff2
-  - webfonts/fa-regular-400.ttf
-  - webfonts/fa-regular-400.woff2
-  - webfonts/fa-solid-900.ttf
-  - webfonts/fa-solid-900.woff2
-  - webfonts/fa-v4compatibility.ttf
-  - webfonts/fa-v4compatibility.woff2
+    - favicon.ico
+    - css/bootstrap.min.css
+    - css/fontawesome-all.min.css
+    - js/jquery.min.js
+    - js/bootstrap.bundle.min.js
+    - js/domjudge.js
+    - style_domjudge.css
+    - webfonts/fa-brands-400.ttf
+    - webfonts/fa-brands-400.woff2
+    - webfonts/fa-regular-400.ttf
+    - webfonts/fa-regular-400.woff2
+    - webfonts/fa-solid-900.ttf
+    - webfonts/fa-solid-900.woff2
+    - webfonts/fa-v4compatibility.ttf
+    - webfonts/fa-v4compatibility.woff2
 
 - name: install contest images
   synchronize:
     src: files/domjudge-public/
     dest: "/home/domjudge/scoreboard/"
-    owner: no
+    owner: false
     use_ssh_args: true
-  become: yes
+  become: true
   become_user: domjudge
 
 - name: download and unpack flag icons package

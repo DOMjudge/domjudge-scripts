@@ -19,14 +19,14 @@
   synchronize:
     src: lib
     dest: /home/domjudge/.local/
-    owner: no
+    owner: false
     use_ssh_args: true
 
 - name: install domlogo images
   synchronize:
     src: images
     dest: "{{DJ_DIR}}"
-    owner: no
+    owner: false
     use_ssh_args: true
 
 - name: add autostart shortcuts

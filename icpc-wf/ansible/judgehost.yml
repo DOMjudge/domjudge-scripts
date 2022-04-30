@@ -3,13 +3,14 @@
 
 - name: setup judgehost
   hosts: judgehost
+  # We always leave 1/3 of the judges online
   serial:
-    - 33% # We always leave 1/3 of the judges online
+    - 33%
     - 33%
     - 34%
   vars:
     host_type: judgehost
-  become: yes
+  become: true
   roles:
     - role: base_packages
       tags: base_packages

@@ -5,7 +5,7 @@
   hosts: domserver
   vars:
     host_type: domserver
-  become: yes
+  become: true
   roles:
     - role: base_packages
       tags: base_packages
@@ -53,9 +53,9 @@
       apt:
         state: present
         pkg:
-        - python3-mysqldb
-        - macchanger
-        - molly-guard
+          - python3-mysqldb
+          - macchanger
+          - molly-guard
 
     - name: disable developer mode
       lineinfile:
@@ -67,7 +67,7 @@
       synchronize:
         src: files/domjudge-public/
         dest: "{{DJ_DIR}}/webapp/public"
-        owner: no
+        owner: false
         use_ssh_args: true
       notify: clear application cache
 

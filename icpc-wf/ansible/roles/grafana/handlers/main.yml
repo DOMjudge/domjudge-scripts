@@ -28,6 +28,5 @@
 - name: restart loki
   service:
     name: loki
-    enabled: yes
+    enabled: true
     state: restarted
-

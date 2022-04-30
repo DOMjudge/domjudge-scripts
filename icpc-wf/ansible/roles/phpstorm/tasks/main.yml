@@ -5,32 +5,32 @@
   synchronize:
     src: PhpStorm-{{ PHPSTORM_FULL_VERSION }}
     dest: "/opt/phpstorm"
-    owner: no
+    owner: false
     use_ssh_args: true
 
 - name: Copy in PHPStorm config
   synchronize:
     src: PhpStorm{{ PHPSTORM_VERSION }}
     dest: "/home/domjudge/.config/JetBrains"
-    owner: no
+    owner: false
     use_ssh_args: true
 
 - name: Copy in PHPStorm jdbc drivers
   synchronize:
     src: jdbc-drivers
     dest: "/home/domjudge/.config/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}/"
-    owner: no
+    owner: false
     use_ssh_args: true
 
 - name: fix ownership of PHPStorm config
   file:
     path: "/home/domjudge/.config/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
-    recurse: yes
+    recurse: true
     owner: domjudge
     group: domjudge
 
 - name: Create local directory
-  become: yes
+  become: true
   become_user: domjudge
   file:
     path: "/home/domjudge/.local/share/JetBrains/"
@@ -41,14 +41,14 @@
   synchronize:
     src: PhpStorm{{ PHPSTORM_VERSION }}-local-share/
     dest: "/home/domjudge/.local/share/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
-    owner: no
-    recursive: yes
+    owner: false
+    recursive: true
     use_ssh_args: true
 
 - name: fix ownership of PHPStorm local share
   file:
     path: "/home/domjudge/.local/share/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
-    recurse: yes
+    recurse: true
     owner: domjudge
     group: domjudge
 
@@ -56,18 +56,18 @@
   synchronize:
     src: .idea
     dest: "{{DJ_DIR}}"
-    owner: no
+    owner: false
     use_ssh_args: true
 
 - name: fix ownership of PHPStorm config
   file:
     path: "{{DJ_DIR}}/.idea"
-    recurse: yes
+    recurse: true
     owner: domjudge
     group: domjudge
 
 - name: Create a directory if it does not exist
-  become: yes
+  become: true
   become_user: domjudge
   file:
     path: /home/domjudge/.local/share/applications
@@ -75,7 +75,7 @@
     mode: '0755'
 
 - name: Copy in PHPStorm Desktop icon
-  become: yes
+  become: true
   become_user: domjudge
   template:
     src: jetbrains-phpstorm.desktop.j2

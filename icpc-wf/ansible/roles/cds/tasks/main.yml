@@ -5,7 +5,7 @@
   uri:
     url: https://api.github.com/repos/icpctools/icpctools/releases?per_page=1
     method: GET
-    return_content: yes
+    return_content: true
     status_code: 200
     body_format: json
   register: latest_cds_release_array
@@ -52,7 +52,7 @@
   copy:
     src: /root/CDS-{{ cds_version_minor }}/CDS.war
     dest: /home/domjudge/cds/wlp/usr/servers/cds/apps/CDS.war
-    remote_src: yes
+    remote_src: true
     owner: domjudge
     group: domjudge
   when: cds_war.stat.exists
@@ -103,28 +103,28 @@
 
 - name: Setup nginx
   block:
-  - name: install nginx
-    apt:
-      state: present
-      pkg:
-        - nginx
+    - name: install nginx
+      apt:
+        state: present
+        pkg:
+          - nginx
 
-  - name: add CDS nginx conf
-    template:
-      src: cds.conf.j2
-      dest: /etc/nginx/sites-available/cds.conf
-    notify: restart nginx
+    - name: add CDS nginx conf
+      template:
+        src: cds.conf.j2
+        dest: /etc/nginx/sites-available/cds.conf
+      notify: restart nginx
 
-  - name: enable nginx conf for CDS
-    file:
-      src: /etc/nginx/sites-available/cds.conf
-      dest: /etc/nginx/sites-enabled/cds.conf
-      state: link
-    notify: restart nginx
+    - name: enable nginx conf for CDS
+      file:
+        src: /etc/nginx/sites-available/cds.conf
+        dest: /etc/nginx/sites-enabled/cds.conf
+        state: link
+      notify: restart nginx
 
-  - name: disable default nginx site
-    file:
-      path: /etc/nginx/sites-enabled/default
-      state: absent
-    notify: restart nginx
+    - name: disable default nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: restart nginx
   when: CDS_HOSTNAME is defined

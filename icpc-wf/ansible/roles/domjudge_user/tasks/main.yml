@@ -41,7 +41,7 @@
     path: /etc/gdm3/custom.conf
     regexp: 'AutomaticLoginEnable'
     line: 'AutomaticLoginEnable=true'
-    create: yes
+    create: true
   notify: restart gdm
 
 - name: Automatically login domjudge user
