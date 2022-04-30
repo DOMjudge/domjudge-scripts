@@ -10,7 +10,7 @@
 - name: install domlogo
   copy:
     src: domlogo.py
-    dest: "{{DJ_DIR}}"
+    dest: "{{ DJ_DIR }}"
     owner: domjudge
     group: domjudge
     mode: 0755
@@ -25,7 +25,7 @@
 - name: install domlogo images
   synchronize:
     src: images
-    dest: "{{DJ_DIR}}"
+    dest: "{{ DJ_DIR }}"
     owner: false
     use_ssh_args: true
 

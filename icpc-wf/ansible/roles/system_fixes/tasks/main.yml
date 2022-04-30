@@ -3,14 +3,14 @@
 
 - name: set timezone
   timezone:
-    name: "{{TIMEZONE}}"
+    name: "{{ TIMEZONE }}"
 
 - name: set PHP timezone for CLI
   lineinfile:
     dest: /etc/php/7.4/cli/php.ini
     state: present
     regexp: 'date\.timezone\s*='
-    line: 'date.timezone = {{TIMEZONE}}'
+    line: 'date.timezone = {{ TIMEZONE }}'
 
 - name: enable bash completion globally
   blockinfile:

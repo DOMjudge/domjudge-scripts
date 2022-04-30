@@ -1,6 +1,6 @@
 # Common definition of handlers
 ---
 - name: clear application cache
-  command: "{{DJ_DIR}}/webapp/bin/console cache:clear"
+  command: "{{ DJ_DIR }}/webapp/bin/console cache:clear"
   become: true
   become_user: domjudge

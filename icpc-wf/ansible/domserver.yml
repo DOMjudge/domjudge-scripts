@@ -61,12 +61,12 @@
       lineinfile:
         regexp: '^APP_ENV=dev'
         state: absent
-        dest: "{{DJ_DIR}}/webapp/.env.local"
+        dest: "{{ DJ_DIR }}/webapp/.env.local"
 
     - name: install contest images
       synchronize:
         src: files/domjudge-public/
-        dest: "{{DJ_DIR}}/webapp/public"
+        dest: "{{ DJ_DIR }}/webapp/public"
         owner: false
         use_ssh_args: true
       notify: clear application cache
@@ -74,12 +74,12 @@
     - name: Add documentation in DOMjudge team interface
       copy:
         src: files/docs.yaml
-        dest: "{{DJ_DIR}}/etc/"
+        dest: "{{ DJ_DIR }}/etc/"
       notify: clear application cache
 
     - name: add autostart shortcuts
       copy:
-        src: files/{{item}}.desktop
+        src: files/{{ item }}.desktop
         dest: /home/domjudge/.config/autostart/
         owner: domjudge
         group: domjudge
@@ -90,8 +90,8 @@
 
     - name: add autostart shortcuts from template
       template:
-        src: files/{{item}}.desktop.j2
-        dest: /home/domjudge/.config/autostart/{{item}}.desktop
+        src: files/{{ item }}.desktop.j2
+        dest: /home/domjudge/.config/autostart/{{ item }}.desktop
         owner: domjudge
         group: domjudge
         mode: 0755

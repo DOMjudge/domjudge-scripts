@@ -16,4 +16,4 @@
   lineinfile:
     dest: /etc/hosts
     regexp: 'domserver'
-    line: "{{DOMSERVER_IP}}	domjudge domserver"
+    line: "{{ DOMSERVER_IP }}	domjudge domserver"

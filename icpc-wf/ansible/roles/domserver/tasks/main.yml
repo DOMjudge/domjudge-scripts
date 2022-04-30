@@ -4,24 +4,24 @@
 - name: install dbpasswords.secret file
   template:
     src: dbpasswords.secret.j2
-    dest: "{{DJ_DIR}}/etc/dbpasswords.secret"
+    dest: "{{ DJ_DIR }}/etc/dbpasswords.secret"
   notify: fix permissions on domjudge inplace-install
 
 - name: install initial_admin_password.secret file
   template:
     src: initial_admin_password.secret.j2
-    dest: "{{DJ_DIR}}/etc/initial_admin_password.secret"
+    dest: "{{ DJ_DIR }}/etc/initial_admin_password.secret"
   notify: fix permissions on domjudge inplace-install
 
 # When using replication, the DB will be dropped and recreated on the slave later.
 - name: check if the database is configured
-  command: "{{DJ_DIR}}/bin/dj_setup_database -u root status"
+  command: "{{ DJ_DIR }}/bin/dj_setup_database -u root status"
   register: db_status
   ignore_errors: true
   changed_when: false
 
 - name: make sure the database is configured
-  command: "{{DJ_DIR}}/bin/dj_setup_database -u root bare-install"
+  command: "{{ DJ_DIR }}/bin/dj_setup_database -u root bare-install"
   when: "'failed' in db_status.stdout"
 
 - name: install required packages
@@ -37,12 +37,12 @@
     dest: /etc/php/7.4/fpm/php.ini
     state: present
     regexp: 'date\.timezone\s*='
-    line: 'date.timezone = {{TIMEZONE}}'
+    line: 'date.timezone = {{ TIMEZONE }}'
 
 - name: enable PHP modules
-  command: phpenmod {{item}}
+  command: phpenmod {{ item }}
   args:
-    creates: /etc/php/7.4/fpm/conf.d/20-{{item}}.ini
+    creates: /etc/php/7.4/fpm/conf.d/20-{{ item }}.ini
   loop:
     - zip
     - intl
@@ -75,7 +75,7 @@
 - name: symlink domjudge FPM conf
   file:
     path: /etc/php/7.4/fpm/pool.d/domjudge.conf
-    src: "{{DJ_DIR}}/etc/domjudge-fpm.conf"
+    src: "{{ DJ_DIR }}/etc/domjudge-fpm.conf"
     state: link
     force: true
   notify: restart PHP FPM
@@ -83,13 +83,13 @@
 - name: set PHP settings
   lineinfile:
     dest: /etc/php/7.4/fpm/pool.d/domjudge.conf
-    regexp: "{{item.regexp}}"
-    line: "{{item.key}} = {{item.value}}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.key }} = {{ item.value }}"
   loop:
-    - { key: 'pm.max_children', regexp: '^pm\.max_children', value: '{{PHP_FPM_MAX_CHILDREN}}' }
-    - { key: 'pm.max_requests', regexp: '^pm\.max_requests', value: '{{PHP_FPM_MAX_REQUESTS}}' }
-    - { key: 'php_admin_value[memory_limit]', regexp: '^php_admin_value\[memory_limit\]', value: '{{PHP_MEMORY_LIMIT}}' }
-    - { key: 'php_admin_value[upload_max_filesize]', regexp: '^php_admin_value\[upload_max_filesize\]', value: '{{PHP_UPLOAD_MAX_FILESIZE}}' }
-    - { key: 'php_admin_value[post_max_size]', regexp: '^php_admin_value\[post_max_size\]', value: '{{PHP_POST_MAX_SIZE}}' }
-    - { key: 'php_admin_value[max_file_uploads]', regexp: '^php_admin_value\[max_file_uploads\]', value: '{{PHP_MAX_FILE_UPLOADS}}' }
+    - { key: 'pm.max_children', regexp: '^pm\.max_children', value: '{{ PHP_FPM_MAX_CHILDREN }}' }
+    - { key: 'pm.max_requests', regexp: '^pm\.max_requests', value: '{{ PHP_FPM_MAX_REQUESTS }}' }
+    - { key: 'php_admin_value[memory_limit]', regexp: '^php_admin_value\[memory_limit\]', value: '{{ PHP_MEMORY_LIMIT }}' }
+    - { key: 'php_admin_value[upload_max_filesize]', regexp: '^php_admin_value\[upload_max_filesize\]', value: '{{ PHP_UPLOAD_MAX_FILESIZE }}' }
+    - { key: 'php_admin_value[post_max_size]', regexp: '^php_admin_value\[post_max_size\]', value: '{{ PHP_POST_MAX_SIZE }}' }
+    - { key: 'php_admin_value[max_file_uploads]', regexp: '^php_admin_value\[max_file_uploads\]', value: '{{ PHP_MAX_FILE_UPLOADS }}' }
   notify: restart PHP FPM

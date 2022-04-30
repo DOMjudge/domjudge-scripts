@@ -4,7 +4,7 @@
 - name: add the restapi secret file
   template:
     src: restapi.secret.j2
-    dest: "{{DJ_DIR}}/etc/restapi.secret"
+    dest: "{{ DJ_DIR }}/etc/restapi.secret"
     owner: domjudge
     group: domjudge
     mode: 0600
@@ -12,14 +12,14 @@
 - name: run inplace-conf
   become: true
   become_user: domjudge
-  command: make inplace-conf CONFIGURE_FLAGS='--disable-doc-build --with-baseurl={{DOMSERVER}}/'
+  command: make inplace-conf CONFIGURE_FLAGS='--disable-doc-build --with-baseurl={{ DOMSERVER }}/'
   register: dj_configured
   args:
-    chdir: "{{DJ_DIR}}"
-    creates: "{{DJ_DIR}}/paths.mk"
+    chdir: "{{ DJ_DIR }}"
+    creates: "{{ DJ_DIR }}/paths.mk"
 
 - name: check if domjudge is built
-  stat: path="{{DJ_DIR}}/judge/judgedaemon"
+  stat: path="{{ DJ_DIR }}/judge/judgedaemon"
   register: judgedaemon_binary
 
 - name: build domjudge
@@ -27,14 +27,14 @@
   become_user: domjudge
   command: make inplace-install
   args:
-    chdir: "{{DJ_DIR}}"
+    chdir: "{{ DJ_DIR }}"
   notify: fix permissions on domjudge inplace-install
   when: (git_working_copy is defined and git_working_copy.changed) or dj_configured.changed or not judgedaemon_binary.stat.exists
 
 - name: copy domjudge-sudoers file
   copy:
     remote_src: true
-    src: "{{DJ_DIR}}/etc/sudoers-domjudge"
+    src: "{{ DJ_DIR }}/etc/sudoers-domjudge"
     dest: /etc/sudoers.d/domjudge
     mode: 0440
     owner: root

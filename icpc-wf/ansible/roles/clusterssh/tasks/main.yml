@@ -22,7 +22,7 @@
   lineinfile:
     dest: /home/domjudge/.clusterssh/clusters
     regexp: '^{{ item }}s'
-    line: "{{item}}s {{ groups[item] | join(' ') }}"
+    line: "{{ item }}s {{ groups[item] | join(' ') }}"
     create: true
   loop:
     - domserver

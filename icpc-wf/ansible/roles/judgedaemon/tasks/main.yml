@@ -2,8 +2,8 @@
 # These tasks configure the DOMjudge judgedaemon with chroot
 
 - name: create domjudge-run users
-  user: name=domjudge-run-{{item}} createhome=no home=/nonexistent group=nogroup shell=/bin/false
-  loop: "{{CPUCORE}}"
+  user: name=domjudge-run-{{ item }} createhome=no home=/nonexistent group=nogroup shell=/bin/false
+  loop: "{{ CPUCORE }}"
 
 - name: create domjudge-run group
   group: name=domjudge-run state=present
@@ -22,7 +22,7 @@
     dest: /tmp/dj_ansible/
 
 - name: create chroot
-  shell: "{{DJ_DIR}}/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log; grep '^Done building chroot in' /tmp/dj_make_chroot.log"
+  shell: "{{ DJ_DIR }}/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log; grep '^Done building chroot in' /tmp/dj_make_chroot.log"
   environment:
     DEBMIRROR: "{{ 'https://packages/ubuntu' if WF_RESTRICTED_NETWORK else '' }}"
   args:
@@ -66,7 +66,7 @@
 - name: copy judgedaemon related systemd unit files
   copy:
     remote_src: true
-    src: "{{DJ_DIR}}/lib/judge/{{item}}.service"
+    src: "{{ DJ_DIR }}/lib/judge/{{ item }}.service"
     dest: /etc/systemd/system/
   loop:
     - create-cgroups
@@ -84,9 +84,9 @@
     - enable and restart judgedaemon
 
 - name: disable systemd timers
-  command: systemctl mask {{item}}
+  command: systemctl mask {{ item }}
   args:
-    creates: /etc/systemd/system/{{item}}
+    creates: /etc/systemd/system/{{ item }}
   loop:
     - apt-daily-upgrade.timer
     - apt-daily.timer
