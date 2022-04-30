@@ -1,2 +1,2 @@
 grafana_port: 8443
-LOKI: false
+loki: false

@@ -15,7 +15,7 @@
     remote_src: true
     owner: domjudge
     group: domjudge
-  when: PROM
+  when: prom
 
 - name: Dir for promtail settings
   file:
@@ -24,7 +24,7 @@
     owner: root
     group: root
     mode: 0755
-  when: PROM
+  when: prom
 
 - name: Set promtail settings
   copy:
@@ -33,7 +33,7 @@
     owner: root
     group: root
     mode: 0644
-  when: PROM
+  when: prom
   notify: restart promtail
 
 - name: Setup promtail systemd
@@ -43,7 +43,7 @@
     mode: 0655
     owner: root
     group: root
-  when: PROM
+  when: prom
   notify: restart promtail
 
 - name: Start promtail service
@@ -51,4 +51,4 @@
     name: promtail
     state: started
     enabled: true
-  when: PROM
+  when: prom
