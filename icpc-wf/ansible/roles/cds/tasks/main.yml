@@ -98,7 +98,6 @@
     src: cds.service
     dest: /etc/systemd/system/
   notify:
-    - restart systemctl
     - restart cds
 
 - name: Setup nginx

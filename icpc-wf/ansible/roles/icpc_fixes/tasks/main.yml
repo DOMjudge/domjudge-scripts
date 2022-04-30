@@ -16,7 +16,7 @@
     state: absent
 
 - name: Re-order PXEboot
-  shell: efibootmgr -o {{ EFI_ORDER }}
+  command: efibootmgr -o {{ EFI_ORDER }}
   when: EFI_ORDER is defined
 
 - name: disable mumble,selfie services

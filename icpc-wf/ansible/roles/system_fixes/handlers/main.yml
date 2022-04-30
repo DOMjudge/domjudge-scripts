@@ -2,4 +2,4 @@
 # Define here handlers associated to this role.
 
 - name: update dconf
-  shell: dconf update
+  command: dconf update
