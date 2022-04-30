@@ -8,22 +8,22 @@
       - clusterssh
 
 - name: create clusterssh 'all' config group
-  become: yes
+  become: true
   become_user: domjudge
   lineinfile:
     dest: /home/domjudge/.clusterssh/clusters
     regexp: '^all'
     line: "all {{ groups['all'] | join(' ') }}"
-    create: yes
+    create: true
 
 - name: create clusterssh config groups
-  become: yes
+  become: true
   become_user: domjudge
   lineinfile:
     dest: /home/domjudge/.clusterssh/clusters
     regexp: '^{{ item }}s'
     line: "{{item}}s {{ groups[item] | join(' ') }}"
-    create: yes
+    create: true
   loop:
     - domserver
     - judgehost

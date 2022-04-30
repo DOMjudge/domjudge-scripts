@@ -77,7 +77,7 @@
     path: /etc/php/7.4/fpm/pool.d/domjudge.conf
     src: "{{DJ_DIR}}/etc/domjudge-fpm.conf"
     state: link
-    force: yes
+    force: true
   notify: restart PHP FPM
 
 - name: set PHP settings

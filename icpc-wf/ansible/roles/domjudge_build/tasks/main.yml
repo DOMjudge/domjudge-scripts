@@ -10,7 +10,7 @@
     mode: 0600
 
 - name: run inplace-conf
-  become: yes
+  become: true
   become_user: domjudge
   command: make inplace-conf CONFIGURE_FLAGS='--disable-doc-build --with-baseurl={{DOMSERVER}}/'
   register: dj_configured
@@ -23,7 +23,7 @@
   register: judgedaemon_binary
 
 - name: build domjudge
-  become: yes
+  become: true
   become_user: domjudge
   command: make inplace-install
   args:

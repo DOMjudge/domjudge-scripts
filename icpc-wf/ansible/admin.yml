@@ -5,7 +5,7 @@
   hosts: admin
   vars:
     host_type: admin
-  become: yes
+  become: true
   roles:
     - role: base_packages
       tags: base_packages
@@ -49,10 +49,10 @@
       apt:
         state: present
         pkg:
-        - gitk
-        - git-gui
-        - makepasswd
-        - mmv
+          - gitk
+          - git-gui
+          - makepasswd
+          - mmv
 
     - name: enable developer mode
       lineinfile:
@@ -89,13 +89,13 @@
         DJ_GIT_REPO_SCRIPTS: "{{ DJ_GIT_REPO_SCRIPTS_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO_SCRIPTS}}"
 
     - name: create working copy of the domjudge-scripts repo
-      become: yes
+      become: true
       become_user: domjudge
       # We use a different directory here to have one single 'upstream' and not have issues with it
       git: repo={{DJ_GIT_REPO_SCRIPTS}} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
 
     - name: create working copy of the wf2020 repo
-      become: yes
+      become: true
       become_user: domjudge
       git: repo=git@cds:wf2020 dest=/home/domjudge/wf2020 version=master accept_hostkey=yes update=no
 

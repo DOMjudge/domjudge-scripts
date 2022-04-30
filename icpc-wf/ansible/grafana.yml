@@ -3,7 +3,7 @@
 - hosts: grafana
   vars:
     host_type: grafana
-  become: yes
+  become: true
   roles:
     - role: base_packages
       tags: base_packages

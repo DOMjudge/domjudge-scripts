@@ -5,7 +5,7 @@
   hosts: mgmt
   vars:
     host_type: mgmt
-  become: yes
+  become: true
   roles:
     - role: prometheus_target_all
       tags: prometheus_target_all

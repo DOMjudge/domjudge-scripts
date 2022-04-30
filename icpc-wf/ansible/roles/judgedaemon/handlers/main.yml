@@ -5,15 +5,15 @@
   shell: systemctl daemon-reload
 
 - name: enable and restart tune_cpu
-  service: name=tune_cpu enabled=yes state=restarted
+  service: name=tune_cpu enabled=true state=restarted
 
 - name: enable and restart create-cgroups
-  service: name=create-cgroups enabled=yes state=restarted
+  service: name=create-cgroups enabled=true state=restarted
 
 - name: enable and restart judgedaemon
   service:
     name="domjudge-judgehost.target"
-    enabled=yes
+    enabled=true
     state=restarted
 
 - name: update grub

@@ -23,7 +23,7 @@
   service:
     name: "{{ item }}"
     state: stopped
-    enabled: no
+    enabled: false
   loop:
     - mumble-server
     - selfie

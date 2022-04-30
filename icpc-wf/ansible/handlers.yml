@@ -2,5 +2,5 @@
 ---
 - name: clear application cache
   command: "{{DJ_DIR}}/webapp/bin/console cache:clear"
-  become: yes
+  become: true
   become_user: domjudge

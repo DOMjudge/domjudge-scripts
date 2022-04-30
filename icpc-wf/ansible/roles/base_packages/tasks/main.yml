@@ -47,62 +47,62 @@
   apt:
     state: absent
     pkg:
-    - apport
-    - ntp
+      - apport
+      - ntp
 
 - name: install common required/useful packages
   apt:
     state: present
     pkg:
-    - ack
-    - git
-    - htop
-    - httpie
-    - ncdu
-    - pv
-    - screen
-    - autoconf
-    - automake
-    - efibootmgr
-    - curl
-    - gcc
-    - g++
-    - default-jdk-headless
-    - make
-    - zip
-    - unzip
-    - php-cli
-    - php-gd
-    - php-curl
-    - php-mysql
-    - php-json
-    - php-xml
-    - php-zip
-    - php-mbstring
-    - php-intl
-    - bsdmainutils
-    - libcgroup-dev
-    - libcurl4-gnutls-dev
-    - libjsoncpp-dev
-    - libmagic-dev
-    - debootstrap
-    - texlive-latex-recommended
-    - texlive-latex-extra
-    - apache2-utils
-    - tig
-    - bat
-    - jq
-    - python3-sphinx
-    - autoconf
-    - automake
-    - bats
-    - python3-sphinx
-    - python3-sphinx-rtd-theme
-    - rst2pdf
-    - fontconfig
-    - python3-yaml
-    - latexmk
-    - acl
+      - ack
+      - git
+      - htop
+      - httpie
+      - ncdu
+      - pv
+      - screen
+      - autoconf
+      - automake
+      - efibootmgr
+      - curl
+      - gcc
+      - g++
+      - default-jdk-headless
+      - make
+      - zip
+      - unzip
+      - php-cli
+      - php-gd
+      - php-curl
+      - php-mysql
+      - php-json
+      - php-xml
+      - php-zip
+      - php-mbstring
+      - php-intl
+      - bsdmainutils
+      - libcgroup-dev
+      - libcurl4-gnutls-dev
+      - libjsoncpp-dev
+      - libmagic-dev
+      - debootstrap
+      - texlive-latex-recommended
+      - texlive-latex-extra
+      - apache2-utils
+      - tig
+      - bat
+      - jq
+      - python3-sphinx
+      - autoconf
+      - automake
+      - bats
+      - python3-sphinx
+      - python3-sphinx-rtd-theme
+      - rst2pdf
+      - fontconfig
+      - python3-yaml
+      - latexmk
+      - acl
 
 - name: Check if composer is installed
   stat:
