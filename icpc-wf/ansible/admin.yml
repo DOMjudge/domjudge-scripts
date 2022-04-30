@@ -86,13 +86,13 @@
 
     - name: Update repo URL based on network
       set_fact:
-        DJ_GIT_REPO_SCRIPTS: "{{ DJ_GIT_REPO_SCRIPTS_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO_SCRIPTS }}"
+        dj_git_repo_scripts: "{{ DJ_GIT_REPO_SCRIPTS_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO_SCRIPTS }}"
 
     - name: create working copy of the domjudge-scripts repo
       become: true
       become_user: domjudge
       # We use a different directory here to have one single 'upstream' and not have issues with it
-      git: repo={{ DJ_GIT_REPO_SCRIPTS }} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
+      git: repo={{ dj_git_repo_scripts }} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
 
     - name: create working copy of the wf2020 repo
       become: true

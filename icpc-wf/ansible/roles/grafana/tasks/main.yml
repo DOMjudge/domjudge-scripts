@@ -37,7 +37,7 @@
     remote_src: true
     owner: domjudge
     group: domjudge
-  when: LOKI
+  when: loki
 
 - name: Dir for loki settings
   file:
@@ -46,7 +46,7 @@
     owner: root
     group: root
     mode: 0755
-  when: LOKI
+  when: loki
 
 - name: Set loki settings
   copy:
@@ -55,7 +55,7 @@
     owner: root
     group: root
     mode: 0644
-  when: LOKI
+  when: loki
   notify: restart loki
 
 - name: Setup loki systemd
@@ -63,7 +63,7 @@
     src: loki.service
     dest: /etc/systemd/system/
     mode: 0655
-  when: LOKI
+  when: loki
   notify: restart loki
 
 - name: Start loki service
@@ -71,7 +71,7 @@
     name: loki
     state: started
     enabled: true
-  when: LOKI
+  when: loki
 
 ## Setup grafana
 - name: Install grafana

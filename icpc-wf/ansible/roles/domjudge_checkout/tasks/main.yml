@@ -11,12 +11,12 @@
 
 - name: Update repo URL based on network
   set_fact:
-    DJ_GIT_REPO: "{{ DJ_GIT_REPO_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO }}"
+    dj_git_repo: "{{ DJ_GIT_REPO_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO }}"
 
 - name: Create working copy of the domjudge repo
   become: true
   become_user: domjudge
-  git: repo={{ DJ_GIT_REPO }} dest={{ DJ_DIR }} version={{ DJ_BRANCH }} accept_hostkey=yes update=yes
+  git: repo={{ dj_git_repo }} dest={{ DJ_DIR }} version={{ DJ_BRANCH }} accept_hostkey=yes update=yes
   register: git_working_copy
 
 - name: Check composer dependencies present
