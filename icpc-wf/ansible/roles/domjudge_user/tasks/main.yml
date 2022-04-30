@@ -23,6 +23,7 @@
     value: "{{ item.value }}"
     owner: domjudge
     group: domjudge
+    mode: 0644
   loop:
     - { name: 'email', value: 'team@domjudge.org' }
     - { name: 'name', value: 'DOMjudge team' }
@@ -35,6 +36,7 @@
     value: "remote"
     owner: domjudge
     group: domjudge
+    mode: 0644
 
 - name: enable GDM autologin
   lineinfile:
@@ -42,6 +44,7 @@
     regexp: 'AutomaticLoginEnable'
     line: 'AutomaticLoginEnable=true'
     create: true
+    mode: 0644
   notify: restart gdm
 
 - name: Automatically login domjudge user
@@ -52,4 +55,9 @@
   notify: restart gdm
 
 - name: make sure autostart directory exists
-  file: dest=/home/domjudge/.config/autostart state=directory owner=domjudge group=domjudge
+  file:
+    dest: /home/domjudge/.config/autostart
+    state: directory
+    owner: domjudge
+    group: domjudge
+    mode: 0755

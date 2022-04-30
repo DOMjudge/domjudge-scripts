@@ -44,9 +44,15 @@
   copy:
     src: rsyslog.domjudge.conf
     dest: /etc/rsyslog.d/domjudge.conf
+    mode: 0644
+    group: root
+    owner: root
   notify: restart rsyslog
 
 - name: configure domjudge logrotate
   copy:
     src: logrotate.domjudge
     dest: /etc/logrotate.d/domjudge
+    mode: 0644
+    group: root
+    owner: root

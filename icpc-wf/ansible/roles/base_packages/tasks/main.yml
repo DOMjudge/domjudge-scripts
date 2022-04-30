@@ -113,6 +113,9 @@
   get_url:
     url: https://getcomposer.org/installer
     dest: /root/composer-setup.php
+    owner: root
+    group: root
+    mode: 0755
   when: not composer_file.stat.exists
 
 - name: Install composer

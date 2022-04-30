@@ -5,12 +5,18 @@
   template:
     src: dbpasswords.secret.j2
     dest: "{{ DJ_DIR }}/etc/dbpasswords.secret"
+    mode: 0644
+    group: root
+    owner: root
   notify: fix permissions on domjudge inplace-install
 
 - name: install initial_admin_password.secret file
   template:
     src: initial_admin_password.secret.j2
     dest: "{{ DJ_DIR }}/etc/initial_admin_password.secret"
+    mode: 0644
+    group: domjudge
+    owner: domjudge
   notify: fix permissions on domjudge inplace-install
 
 # When using replication, the DB will be dropped and recreated on the slave later.
@@ -51,12 +57,18 @@
   template:
     src: nginx-domjudge.conf.j2
     dest: /etc/nginx/sites-available/domjudge.conf
+    mode: 0644
+    group: root
+    owner: root
   notify: restart nginx
 
 - name: add domjudge inner nginx conf
   template:
     src: nginx-domjudge-inner.j2
     dest: /etc/nginx/snippets/domjudge-inner
+    mode: 0644
+    group: root
+    owner: root
   notify: restart nginx
 
 - name: enable nginx conf for domjudge
