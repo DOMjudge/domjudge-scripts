@@ -60,7 +60,6 @@
     src: tune_cpu.service
     dest: /etc/systemd/system/
   notify:
-    - restart systemctl
     - enable and restart tune_cpu
 
 - name: copy judgedaemon related systemd unit files
@@ -72,7 +71,6 @@
     - create-cgroups
     - domjudge-judgedaemon@
   notify:
-    - restart systemctl
     - enable and restart create-cgroups
 
 - name: template judgedaemon template systemd unit file
@@ -80,7 +78,6 @@
     src: domjudge-judgehost.target.j2
     dest: /etc/systemd/system/domjudge-judgehost.target
   notify:
-    - restart systemctl
     - enable and restart judgedaemon
 
 - name: disable systemd timers
