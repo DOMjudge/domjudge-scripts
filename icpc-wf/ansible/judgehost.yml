@@ -46,14 +46,14 @@
       service_facts:
     - name: Disable all cores
       service:
-        name="domjudge-judgedaemon@{{item}}"
+        name="domjudge-judgedaemon@{{ item }}"
         state=stopped
       with_sequence: start=0 end={{ ansible_processor_vcpus }} format=domjudge-judgedaemon@%1x
       when: '"domjudge-judgedaemon@0.service" in services'
   tasks:
     - name: add autostart shortcuts
       template:
-        src: files/{{item}}.desktop
+        src: files/{{ item }}.desktop
         dest: /home/domjudge/.config/autostart/
         owner: domjudge
         group: domjudge
@@ -63,8 +63,8 @@
 
     - name: add autostart shortcuts from template
       template:
-        src: files/{{item}}.desktop.j2
-        dest: /home/domjudge/.config/autostart/{{item}}.desktop
+        src: files/{{ item }}.desktop.j2
+        dest: /home/domjudge/.config/autostart/{{ item }}.desktop
         owner: domjudge
         group: domjudge
         mode: 0755

@@ -55,13 +55,13 @@
 - name: Copy in PHPStorm settings for repo
   synchronize:
     src: .idea
-    dest: "{{DJ_DIR}}"
+    dest: "{{ DJ_DIR }}"
     owner: false
     use_ssh_args: true
 
 - name: fix ownership of PHPStorm config
   file:
-    path: "{{DJ_DIR}}/.idea"
+    path: "{{ DJ_DIR }}/.idea"
     recurse: true
     owner: domjudge
     group: domjudge

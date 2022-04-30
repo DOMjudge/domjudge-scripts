@@ -6,7 +6,7 @@
     name: domjudge
     shell: /bin/bash
     groups: sudo
-    password: "{{DJ_SHELL_USER_PW | default(omit)}}"
+    password: "{{ DJ_SHELL_USER_PW | default(omit) }}"
 
 - name: Allow 'sudo' group to have passwordless sudo
   lineinfile:
@@ -19,8 +19,8 @@
   ini_file:
     dest: /home/domjudge/.gitconfig
     section: user
-    option: "{{item.name}}"
-    value: "{{item.value}}"
+    option: "{{ item.name }}"
+    value: "{{ item.value }}"
     owner: domjudge
     group: domjudge
   loop:

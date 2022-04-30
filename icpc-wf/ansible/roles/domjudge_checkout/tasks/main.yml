@@ -3,19 +3,19 @@
 
 - name: create working copy directory
   file:
-    path: "{{DJ_DIR}}"
+    path: "{{ DJ_DIR }}"
     state: directory
     owner: domjudge
     group: domjudge
 
 - name: Update repo URL based on network
   set_fact:
-    DJ_GIT_REPO: "{{ DJ_GIT_REPO_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO}}"
+    DJ_GIT_REPO: "{{ DJ_GIT_REPO_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO }}"
 
 - name: Create working copy of the domjudge repo
   become: true
   become_user: domjudge
-  git: repo={{DJ_GIT_REPO}} dest={{DJ_DIR}} version={{DJ_BRANCH}} accept_hostkey=yes update=yes
+  git: repo={{ DJ_GIT_REPO }} dest={{ DJ_DIR }} version={{ DJ_BRANCH }} accept_hostkey=yes update=yes
   register: git_working_copy
 
 - name: Check composer dependencies present
@@ -26,14 +26,14 @@
 - name: Copy in composer dependencies (if they exist locally)
   synchronize:
     src: files/lib/vendor/
-    dest: "{{DJ_DIR}}/lib/vendor/"
+    dest: "{{ DJ_DIR }}/lib/vendor/"
     owner: false
     use_ssh_args: true
   when: libvendor.stat.exists
 
 - name: fix ownership of lib/vendor
   file:
-    path: "{{DJ_DIR}}/lib/vendor"
+    path: "{{ DJ_DIR }}/lib/vendor"
     recurse: true
     owner: domjudge
     group: domjudge

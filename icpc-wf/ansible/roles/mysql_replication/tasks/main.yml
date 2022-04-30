@@ -24,7 +24,7 @@
   mysql_user:
     name: replication
     host: '%'
-    password: "{{REPLICATION_PASSWORD}}"
+    password: "{{ REPLICATION_PASSWORD }}"
     append_privs: true
     priv: '*.*:REPLICATION SLAVE'
     state: present

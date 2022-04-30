@@ -7,7 +7,7 @@ server_name _default_;
 client_max_body_size {{PHP_UPLOAD_MAX_FILESIZE}};
 
 # Variables used in the nginx configuration
-set $domjudgeRoot {{DJ_DIR}}/webapp/public;
+set $domjudgeRoot {{ DJ_DIR }}/webapp/public;
 set $prefix '';
 
 location / {
