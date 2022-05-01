@@ -26,6 +26,8 @@ jobs:
         run: sudo systemctl status mariadb.service || true
       - name: Check that mariadb works
         run: sudo systemctl status mariadb.service || true
+      - run: cat /var/log/syslog
+      - run: ls -atrl /var/log/mysql
       - name: Fix service
         run: cp icpc-wf/ansible/mysqlhandler.yml icpc-wf/ansible/roles/mysql_server/handlers/main.yml
       - name: Setup the hosts file
