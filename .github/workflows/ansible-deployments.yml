@@ -15,8 +15,22 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-      - name: Install ansible lint tools
-        run: sudo apt update; sudo apt install ansible
+      - name: remove package
+        run: sudo apt update; sudo apt purge mysql-server
+      - name: Install ansible lint tools + SQL server
+        run: sudo apt install ansible mariadb-server
+      - name: Check that mariadb works
+        run: sudo systemctl status mariadb.service || true
+      - name: Check that mariadb works
+        run: sudo journalctl -xe || true
+      - name: Check that mariadb works
+        run: sudo service mariadb restart || true
+      - name: Check that mariadb works
+        run: sudo systemctl status mariadb.service || true
+      - name: Check that mariadb works
+        run: sudo journalctl -xe || true
+      - name: Fix service
+        run: cp icpc-wf/ansible/mysqlhandler.yml icpc-wf/ansible/roles/mysql_server/handlers/main.yml
       - name: Setup the hosts file
         working-directory: ./icpc-wf/ansible
         run: sed -i 's/\[${{ matrix.role }}\]/[removed]/g' hosts; printf '\n[${{ matrix.role }}]\ngithub-action\tansible_host=localhost ansible_connection=local' >> hosts
