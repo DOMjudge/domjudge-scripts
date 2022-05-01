@@ -17,10 +17,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: remove package
-        run: apt update; apt purge mysql-server
+        run: apt update; apt purge mysql-server -y
       - name: Install ansible lint tools + SQL server
-        run: apt install ansible sudo
-      - run: apt install mariadb-server
+        run: apt install ansible sudo -y
+      - run: apt install mariadb-server -y
       - name: Check that mariadb works
         run: service mariadb restart || true
       - name: Check that mariadb works
