@@ -1,4 +1,4 @@
-name: Test contest deployment (ansible scripts) [PIP]
+name: Test contest deployment (ansible scripts)
 
 on: [push,pull_request]
 
@@ -15,8 +15,8 @@ jobs:
           set -eux
           ansible-lint --version
           ansible-lint .
-        working-directory: icpc-wf/ansible
+        working-directory: provision-contest/ansible
       - name: Lint the different scripts (Via the script)
         run: ../../.github/linting.sh
-        working-directory: icpc-wf/ansible
+        working-directory: provision-contest/ansible
 
