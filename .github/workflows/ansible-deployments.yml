@@ -12,6 +12,7 @@ jobs:
         os: [ubuntu-latest]
         role: [domserver]
     runs-on: ${{ matrix.os }}
+    container: ubuntu
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
