@@ -26,20 +26,38 @@
     mode: 0755
   when: prom
 
-- name: Set promtail settings
-  copy:
+- name: Set promtail settings (1/2)
+  synchronize:
     src: promtail-local-config.yaml
     dest: /etc/promtail/
+    owner: false
+    group: false
+    perms: false
+  when: prom
+  notify: restart promtail
+
+- name: Set promtail settings (2/2)
+  file:
+    path: /etc/promtail/promtail-local-config.yaml
     owner: root
     group: root
     mode: 0644
   when: prom
   notify: restart promtail
 
-- name: Setup promtail systemd
-  copy:
+- name: Setup promtail systemd (1/2)
+  synchronize:
     src: promtail.service
     dest: /etc/systemd/system/
+    perms: false
+    owner: false
+    group: false
+  when: prom
+  notify: restart promtail
+
+- name: Setup promtail systemd (2/2)
+  file:
+    dest: /etc/systemd/system/promtail.service
     mode: 0655
     owner: root
     group: root

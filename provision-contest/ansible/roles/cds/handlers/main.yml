@@ -1,6 +1,4 @@
 ---
-# Define here handlers associated to this role.
-
 - name: restart cds
   systemd:
     name: cds

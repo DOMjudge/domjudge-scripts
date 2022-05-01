@@ -9,6 +9,7 @@
     group: domjudge
     mode: 0600
 
+# Using the ansible-make here always triggers a change
 - name: run inplace-conf
   become: true
   become_user: domjudge
@@ -19,16 +20,18 @@
     creates: "{{ DJ_DIR }}/paths.mk"
 
 - name: check if domjudge is built
-  stat: path="{{ DJ_DIR }}/judge/judgedaemon"
+  stat:
+    path: "{{ DJ_DIR }}/judge/judgedaemon"
   register: judgedaemon_binary
+  changed_when: not judgedaemon_binary.stat.exists
+  notify: rebuild domjudge
 
-- name: build domjudge
+- name: rebuild domjudge
   become: true
   become_user: domjudge
-  command: make inplace-install
-  args:
+  make:
     chdir: "{{ DJ_DIR }}"
-  notify: fix permissions on domjudge inplace-install
+    target: inplace-install
   when: (git_working_copy is defined and git_working_copy.changed) or dj_configured.changed or not judgedaemon_binary.stat.exists
 
 - name: copy domjudge-sudoers file
@@ -41,18 +44,33 @@
     group: root
 
 - name: configure domjudge logging
-  copy:
+  synchronize:
     src: rsyslog.domjudge.conf
     dest: /etc/rsyslog.d/domjudge.conf
+    perms: false
+    group: false
+    owner: false
+  notify: restart rsyslog
+
+- name: set domjudge logging config permissions
+  file:
+    path: /etc/rsyslog.d/domjudge.conf
     mode: 0644
     group: root
     owner: root
   notify: restart rsyslog
 
 - name: configure domjudge logrotate
-  copy:
+  synchronize:
     src: logrotate.domjudge
     dest: /etc/logrotate.d/domjudge
+    perms: false
+    group: false
+    owner: false
+
+- name: set domjudge logrotate permissions
+  file:
+    path: /etc/logrotate.d/domjudge
     mode: 0644
     group: root
     owner: root

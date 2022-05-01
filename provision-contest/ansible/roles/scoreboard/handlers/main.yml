@@ -2,4 +2,7 @@
 # Define here handlers associated to this role.
 
 - name: restart nginx
-  service: name=nginx enabled=true state=restarted
+  service:
+    name: nginx
+    enabled: true
+    state: restarted

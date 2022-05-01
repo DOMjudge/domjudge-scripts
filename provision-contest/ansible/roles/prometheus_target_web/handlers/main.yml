@@ -1,12 +1,25 @@
 ---
 - name: restart php-exporter
-  service: name=php-fpm-exporter enabled=true state=restarted
+  service:
+    name: php-fpm-exporter
+    enabled: true
+    daemon_reload: true
+    state: restarted
 
 - name: restart nginx
-  service: name=nginx enabled=true state=restarted
+  service:
+    name: nginx
+    enabled: true
+    state: restarted
 
 - name: restart nginx-exporter
-  service: name=prometheus-nginx-exporter enabled=true state=restarted
+  service:
+    name: prometheus-nginx-exporter
+    enabled: true
+    state: restarted
 
 - name: restart mysqld-exporter
-  service: name=prometheus-mysqld-exporter enabled=true state=restarted
+  service:
+    name: prometheus-mysqld-exporter
+    enabled: true
+    state: restarted

@@ -23,9 +23,13 @@
   notify: restart mysql
 
 - name: copy script to setup replication
-  template: src=setup-replication.sh.j2 dest=/usr/local/sbin/setup-replication.sh mode=0755
+  template:
+    src: setup-replication.sh.j2
+    dest: /usr/local/sbin/setup-replication.sh
+    mode: 0755
 
 - name: create mysql replication user
+  no_log: true
   mysql_user:
     name: replication
     host: '%'

@@ -1,5 +1,4 @@
 ---
-# Define here handlers associated to this role.
-
 - name: run apt update
-  command: apt update
+  apt:
+    update_cache: true

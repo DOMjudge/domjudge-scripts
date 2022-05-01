@@ -10,7 +10,7 @@
 - name: install domlogo
   copy:
     src: domlogo.py
-    dest: "{{ DJ_DIR }}"
+    dest: "{{ DJ_DIR }}/domlogo.py"
     owner: domjudge
     group: domjudge
     mode: 0755

@@ -10,9 +10,16 @@
       - mycli
 
 - name: copy in MySQL config
-  copy:
+  synchronize:
     src: my.cnf
     dest: /root/.my.cnf
+    perms: false
+    owner: false
+    group: false
+
+- name: Set file permissions for MySQL config
+  file:
+    path: /root/.my.cnf
     mode: 0644
     owner: root
     group: root
@@ -26,8 +33,16 @@
     mode: 0755
 
 - name: update systemd so mysql has bigger limits
-  copy:
+  synchronize:
     src: mysql.override.cnf
+    dest: /etc/systemd/system/mysql.service.d/override.conf
+    perms: false
+    group: false
+    owner: false
+  notify: restart mysql
+
+- name: set mysql memory limits file
+  file:
     dest: /etc/systemd/system/mysql.service.d/override.conf
     mode: 0644
     group: root
@@ -35,8 +50,16 @@
   notify: restart mysql
 
 - name: add mysql config snippet to increase limits
-  copy:
+  synchronize:
     src: mysql.domjudge.cnf
+    dest: /etc/mysql/mariadb.conf.d/zz_domjudge.cnf
+    perms: false
+    owner: false
+    group: false
+  notify: restart mysql
+
+- name: set increased limits permissions
+  file:
     dest: /etc/mysql/mariadb.conf.d/zz_domjudge.cnf
     mode: 0644
     owner: root
@@ -58,9 +81,19 @@
     - bin
 
 - name: copy database dump/load scripts
-  copy:
+  synchronize:
     src: "{{ item }}"
     dest: /home/domjudge/bin/{{ item }}
+    owner: false
+    group: false
+    perms: false
+  loop:
+    - load-db
+    - dump-db
+
+- name: copy database dump/load scripts
+  file:
+    path: /home/domjudge/bin/{{ item }}
     owner: domjudge
     group: domjudge
     mode: 0755

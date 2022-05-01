@@ -44,3 +44,4 @@ domjudge-scoreboard ansible_host=10.2.2.229
 
 [mgmt]
 domjudge-mgmg ansible_host=10.3.3.223
+

@@ -1,5 +1,6 @@
 ---
-# Define here handlers associated to this role.
-
 - name: restart gdm
-  service: name=gdm3 enabled=true state=restarted
+  service:
+    name: gdm3
+    enabled: true
+    state: restarted

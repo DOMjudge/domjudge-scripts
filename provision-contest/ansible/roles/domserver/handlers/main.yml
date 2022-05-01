@@ -1,8 +1,12 @@
 ---
-# Define here handlers associated to this role.
-
 - name: restart nginx
-  service: name=nginx enabled=true state=restarted
+  service:
+    name: nginx
+    enabled: true
+    state: restarted
 
 - name: restart PHP FPM
-  service: name=php7.4-fpm enabled=true state=restarted
+  service:
+    name: php{{ php_version.stdout }}-fpm
+    enabled: true
+    state: restarted

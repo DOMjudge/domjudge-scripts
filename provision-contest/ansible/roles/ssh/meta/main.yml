@@ -1,4 +1,3 @@
-# Role dependencies
 ---
 dependencies:
   - role: domjudge_user

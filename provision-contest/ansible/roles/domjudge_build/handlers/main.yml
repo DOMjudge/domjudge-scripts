@@ -1,8 +1,9 @@
 ---
-# Define here handlers associated to this role.
-
 - name: fix permissions on domjudge inplace-install
   command: make -C {{ DJ_DIR }} inplace-postinstall-permissions
 
 - name: restart rsyslog
-  service: name=rsyslog enabled=true state=restarted
+  service:
+    name: rsyslog
+    enabled: true
+    state: restarted

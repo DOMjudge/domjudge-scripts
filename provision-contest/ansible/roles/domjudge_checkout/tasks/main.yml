@@ -16,8 +16,13 @@
 - name: Create working copy of the domjudge repo
   become: true
   become_user: domjudge
-  git: repo={{ dj_git_repo }} dest={{ DJ_DIR }} version={{ DJ_BRANCH }} accept_hostkey=yes update=yes
-  register: git_working_copy
+  git:
+    repo: "{{ dj_git_repo }}"
+    dest: "{{ DJ_DIR }}"
+    version: "{{ DJ_BRANCH }}"
+    accept_hostkey: true
+    update: true
+  notify: rebuild domjudge
 
 - name: Check composer dependencies present
   become: false

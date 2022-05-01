@@ -5,7 +5,7 @@
   apt:
     state: present
     pkg:
-      - prometheus-mysqld-exporter
+      - prometheus-nginx-exporter
   notify: restart nginx-exporter
 
 - name: Expose MariaDB metrics
@@ -16,13 +16,26 @@
       - prometheus-mysqld-exporter
   notify: restart mysqld-exporter
 
+- name: Get the latest PHP-Exporter release
+  uri:
+    url: https://api.github.com/repos/hipages/php-fpm_exporter/releases?per_page=1
+    method: GET
+    return_content: true
+    status_code: 200
+    body_format: json
+  register: latest_exporter_release_array
+
+- name: Set PHP-Exporter latest version
+  set_fact:
+    exporter_version: "{{ latest_exporter_release_array.json[0].name | replace('v', '') }}"
+
 # Gather PHP-FPM statistics
 # The exporter from this is currently not in deb sources
 # so we need to download this from GitHub see the README in files
 - name: Install PHP-fpm exporter binary
   when: FPM
   ansible.builtin.unarchive:
-    src: https://github.com/hipages/php-fpm_exporter/releases/download/v2.0.4/php-fpm_exporter_2.0.4_linux_amd64.tar.gz
+    src: https://github.com/hipages/php-fpm_exporter/releases/download/v{{ exporter_version }}/php-fpm_exporter_{{ exporter_version }}_linux_amd64.tar.gz
     dest: /usr/bin/
     remote_src: true
     exclude:

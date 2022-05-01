@@ -38,22 +38,6 @@
     group: domjudge
     mode: 0644
 
-- name: enable GDM autologin
-  lineinfile:
-    path: /etc/gdm3/custom.conf
-    regexp: 'AutomaticLoginEnable'
-    line: 'AutomaticLoginEnable=true'
-    create: true
-    mode: 0644
-  notify: restart gdm
-
-- name: Automatically login domjudge user
-  lineinfile:
-    path: /etc/gdm3/custom.conf
-    regexp: 'AutomaticLogin='
-    line: 'AutomaticLogin=domjudge'
-  notify: restart gdm
-
 - name: make sure autostart directory exists
   file:
     dest: /home/domjudge/.config/autostart
@@ -61,3 +45,21 @@
     owner: domjudge
     group: domjudge
     mode: 0755
+
+- block:
+    - name: enable GDM autologin
+      lineinfile:
+        path: /etc/gdm3/custom.conf
+        regexp: 'AutomaticLoginEnable'
+        line: 'AutomaticLoginEnable=true'
+        create: true
+        mode: 0644
+      notify: restart gdm
+
+    - name: Automatically login domjudge user
+      lineinfile:
+        path: /etc/gdm3/custom.conf
+        regexp: 'AutomaticLogin='
+        line: 'AutomaticLogin=domjudge'
+      notify: restart gdm
+  when: GRAPHICAL

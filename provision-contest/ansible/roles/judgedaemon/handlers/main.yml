@@ -1,6 +1,4 @@
 ---
-# Define here handlers associated to this role.
-
 - name: enable and restart tune_cpu
   systemd:
     name: tune_cpu
@@ -27,3 +25,4 @@
 
 - name: reboot
   reboot:
+    search_paths: ['/lib/molly-guard', '/sbin']

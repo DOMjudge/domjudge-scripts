@@ -1,13 +1,18 @@
 ---
 # These tasks perform miscellaneous fixes to the base system.
 
+- name: Check installed PHP version
+  command: php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;'
+  register: php_version
+  changed_when: false
+
 - name: set timezone
   timezone:
     name: "{{ TIMEZONE }}"
 
 - name: set PHP timezone for CLI
   lineinfile:
-    dest: /etc/php/7.4/cli/php.ini
+    dest: "/etc/php/{{ php_version.stdout }}/cli/php.ini"
     state: present
     regexp: 'date\.timezone\s*='
     line: 'date.timezone = {{ TIMEZONE }}'
@@ -25,6 +30,7 @@
         fi
       fi
 
+# Keep copy instead of synchronize because of permissions
 - name: Force enable alt-tab for switching windows
   copy:
     src: dconf/
@@ -33,3 +39,4 @@
     group: root
     mode: 0755
   notify: update dconf
+  when: GRAPHICAL

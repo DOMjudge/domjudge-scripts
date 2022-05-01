@@ -1,0 +1,44 @@
+---
+- name: Create domjudge .ssh directory
+  file:
+    path: "{{ ssh_user.home }}/.ssh"
+    state: directory
+    group: "{{ ssh_user.user }}"
+    owner: "{{ ssh_user.user }}"
+    mode: 0700
+
+- name: Copy shared SSH private/public key and config to domjudge
+  synchronize:
+    src: "{{ item }}"
+    dest: "{{ ssh_user.home }}/.ssh/{{ item }}"
+    owner: false
+    group: false
+    perms: false
+  loop:
+    - config
+    - id_rsa
+    - id_rsa.pub
+
+- name: Copy shared SSH private/public key and config to domjudge
+  file:
+    path: "{{ ssh_user.home }}/.ssh/{{ item }}"
+    owner: "{{ ssh_user.user }}"
+    group: "{{ ssh_user.user }}"
+    mode: 0600
+  loop:
+    - config
+    - id_rsa
+    - id_rsa.pub
+
+- name: Add SSH key to authorized keys of domjudge and root
+  authorized_key:
+    user: "{{ ssh_user.user }}"
+    state: present
+    key: "{{ lookup('file', 'id_rsa.pub') }}"
+
+- name: Ensure authorized_keys for GitHub user accounts are present.
+  authorized_key:
+    user: "{{ ssh_user.user }}"
+    key: "https://github.com/{{ item }}.keys"
+  loop: "{{ github_ssh_user }}"
+  when: not WF_RESTRICTED_NETWORK

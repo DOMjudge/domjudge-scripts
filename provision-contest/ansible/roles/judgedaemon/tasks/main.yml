@@ -2,11 +2,18 @@
 # These tasks configure the DOMjudge judgedaemon with chroot
 
 - name: create domjudge-run users
-  user: name=domjudge-run-{{ item }} createhome=no home=/nonexistent group=nogroup shell=/bin/false
+  user:
+    name: domjudge-run-{{ item }}
+    createhome: false
+    home: /nonexistent
+    group: nogroup
+    shell: /bin/false
   loop: "{{ cpucore }}"
 
 - name: create domjudge-run group
-  group: name=domjudge-run state=present
+  group:
+    name: domjudge-run
+    state: present
 
 - name: create temp package directory
   file:
@@ -21,16 +28,45 @@
     src: install-chroot
     dest: /tmp/dj_ansible/
 
-- name: create chroot
-  shell: "set -o pipefail && {{ DJ_DIR }}/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log; grep '^Done building chroot in' /tmp/dj_make_chroot.log"
-  environment:
-    DEBMIRROR: "{{ 'https://packages/ubuntu' if WF_RESTRICTED_NETWORK else '' }}"
-  args:
-    creates: "/chroot/domjudge"
+- name: Check if chroot exists
+  stat:
+    path: /chroot/domjudge
+    get_attributes: false
+    get_checksum: false
+    get_mime: false
+  register: chroot_dir
+
+- block:
+    - name: create chroot
+      shell: "{{ DJ_DIR }}/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1"
+      environment:
+        DEBMIRROR: "{{ 'https://packages/ubuntu' if WF_RESTRICTED_NETWORK else '' }}"
+      register: chroot_creation
+      when: not chroot_dir.stat.exists
+
+    - name: store chrootlog in file
+      copy:
+        content: chroot_creation.stdout
+        dest: /tmp/dj_make_chroot.log
+        mode: 0644
+        owner: domjudge
+        group: domjudge
+
+    - name: Remove chroot if we failed
+      file:
+        state: absent
+        path: /chroot/domjudge
+      when: "'Done building chroot in' not in chroot_creation.stdout"
+
+    - name: Check if we failed after writing the log
+      fail:
+        msg: Creation of chroot failed.
+      failed_when: "'Done building chroot in' not in chroot_creation.stdout"
+  when: not chroot_dir.stat.exists
 
 - name: Pre-generate the kernel flags for ansible usage
   set_fact:
-    procline: "cgroup_enable=memory swapaccount=1 isolcpus={{ cpucore|join(',') }}"
+    procline: "cgroup_enable=memory swapaccount=1 systemd.unified_cgroup_hierarchy=0 isolcpus={{ cpucore|join(',') }}"
 
 - name: add cgroup kernel parameters
   lineinfile:
@@ -78,6 +114,7 @@
     - domjudge-judgedaemon@
   notify:
     - enable and restart create-cgroups
+    - enable and restart judgedaemon
 
 - name: template judgedaemon template systemd unit file
   template:

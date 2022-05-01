@@ -72,18 +72,36 @@
       notify: clear application cache
 
     - name: Add documentation in DOMjudge team interface
-      copy:
+      synchronize:
         src: files/docs.yaml
         dest: "{{ DJ_DIR }}/etc/"
+        perms: false
+        owner: false
+        group: false
+      notify: clear application cache
+
+    - name: Add documentation in DOMjudge team interface
+      file:
+        path: "{{ DJ_DIR }}/etc/docs.yaml"
         mode: 0644
         group: root
         owner: root
       notify: clear application cache
 
     - name: add autostart shortcuts
-      copy:
+      synchronize:
         src: files/{{ item }}.desktop
         dest: /home/domjudge/.config/autostart/
+        owner: false
+        group: false
+        perms: false
+      loop:
+        - htop
+        - taillog-domserver-nginx-error
+
+    - name: add autostart shortcuts
+      file:
+        path: "/home/domjudge/.config/autostart/{{ item }}.desktop"
         owner: domjudge
         group: domjudge
         mode: 0755

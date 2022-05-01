@@ -23,7 +23,7 @@
 - name: install SSL server certificates into CA certificates
   copy:
     src: "{{ item }}"
-    dest: /usr/local/share/ca-certificates
+    dest: /usr/local/share/ca-certificates/
     owner: root
     group: root
     mode: 0644

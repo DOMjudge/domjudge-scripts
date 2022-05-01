@@ -1,6 +1,6 @@
 [Unit]
 Description=DOMjudge judgehost running one or more judgedaemons
-Requires={% for core in CPUCORE %}domjudge-judgedaemon@{{ core }}.service {% endfor %}
+Requires={% for core in cpucore %}domjudge-judgedaemon@{{ core }}.service {% endfor %}
 
 [Install]
 WantedBy=multi-user.target

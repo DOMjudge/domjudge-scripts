@@ -1,6 +1,4 @@
 ---
-# These tasks configure clusterssh
-
 - name: install clusterssh package
   apt:
     state: present
@@ -30,3 +28,7 @@
     - domserver
     - judgehost
     - admin
+    - cds
+    - grafana
+    - scoreboard
+    - mgmt
