@@ -5,14 +5,12 @@ on: [push,pull_request]
 jobs:
   test_domjudge_role:
     strategy:
-      #matrix:
-      #  os: [ubuntu-latest, ubuntu-20.04]
-      #  role: [domserver,judgehost]
       matrix:
-        os: [ubuntu-latest]
+        os: [22.04, 20.04]
         role: [domserver]
-    runs-on: ${{ matrix.os }}
-    container: ubuntu
+    runs-on: ubuntu-20.04
+    container: ubuntu:${{ matrix.os }}
+    
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
