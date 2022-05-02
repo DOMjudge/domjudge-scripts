@@ -28,7 +28,7 @@ jobs:
         run: sed -i 's/\[${{ matrix.role }}\]/[removed]/g' hosts; printf '\n[${{ matrix.role }}]\ngithub-action\tansible_host=localhost ansible_connection=local' >> hosts
       - name: Generate insecure credentials
         working-directory: ./icpc-wf/ansible
-        run: mv group_vars/all/secret.yml{.example,}
+        run: mv group_vars/all/secret.yml.example group_vars/all/secret.yml
       - name: Run the default deployment method
         working-directory: ./icpc-wf/ansible
         run: make ${{ matrix.role }}
