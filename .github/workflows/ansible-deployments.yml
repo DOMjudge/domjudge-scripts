@@ -17,14 +17,11 @@ jobs:
       - name: remove package
         run: apt update; apt purge mysql-server -y
       - name: Install ansible lint tools + SQL server
-        run: apt install ansible sudo make mariadb-server -y
-      - name: Set SQL server name
-        run: export name=mysql; if [ "${{ matrix.os }}" = "22.04"]; then name=mariadb; fi
-      - run: echo $name
-      - name: Check that mariadb works
-        run: service $name restart
-      - name: Check that mariadb works
-        run: service $name status
+        run: apt install ansible sudo make -y
+      #mariadb-server -y
+      #- name: Check that mariadb works
+      #  if: ${{ matrix.os == '22.04' }}
+      #  run: service mariadb restart; service mariadb status
       - name: Setup the hosts file
         working-directory: ./icpc-wf/ansible
         run: sed -i 's/\[${{ matrix.role }}\]/[removed]/g' hosts; printf '\n[${{ matrix.role }}]\ngithub-action\tansible_host=localhost ansible_connection=local' >> hosts
