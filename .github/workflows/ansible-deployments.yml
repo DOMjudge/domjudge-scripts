@@ -24,9 +24,7 @@ jobs:
       - name: Check that mariadb works
         run: service mariadb restart
       - name: Check that mariadb works
-        run: systemctl status mariadb.service
-      #- name: Fix service
-      #  run: cp icpc-wf/ansible/mysqlhandler.yml icpc-wf/ansible/roles/mysql_server/handlers/main.yml
+        run: service mariadb status
       - name: Setup the hosts file
         working-directory: ./icpc-wf/ansible
         run: sed -i 's/\[${{ matrix.role }}\]/[removed]/g' hosts; printf '\n[${{ matrix.role }}]\ngithub-action\tansible_host=localhost ansible_connection=local' >> hosts
