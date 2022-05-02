@@ -22,15 +22,11 @@ jobs:
         run: apt install ansible sudo -y
       - run: apt install mariadb-server -y
       - name: Check that mariadb works
-        run: service mariadb restart || true
+        run: service mariadb restart
       - name: Check that mariadb works
-        run: sudo systemctl status mariadb.service || true
-      - name: Check that mariadb works
-        run: sudo systemctl status mariadb.service || true
-      - run: cat /var/log/syslog
-      - run: ls -atrl /var/log/mysql
-      - name: Fix service
-        run: cp icpc-wf/ansible/mysqlhandler.yml icpc-wf/ansible/roles/mysql_server/handlers/main.yml
+        run: systemctl status mariadb.service
+      #- name: Fix service
+      #  run: cp icpc-wf/ansible/mysqlhandler.yml icpc-wf/ansible/roles/mysql_server/handlers/main.yml
       - name: Setup the hosts file
         working-directory: ./icpc-wf/ansible
         run: sed -i 's/\[${{ matrix.role }}\]/[removed]/g' hosts; printf '\n[${{ matrix.role }}]\ngithub-action\tansible_host=localhost ansible_connection=local' >> hosts
