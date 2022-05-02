@@ -20,9 +20,9 @@ jobs:
         run: apt install ansible sudo -y
       - run: apt install mariadb-server -y
       - name: Check that mariadb works
-        run: service mariadb restart
+        run: service mysql restart
       - name: Check that mariadb works
-        run: service mariadb status
+        run: service mysql status
       - name: Setup the hosts file
         working-directory: ./icpc-wf/ansible
         run: sed -i 's/\[${{ matrix.role }}\]/[removed]/g' hosts; printf '\n[${{ matrix.role }}]\ngithub-action\tansible_host=localhost ansible_connection=local' >> hosts
