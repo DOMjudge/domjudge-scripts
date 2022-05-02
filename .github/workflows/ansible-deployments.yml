@@ -18,6 +18,7 @@ jobs:
         run: apt update; apt purge mysql-server -y
       - name: Install ansible lint tools + SQL server
         run: apt install ansible sudo make -y
+      - run: mount
       #mariadb-server -y
       #- name: Check that mariadb works
       #  if: ${{ matrix.os == '22.04' }}
