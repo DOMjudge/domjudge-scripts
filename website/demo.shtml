@@ -45,4 +45,8 @@ contest, NWERC 2018, with some sensitive things removed.</p>
 <p>If there's something not working, or you've got questions, please contact us
 at <a href="mailto:admin@domjudge.org">admin@domjudge.org</a>.</p>
 
+<h3>Logging</h3>
+
+We send exceptions encountered on the demo instance to <a href="https://sentry.io">Sentry</a>. This should not contain personal information but we prefer to inform you of this. These errors make it easier to detect and debug bugs in our current development version, so you already help us by encountering these bugs!
+
 <!--#include virtual="/footer.shtml" -->
