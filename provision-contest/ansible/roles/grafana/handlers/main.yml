@@ -13,12 +13,6 @@
     enabled: true
     state: restarted
 
-- name: restart nginx
-  service:
-    name: nginx
-    enabled: true
-    state: restarted
-
 - name: restart grafana
   service:
     name: grafana-server

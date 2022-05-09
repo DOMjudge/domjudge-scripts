@@ -4,3 +4,18 @@
   command: "{{ DJ_DIR }}/webapp/bin/console cache:clear"
   become: true
   become_user: domjudge
+
+- name: rebuild domjudge
+  become: true
+  become_user: domjudge
+  make:
+    chdir: "{{ DJ_DIR }}"
+    target: inplace-install
+  notify: fix permissions on domjudge inplace-install
+
+- name: restart nginx
+  systemd:
+    name: nginx
+    enabled: true
+    state: restarted
+
