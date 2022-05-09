@@ -33,3 +33,4 @@
     group: root
     mode: 0755
   notify: update dconf
+  when: GRAPHICAL
