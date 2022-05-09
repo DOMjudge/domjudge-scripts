@@ -69,6 +69,7 @@
         mode: 0755
       loop:
         - rotate
+      when: GRAPHICAL
 
     - name: add autostart shortcuts from template
       template:
@@ -79,3 +80,4 @@
         mode: 0755
       loop:
         - taillog
+      when: GRAPHICAL

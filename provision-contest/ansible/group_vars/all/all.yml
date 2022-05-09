@@ -21,6 +21,9 @@ DOMSERVER_SSL_KEY: /etc/ssl/private/domserver.key
 # Set this to true when you are using the ICPC World Finals Contest Image
 ICPC_IMAGE: false
 
+# Set this to true when you are using a graphical desktop
+GRAPHICAL: false
+
 # Set this when on the blue network at the World Finals where no
 # internet access is available and "packages" must be used as APT repo
 # server.
@@ -60,3 +63,4 @@ STATIC_SCOREBOARD_HOSTNAME: scoreboard
 
 STATIC_SCOREBOARD_SSL_CERT: /etc/ssl/certs/scoreboard.crt
 STATIC_SCOREBOARD_SSL_KEY: /etc/ssl/private/scoreboard.key
+
