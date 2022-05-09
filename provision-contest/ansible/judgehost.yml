@@ -42,14 +42,20 @@
       tags: prometheus_target_all
       when: GRAFANA_MONITORING
   pre_tasks:
-    - name: Get current services
-      service_facts:
+    - name: Check if the service is already available
+      stat:
+        path: /etc/systemd/system/domjudge-judgedaemon@.service
+        get_attributes: false
+        get_checksum: false
+        get_mime: false
+      register: service_file
+
     - name: Disable all cores
       service:
-        name="domjudge-judgedaemon@{{ item }}"
-        state=stopped
+        name: "domjudge-judgedaemon@{{ item }}"
+        state: stopped
       with_sequence: start=0 end={{ ansible_processor_vcpus }} format=domjudge-judgedaemon@%1x
-      when: '"domjudge-judgedaemon@0.service" in services'
+      when: service_file.stat.exists
   tasks:
     - name: add autostart shortcuts
       template:
