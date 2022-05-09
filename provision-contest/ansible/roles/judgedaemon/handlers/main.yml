@@ -25,3 +25,5 @@
 
 - name: reboot
   reboot:
+    search_paths: ['/lib/molly-guard', '/sbin']
+
