@@ -1,3 +1,5 @@
 ---
 - name: restart keepalived service
-  service: name=keepalived state=restarted
+  service:
+    name: keepalived
+    state: restarted

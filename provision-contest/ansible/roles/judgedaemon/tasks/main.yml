@@ -2,11 +2,18 @@
 # These tasks configure the DOMjudge judgedaemon with chroot
 
 - name: create domjudge-run users
-  user: name=domjudge-run-{{ item }} createhome=no home=/nonexistent group=nogroup shell=/bin/false
+  user:
+    name: "domjudge-run-{{ item }}"
+    createhome: false
+    home: /nonexistent
+    group: nogroup
+    shell: /bin/false
   loop: "{{ cpucore }}"
 
 - name: create domjudge-run group
-  group: name=domjudge-run state=present
+  group:
+    name: domjudge-run
+    state: present
 
 - name: create temp package directory
   file:

@@ -1,3 +1,6 @@
 ---
 - name: restart PHP FPM
-  service: name=php7.4-fpm enabled=true state=restarted
+  service:
+    name: php7.4-fpm
+    enabled: true
+    state: restarted
