@@ -1,27 +1,34 @@
 ---
 # This task configures packaging and installs various system utilities
 
-- name: replace pc2.ecs.baylor.edu by packages in apt sources
-  replace:
-    dest: "/etc/apt/{{ item }}"
-    regexp: 'pc2\.ecs\.baylor\.edu'
-    replace: 'packages'
-  loop:
-    - sources.list
-    - sources.list.d/microsoft.list
-    - sources.list.d/mono.list
-    - sources.list.d/vscode.list
-    - sources.list.d/pypy-ubuntu-ppa-buster.list
-  notify: run apt update
-  when: WF_RESTRICTED_NETWORK
+- block:
+  - name: replace pc2.ecs.baylor.edu by packages in apt sources
+    replace:
+      dest: "/etc/apt/{{ item }}"
+      regexp: 'pc2\.ecs\.baylor\.edu'
+      replace: 'packages'
+    loop:
+      - sources.list
+      - sources.list.d/microsoft.list
+      - sources.list.d/mono.list
+      - sources.list.d/vscode.list
+      - sources.list.d/pypy-ubuntu-ppa-buster.list
+    notify: run apt update
 
-- name: add packages to hosts file
-  lineinfile:
-    dest: /etc/hosts
-    regexp: '^10\.3\.3\.209'
-    line: "10.3.3.209 packages"
-  notify: run apt update
-  when: WF_RESTRICTED_NETWORK
+  - name: add packages to hosts file
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '^10\.3\.3\.209'
+      line: "10.3.3.209 packages"
+    notify: run apt update
+
+  - name: remove pycharm repo
+    replace:
+      dest: /etc/apt/sources.list
+      regexp: '^([^#].*pycharm.*)$'
+      replace: '# \1'
+    notify: run apt update
+  when: ICPC_IMAGE and WF_RESTRICTED_NETWORK
 
 - name: check for dpkg architecture i386
   command: dpkg --print-foreign-architectures
@@ -32,13 +39,6 @@
   command: dpkg --remove-architecture i386
   notify: run apt update
   when: dpkg_architectures.stdout.find('i386') != -1
-
-- name: remove pycharm repo
-  replace:
-    dest: /etc/apt/sources.list
-    regexp: '^([^#].*pycharm.*)$'
-    replace: '# \1'
-  notify: run apt update
 
 - name: flush handlers
   meta: flush_handlers
