@@ -5,19 +5,11 @@
   hostname:
     name: "{{ inventory_hostname }}"
 
-# FIXME: this needs to be cleaned up and done in a way such that the
-# tasks are not marked as "changed" every time they are run, and also
-# work better with ad-hoc editing of the inventory hosts file.
-
-- name: add all hosts to hosts file
-  lineinfile:
+- name: Set new hosts file
+  template:
+    src: hosts.j2
     dest: /etc/hosts
-    regexp: '{{ item }}$'
-    line: "{{ hostvars[item].ansible_host }} {{ item }}"
-  loop: "{{ groups['all'] }}"
+    group: root
+    owner: root
+    mode: 0644
 
-- name: add domjudge in hosts file
-  lineinfile:
-    dest: /etc/hosts
-    regexp: 'domserver'
-    line: "{{ DOMSERVER_IP }} domjudge domserver"
