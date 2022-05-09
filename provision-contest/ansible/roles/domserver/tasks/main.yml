@@ -44,6 +44,7 @@
     state: present
     regexp: 'date\.timezone\s*='
     line: 'date.timezone = {{ TIMEZONE }}'
+  notify: restart PHP FPM
 
 - name: enable PHP modules
   command: phpenmod {{ item }}
@@ -52,6 +53,7 @@
   loop:
     - zip
     - intl
+  notify: restart PHP FPM
 
 - name: add domjudge nginx conf
   template:
