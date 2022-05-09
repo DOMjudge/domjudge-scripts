@@ -1,6 +1,4 @@
 ---
-# Define here handlers associated to this role.
-
 - name: restart systemd timesyncd
   systemd:
     name: systemd-timesyncd
