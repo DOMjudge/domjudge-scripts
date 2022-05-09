@@ -30,3 +30,8 @@
     - domserver
     - judgehost
     - admin
+    - cds
+    - grafana
+    - scoreboard
+    - mgmt
+
