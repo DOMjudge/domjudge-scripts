@@ -21,13 +21,13 @@
 
 # When using replication, the DB will be dropped and recreated on the slave later.
 - name: check if the database is configured
-  command: "{{ DJ_DIR }}/bin/dj_setup_database -u root status"
+  command: "{{ DJ_DIR }}/bin/dj_setup_database -s -u root status"
   register: db_status
   ignore_errors: true
   changed_when: false
 
 - name: make sure the database is configured
-  command: "{{ DJ_DIR }}/bin/dj_setup_database -u root bare-install"
+  command: "{{ DJ_DIR }}/bin/dj_setup_database -s -u root bare-install"
   when: "'failed' in db_status.stdout"
 
 - name: install required packages
