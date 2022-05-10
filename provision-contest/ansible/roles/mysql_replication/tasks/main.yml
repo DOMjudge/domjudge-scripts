@@ -30,6 +30,7 @@
 
 - name: create mysql replication user
   mysql_user:
+    no_log: true
     name: replication
     host: '%'
     password: "{{ REPLICATION_PASSWORD }}"
