@@ -34,6 +34,7 @@
       tags: domserver
     - role: mysql_replication
       tags: mysql_replication
+      when: REPLICATION_PASSWORD is defined
     - role: keepalived
       tags: keepalived
       when: KEEPALIVED_PRIORITY is defined
