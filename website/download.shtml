@@ -41,8 +41,7 @@ mailing list</a>.</p>
 <h3>DOMjudge docker images</h3>
 
 <p>Official Docker images for both the domserver and judgehost are also available.
-See the <a href="https://hub.docker.com/r/domjudge/domserver/">Docker Hub
-repository for the DOMserver</a> to get started.
+See the <a href="https://hub.docker.com/r/domjudge/domserver/">Docker Hub repository for the DOMserver</a> to get started or use the example <a href="docker-compose.yml">docker-compose</a> setup.
 </p>
 
 <h3>Debian Packages</h3>
