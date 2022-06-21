@@ -42,3 +42,4 @@ on the account `domjudge@vm-domjudge`):
  1. Put debian packages in `/srv/http/domjudge/debian/mini-dinstall/incoming`
     and run as domjudge@domjudge: `mini-dinstall -b`
  1. Send an email to `domjudge-announce@domjudge.org`.
+ 1. Add the released branch to the dependabot.yml (https://github.com/DOMjudge/domjudge/blob/main/.github/dependabot.yml)
