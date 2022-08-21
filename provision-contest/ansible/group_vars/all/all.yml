@@ -29,6 +29,10 @@ GRAPHICAL: false
 # server.
 WF_RESTRICTED_NETWORK: false
 
+# Set this to true to enable load balancing instead of (automatic) failover
+# DBA_PASSWORD needs to be set for this in secret.yml
+DOMSERVER_LOADBALANCING: false
+
 TIMEZONE: "Europe/Moscow"
 
 PHP_FPM_MAX_CHILDREN: 400
