@@ -7,6 +7,36 @@ upstream domjudge {
 	server unix:/var/run/php-fpm-domjudge.sock; # if using with etc/domjudge-fpm.conf
 }
 
+{% if DOMSERVER_LOADBALANCING %}
+upstream domjudge-loadbalanced {
+	least_conn;
+{% for host in groups['domserver'] %}
+	server {{ hostvars[host].ansible_host }}:81;
+{% endfor %}
+}
+
+server {
+	listen   81;
+	listen   [::]:81;
+	server_name _default_;
+
+	add_header Strict-Transport-Security max-age=31556952;
+	include /etc/nginx/snippets/domjudge-inner;
+
+	set_real_ip_from {{ SERVER_IP_PREFIX }}.0/24;
+	real_ip_header X-Forwarded-For;
+	real_ip_recursive on;
+}
+
+map $realip_remote_addr $access_allowed {
+	default false;
+{% for host in groups['domserver'] %}
+	{{ hostvars[host].ansible_host }} true;
+{% endfor %}
+}
+
+{% endif %}
+
 server {
 	listen   80 default;
 	server_name _default_;
@@ -24,5 +54,20 @@ server {
 	add_header Strict-Transport-Security max-age=31556952;
 
 	send_timeout 36000s;
+{% if DOMSERVER_LOADBALANCING %}
+	location / {
+		proxy_pass http://domjudge-loadbalanced;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "upgrade";
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header Host $http_host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_request_buffering off;
+		proxy_buffering off;
+	}
+{% else %}
 	include /etc/nginx/snippets/domjudge-inner;
+{% endif %}
 }

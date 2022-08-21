@@ -37,18 +37,18 @@
       tags: ssh
     - role: mysql_server
       tags: mysql_server
-    - role: domjudge_checkout
-      tags: domjudge_checkout
-    - role: domjudge_build
-      tags: domjudge_build
-    - role: domserver
-      tags: domserver
     - role: mysql_replication
       tags: mysql_replication
       when: REPLICATION_PASSWORD is defined
     - role: keepalived
       tags: keepalived
       when: KEEPALIVED_PRIORITY is defined
+    - role: domjudge_checkout
+      tags: domjudge_checkout
+    - role: domjudge_build
+      tags: domjudge_build
+    - role: domserver
+      tags: domserver
     - role: prometheus_target_web
       tags: prometheus_target_web
       vars:

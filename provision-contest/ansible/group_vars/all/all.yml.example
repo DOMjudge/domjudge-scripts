@@ -52,6 +52,10 @@ HOSTS:
     domjudge-laptop: 10.3.3.200
     pc2:             10.3.3.241
 
+# Set this to true to enable load balancing instead of (automatic) failover
+# DBA_PASSWORD needs to be set for this in secret.yml
+DOMSERVER_LOADBALANCING: false
+
 TIMEZONE: "Asia/Dhaka"
 
 PHP_FPM_MAX_CHILDREN: 400
