@@ -26,6 +26,7 @@
   environment:
     DEBMIRROR: "{{ 'https://packages/ubuntu' if WF_RESTRICTED_NETWORK else '' }}"
   args:
+    executable: /bin/bash
     creates: "/chroot/domjudge"
 
 - name: Pre-generate the kernel flags for ansible usage
