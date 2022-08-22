@@ -59,6 +59,7 @@
         regexp: 'APP_ENV='
         line: 'APP_ENV=dev'
         dest: "{{ DJ_DIR }}/webapp/.env.local"
+        create: true
 
     - name: add cds to hosts file
       lineinfile:
