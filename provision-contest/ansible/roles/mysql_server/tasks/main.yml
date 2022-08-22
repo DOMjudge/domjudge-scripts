@@ -71,19 +71,21 @@
 - name: create mysql user for for DOMjudge database administration
   mysql_user:
     name: domjudge_dba
-    host: '{{ SERVER_IP_PREFIX }}.%'
+    host: '{{ item }}'
     password: "{{ DBA_PASSWORD }}"
     append_privs: true
     priv: 'domjudge.*:ALL,GRANT/*.*:CREATE USER,RELOAD'
     state: present
-  when: DBA_PASSWORD is defined
+  when: host_type == 'domserver' and DBA_PASSWORD is defined
+  loop: "{{ groups['domserver'] | map('extract', hostvars, 'ansible_host') + [DOMSERVER_IP] }}"
 
 - name: create mysql user for for DOMjudge when we are doing loadbalancing
   mysql_user:
     name: domjudge
-    host: '{{ SERVER_IP_PREFIX }}.%'
+    host: '{{ item }}'
     password: "{{ DB_PASSWORD }}"
     append_privs: true
     priv: 'domjudge.*:SELECT,INSERT,UPDATE,DELETE'
     state: present
-  when: DOMSERVER_LOADBALANCING
+  when: host_type == 'domserver' and DOMSERVER_LOADBALANCING
+  loop: "{{ groups['domserver'] | map('extract', hostvars, 'ansible_host') + [DOMSERVER_IP] }}"
