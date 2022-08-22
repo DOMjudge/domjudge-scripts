@@ -11,7 +11,7 @@ set $domjudgeRoot {{ DJ_DIR }}/webapp/public;
 set $prefix '';
 
 location / {
-{% if DOMSERVER_LOADBALANCING %}
+{% if host_type == 'domserver' and DOMSERVER_LOADBALANCING %}
 	if ($access_allowed = false) {
 		return 403;
 	}

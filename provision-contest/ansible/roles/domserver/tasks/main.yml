@@ -22,7 +22,7 @@
 - name: set the DBA credentials
   set_fact:
     dba_credentials: |
-      {% if DBA_PASSWORD is defined %}
+      {% if host_type == 'domserver' and DBA_PASSWORD is defined %}
         -u domjudge_dba -p {{ DBA_PASSWORD }}
       {% else %}
         -s -u root
@@ -35,11 +35,11 @@
   ignore_errors: true
   changed_when: false
   check_mode: no
-  when: not DOMSERVER_LOADBALANCING or groups['domserver'][0] == inventory_hostname
+  when: not DOMSERVER_LOADBALANCING or groups['domserver'][0] == inventory_hostname or host_type != 'domserver'
 
 - name: make sure the database is configured
   command: "{{ DJ_DIR }}/bin/dj_setup_database {{ dba_credentials }} bare-install"
-  when: "(not DOMSERVER_LOADBALANCING or groups['domserver'][0] == inventory_hostname) and 'failed' in db_status.stdout"
+  when: "(not DOMSERVER_LOADBALANCING or groups['domserver'][0] == inventory_hostname or host_type != 'domserver') and 'failed' in db_status.stdout"
 
 - name: Install required packages
   apt:
