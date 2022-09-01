@@ -69,4 +69,16 @@
     is useful to keep problem data secret and to make sharing credentials easier on the organizer.
 </p>
 
+<h3>DOMjudge for teaching</h3>
+
+<p> DOMjudge is mostly focused on being a contest system for short running contests. Some people use the
+automatic judging for teaching. When possible we can incorporate such extensions to provide easier access
+through the API and UI with feature requests. Since not everything will make it into our releases, we link here to
+some extensions to help with this use case.
+<ul>
+<li><a href="https://github.com/ioi/isolate">Isolate</a> this is an alternative to our judgedaemon with chroot.</li>
+<li><a href="https://tobias.meggendorfer.de/domtutor.html">DOMtutor</a></li>
+</ul>
+</p>
+
 <!--#include virtual="/footer.shtml" -->
