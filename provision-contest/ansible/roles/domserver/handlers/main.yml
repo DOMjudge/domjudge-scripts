@@ -1,5 +1,5 @@
 ---
-- name: restart PHP FPM
+- name: Restart PHP FPM
   service:
     name: php7.4-fpm
     enabled: true

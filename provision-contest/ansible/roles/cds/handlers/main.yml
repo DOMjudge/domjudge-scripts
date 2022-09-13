@@ -1,5 +1,5 @@
 ---
-- name: restart cds
+- name: Restart cds
   systemd:
     name: cds
     enabled: true

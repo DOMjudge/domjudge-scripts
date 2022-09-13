@@ -1,5 +1,5 @@
 ---
-- name: restart mysql
+- name: Restart mysql
   service:
     name: mysql
     enabled: true

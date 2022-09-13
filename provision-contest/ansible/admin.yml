@@ -1,7 +1,7 @@
 ---
 # This playbook an admin machine with a dev DOMjudge instance
 
-- name: setup admin machines
+- name: Setup admin machines
   hosts: admin
   vars:
     host_type: admin
@@ -44,7 +44,7 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - name: install common required/useful packages
+    - name: Install common required/useful packages
       tags: packages
       apt:
         state: present
@@ -54,32 +54,32 @@
           - makepasswd
           - mmv
 
-    - name: enable developer mode
+    - name: Enable developer mode
       lineinfile:
         regexp: 'APP_ENV='
         line: 'APP_ENV=dev'
         dest: "{{ DJ_DIR }}/webapp/.env.local"
         create: true
 
-    - name: add cds to hosts file
+    - name: Add cds to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: 'cds$'
         line: "10.3.3.207 cds"
 
-    - name: add kattis to hosts file
+    - name: Add kattis to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: 'kattis$'
         line: "10.3.3.212 kattis"
 
-    - name: add domjudge-laptop to hosts file
+    - name: Add domjudge-laptop to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: 'domjudge-laptop$'
         line: "10.3.3.200 domjudge-laptop"
 
-    - name: add nisprint to hosts file
+    - name: Add nisprint to hosts file
       lineinfile:
         dest: /etc/hosts
         regexp: 'printsrv$'
@@ -89,25 +89,25 @@
       set_fact:
         dj_git_repo_scripts: "{{ DJ_GIT_REPO_SCRIPTS_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO_SCRIPTS }}"
 
-    - name: create working copy of the domjudge-scripts repo
+    - name: Create working copy of the domjudge-scripts repo
       become: true
       become_user: domjudge
       # We use a different directory here to have one single 'upstream' and not have issues with it
       git: repo={{ dj_git_repo_scripts }} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
 
-    - name: create working copy of the wf2020 repo
+    - name: Create working copy of the wf2020 repo
       become: true
       become_user: domjudge
       git: repo=git@cds:wf2020 dest=/home/domjudge/wf2020 version=master accept_hostkey=yes update=no
 
-    - name: copy custom CSS file for admin machines
+    - name: Copy custom CSS file for admin machines
       copy:
         src: admin-machine.css
         dest: "{{ DJ_DIR }}/webapp/public/css/custom/admin-machine.css"
         owner: domjudge
         group: domjudge
         mode: 0644
-      notify: clear application cache
+      notify: Clear application cache
 
     - name: Install netrc file
       template:

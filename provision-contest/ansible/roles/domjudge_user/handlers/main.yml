@@ -1,5 +1,5 @@
 ---
-- name: restart gdm
+- name: Restart gdm
   service:
     name: gdm3
     enabled: true

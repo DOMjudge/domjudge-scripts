@@ -1,7 +1,7 @@
 ---
 # These tasks configure a static scoreboard
 
-- name: create directories for styling, scripts, fonts and flags
+- name: Create directories for styling, scripts, fonts and flags
   file:
     path: /home/domjudge/scoreboard/{{ item }}
     state: directory
@@ -14,7 +14,7 @@
     - webfonts
     - flags
 
-- name: download required assets
+- name: Download required assets
   get_url:
     url: "{{ DOMSERVER_URL }}/{{ item }}"
     dest: /home/domjudge/scoreboard/{{ item }}
@@ -38,7 +38,7 @@
     - webfonts/fa-v4compatibility.ttf
     - webfonts/fa-v4compatibility.woff2
 
-- name: install contest images
+- name: Install contest images
   synchronize:
     src: files/domjudge-public/
     dest: "/home/domjudge/scoreboard/"
@@ -47,7 +47,7 @@
   become: true
   become_user: domjudge
 
-- name: download and unpack flag icons package
+- name: Download and unpack flag icons package
   unarchive:
     src: https://github.com/lipis/flag-icons/archive/refs/tags/3.5.0.zip
     dest: /tmp
@@ -55,7 +55,7 @@
     owner: domjudge
     group: domjudge
 
-- name: copy flag icon SVG's
+- name: Copy flag icon SVG's
   copy:
     src: /tmp/flag-icons-3.5.0/flags/
     dest: /home/domjudge/scoreboard/flags/
@@ -64,7 +64,7 @@
     group: domjudge
     mode: 0755
 
-- name: create bin directory
+- name: Create bin directory
   file:
     path: /home/domjudge/bin
     state: directory
@@ -72,7 +72,7 @@
     group: domjudge
     mode: 0755
 
-- name: install update scoreboard script
+- name: Install update scoreboard script
   template:
     src: update-scoreboard.sh.j2
     dest: "/home/domjudge/bin/update-scoreboard.sh"
@@ -81,34 +81,34 @@
     mode: 0755
 
 # Ansible cron task defaults to * for all cron parts
-- name: set up cron to update scoreboard
+- name: Set up cron to update scoreboard
   cron:
     name: update public scoreboard
     job: /home/domjudge/bin/update-scoreboard.sh
     user: domjudge
 
-- name: install nginx
+- name: Install nginx
   apt:
     state: present
     pkg:
       - nginx
 
-- name: add scoreboard nginx conf
+- name: Add scoreboard nginx conf
   template:
     src: scoreboard.conf.j2
     dest: /etc/nginx/sites-available/scoreboard.conf
     mode: 0644
-  notify: restart nginx
+  notify: Restart nginx
 
-- name: enable nginx conf for static scoreboard
+- name: Enable nginx conf for static scoreboard
   file:
     src: /etc/nginx/sites-available/scoreboard.conf
     dest: /etc/nginx/sites-enabled/scoreboard.conf
     state: link
-  notify: restart nginx
+  notify: Restart nginx
 
-- name: disable default nginx site
+- name: Disable default nginx site
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-  notify: restart nginx
+  notify: Restart nginx

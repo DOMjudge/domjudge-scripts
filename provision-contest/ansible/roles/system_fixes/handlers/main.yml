@@ -1,3 +1,3 @@
 ---
-- name: update dconf
+- name: Update dconf
   command: dconf update

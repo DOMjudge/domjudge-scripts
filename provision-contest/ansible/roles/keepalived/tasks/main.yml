@@ -14,7 +14,7 @@
     mode: 0644
     group: root
     owner: root
-  notify: restart keepalived service
+  notify: Restart keepalived service
 
 - name: Start but disable keepalived (so it does not fail back to primary)
   service:

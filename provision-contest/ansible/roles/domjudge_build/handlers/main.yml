@@ -1,8 +1,8 @@
 ---
-- name: fix permissions on domjudge inplace-install
+- name: Fix permissions on domjudge inplace-install
   command: make -C {{ DJ_DIR }} inplace-postinstall-permissions
 
-- name: restart rsyslog
+- name: Restart rsyslog
   service:
     name: rsyslog
     enabled: true

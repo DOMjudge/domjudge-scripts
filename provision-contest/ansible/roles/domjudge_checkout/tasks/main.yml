@@ -1,7 +1,7 @@
 ---
 # These tasks create a checkout of the DOMjudge repo
 
-- name: create working copy directory
+- name: Create working copy directory
   file:
     path: "{{ DJ_DIR }}"
     state: directory
@@ -39,7 +39,7 @@
     use_ssh_args: true
   when: libvendor.stat.exists
 
-- name: fix ownership of lib/vendor
+- name: Fix ownership of lib/vendor
   file:
     path: "{{ DJ_DIR }}/lib/vendor"
     recurse: true
