@@ -1,7 +1,7 @@
 ---
 # These tasks configure the DOMjudge judgedaemon with chroot
 
-- name: create domjudge-run users
+- name: Create domjudge-run users
   user:
     name: "domjudge-run-{{ item }}"
     createhome: false
@@ -10,12 +10,12 @@
     shell: /bin/false
   loop: "{{ cpucore }}"
 
-- name: create domjudge-run group
+- name: Create domjudge-run group
   group:
     name: domjudge-run
     state: present
 
-- name: create temp package directory
+- name: Create temp package directory
   file:
     path: /tmp/dj_ansible
     state: directory
@@ -23,12 +23,12 @@
     group: root
     mode: 0700
 
-- name: copy chroot DEB packages to install
+- name: Copy chroot DEB packages to install
   synchronize:
     src: install-chroot
     dest: /tmp/dj_ansible/
 
-- name: create chroot
+- name: Create chroot
   shell: "set -o pipefail && {{ DJ_DIR }}/misc-tools/dj_make_chroot -y -i openjdk-11-jdk-headless -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\" 2>&1 | tee /tmp/dj_make_chroot.log; grep '^Done building chroot in' /tmp/dj_make_chroot.log"
   environment:
     DEBMIRROR: "{{ 'https://packages/ubuntu' if WF_RESTRICTED_NETWORK else '' }}"
@@ -40,30 +40,30 @@
   set_fact:
     procline: "cgroup_enable=memory swapaccount=1 isolcpus={{ cpucore | join(',') }}"
 
-- name: add cgroup kernel parameters
+- name: Add cgroup kernel parameters
   lineinfile:
     dest: /etc/default/grub
     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
     line: "GRUB_CMDLINE_LINUX_DEFAULT=\"{{ procline }}\""
 
-- name: check cgroup kernel parameters
+- name: Check cgroup kernel parameters
   command: cat /proc/cmdline
   register: kernel_cmdline
   changed_when: procline not in kernel_cmdline.stdout
   notify:
-    - update grub
-    - reboot
+    - Update grub
+    - Reboot
 
-- name: reboot to activate kernel parameters
+- name: Reboot to activate kernel parameters
   meta: flush_handlers
 
-- name: copy script to disable turboboost and hyperthreading
+- name: Copy script to disable turboboost and hyperthreading
   copy:
     src: disable-turboboost_ht
     dest: /usr/local/sbin/
     mode: 0755
 
-- name: copy tune_cpu systemd unit file
+- name: Copy tune_cpu systemd unit file
   copy:
     src: tune_cpu.service
     dest: /etc/systemd/system/
@@ -71,9 +71,9 @@
     group: root
     owner: root
   notify:
-    - enable and restart tune_cpu
+    - Enable and restart tune_cpu
 
-- name: copy judgedaemon related systemd unit files
+- name: Copy judgedaemon related systemd unit files
   copy:
     remote_src: true
     src: "{{ DJ_DIR }}/lib/judge/{{ item }}.service"
@@ -85,9 +85,9 @@
     - create-cgroups
     - domjudge-judgedaemon@
   notify:
-    - enable and restart create-cgroups
+    - Enable and restart create-cgroups
 
-- name: template judgedaemon template systemd unit file
+- name: Template judgedaemon template systemd unit file
   template:
     src: domjudge-judgehost.target.j2
     dest: /etc/systemd/system/domjudge-judgehost.target
@@ -95,9 +95,9 @@
     group: root
     owner: root
   notify:
-    - enable and restart judgedaemon
+    - Enable and restart judgedaemon
 
-- name: disable systemd timers
+- name: Disable systemd timers
   systemd:
     name: "{{ item }}"
     masked: true

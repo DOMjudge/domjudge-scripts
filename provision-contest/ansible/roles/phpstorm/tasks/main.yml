@@ -22,7 +22,7 @@
     owner: false
     use_ssh_args: true
 
-- name: fix ownership of PHPStorm config
+- name: Fix ownership of PHPStorm config
   file:
     path: "/home/domjudge/.config/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
     recurse: true
@@ -45,7 +45,7 @@
     recursive: true
     use_ssh_args: true
 
-- name: fix ownership of PHPStorm local share
+- name: Fix ownership of PHPStorm local share
   file:
     path: "/home/domjudge/.local/share/JetBrains/PhpStorm{{ PHPSTORM_VERSION }}"
     recurse: true
@@ -59,7 +59,7 @@
     owner: false
     use_ssh_args: true
 
-- name: fix ownership of PHPStorm config
+- name: Fix ownership of PHPStorm config
   file:
     path: "{{ DJ_DIR }}/.idea"
     recurse: true

@@ -1,21 +1,20 @@
 # Common definition of handlers
 ---
-- name: clear application cache
+- name: Clear application cache
   command: "{{ DJ_DIR }}/webapp/bin/console cache:clear"
   become: true
   become_user: domjudge
 
-- name: rebuild domjudge
+- name: Rebuild domjudge
   become: true
   become_user: domjudge
   make:
     chdir: "{{ DJ_DIR }}"
     target: inplace-install
-  notify: fix permissions on domjudge inplace-install
+  notify: Fix permissions on domjudge inplace-install
 
-- name: restart nginx
+- name: Restart nginx
   systemd:
     name: nginx
     enabled: true
     state: restarted
-

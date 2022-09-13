@@ -1,13 +1,13 @@
 ---
 # These tasks install domlogo
 
-- name: install python3 modules for domlogo
+- name: Install python3 modules for domlogo
   apt:
     state: present
     pkg:
       - python3-tk
 
-- name: install domlogo
+- name: Install domlogo
   copy:
     src: domlogo.py
     dest: "{{ DJ_DIR }}"
@@ -15,21 +15,21 @@
     group: domjudge
     mode: 0755
 
-- name: install domlogo env
+- name: Install domlogo env
   synchronize:
     src: lib
     dest: /home/domjudge/.local/
     owner: false
     use_ssh_args: true
 
-- name: install domlogo images
+- name: Install domlogo images
   synchronize:
     src: images
     dest: "{{ DJ_DIR }}"
     owner: false
     use_ssh_args: true
 
-- name: add autostart shortcuts
+- name: Add autostart shortcuts
   template:
     src: domjudgelogo.desktop.j2
     dest: /home/domjudge/.config/autostart/domjudgelogo.desktop

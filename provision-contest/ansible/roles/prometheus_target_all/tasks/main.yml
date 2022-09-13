@@ -1,7 +1,7 @@
 ---
 # This tasks gathers default system metrics.
 
-- name: install required packages
+- name: Install required packages
   apt:
     state: present
     pkg:
@@ -34,7 +34,7 @@
     group: root
     mode: 0644
   when: prom
-  notify: restart promtail
+  notify: Restart promtail
 
 - name: Setup promtail systemd
   copy:
@@ -44,7 +44,7 @@
     owner: root
     group: root
   when: prom
-  notify: restart promtail
+  notify: Restart promtail
 
 - name: Start promtail service
   service:

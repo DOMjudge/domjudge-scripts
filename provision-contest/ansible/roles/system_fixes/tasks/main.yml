@@ -6,18 +6,18 @@
   register: php_version
   changed_when: false
 
-- name: set timezone
+- name: Set timezone
   timezone:
     name: "{{ TIMEZONE }}"
 
-- name: set PHP timezone for CLI
+- name: Set PHP timezone for CLI
   lineinfile:
     dest: "/etc/php/{{ php_version.stdout }}/cli/php.ini"
     state: present
     regexp: 'date\.timezone\s*='
     line: 'date.timezone = {{ TIMEZONE }}'
 
-- name: enable bash completion globally
+- name: Enable bash completion globally
   blockinfile:
     path: /etc/bash.bashrc
     insertafter: "# enable bash completion in interactive shells"
@@ -37,5 +37,5 @@
     owner: root
     group: root
     mode: 0755
-  notify: update dconf
+  notify: Update dconf
   when: GRAPHICAL

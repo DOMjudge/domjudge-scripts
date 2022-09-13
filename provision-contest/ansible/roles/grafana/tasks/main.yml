@@ -10,7 +10,7 @@
     state: present
   register: prometheus_repo
 
-- name: install dependencies
+- name: Install dependencies
   apt:
     state: present
     install_recommends: false
@@ -20,14 +20,14 @@
 
 # Setup Prometheus, which scrapes all metrics from the monitored machines
 # The client exposes the metrics (on different ports/URIs) and we collect those
-- name: set up prometheus scrapes
+- name: Set up prometheus scrapes
   template:
     src: prometheus.yml.j2
     dest: /etc/prometheus/prometheus.yml
     mode: 0644
     owner: root
     group: root
-  notify: restart prometheus
+  notify: Restart prometheus
 
 # Setup loki which gathers our logs
 - name: Install loki
@@ -56,7 +56,7 @@
     group: root
     mode: 0644
   when: loki
-  notify: restart loki
+  notify: Restart loki
 
 - name: Setup loki systemd
   copy:
@@ -64,7 +64,7 @@
     dest: /etc/systemd/system/
     mode: 0655
   when: loki
-  notify: restart loki
+  notify: Restart loki
 
 - name: Start loki service
   service:
@@ -78,50 +78,50 @@
   apt:
     deb: https://dl.grafana.com/enterprise/release/grafana-enterprise_8.4.6_amd64.deb
     state: present
-  notify: restart grafana
+  notify: Restart grafana
 
-- name: configure grafana
+- name: Configure grafana
   synchronize:
     src: files/grafana/environment
     dest: /etc/default/grafana-server
-  notify: restart grafana
+  notify: Restart grafana
 
-- name: set up grafana datasources
+- name: Set up grafana datasources
   synchronize:
     src: files/grafana/datasources.yml
     dest: /etc/grafana/provisioning/datasources/default.yml
-  notify: restart grafana
+  notify: Restart grafana
 
-- name: set up grafana dashboards
+- name: Set up grafana dashboards
   synchronize:
     src: files/grafana/dashboards.yml
     dest: /etc/grafana/provisioning/dashboards/default.yml
-  notify: restart grafana
+  notify: Restart grafana
 
-- name: copy grafana dashboards
+- name: Copy grafana dashboards
   synchronize:
     src: dashboards/
     dest: /etc/grafana/dashboards/
-  notify: restart grafana
+  notify: Restart grafana
 
 # Setup nginx with selfsigned certificate
-- name: copy ssl cert
+- name: Copy ssl cert
   synchronize:
     src: ssl.crt
     dest: /etc/ssl/certs/grafana.crt
-  notify: restart nginx
+  notify: Restart nginx
 
-- name: copy ssl key
+- name: Copy ssl key
   synchronize:
     src: ssl.key
     dest: /etc/ssl/private/grafana.key
-  notify: restart nginx
+  notify: Restart nginx
 
-- name: copy default nginx config
+- name: Copy default nginx config
   template:
     src: nginx.conf.j2
     dest: /etc/nginx/sites-enabled/grafana.conf
     owner: root
     group: root
     mode: 0644
-  notify: restart nginx
+  notify: Restart nginx

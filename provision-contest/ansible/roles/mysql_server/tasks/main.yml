@@ -1,7 +1,7 @@
 ---
 # These tasks install and configure a MySQL server
 
-- name: install mysql packages
+- name: Install mysql packages
   apt:
     state: present
     pkg:
@@ -9,7 +9,7 @@
       - python3-mysqldb
       - mycli
 
-- name: copy in MySQL config
+- name: Copy in MySQL config
   copy:
     src: my.cnf
     dest: /root/.my.cnf
@@ -17,7 +17,7 @@
     owner: root
     group: root
 
-- name: create directory for systemd mysql settings
+- name: Create directory for systemd mysql settings
   file:
     path: /etc/systemd/system/mysql.service.d/
     state: directory
@@ -25,28 +25,28 @@
     owner: root
     mode: 0755
 
-- name: update systemd so mysql has bigger limits
+- name: Update systemd so mysql has bigger limits
   copy:
     src: mysql.override.cnf
     dest: /etc/systemd/system/mysql.service.d/override.conf
     mode: 0644
     group: root
     owner: root
-  notify: restart mysql
+  notify: Restart mysql
 
-- name: add mysql config snippet to increase limits
+- name: Add mysql config snippet to increase limits
   copy:
     src: mysql.domjudge.cnf
     dest: /etc/mysql/mariadb.conf.d/zz_domjudge.cnf
     mode: 0644
     owner: root
     group: root
-  notify: restart mysql
+  notify: Restart mysql
 
-- name: make sure mysql is restarted
+- name: Make sure mysql is restarted
   meta: flush_handlers
 
-- name: create directory to store scripts & database dumps
+- name: Create directory to store scripts & database dumps
   file:
     path: /home/domjudge/{{ item }}
     owner: domjudge
@@ -57,7 +57,7 @@
     - db-dumps
     - bin
 
-- name: copy database dump/load scripts
+- name: Copy database dump/load scripts
   copy:
     src: "{{ item }}"
     dest: /home/domjudge/bin/{{ item }}

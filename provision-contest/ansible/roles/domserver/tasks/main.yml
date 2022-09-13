@@ -1,36 +1,36 @@
 ---
 # These tasks configure DOMjudge as domserver
 
-- name: install dbpasswords.secret file
+- name: Install dbpasswords.secret file
   template:
     src: dbpasswords.secret.j2
     dest: "{{ DJ_DIR }}/etc/dbpasswords.secret"
     mode: 0644
     group: root
     owner: root
-  notify: fix permissions on domjudge inplace-install
+  notify: Fix permissions on domjudge inplace-install
 
-- name: install initial_admin_password.secret file
+- name: Install initial_admin_password.secret file
   template:
     src: initial_admin_password.secret.j2
     dest: "{{ DJ_DIR }}/etc/initial_admin_password.secret"
     mode: 0644
     group: domjudge
     owner: domjudge
-  notify: fix permissions on domjudge inplace-install
+  notify: Fix permissions on domjudge inplace-install
 
 # When using replication, the DB will be dropped and recreated on the slave later.
-- name: check if the database is configured
+- name: Check if the database is configured
   command: "{{ DJ_DIR }}/bin/dj_setup_database -s -u root status"
   register: db_status
   ignore_errors: true
   changed_when: false
 
-- name: make sure the database is configured
+- name: Make sure the database is configured
   command: "{{ DJ_DIR }}/bin/dj_setup_database -s -u root bare-install"
   when: "'failed' in db_status.stdout"
 
-- name: install required packages
+- name: Install required packages
   apt:
     state: present
     pkg:
@@ -38,63 +38,63 @@
       - php-fpm
       - php-intl
 
-- name: set PHP timezone for FPM
+- name: Set PHP timezone for FPM
   lineinfile:
     dest: "/etc/php/{{ php_version.stdout }}/fpm/php.ini"
     state: present
     regexp: 'date\.timezone\s*='
     line: 'date.timezone = {{ TIMEZONE }}'
-  notify: restart PHP FPM
+  notify: Restart PHP FPM
 
-- name: enable PHP modules
+- name: Enable PHP modules
   command: phpenmod {{ item }}
   args:
     creates: "/etc/php/{{ php_version.stdout }}/fpm/conf.d/20-{{ item }}.ini"
   loop:
     - zip
     - intl
-  notify: restart PHP FPM
+  notify: Restart PHP FPM
 
-- name: add domjudge nginx conf
+- name: Add domjudge nginx conf
   template:
     src: nginx-domjudge.conf.j2
     dest: /etc/nginx/sites-available/domjudge.conf
     mode: 0644
     group: root
     owner: root
-  notify: restart nginx
+  notify: Restart nginx
 
-- name: add domjudge inner nginx conf
+- name: Add domjudge inner nginx conf
   template:
     src: nginx-domjudge-inner.j2
     dest: /etc/nginx/snippets/domjudge-inner
     mode: 0644
     group: root
     owner: root
-  notify: restart nginx
+  notify: Restart nginx
 
-- name: enable nginx conf for domjudge
+- name: Enable nginx conf for domjudge
   file:
     src: /etc/nginx/sites-available/domjudge.conf
     dest: /etc/nginx/sites-enabled/domjudge.conf
     state: link
-  notify: restart nginx
+  notify: Restart nginx
 
-- name: disable default nginx site
+- name: Disable default nginx site
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-  notify: restart nginx
+  notify: Restart nginx
 
-- name: symlink domjudge FPM conf
+- name: Symlink domjudge FPM conf
   file:
     path: "/etc/php/{{ php_version.stdout }}/fpm/pool.d/domjudge.conf"
     src: "{{ DJ_DIR }}/etc/domjudge-fpm.conf"
     state: link
     force: true
-  notify: restart PHP FPM
+  notify: Restart PHP FPM
 
-- name: set PHP settings
+- name: Set PHP settings
   lineinfile:
     dest: "/etc/php/{{ php_version.stdout }}/fpm/pool.d/domjudge.conf"
     regexp: "{{ item.regexp }}"
@@ -106,4 +106,4 @@
     - { key: 'php_admin_value[upload_max_filesize]', regexp: '^php_admin_value\[upload_max_filesize\]', value: '{{ PHP_UPLOAD_MAX_FILESIZE }}' }
     - { key: 'php_admin_value[post_max_size]', regexp: '^php_admin_value\[post_max_size\]', value: '{{ PHP_POST_MAX_SIZE }}' }
     - { key: 'php_admin_value[max_file_uploads]', regexp: '^php_admin_value\[max_file_uploads\]', value: '{{ PHP_MAX_FILE_UPLOADS }}' }
-  notify: restart PHP FPM
+  notify: Restart PHP FPM

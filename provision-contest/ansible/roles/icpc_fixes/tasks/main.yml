@@ -1,15 +1,15 @@
 ---
 # These tasks perform fixes used on the ICPC image to the base system.
 
-- name: add NTP servers
+- name: Add NTP servers
   lineinfile:
     dest: /etc/systemd/timesyncd.conf
     regexp: '^#?NTP='
     line: "NTP=10.3.3.208 10.3.3.209"
-  notify: restart systemd timesyncd
+  notify: Restart systemd timesyncd
   when: WF_RESTRICTED_NETWORK
 
-- name: remove source line from interfaces
+- name: Remove source line from interfaces
   lineinfile:
     dest: /etc/network/interfaces
     regexp: '^source-'
@@ -19,7 +19,7 @@
   command: efibootmgr -o {{ EFI_ORDER }}
   when: EFI_ORDER is defined
 
-- name: disable mumble,selfie services
+- name: Disable mumble,selfie services
   service:
     name: "{{ item }}"
     state: stopped

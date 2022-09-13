@@ -6,7 +6,7 @@
     state: present
     pkg:
       - prometheus-mysqld-exporter
-  notify: restart nginx-exporter
+  notify: Restart nginx-exporter
 
 - name: Expose MariaDB metrics
   when: MARIADB
@@ -14,7 +14,7 @@
     state: present
     pkg:
       - prometheus-mysqld-exporter
-  notify: restart mysqld-exporter
+  notify: Restart mysqld-exporter
 
 # Gather PHP-FPM statistics
 # The exporter from this is currently not in deb sources
@@ -28,14 +28,14 @@
     exclude:
       - LICENSE
       - README.md
-  notify: restart php-exporter
+  notify: Restart php-exporter
 
 - name: Export PHP-FPM metrics
   when: FPM
   synchronize:
     src: php-fpm-exporter.service
     dest: /etc/systemd/system/php-fpm-exporter.service
-  notify: restart php-exporter
+  notify: Restart php-exporter
 
 # Gather NGINX statistics,
 # Observe that we use the observed process itself in the monitoring
@@ -43,7 +43,7 @@
   synchronize:
     src: nginx-status.conf
     dest: /etc/nginx/sites-enabled/nginx-status.conf
-  notify: restart nginx
+  notify: Restart nginx
 
 - name: Prometheus nginx exporter
   lineinfile:
@@ -51,7 +51,7 @@
     state: present
     regexp: '^ARGS=""'
     line: 'ARGS="-nginx.scrape-uri=http://localhost:8787/basic_status"'
-  notify: restart nginx-exporter
+  notify: Restart nginx-exporter
 
 - name: Create storage dir for exporter settings
   when: MARIADB
@@ -71,4 +71,4 @@
     dest: /var/lib/prometheus/.my.cnf
     owner: prometheus
     mode: 0644
-  notify: restart mysqld-exporter
+  notify: Restart mysqld-exporter

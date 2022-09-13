@@ -1,8 +1,9 @@
 ---
 # This task configures packaging and installs various system utilities
 
-- block:
-  - name: replace pc2.ecs.baylor.edu by packages in apt sources
+- name: World finals fixes for apt sources
+  block:
+  - name: Replace pc2.ecs.baylor.edu by packages in apt sources
     replace:
       dest: "/etc/apt/{{ item }}"
       regexp: 'pc2\.ecs\.baylor\.edu'
@@ -13,44 +14,44 @@
       - sources.list.d/mono.list
       - sources.list.d/vscode.list
       - sources.list.d/pypy-ubuntu-ppa-buster.list
-    notify: run apt update
+    notify: Run apt update
 
-  - name: add packages to hosts file
+  - name: Add packages to hosts file
     lineinfile:
       dest: /etc/hosts
       regexp: '^10\.3\.3\.209'
       line: "10.3.3.209 packages"
-    notify: run apt update
+    notify: Run apt update
 
-  - name: remove pycharm repo
+  - name: Remove pycharm repo
     replace:
       dest: /etc/apt/sources.list
       regexp: '^([^#].*pycharm.*)$'
       replace: '# \1'
-    notify: run apt update
+    notify: Run apt update
   when: ICPC_IMAGE and WF_RESTRICTED_NETWORK
 
-- name: check for dpkg architecture i386
+- name: Check for dpkg architecture i386
   command: dpkg --print-foreign-architectures
   register: dpkg_architectures
   changed_when: false
 
-- name: remove unused dpkg architecture i386
+- name: Remove unused dpkg architecture i386
   command: dpkg --remove-architecture i386
-  notify: run apt update
+  notify: Run apt update
   when: dpkg_architectures.stdout.find('i386') != -1
 
-- name: flush handlers
+- name: Flush handlers
   meta: flush_handlers
 
-- name: remove some packages
+- name: Remove some packages
   apt:
     state: absent
     pkg:
       - apport
       - ntp
 
-- name: install common required/useful packages
+- name: Install common required/useful packages
   apt:
     state: present
     pkg:
@@ -122,7 +123,7 @@
   command: php /root/composer-setup.php --install-dir=/usr/local/bin --filename=composer
   when: not composer_file.stat.exists
 
-- name: install local DEB packages
+- name: Install local DEB packages
   include: install-local-package.yml
   with_fileglob:
     - install-{{ host_type }}/*.deb

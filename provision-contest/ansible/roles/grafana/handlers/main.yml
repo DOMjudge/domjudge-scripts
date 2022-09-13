@@ -1,23 +1,23 @@
 ---
-- name: restart nginx-exporter
+- name: Restart nginx-exporter
   service:
     name: prometheus-nginx-exporter
     enabled: true
     state: restarted
 
-- name: restart php-exporter
+- name: Restart php-exporter
   service:
     name: php-fpm-exporter
     enabled: true
     state: restarted
 
-- name: restart grafana
+- name: Restart grafana
   service:
     name: grafana-server
     enabled: true
     state: restarted
 
-- name: restart loki
+- name: Restart loki
   service:
     name: loki
     enabled: true

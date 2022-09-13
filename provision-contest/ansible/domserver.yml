@@ -1,7 +1,7 @@
 ---
 # This playbook installs the DOMjudge server(s)
 
-- name: setup domserver
+- name: Setup domserver
   hosts: domserver
   vars:
     host_type: domserver
@@ -50,7 +50,7 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - name: install domserver required packages
+    - name: Install domserver required packages
       apt:
         state: present
         pkg:
@@ -58,19 +58,19 @@
           - macchanger
           - molly-guard
 
-    - name: disable developer mode
+    - name: Disable developer mode
       lineinfile:
         regexp: '^APP_ENV=dev'
         state: absent
         dest: "{{ DJ_DIR }}/webapp/.env.local"
 
-    - name: install contest images
+    - name: Install contest images
       synchronize:
         src: files/domjudge-public/
         dest: "{{ DJ_DIR }}/webapp/public"
         owner: false
         use_ssh_args: true
-      notify: clear application cache
+      notify: Clear application cache
 
     - name: Add documentation in DOMjudge team interface
       copy:
@@ -79,9 +79,9 @@
         mode: 0644
         group: root
         owner: root
-      notify: clear application cache
+      notify: Clear application cache
 
-    - name: add autostart shortcuts
+    - name: Add autostart shortcuts
       copy:
         src: files/{{ item }}.desktop
         dest: /home/domjudge/.config/autostart/
@@ -92,7 +92,7 @@
         - htop
         - taillog-domserver-nginx-error
 
-    - name: add autostart shortcuts from template
+    - name: Add autostart shortcuts from template
       template:
         src: files/{{ item }}.desktop.j2
         dest: /home/domjudge/.config/autostart/{{ item }}.desktop

@@ -23,7 +23,7 @@
     path: /home/domjudge/cds/wlp/usr/servers/cds/apps/CDS.war
   register: cds_war
 
-- name: create CDS directory
+- name: Create CDS directory
   file:
     path: /home/domjudge/cds
     state: directory
@@ -39,7 +39,7 @@
     owner: domjudge
     group: domjudge
   when: not cds_war.stat.exists
-  notify: restart cds
+  notify: Restart cds
 
 - name: Download and unpack CDS WAR
   unarchive:
@@ -57,7 +57,7 @@
     group: domjudge
     mode: 0644
   when: cds_war.stat.exists
-  notify: restart cds
+  notify: Restart cds
 
 - name: Populate CDS accounts.yaml
   template:
@@ -66,7 +66,7 @@
     owner: domjudge
     group: domjudge
     mode: 0600
-  notify: restart cds
+  notify: Restart cds
 
 - name: Populate CDS cdsConfig.xml
   template:
@@ -75,7 +75,7 @@
     owner: domjudge
     group: domjudge
     mode: 0600
-  notify: restart cds
+  notify: Restart cds
 
 - name: Create contests config directory
   file:
@@ -94,41 +94,41 @@
     mode: 0755
   loop: "{{ CDS_CONTESTS }}"
 
-- name: copy cds systemd unit file
+- name: Copy cds systemd unit file
   copy:
     src: cds.service
     dest: /etc/systemd/system/
     mode: 0644
   notify:
-    - restart cds
+    - Restart cds
 
 - name: Setup nginx
   block:
-    - name: install nginx
+    - name: Install nginx
       apt:
         state: present
         pkg:
           - nginx
 
-    - name: add CDS nginx conf
+    - name: Add CDS nginx conf
       template:
         src: cds.conf.j2
         dest: /etc/nginx/sites-available/cds.conf
         mode: 0644
         group: root
         owner: root
-      notify: restart nginx
+      notify: Restart nginx
 
-    - name: enable nginx conf for CDS
+    - name: Enable nginx conf for CDS
       file:
         src: /etc/nginx/sites-available/cds.conf
         dest: /etc/nginx/sites-enabled/cds.conf
         state: link
-      notify: restart nginx
+      notify: Restart nginx
 
-    - name: disable default nginx site
+    - name: Disable default nginx site
       file:
         path: /etc/nginx/sites-enabled/default
         state: absent
-      notify: restart nginx
+      notify: Restart nginx
   when: CDS_HOSTNAME is defined

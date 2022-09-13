@@ -1,7 +1,7 @@
 ---
 # These tasks create a domjudge system account and fix sudo/autologin
 
-- name: create domjudge user
+- name: Create domjudge user
   user:
     name: domjudge
     shell: /bin/bash
@@ -15,7 +15,7 @@
     regexp: '^%sudo'
     line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
-- name: configure git user
+- name: Configure git user
   ini_file:
     dest: /home/domjudge/.gitconfig
     section: user
@@ -28,7 +28,7 @@
     - { name: 'email', value: 'team@domjudge.org' }
     - { name: 'name', value: 'DOMjudge team' }
 
-- name: configure git to rebase on pull
+- name: Configure git to rebase on pull
   ini_file:
     dest: /home/domjudge/.gitconfig
     section: branch
@@ -38,24 +38,25 @@
     group: domjudge
     mode: 0644
 
-- block:
-    - name: enable GDM autologin
+- name: Setup autologin on desktop installs
+  block:
+    - name: Enable GDM autologin
       lineinfile:
         path: /etc/gdm3/custom.conf
         regexp: 'AutomaticLoginEnable'
         line: 'AutomaticLoginEnable=true'
         create: true
         mode: 0644
-      notify: restart gdm
-    
+      notify: Restart gdm
+
     - name: Automatically login domjudge user
       lineinfile:
         path: /etc/gdm3/custom.conf
         regexp: 'AutomaticLogin='
         line: 'AutomaticLogin=domjudge'
-      notify: restart gdm
-    
-    - name: make sure autostart directory exists
+      notify: Restart gdm
+
+    - name: Make sure autostart directory exists
       file:
         dest: /home/domjudge/.config/autostart
         state: directory

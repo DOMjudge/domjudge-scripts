@@ -1,7 +1,7 @@
 ---
 # These tasks install SSL certificates/keys
 
-- name: install SSL server certificates
+- name: Install SSL server certificates
   copy:
     src: "{{ item }}"
     dest: /etc/ssl/certs/
@@ -10,9 +10,9 @@
     mode: 0644
   with_fileglob:
     - "*.crt"
-  notify: update-ca-certificates
+  notify: Update-ca-certificates
 
-- name: create CA certificates shared directory
+- name: Create CA certificates shared directory
   file:
     dest: /usr/local/share/ca-certificates
     state: directory
@@ -20,7 +20,7 @@
     group: root
     mode: 0755
 
-- name: install SSL server certificates into CA certificates
+- name: Install SSL server certificates into CA certificates
   copy:
     src: "{{ item }}"
     dest: /usr/local/share/ca-certificates
@@ -29,9 +29,9 @@
     mode: 0644
   with_fileglob:
     - "*.crt"
-  notify: update-ca-certificates
+  notify: Update-ca-certificates
 
-- name: install SSL private key files
+- name: Install SSL private key files
   copy:
     src: "{{ item }}"
     dest: /etc/ssl/private/
@@ -40,5 +40,5 @@
     mode: 0600
   with_fileglob:
     - "*.key"
-  notify: update-ca-certificates
+  notify: Update-ca-certificates
   when: INSTALL_SSL_PRIVATE_KEYS is defined and INSTALL_SSL_PRIVATE_KEYS
