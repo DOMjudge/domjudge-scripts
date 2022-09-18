@@ -104,6 +104,7 @@
       - python3-yaml
       - latexmk
       - acl
+      - gdb
 
 - name: Check if composer is installed
   stat:
