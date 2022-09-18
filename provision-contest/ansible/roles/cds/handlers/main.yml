@@ -5,3 +5,9 @@
     enabled: true
     state: restarted
     daemon_reload: true
+
+- name: Restart nginx
+  systemd:
+    name: nginx
+    enabled: true
+    state: restarted
