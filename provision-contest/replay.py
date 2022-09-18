@@ -41,6 +41,15 @@ submissions = json.load(open('submissions.json'))
 logging.info(f'Loaded {len(submissions)} submissions.')
 
 contest_data = requests.get(f'{api_url}/contests/{contest}').json()
+while not contest_data['start_time']:
+    logging.info(f'Start time unknown - contest delayed.')
+    time_diff = 30
+    spinner = Halo(spinner='dots', text=f'Sleeping for ~{str(round(time_diff,2))}s while waiting for contest start to be set.')
+    spinner.start()
+    time.sleep(time_diff)
+    spinner.stop()
+    contest_data = requests.get(f'{api_url}/contests/{contest}').json()
+
 contest_start = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z').timestamp()
 contest_duration = (datetime.strptime(contest_data['duration'], '%H:%M:%S.000') - datetime(1900, 1, 1)).total_seconds()
 
