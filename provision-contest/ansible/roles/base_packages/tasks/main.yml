@@ -105,6 +105,7 @@
       - latexmk
       - acl
       - gdb
+      - rsync
 
 - name: Check if composer is installed
   stat:
