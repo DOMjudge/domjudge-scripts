@@ -7,6 +7,43 @@ upstream domjudge {
 	server unix:/var/run/php-fpm-domjudge.sock; # if using with etc/domjudge-fpm.conf
 }
 
+{% if host_type == 'domserver' and DOMSERVER_LOADBALANCING %}
+upstream domjudge-loadbalanced {
+	least_conn;
+	keepalive 100;
+{% for host in groups['domserver'] %}
+	server {{ hostvars[host].ansible_host }}:444;
+{% endfor %}
+}
+
+server {
+	listen   444 ssl http2;
+	listen   [::]:444 ssl http2;
+	server_name _default_;
+
+	ssl_certificate {{DOMSERVER_SSL_CERT}};
+	ssl_certificate_key {{DOMSERVER_SSL_KEY}};
+	ssl_session_timeout 5m;
+	ssl_prefer_server_ciphers on;
+
+	add_header Strict-Transport-Security max-age=31556952;
+	include /etc/nginx/snippets/domjudge-inner;
+
+	set_real_ip_from {{ SERVER_IP_PREFIX }}.0/24;
+	real_ip_header X-Forwarded-For;
+	real_ip_recursive on;
+}
+
+map $realip_remote_addr $access_allowed {
+	default false;
+	{{ DOMSERVER_IP }} true;
+{% for host in groups['domserver'] %}
+	{{ hostvars[host].ansible_host }} true;
+{% endfor %}
+}
+
+{% endif %}
+
 server {
 	listen   80;
 	listen   [::]:80;
@@ -26,5 +63,19 @@ server {
 	add_header Strict-Transport-Security max-age=31556952;
 
 	send_timeout 36000s;
+{% if host_type == 'domserver' and DOMSERVER_LOADBALANCING %}
+	location / {
+		proxy_pass https://domjudge-loadbalanced;
+		proxy_http_version 1.1;
+		proxy_set_header Connection "";
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header Host $http_host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_request_buffering off;
+		proxy_buffering off;
+	}
+{% else %}
 	include /etc/nginx/snippets/domjudge-inner;
+{% endif %}
 }

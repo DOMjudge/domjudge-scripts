@@ -19,16 +19,26 @@
     owner: domjudge
   notify: Fix permissions on domjudge inplace-install
 
+- name: set the DBA credentials
+  set_fact:
+    dba_credentials: |
+      {% if host_type == 'domserver' and DBA_PASSWORD is defined %}
+        -u domjudge_dba -p {{ DBA_PASSWORD }}
+      {% else %}
+        -s -u root
+      {% endif %}
+
 # When using replication, the DB will be dropped and recreated on the slave later.
-- name: Check if the database is configured
-  command: "{{ DJ_DIR }}/bin/dj_setup_database -s -u root status"
+- name: check if the database is configured
+  command: "{{ DJ_DIR }}/bin/dj_setup_database {{ dba_credentials }} status"
   register: db_status
   ignore_errors: true
   changed_when: false
+  when: not DOMSERVER_LOADBALANCING or groups['domserver'][0] == inventory_hostname or host_type != 'domserver'
 
-- name: Make sure the database is configured
-  command: "{{ DJ_DIR }}/bin/dj_setup_database -s -u root bare-install"
-  when: "'failed' in db_status.stdout"
+- name: make sure the database is configured
+  command: "{{ DJ_DIR }}/bin/dj_setup_database {{ dba_credentials }} bare-install"
+  when: "(not DOMSERVER_LOADBALANCING or groups['domserver'][0] == inventory_hostname or host_type != 'domserver') and 'failed' in db_status.stdout"
 
 - name: Install required packages
   apt:
