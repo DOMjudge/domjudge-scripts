@@ -33,5 +33,7 @@ server {
 		proxy_set_header Connection "upgrade";
 		proxy_request_buffering off;
 		proxy_buffering off;
+		# CDS event feed sends a heartbeat every 120s, so make sure our timeout is longer
+		proxy_read_timeout 130s;
 	}
 }
