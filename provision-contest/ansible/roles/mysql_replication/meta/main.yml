@@ -2,3 +2,4 @@
 ---
 dependencies:
   - role: mysql_server
+    tags: mysql_server
