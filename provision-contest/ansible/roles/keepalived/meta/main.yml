@@ -2,3 +2,4 @@
 ---
 dependencies:
   - role: domjudge_user
+    tags: domjudge_user
