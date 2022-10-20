@@ -91,6 +91,7 @@
       loop:
         - htop
         - taillog-domserver-nginx-error
+      when: GRAPHICAL
 
     - name: Add autostart shortcuts from template
       template:
@@ -101,3 +102,4 @@
         mode: 0755
       loop:
         - taillog-domserver-symfony-error
+      when: GRAPHICAL
