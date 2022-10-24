@@ -1,0 +1,14 @@
+- name: Ensure authorized_keys contains keys from GitHub user accounts.
+  authorized_key:
+    user: "{{ user_item }}"
+    key: "https://github.com/{{ item }}.keys"
+    comment: "{{ item }}"
+  loop: "{{ github_ssh_user }}"
+  when: not WF_RESTRICTED_NETWORK
+
+- name: Ensure authorized_keys contains listed public keys.
+  authorized_key:
+    user: "{{ user_item }}"
+    key: "{{ item }}"
+  loop: "{{ ssh_public_keys }}"
+  when: not WF_RESTRICTED_NETWORK

@@ -40,16 +40,9 @@
     - domjudge
     - root
 
-- name: Ensure authorized_keys for GitHub user accounts are present.
-  authorized_key:
-    user: domjudge
-    key: "https://github.com/{{ item }}.keys"
-  loop: "{{ github_ssh_user }}"
-  when: not WF_RESTRICTED_NETWORK
-
-- name: Ensure authorized_keys for GitHub user accounts are present.
-  authorized_key:
-    user: root
-    key: "https://github.com/{{ item }}.keys"
-  loop: "{{ github_ssh_user }}"
-  when: not WF_RESTRICTED_NETWORK
+- include_tasks: add-auth-keys.yml
+  loop:
+    - domjudge
+    - root
+  loop_control:
+    loop_var: user_item

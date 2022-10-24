@@ -1,5 +1,4 @@
 github_ssh_user:
-  - eldering
   - meisterT
   - nickygerritsen
   - thijskh
@@ -9,3 +8,7 @@ github_ssh_user:
   - deboer-tim
   - edomora97
   - SuprDewd
+
+ssh_public_keys:
+  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICd/P3Mu0X0hE9yc+k4cU/eT67S4F4E8Lmxk4yYDM8qL jaap@diamond"
+  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINrtJzsraIV4SFFkeu5HtxwRZKBOwn2dL/g1CJhaCwJs jaap@tiger"
