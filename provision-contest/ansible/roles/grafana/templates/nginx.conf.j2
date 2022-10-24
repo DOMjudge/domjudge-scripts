@@ -21,7 +21,7 @@ server {
        proxy_redirect off;
        proxy_set_header Host $host;
     }
-{% endif $}
+{% endif %}
 
     access_log /var/log/nginx/prometheus.log;
     error_log /var/log/nginx/prometheus.log;
