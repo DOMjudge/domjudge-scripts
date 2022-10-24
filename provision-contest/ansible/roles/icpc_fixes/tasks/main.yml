@@ -18,12 +18,3 @@
 - name: Re-order PXEboot
   command: efibootmgr -o {{ EFI_ORDER }}
   when: EFI_ORDER is defined
-
-- name: Disable mumble,selfie services
-  service:
-    name: "{{ item }}"
-    state: stopped
-    enabled: false
-  loop:
-    - mumble-server
-    - selfie
