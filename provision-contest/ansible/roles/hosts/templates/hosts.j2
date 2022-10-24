@@ -10,6 +10,8 @@ ff02::2 ip6-allrouters
 
 {{ DOMSERVER_IP }}             domjudge domserver
 {% for item in groups['all'] %}
+{% if hostvars[item].ansible_host is defined %}
 {{ hostvars[item].ansible_host }}              {{ item }}
+{% endif %}
 {% endfor %}
 
