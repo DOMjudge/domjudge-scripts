@@ -30,6 +30,7 @@
   stat:
     path: files/lib/vendor
   register: libvendor
+  check_mode: no
 
 - name: Copy in composer dependencies (if they exist locally)
   synchronize:

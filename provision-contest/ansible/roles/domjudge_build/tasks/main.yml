@@ -21,6 +21,7 @@
 - name: Check if domjudge is built
   stat: path="{{ DJ_DIR }}/judge/judgedaemon"
   register: judgedaemon_binary
+  check_mode: no
 
 - name: Build domjudge
   become: true

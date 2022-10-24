@@ -9,6 +9,7 @@
     status_code: 200
     body_format: json
   register: latest_cds_release_array
+  check_mode: no
 
 - name: Set CDS latest version
   set_fact:
@@ -22,6 +23,7 @@
   stat:
     path: /home/domjudge/cds/wlp/usr/servers/cds/apps/CDS.war
   register: cds_war
+  check_mode: no
 
 - name: Create CDS directory
   file:

@@ -5,6 +5,8 @@
   command: php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;'
   register: php_version
   changed_when: false
+  check_mode: no
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Set timezone
   timezone:
@@ -16,6 +18,7 @@
     state: present
     regexp: 'date\.timezone\s*='
     line: 'date.timezone = {{ TIMEZONE }}'
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Enable bash completion globally
   blockinfile:

@@ -52,6 +52,7 @@
         get_checksum: false
         get_mime: false
       register: service_file
+      check_mode: no
 
     - name: Disable all cores
       service:

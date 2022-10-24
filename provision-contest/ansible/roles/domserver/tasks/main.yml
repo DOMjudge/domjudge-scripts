@@ -25,6 +25,7 @@
   register: db_status
   ignore_errors: true
   changed_when: false
+  check_mode: no
 
 - name: Make sure the database is configured
   command: "{{ DJ_DIR }}/bin/dj_setup_database -s -u root bare-install"
