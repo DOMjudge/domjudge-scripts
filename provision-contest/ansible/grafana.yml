@@ -4,6 +4,8 @@
   vars:
     host_type: grafana
   become: true
+  handlers:
+    - include: handlers.yml
   roles:
     - role: base_packages
       tags: base_packages
