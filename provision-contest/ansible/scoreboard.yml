@@ -6,6 +6,8 @@
   vars:
     host_type: scoreboard
   become: true
+  handlers:
+    - include: handlers.yml
   roles:
     - role: base_packages
       tags: base_packages
