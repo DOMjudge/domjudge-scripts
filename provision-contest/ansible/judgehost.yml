@@ -39,6 +39,7 @@
       tags: ssh
     - role: domlogo
       tags: domlogo
+      when: GRAPHICAL
     - role: prometheus_target_all
       tags: prometheus_target_all
       when: GRAFANA_MONITORING
