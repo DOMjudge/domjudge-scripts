@@ -11,6 +11,12 @@
     enabled: true
     state: restarted
 
+- name: Restart prometheus
+  service:
+    name: prometheus
+    enabled: true
+    state: restarted
+
 - name: Restart grafana
   service:
     name: grafana-server
