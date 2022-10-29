@@ -27,8 +27,13 @@ $(LIBVENDOR): $(LIBVENDORTGZ)
 	-cd roles/domjudge_checkout/files && tar xzf $(notdir $<)
 endif
 
-domserver judgehost admin grafana cds scoreboard mgmt: %: %.yml hosts group_vars/all/secret.yml $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
+ROLES=domserver judgehost admin grafana cds scoreboard mgmt
+$(ROLES): %: %.yml hosts group_vars/all/secret.yml $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
 	ansible-playbook -i hosts $<
+
+CODEONLY_ROLES=$(addprefix codeonly-,domserver judgehost admin)
+$(CODEONLY_ROLES): codeonly-%:
+	ansible-playbook -i hosts --tags pretask,domjudge_build $*.yml
 
 admin: $(SSL_LOCALHOST_FILES)
 grafana: $(SSL_GRAFANA_FILES)
@@ -61,4 +66,4 @@ distclean: clean
 	rm -f $(SSL_CDS_FILES)
 	rm -f $(SSL_GRAFANA_FILES)
 
-.PHONY: default clean distclean domserver judgehost admin grafana cds scoreboard
+.PHONY: default clean distclean $(ROLES) $(CODEONLY_ROLES)

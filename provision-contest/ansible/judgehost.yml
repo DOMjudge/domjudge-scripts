@@ -54,6 +54,7 @@
         get_mime: false
       register: service_file
       check_mode: no
+      tags: pretask
 
     - name: Disable all cores
       service:
@@ -61,6 +62,7 @@
         state: stopped
       with_sequence: start=0 end={{ ansible_processor_vcpus }} format=domjudge-judgedaemon@%1x
       when: service_file.stat.exists
+      tags: pretask
   tasks:
     - name: Add autostart shortcuts
       template:
