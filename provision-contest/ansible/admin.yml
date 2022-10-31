@@ -116,3 +116,11 @@
         owner: domjudge
         group: domjudge
         mode: 0600
+
+    - name: Install .my.cnf file
+      template:
+        src: files/admin.my.cnf.j2
+        dest: /home/domjudge/.my.cnf
+        owner: domjudge
+        group: domjudge
+        mode: 0600
