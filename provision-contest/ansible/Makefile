@@ -35,6 +35,15 @@ CODEONLY_ROLES=$(addprefix codeonly-,domserver judgehost admin)
 $(CODEONLY_ROLES): codeonly-%:
 	ansible-playbook -i hosts --tags pretask,domjudge_build $*.yml
 
+powerloss:
+	ansible-playbook -i hosts emergency.yml --tags powerloss
+
+lockdown:
+	ansible-playbook -i hosts emergency.yml --tags full_lockdown
+
+lockdown-force:
+	ansible-playbook -i hosts emergency.yml --tags full_lockdown,force_lockdown
+
 admin: $(SSL_LOCALHOST_FILES)
 grafana: $(SSL_GRAFANA_FILES)
 domserver: $(SSL_DOMSERVER_FILES)
@@ -66,4 +75,4 @@ distclean: clean
 	rm -f $(SSL_CDS_FILES)
 	rm -f $(SSL_GRAFANA_FILES)
 
-.PHONY: default clean distclean $(ROLES) $(CODEONLY_ROLES)
+.PHONY: default clean distclean $(ROLES) $(CODEONLY_ROLES) powerloss lockdown lockdown-force

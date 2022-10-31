@@ -9,6 +9,12 @@ ansible_python_interpreter=/usr/bin/python3
 domjudge-primary     ansible_host=10.3.3.216 KEEPALIVED_PRIORITY=100 EFI_ORDER='0\,1\,3\,4'
 domjudge-backup      ansible_host=10.3.3.217 KEEPALIVED_PRIORITY=99 EFI_ORDER='0\,1\,3\,4'
 
+[domserver:children]
+emergency
+
+[emergency]
+domjudge-laptop      ansible_host=10.3.3.218
+
 [judgehost]
 domjudge-judgehost1  ansible_host=10.2.2.192
 domjudge-judgehost2  ansible_host=10.2.2.193
