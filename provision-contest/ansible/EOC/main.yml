@@ -1,0 +1,205 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Set facts for whether enough variables are set
+      tags: all, compare, scoreboard, awards, fetch
+      ansible.builtin.set_fact:
+        cds_available: "{{ cds_url is defined and cds_url_api_suffix is defined and cds_username is defined and cds_password is defined }}"
+        other_available: "{{ other_url is defined and other_url_api_suffix is defined and other_username is defined and other_password is defined }}"
+
+    # Do this to prevent the dreaded issues with basic auth. Tedious but it works
+    - name: Set DOMjudge basic auth fact
+      tags: all, compare, scoreboard, awards, fetch
+      ansible.builtin.set_fact:
+        dj_basic_auth: "Basic {{ (dj_username+':'+dj_password) | b64encode }}"
+
+    - name: Set CDS basic auth fact
+      tags: all, compare, scoreboard, awards
+      ansible.builtin.set_fact:
+        cds_basic_auth: "Basic {{ (cds_username+':'+cds_password) | b64encode }}"
+      when: cds_available
+
+    - name: Set other basic auth fact
+      tags: all, compare, scoreboard, awards
+      ansible.builtin.set_fact:
+        other_basic_auth: "Basic {{ (other_username+':'+other_password) | b64encode }}"
+      when: other_available
+
+
+    - name: Attempt login into DOMjudge
+      tags: all, fetch, results.tsv
+      block:
+        - name: Fetch CSRF from login page
+          ansible.builtin.uri:
+            method: GET
+            return_content: yes
+            url: "{{ dj_url }}/login"
+          register: DOMjudge_login_output
+
+        - name: Extract CSRF input field
+          ansible.builtin.set_fact:
+            DOMjudge_csrf_field: "{{ DOMjudge_login_output.content | regex_search('<input[^>]+?_csrf_token[^>]+?>')  | regex_search('[^\"]{30,}') }}"
+
+        - name: Login into DOMjudge and retrieve cookie
+          ansible.builtin.uri:
+            method: POST
+            body_format: form-urlencoded
+            url: "{{ dj_url }}/login"
+            status_code: 302
+            headers:
+              cookie: "{{ DOMjudge_login_output.cookies_string }}"
+            body:
+              _username: "{{ dj_username }}"
+              _password: "{{ dj_password }}"
+              _csrf_token: "{{ DOMjudge_csrf_field }}"
+          register: login_response
+
+        - name: Test succesfull login by going to a restricted page
+          ansible.builtin.uri:
+            url: "{{ dj_url }}/jury"
+            method: GET
+            headers:
+              cookie: "{{ login_response.set_cookie }}"
+
+
+    - name: Download results.tsv
+      tags: all, results.tsv
+      ansible.builtin.uri:
+        url: "{{ dj_url }}/jury/import-export/export/results.tsv"
+        return_content: yes
+        method: GET
+        creates: "{{ repo }}/results.tsv"
+        dest: "{{ repo }}/results.tsv"
+        headers:
+          cookie: "{{ login_response.set_cookie }}"
+
+    - name: Compare scoreboard.json
+      tags: all, compare, scoreboard
+      block:
+        - name: "Fetch scoreboard.json from Dj"
+          ansible.builtin.uri:
+            url: "{{ dj_url }}/{{ dj_url_api_suffix }}/contests/{{ contest }}/scoreboard"
+            dest: "/tmp/scoreboard.dj.json"
+            return_content: yes
+            force: yes
+            headers:
+              Authorization: "{{ dj_basic_auth }}"
+          register: dj_scoreboard
+
+        - name: "Fetch scoreboard.json from other"
+          ansible.builtin.uri:
+            url: "{{ other_url }}/{{ other_url_api_suffix }}/contests/{{ contest }}/scoreboard"
+            dest: "/tmp/scoreboard.other.json"
+            return_content: yes
+            force: yes
+            headers:
+              Authorization: "{{ other_basic_auth }}"
+          register: other_scoreboard
+          when: other_available
+
+#        - name: Convert scoreboard to nice json
+#          block:
+#          - name: Convert DOMjudge scoreboard to nice json
+#            ansible.builtin.set_fact:
+#              dj_scoreboard_nice: "{{ dj_scoreboard.json | to_nice_json }}"
+#
+#          - name: Convert other scoreboard to nice json
+#            ansible.builtin.set_fact:
+#              other_scoreboard_nice: "{{ other_scoreboard.json | to_nice_json }}"
+#            when: other_available
+
+        - name: Does Dj == other for scoreboard
+          shell: "{{ jd_loc }} /tmp/scoreboard.dj.json /tmp/scoreboard.other.json"
+          when: other_available
+
+    - name: Compare awards.json
+      tags: all, compare, awards
+      block:
+        - name: Fetch awards.json from Dj
+          ansible.builtin.uri:
+            url: "{{ dj_url }}/{{ dj_url_api_suffix }}/contests/{{ contest }}/awards/"
+            dest: "/tmp/awards.dj.json"
+            return_content: yes
+            force: yes
+            method: GET
+            headers:
+              Authorization: "{{ dj_basic_auth }}"
+          register: dj_awards
+
+        - name: Fetch awards.json from cds
+          ansible.builtin.uri:
+            url: "{{ cds_url }}/{{ cds_url_api_suffix }}/contests/{{ contest }}/awards/"
+            dest: "/tmp/awards.cds.json"
+            return_content: yes
+            force: yes
+            method: GET
+            headers:
+              Authorization: "{{ cds_basic_auth }}"
+          register: cds_awards
+          when: cds_available
+
+#        - name: Convert awards to nice json
+#          block:
+#          - name: Convert DOMjudge awards to nice json
+#            ansible.builtin.set_fact:
+#              dj_awards_nice: "{{ dj_awards.json | to_nice_json }}"
+#
+#          - name: Convert cds awards to nice json
+#            ansible.builtin.set_fact:
+#              cds_awards_nice: "{{ cds_awards.json | to_nice_json }}"
+#            when: cds_available
+
+        - name: Does Dj == CDS for awards
+          shell: "{{ jd_loc }} /tmp/awards.dj.json /tmp/awards.cds.json"
+          when: cds_available
+
+    - name: "Fetch event-feed.ndjson from Dj"
+      tags: all, fetch
+      ansible.builtin.uri:
+        url: "{{ dj_url }}/{{ dj_url_api_suffix }}/contests/{{ contest }}/event-feed?stream=false"
+        return_content: yes
+        method: GET
+        creates: "{{ repo }}/event-feed.ndjson"
+        dest: "{{ repo }}/event-feed.ndjson"
+        headers:
+          Authorization: "{{ dj_basic_auth }}"
+
+    - name: "Store final standings (contest.zip)"
+      tags: all, fetch
+      ansible.builtin.uri:
+        url: "{{ dj_url }}/public/scoreboard-data.zip?contest={{ contest_id }}"
+        creates: "{{ repo }}/final_standings.zip"
+        dest: "{{ repo }}/final_standings.zip"
+        headers:
+          cookie: "{{ login_response.set_cookie }}"
+
+    - name: "Fetch DOMjudge submissions"
+      tags: all, fetch
+      block:
+        - name: Retrieve all submissions
+          ansible.builtin.uri:
+            url: "{{ dj_url }}/{{ dj_url_api_suffix }}/contests/{{ contest }}/submissions?strict=1"
+            return_content: yes
+            method: GET
+            headers:
+              Authorization: "{{ dj_basic_auth }}"
+          register: "submissions"
+
+        - name: Extract submission endpoints
+          ansible.builtin.set_fact:
+            submissions: "{{ submissions.json | json_query(jmesquery) }}"
+          vars:
+            jmesquery: "[].files[?mime == 'application/zip'][]"
+
+        - name: Download submissions
+          ansible.builtin.uri:
+            url: "{{ dj_url }}/{{ dj_url_api_suffix }}/{{ item.href }}"
+            return_content: yes
+            method: GET
+            headers:
+              Authorization: "{{ dj_basic_auth }}"
+            creates: "{{ repo }}/{{ item.href.split('/')[3] }}.zip"
+            dest: "{{ repo }}/{{ item.href.split('/')[3] }}.zip"
+          loop: "{{ submissions }}"
