@@ -58,7 +58,7 @@
 
     - name: Disable all cores
       service:
-        name: "domjudge-judgedaemon@{{ item }}"
+        name: "{{ item }}"
         state: stopped
       with_sequence: start=0 end={{ ansible_processor_vcpus }} format=domjudge-judgedaemon@%1x
       when: service_file.stat.exists
