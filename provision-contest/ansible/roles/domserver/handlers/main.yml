@@ -1,6 +1,6 @@
 ---
 - name: Restart PHP FPM
   service:
-    name: php7.4-fpm
+    name: php{{ php_version.stdout }}-fpm
     enabled: true
     state: restarted
