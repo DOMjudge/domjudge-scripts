@@ -117,7 +117,7 @@ if check_replication ; then
 fi
 
 echo "Stopping PHP locally..."
-service {{ php_version.stdout }}-fpm stop
+service php{{ php_version.stdout }}-fpm stop
 
 echo "Stopping replication on $PRIMARY..."
 ssh "$PRIMARY" 'mysql -e "STOP SLAVE;"'
@@ -192,7 +192,7 @@ CHANGE MASTER TO MASTER_HOST=\"{{SERVER_IP_PREFIX}}.${OUR_SERVER_ID}\",
 START SLAVE;'"
 
 echo "Restarting PHP locally..."
-service {{ php_version.stdout }}-fpm start
+service php{{ php_version.stdout }}-fpm start
 
 if check_replication ; then
     echo "Replication setup done."
