@@ -46,6 +46,11 @@
 - name: Make sure mysql is restarted
   meta: flush_handlers
 
+- name: Make sure mysql runs
+  service:
+    name: mysql
+    state: started
+
 - name: Create directory to store scripts & database dumps
   file:
     path: /home/domjudge/{{ item }}
