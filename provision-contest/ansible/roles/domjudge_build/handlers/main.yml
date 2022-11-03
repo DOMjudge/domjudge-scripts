@@ -2,6 +2,11 @@
 - name: Fix permissions on domjudge inplace-install
   command: make -C {{ DJ_DIR }} inplace-postinstall-permissions
 
+- name: Fix composer autoload
+  command:
+    cmd: composer dump-autoload -o
+    chdir: "{{ DJ_DIR }}"
+
 - name: Restart rsyslog
   service:
     name: rsyslog

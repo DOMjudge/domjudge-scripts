@@ -29,7 +29,9 @@
   command: make inplace-install
   args:
     chdir: "{{ DJ_DIR }}"
-  notify: Fix permissions on domjudge inplace-install
+  notify:
+    - Fix permissions on domjudge inplace-install
+    - Fix composer autoload
   when: (git_working_copy is defined and git_working_copy.changed) or dj_configured.changed or not judgedaemon_binary.stat.exists
 
 - name: Copy domjudge-sudoers file
