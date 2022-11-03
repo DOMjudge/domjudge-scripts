@@ -61,7 +61,19 @@ The playbook has multiple tags:
  - `awards`: Verifies awards.json against the CDS and other CCS when configured.
  - `results.tsv`: Downloads results.tsv from DOMjudge and stores it in the repo.
  - `fetch`: Retrieves all files required by the EOC including results.tsv
-
+ - `dump`: Dumps all API endpoints, specifically:
+   - accounts
+   - awards
+   - balloons
+   - clarifications
+   - problems
+   - groups
+   - judgements
+   - languages
+   - organizations
+   - runs
+   - scoreboard
+   - teams
 
 ### Known limitations
  - The checks that verify whether the jsons are the same are *very* simple and I (Mart) have not yet found a reasonable way of actually checking them in a nice manner from ansible. Them matching would be a bigger red-flag than them having a difference. Still, the playbook fails when a difference is detected! To aid with (manual) verification the results of fetching the jsons is stored in `/tmp/[obj].[sys].json` with `[object]` either "awards" or "scoreboard" and `[sys]` either "dj", "cds", or "other".
