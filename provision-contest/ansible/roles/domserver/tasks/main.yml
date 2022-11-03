@@ -108,3 +108,12 @@
     - { key: 'php_admin_value[post_max_size]', regexp: '^php_admin_value\[post_max_size\]', value: '{{ PHP_POST_MAX_SIZE }}' }
     - { key: 'php_admin_value[max_file_uploads]', regexp: '^php_admin_value\[max_file_uploads\]', value: '{{ PHP_MAX_FILE_UPLOADS }}' }
   notify: Restart PHP FPM
+
+- name: Start domserver webservices
+  systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - nginx
+    - php{{ php_version.stdout }}-fpm
