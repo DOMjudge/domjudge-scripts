@@ -30,12 +30,14 @@ Only the `repo`, `contest`, `contest_id`, and `dj_*` variables are required. Whe
 - `contest` must be the externalID.
 - `contest_id` must be the internalID. (cID)
 - `jd_loc` must point to the location of a [`jd` binary](https://github.com/josephburnett/jd/releases/tag/v1.6.1). Used for comparing diffs.
+- `contestutil_loc` must point to the location of [`contestUtil.sh`](https://github.com/icpctools/icpctools/releases). Used for comparing diffs.
 
 ```yaml
 repo: /home/mart/icpc/wf_repo
 contest: bapc2022
 contest_id: 2
 jd_loc: /home/mart/icpc/EOC/jd
+contestutil_loc: /home/mart/Downloads/contestUtil/contestUtil.sh
 
 dj_url: https://judge.gehack.nl
 dj_url_api_suffix: api/v4
@@ -76,4 +78,4 @@ The playbook has multiple tags:
    - teams
 
 ### Known limitations
- - The checks that verify whether the jsons are the same are *very* simple and I (Mart) have not yet found a reasonable way of actually checking them in a nice manner from ansible. Them matching would be a bigger red-flag than them having a difference. Still, the playbook fails when a difference is detected! To aid with (manual) verification the results of fetching the jsons is stored in `/tmp/[obj].[sys].json` with `[object]` either "awards" or "scoreboard" and `[sys]` either "dj", "cds", or "other".
+ - The checks that verify whether the awards.json are the same is *very* simple and I (Mart) have not yet found a reasonable way of actually checking them in a nice manner from ansible. Them matching would be a bigger red-flag than them having a difference. Still, the playbook fails when a difference is detected! To aid with (manual) verification the results of fetching the jsons is stored in `/tmp/awards.[sys].json` with `[sys]` either "dj", or "cds".

@@ -98,8 +98,21 @@
           when: other_available
 
         - name: Does Dj == other for scoreboard
-          shell: "{{ jd_loc }} /tmp/scoreboard.dj.json /tmp/scoreboard.other.json"
-          when: other_available
+          block:
+          - name: Check for differences
+            shell: "{{ contestutil_loc }} ScoreboardUtil /tmp/scoreboard.dj.json /tmp/scoreboard.other.json"
+            when: other_available
+            register: cul
+
+          - name: Print output
+            ansible.builtin.debug:
+              msg: "{{ cul.stdout | split('\n')}}"
+
+          - name: Fail if the scoreboard does not match
+            ansible.builtin.fail:
+              msg: "Scoreboard does not match, check /tmp/scoreboard.dj.json and /tmp/scoreboard.other.json"
+            when:
+             - "'No differences found.' not in cul.stdout"
 
     - name: Compare awards.json
       tags: all, compare, awards
