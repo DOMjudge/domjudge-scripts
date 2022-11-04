@@ -1,5 +1,5 @@
 ## DOMjudge EOC ansible helper
-This ansible playbook should automate must of the tasks DOMjudge needs to perform for the End Of Contest procedures during the ICPC WF's. It was created for the WF 2021 in Dhaka, which took place in 2022.
+This ansible playbook should automate most of the tasks DOMjudge needs to perform for the End Of Contest procedures during the ICPC WF's. It was created for the WF 2021 in Dhaka, which took place in 2022.
 
 Two types of authentication are used and supported. Session based auth and basic auth.
  - Session based auth retrieves a CSRF token and fakes a login action.
@@ -15,7 +15,7 @@ The following steps from the EOC 2022-Oct document have been automated:
 29. `Primary pushes results.tsv into git repo`. Tag for just this action: `results.tsv`. Note, a manual commit is still needed!
 32. `Compare scoreboard.json between primary and shadow`. Tag for just this action: `scoreboard`. Note, only if other (shadow or primary) credentials are provided.
 33. `Compare awards.json between primary and CDS`. Tag for just this action: `awards`. Note, only if CDS credentials are provided.
-36. `Verify that Primary and ... System Test`. Tag for just this action: `fetch`. Note, a manual commit is still needed and the `final_standings.html` is actually the static-scoreboard zip.
+36. `Verify that Primary and ... System Test`. Tag for just this action: `fetch`. Note, a manual commit is still needed. The static scoreboard (zip) and an export of the clarifications is also pulled from DOMjudge.
 
 
 ## Setup
