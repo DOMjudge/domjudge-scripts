@@ -27,7 +27,6 @@
         other_basic_auth: "Basic {{ (other_username+':'+other_password) | b64encode }}"
       when: other_available
 
-
     - name: Attempt login into DOMjudge
       tags: all, fetch, results.tsv
       block:
@@ -62,7 +61,6 @@
             method: GET
             headers:
               cookie: "{{ login_response.set_cookie }}"
-
 
     - name: Download results.tsv
       tags: all, results.tsv
@@ -99,17 +97,6 @@
           register: other_scoreboard
           when: other_available
 
-#        - name: Convert scoreboard to nice json
-#          block:
-#          - name: Convert DOMjudge scoreboard to nice json
-#            ansible.builtin.set_fact:
-#              dj_scoreboard_nice: "{{ dj_scoreboard.json | to_nice_json }}"
-#
-#          - name: Convert other scoreboard to nice json
-#            ansible.builtin.set_fact:
-#              other_scoreboard_nice: "{{ other_scoreboard.json | to_nice_json }}"
-#            when: other_available
-
         - name: Does Dj == other for scoreboard
           shell: "{{ jd_loc }} /tmp/scoreboard.dj.json /tmp/scoreboard.other.json"
           when: other_available
@@ -139,17 +126,6 @@
               Authorization: "{{ cds_basic_auth }}"
           register: cds_awards
           when: cds_available
-
-#        - name: Convert awards to nice json
-#          block:
-#          - name: Convert DOMjudge awards to nice json
-#            ansible.builtin.set_fact:
-#              dj_awards_nice: "{{ dj_awards.json | to_nice_json }}"
-#
-#          - name: Convert cds awards to nice json
-#            ansible.builtin.set_fact:
-#              cds_awards_nice: "{{ cds_awards.json | to_nice_json }}"
-#            when: cds_available
 
         - name: Does Dj == CDS for awards
           shell: "{{ jd_loc }} /tmp/awards.dj.json /tmp/awards.cds.json"
@@ -190,12 +166,30 @@
         - scoreboard
         - teams
 
-    - name: "Store final standings (contest.zip)"
+    - name: "Store final_standings.html (results.html)"
+      tags: all, fetch
+      ansible.builtin.uri:
+        url: "{{ dj_url }}/jury/import-export/export/results.html"
+        creates: "{{ repo }}/final_standings.html"
+        dest: "{{ repo }}/final_standings.html"
+        headers:
+          cookie: "{{ login_response.set_cookie }}"
+
+    - name: "Store (clarifications.html)"
+      tags: all, fetch
+      ansible.builtin.uri:
+        url: "{{ dj_url }}/jury/import-export/export/clarifications.html"
+        creates: "{{ repo }}/clarifications.html"
+        dest: "{{ repo }}/clarifications.html"
+        headers:
+          cookie: "{{ login_response.set_cookie }}"
+
+    - name: "Store final scoreboard (contest.zip)"
       tags: all, fetch
       ansible.builtin.uri:
         url: "{{ dj_url }}/public/scoreboard-data.zip?contest={{ contest_id }}"
-        creates: "{{ repo }}/final_standings.zip"
-        dest: "{{ repo }}/final_standings.zip"
+        creates: "{{ repo }}/final_scoreboard.zip"
+        dest: "{{ repo }}/final_scoreboard.zip"
         headers:
           cookie: "{{ login_response.set_cookie }}"
 
