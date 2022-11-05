@@ -6,7 +6,7 @@
   - name: Replace pc2.ecs.baylor.edu by packages in apt sources
     replace:
       dest: "/etc/apt/{{ item }}"
-      regexp: 'pc2\.ecs\.baylor\.edu'
+      regexp: 'sysopspackages\.icpc\.global'
       replace: 'packages'
     loop:
       - sources.list
