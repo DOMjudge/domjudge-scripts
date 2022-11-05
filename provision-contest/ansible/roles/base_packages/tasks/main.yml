@@ -10,7 +10,6 @@
       replace: 'packages'
     loop:
       - sources.list
-      - sources.list.d/microsoft.list
       - sources.list.d/mono.list
       - sources.list.d/vscode.list
       - sources.list.d/pypy-ubuntu-ppa-buster.list
