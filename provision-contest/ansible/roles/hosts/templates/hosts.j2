@@ -15,3 +15,7 @@ ff02::2 ip6-allrouters
 {% endif %}
 {% endfor %}
 
+{% if WF_RESTRICTED_NETWORK %}
+{{ PACKAGES_IP }} packages
+{% endif %}
+

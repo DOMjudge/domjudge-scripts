@@ -18,8 +18,7 @@
   - name: Add packages to hosts file
     lineinfile:
       dest: /etc/hosts
-      regexp: '^10\.3\.3\.209'
-      line: "10.3.3.209 packages"
+      line: "{{ PACKAGES_IP }} packages"
     notify: Run apt update
 
   - name: Remove pycharm repo

@@ -28,6 +28,7 @@ GRAPHICAL: false
 # internet access is available and "packages" must be used as APT repo
 # server.
 WF_RESTRICTED_NETWORK: false
+PACKAGES_IP: 10.3.3.209
 
 TIMEZONE: "Asia/Dhaka"
 
