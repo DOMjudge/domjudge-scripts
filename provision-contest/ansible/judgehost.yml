@@ -29,14 +29,14 @@
       tags: ssl
     - role: domjudge_user
       tags: domjudge_user
+    - role: ssh
+      tags: ssh
     - role: domjudge_checkout
       tags: domjudge_checkout
     - role: domjudge_build
       tags: domjudge_build
     - role: judgedaemon
       tags: judgedaemon
-    - role: ssh
-      tags: ssh
     - role: domlogo
       tags: domlogo
       when: GRAPHICAL
