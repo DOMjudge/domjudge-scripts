@@ -15,28 +15,12 @@
     regexp: '^%sudo'
     line: '%sudo ALL=(ALL) NOPASSWD: ALL'
 
-- name: Configure git user
-  ini_file:
-    dest: /home/domjudge/.gitconfig
-    section: user
-    option: "{{ item.name }}"
-    value: "{{ item.value }}"
-    owner: domjudge
-    group: domjudge
-    mode: 0644
+- include_tasks: gitconfig.yml
   loop:
-    - { name: 'email', value: 'team@domjudge.org' }
-    - { name: 'name', value: 'DOMjudge team' }
-
-- name: Configure git to rebase on pull
-  ini_file:
-    dest: /home/domjudge/.gitconfig
-    section: branch
-    option: "autosetuprebase"
-    value: "remote"
-    owner: domjudge
-    group: domjudge
-    mode: 0644
+    - { login: 'domjudge', homedir: '/home/domjudge' }
+    - { login: 'root', homedir: '/root' }
+  loop_control:
+    loop_var: user_item
 
 - name: Setup autologin on desktop installs
   block:

@@ -1,0 +1,22 @@
+- name: "Configure git user {{ user_item.login }}"
+  ini_file:
+    dest: "{{ user_item.homedir }}/.gitconfig"
+    section: user
+    option: "{{ item.name }}"
+    value: "{{ item.value }}"
+    owner: "{{ user_item.login }}"
+    group: "{{ user_item.login }}"
+    mode: 0644
+  loop:
+    - { name: 'email', value: 'team@domjudge.org' }
+    - { name: 'name', value: 'DOMjudge team' }
+
+- name: "Configure git to rebase on pull for {{ user_item.login }}"
+  ini_file:
+    dest: "{{ user_item.homedir }}/.gitconfig"
+    section: branch
+    option: "autosetuprebase"
+    value: "remote"
+    owner: "{{ user_item.login }}"
+    group: "{{ user_item.login }}"
+    mode: 0644
