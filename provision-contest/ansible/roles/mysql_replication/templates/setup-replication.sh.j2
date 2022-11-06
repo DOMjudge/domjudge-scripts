@@ -1,14 +1,19 @@
-#!/bin/sh -e
+#!/bin/bash -e
 # This script sets up MySQL master/master replication on two servers.
 
 usage()
 {
 	cat <<EOF
-Usage: $0 <primary-host>
+Usage: $0 [OPTION]... <primary-host>
 
-This script sets up MySQL master/master replication on two servers.
-Run this script as root on the secondary server and specify the
-primary one as argument. The databases on this server will be wiped!
+Options:
+    -s  Use this host as slave only, don't set up master/master replication
+    -h  Show this usage information
+
+This script sets up MySQL master/master (or master/slave) replication
+on two servers. Run this script as root on the secondary server and
+specify the primary one as argument. The databases on this server will
+be wiped!
 
 This script should be run after ansible code has been run, so that
 MySQL replication configuration and users are present on both machines
@@ -24,7 +29,7 @@ To recover a machine after it went down and a failover happened:
 
 2. Make sure the machine is fully configured (using ansible).
 
-3. Run this script as root on the machine with argument the active
+3. Run this script as root on the failed machine with argument the active
    domserver. For example, if the active machine is domjudge-backup
    and this, failed machine is presumably domjudge-primary, then run:
        setup-replication domjudge-backup
@@ -42,14 +47,33 @@ To recover a machine after it went down and a failover happened:
    on domjudge-primary, and check that the domjudge IP correctly
    returned to domjudge-primary again.
 
+The -s option can be used to only set up replication in one way, which
+is useful, for example, if the main machines are desktops and there is
+a disaster recovery laptop.
+
 EOF
 
 }
 
+SETUP_MASTER_MASTER=1
+while getopts 'sh' OPT ; do
+    case $OPT in
+        s) SETUP_MASTER_MASTER=0 ;;
+        h) SHOWHELP=1 ;;
+        \?) echo "Error: could not parse options."; exit 1 ;;
+    esac
+done
+shift $((OPTIND-1))
+
 PRIMARY=$1
 
+if [ -n "${SHOWHELP}" ]; then
+    usage
+    exit 0
+fi
+
 if [ -z "$PRIMARY" ]; then
-    echo "Error: specify primary host to set up master/master replication with."
+    echo "Error: specify primary host to set up replication with."
     usage
     exit 1
 fi
@@ -119,8 +143,10 @@ fi
 echo "Stopping PHP locally..."
 service php{{ php_version.stdout }}-fpm stop
 
-echo "Stopping replication on $PRIMARY..."
-ssh "$PRIMARY" 'mysql -e "STOP SLAVE;"'
+if [ "$SETUP_MASTER_MASTER" -eq 1 ]; then
+    echo "Stopping replication on $PRIMARY..."
+    ssh "$PRIMARY" 'mysql -e "STOP SLAVE;"'
+fi
 
 PRIMARY_STATUS=$(ssh "$PRIMARY" "mysql -e 'SHOW MASTER STATUS\G'")
 PRIMARY_BINLOG=$(get_field 'File' "$PRIMARY_STATUS")
@@ -182,14 +208,16 @@ OUR_STATUS=$(mysql -e 'SHOW MASTER STATUS\G')
 OUR_BINLOG=$(get_field 'File' "$OUR_STATUS")
 OUR_LOGPOS=$(get_field 'Position' "$OUR_STATUS")
 
-echo "Starting replication on $PRIMARY..."
-ssh "$PRIMARY" "mysql -e '
-CHANGE MASTER TO MASTER_HOST=\"{{SERVER_IP_PREFIX}}.${OUR_SERVER_ID}\",
-                 MASTER_USER=\"replication\",
-                 MASTER_PASSWORD=\"{{REPLICATION_PASSWORD}}\",
-                 MASTER_LOG_FILE=\"${OUR_BINLOG}\",
-                 MASTER_LOG_POS=${OUR_LOGPOS};
-START SLAVE;'"
+if [ "$SETUP_MASTER_MASTER" -eq 1 ]; then
+    echo "Starting replication on $PRIMARY..."
+    ssh "$PRIMARY" "mysql -e '
+    CHANGE MASTER TO MASTER_HOST=\"{{SERVER_IP_PREFIX}}.${OUR_SERVER_ID}\",
+                    MASTER_USER=\"replication\",
+                    MASTER_PASSWORD=\"{{REPLICATION_PASSWORD}}\",
+                    MASTER_LOG_FILE=\"${OUR_BINLOG}\",
+                    MASTER_LOG_POS=${OUR_LOGPOS};
+    START SLAVE;'"
+fi
 
 echo "Restarting PHP locally..."
 service php{{ php_version.stdout }}-fpm start
