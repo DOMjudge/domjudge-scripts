@@ -3,3 +3,6 @@ iface {{ STATIC_IP_INTERFACE }} inet static
     address {{ ansible_host }}
     netmask {{ STATIC_IP_NETMASK }}
     gateway {{ STATIC_IP_GATEWAY }}
+    dns-nameservers 8.8.8.8 8.8.4.4
+    post-up route add default via {{ STATIC_IP_GATEWAY }}
+    pre-down route del default via {{ STATIC_IP_GATEWAY }}

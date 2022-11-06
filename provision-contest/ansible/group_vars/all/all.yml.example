@@ -28,6 +28,7 @@ GRAPHICAL: false
 # internet access is available and "packages" must be used as APT repo
 # server.
 WF_RESTRICTED_NETWORK: false
+WF_GREEN: false
 
 # Static IP address configuration. Uses the ansible_host variable as the static
 # IP address. Only configured if STATIC_IP_ENABLED is true.
