@@ -16,6 +16,7 @@ ff02::2 ip6-allrouters
 {% endfor %}
 
 {% if WF_RESTRICTED_NETWORK %}
-{{ PACKAGES_IP }} packages
-10.3.3.207 cds
+{% for host, ip_address in HOSTS.items() %}
+{{ ip_address }} {{ host }}
+{% endfor %}
 {% endif %}

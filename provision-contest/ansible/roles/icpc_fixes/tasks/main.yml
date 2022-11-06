@@ -5,7 +5,7 @@
   lineinfile:
     dest: /etc/systemd/timesyncd.conf
     regexp: '^#?NTP='
-    line: "NTP=10.3.3.208 10.3.3.209"
+    line: "NTP=ntp1 ntp2"
   notify: Restart systemd timesyncd
   when: WF_RESTRICTED_NETWORK
 

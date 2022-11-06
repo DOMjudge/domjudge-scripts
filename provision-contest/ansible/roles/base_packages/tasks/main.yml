@@ -18,7 +18,7 @@
   - name: Add packages to hosts file
     lineinfile:
       dest: /etc/hosts
-      line: "{{ PACKAGES_IP }} packages"
+      line: "{{ HOSTS['packages'] }} packages"
     notify: Run apt update
 
   - name: Remove pycharm repo
