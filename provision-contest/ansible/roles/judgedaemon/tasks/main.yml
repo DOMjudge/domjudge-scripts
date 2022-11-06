@@ -116,3 +116,10 @@
     - apt-daily-upgrade.timer
     - apt-daily.timer
     - systemd-tmpfiles-clean.timer
+
+- name: Enable and start judgedaemon
+  service:
+    name: "domjudge-judgehost.target"
+    enabled: true
+    state: started
+    daemon_reload: true
