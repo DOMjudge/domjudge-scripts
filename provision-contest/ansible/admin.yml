@@ -134,3 +134,28 @@
         owner: domjudge
         group: domjudge
         mode: 0600
+
+    - name: Create local python directory
+      become: true
+      become_user: domjudge
+      file:
+        path: "/home/domjudge/.local/lib/python3.8"
+        state: directory
+        mode: '0755'
+        owner: domjudge
+        group: domjudge
+
+
+    - name: Install local python packages
+      synchronize:
+        src: files/admin-python/
+        dest: "/home/domjudge/.local/lib/python3.8"
+        owner: false
+        use_ssh_args: true
+
+    - name: Fix ownership of local python packages
+      file:
+        path: "/home/domjudge/.local/lib/python3.8"
+        recurse: true
+        owner: domjudge
+        group: domjudge
