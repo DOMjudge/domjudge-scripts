@@ -38,10 +38,15 @@ STATIC_IP_INTERFACE: enp1s0
 
 # Additional entries for the /etc/hosts file.
 HOSTS:
-    cds:      10.3.3.207
-    packages: 10.3.3.209
-    ntp1:     10.3.3.208
-    ntp2:     10.3.3.209
+    cds:             10.3.3.207
+    packages:        10.3.3.209
+    ntp1:            10.3.3.208
+    ntp2:            10.3.3.209
+    nisprint:        10.3.3.211
+    nismaster:       10.3.3.211
+    printsrv:        10.3.3.211
+    domjudge-laptop: 10.3.3.200
+    pc2:             10.3.3.241
 
 TIMEZONE: "Asia/Dhaka"
 
