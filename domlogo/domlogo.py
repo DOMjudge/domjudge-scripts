@@ -55,8 +55,9 @@ with open(latest_logfile, 'r') as logfile:
             break
         line = logfile.readline()
         # Sleep here for a tiny amount of time to avoid using too much CPU.
-        if len(line) == 0:
+        if len(line) == 0 and needs_update is None:
             time.sleep(0.01)
+        needs_update = None
         if 'Working directory:' in line:
             token = line.strip().split('/')
             judging_id = token[-1]
@@ -69,7 +70,7 @@ with open(latest_logfile, 'r') as logfile:
                 team_id = submission_data['team_id']
                 last_seen = (submission_id, judging_id, team_id)
                 new_filename = f'domlogo-files/photos/{team_id}.png'
-                if (int)(team_id) >= 120:
+                if not isinstance(team_id, int):
                     new_filename = f'domlogo-files/photos/crew.png'
                 team_image.update(filename=new_filename)
                 metadata_text.update(f's{submission_id} / {submission_data["problem_id"]} / {submission_data["language_id"]}')
@@ -89,7 +90,6 @@ with open(latest_logfile, 'r') as logfile:
                 '.{1,78}', ' '.join(results))))
         if needs_update:
             sid, jid, tid = needs_update
-            needs_update = None
             judging_data = requests.get(f'{api_url}/judgements/{jid}', auth=(user,passwd)).json()
             verdict = judging_data['judgement_type_id'] or 'pending'
             color = 'firebrick1'
@@ -99,7 +99,7 @@ with open(latest_logfile, 'r') as logfile:
                 color = 'DeepSkyBlue'
             for i in range(len(cache)-1):
                 cache[i] = cache[i+1]
-            if (int)(tid) >= 120:
+            if not isinstance(tid, int):
                 tid = 'DOMjudge'
             cache[-1] = (f'domlogo-files/logos/{tid}.png', f's{sid}/j{jid}\n{verdict}', color, jid)
             for i in range(len(cache)):
