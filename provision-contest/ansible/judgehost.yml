@@ -3,11 +3,6 @@
 
 - name: Setup judgehost
   hosts: judgehost
-  # We always leave 2/3 of the judges online
-  serial:
-    - 33%
-    - 33%
-    - 34%
   strategy: free
   vars:
     host_type: judgehost

@@ -18,8 +18,8 @@
     mode: 0600
   loop:
     - config
-    - id_rsa
-    - id_rsa.pub
+    - id_ed25519
+    - id_ed25519.pub
 
 - name: Copy shared SSH private/public key and config to root
   copy:
@@ -28,14 +28,14 @@
     mode: 0600
   loop:
     - config
-    - id_rsa
-    - id_rsa.pub
+    - id_ed25519
+    - id_ed25519.pub
 
 - name: Add SSH key to authorized keys of domjudge and root
   authorized_key:
     user: "{{ item }}"
     state: present
-    key: "{{ lookup('file', 'id_rsa.pub') }}"
+    key: "{{ lookup('file', 'id_ed25519.pub') }}"
   loop:
     - domjudge
     - root

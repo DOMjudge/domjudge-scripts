@@ -9,7 +9,7 @@ default:
 	@echo " - make scoreboard"
 
 LIBVENDORTGZ=roles/domjudge_checkout/files/lib-vendor.tgz
-SSHKEY=roles/ssh/files/id_rsa
+SSHKEY=roles/ssh/files/id_ed25519
 SSL_DOMSERVER=roles/ssl/files/domserver
 SSL_DOMSERVER_FILES=$(addprefix $(SSL_DOMSERVER),.key .crt)
 SSL_LOCALHOST=roles/ssl/files/localhost
@@ -50,7 +50,7 @@ domserver: $(SSL_DOMSERVER_FILES)
 cds: $(SSL_CDS_FILES)
 
 $(SSHKEY) $(SSHKEY).pub:
-	ssh-keygen -t rsa -f $(SSHKEY) -P ''
+	ssh-keygen -t ed25519 -f $(SSHKEY) -P ''
 
 $(SSL_DOMSERVER_FILES):
 	openssl req -x509 -nodes -newkey rsa:4096 -subj "/O=DOMjudge/CN=domjudge" \

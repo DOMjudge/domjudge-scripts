@@ -28,7 +28,7 @@
   become: false
   delegate_to: localhost
   stat:
-    path: files/lib/vendor
+    path: roles/domjudge_checkout/files/lib/vendor
   register: libvendor
   check_mode: no
 

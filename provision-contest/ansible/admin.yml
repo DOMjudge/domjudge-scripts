@@ -95,10 +95,10 @@
       # We use a different directory here to have one single 'upstream' and not have issues with it
       git: repo={{ dj_git_repo_scripts }} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
 
-    - name: Create working copy of the wf2020 repo
+    - name: Create working copy of the wf2021 repo
       become: true
       become_user: domjudge
-      git: repo=git@cds:wf2020 dest=/home/domjudge/wf2020 version=master accept_hostkey=yes update=no
+      git: repo=git@cds:wf2021 dest=/home/domjudge/wf2021 version=master accept_hostkey=yes update=no
 
     - name: Copy custom CSS file for admin machines
       copy:

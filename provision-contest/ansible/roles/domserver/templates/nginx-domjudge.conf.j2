@@ -9,14 +9,12 @@ upstream domjudge {
 
 server {
 	listen   80;
-	listen   [::]:80;
 	server_name _default_;
 	return 308 https://$host$request_uri;  # enforce https
 }
 
 server {
 	listen   443 ssl http2;
-	listen   [::]:443 ssl http2;
 
 	ssl_certificate {{DOMSERVER_SSL_CERT}};
 	ssl_certificate_key {{DOMSERVER_SSL_KEY}};

@@ -9,12 +9,6 @@
   notify: Restart systemd timesyncd
   when: WF_RESTRICTED_NETWORK
 
-- name: Remove source line from interfaces
-  lineinfile:
-    dest: /etc/network/interfaces
-    regexp: '^source-'
-    state: absent
-
 - name: Re-order PXEboot
   command: efibootmgr -o {{ EFI_ORDER }}
   when: EFI_ORDER is defined
