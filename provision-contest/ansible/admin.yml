@@ -109,6 +109,15 @@
         mode: 0644
       notify: Clear application cache
 
+    - name: Check if netrc file exists
+      stat:
+        path: /home/domjudge/.netrc
+        get_attributes: false
+        get_checksum: false
+        get_mime: false
+      register: netrc_file
+      check_mode: no
+
     - name: Install netrc file
       template:
         src: files/netrc.j2
@@ -116,6 +125,7 @@
         owner: domjudge
         group: domjudge
         mode: 0600
+      when: not netrc_file.stat.exists
 
     - name: Install .my.cnf file
       template:
