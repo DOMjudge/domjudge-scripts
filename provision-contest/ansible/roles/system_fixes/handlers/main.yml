@@ -1,3 +1,6 @@
 ---
 - name: Update dconf
   command: dconf update
+
+- name: Reboot the machine
+  reboot:

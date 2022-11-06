@@ -47,4 +47,23 @@
   template:
     src: static_ip.j2
     dest: /etc/network/interfaces.d/{{ STATIC_IP_INTERFACE }}
+  notify: Reboot the machine
   when: STATIC_IP_ENABLED
+
+- name: Load configuration from /etc/network/interfaces.d
+  lineinfile:
+    path: /etc/network/interfaces
+    line: 'source-directory /etc/network/interfaces.d'
+  notify: Reboot the machine
+  when: STATIC_IP_ENABLED
+
+- name: Use 8.8.8.8 as DNS server
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?DNS='
+    line: 'DNS=8.8.8.8'
+  notify: Reboot the machine
+  when: STATIC_IP_ENABLED
+
+- name: Flush handlers
+  meta: flush_handlers
