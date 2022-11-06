@@ -71,7 +71,7 @@ with open(latest_logfile, 'r') as logfile:
                 team_id = submission_data['team_id']
                 last_seen = (submission_id, judging_id, team_id)
                 new_filename = f'domlogo-files/photos/{team_id}.png'
-                if not isinstance(team_id, int):
+                if not team_id.isdigit():
                     new_filename = f'domlogo-files/photos/crew.png'
                 team_image.update(filename=new_filename)
                 metadata_text.update(f's{submission_id} / {submission_data["problem_id"]} / {submission_data["language_id"]}')
@@ -100,7 +100,7 @@ with open(latest_logfile, 'r') as logfile:
                 color = 'DeepSkyBlue'
             for i in range(len(cache)-1):
                 cache[i] = cache[i+1]
-            if not isinstance(tid, int):
+            if not tid.isdigit():
                 tid = 'DOMjudge'
             cache[-1] = (f'domlogo-files/logos/{tid}.png', f's{sid}/j{jid}\n{verdict}', color, jid)
             for i in range(len(cache)):
