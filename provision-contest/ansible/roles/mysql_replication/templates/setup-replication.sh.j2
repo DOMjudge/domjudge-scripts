@@ -7,13 +7,13 @@ usage()
 Usage: $0 [OPTION]... <primary-host>
 
 Options:
-    -s  Use this host as slave only, don't set up master/master replication
+    -m  Set up two-way master/master replication
     -h  Show this usage information
 
-This script sets up MySQL master/master (or master/slave) replication
+This script sets up MySQL master/slave or master/master replication
 on two servers. Run this script as root on the secondary server and
-specify the primary one as argument. The databases on this server will
-be wiped!
+specify the primary one as argument. The databases on the secondary
+will be wiped!
 
 This script should be run after ansible code has been run, so that
 MySQL replication configuration and users are present on both machines
@@ -21,6 +21,11 @@ and a domjudge database has been initialized on <primary-host> at least.
 Running this script will synchronize the databases on this host to
 that on <primary-host>, including user credentials, so make sure that
 etc/dbpasswords.secret contains the same credentials on each machine.
+
+The -m option should be used to set up two-way master/master replication,
+which is normally used between the primary and a secondary hot-standby.
+In case of replication to a disaster recovery laptop, this should option
+normally not be used.
 
 To recover a machine after it went down and a failover happened:
 
@@ -32,7 +37,7 @@ To recover a machine after it went down and a failover happened:
 3. Run this script as root on the failed machine with argument the active
    domserver. For example, if the active machine is domjudge-backup
    and this, failed machine is presumably domjudge-primary, then run:
-       setup-replication domjudge-backup
+       setup-replication -m domjudge-backup
    When this script completes successfully (should take ~1-3 minutes
    when using a Gbit network and about 1-5 GB database size), the two
    machines are running in master/master replication. If it fails,
@@ -47,18 +52,19 @@ To recover a machine after it went down and a failover happened:
    on domjudge-primary, and check that the domjudge IP correctly
    returned to domjudge-primary again.
 
-The -s option can be used to only set up replication in one way, which
-is useful, for example, if the main machines are desktops and there is
-a disaster recovery laptop.
+   Alternatively, switch the effective roles of the two by decreasing
+   the priority in /etc/keepalived/keepalived.conf on domjudge-primary
+   and run on it:
+       service keepalived start
 
 EOF
 
 }
 
-SETUP_MASTER_MASTER=1
-while getopts 'sh' OPT ; do
+SETUP_MASTER_MASTER=0
+while getopts 'mh' OPT ; do
     case $OPT in
-        s) SETUP_MASTER_MASTER=0 ;;
+        m) SETUP_MASTER_MASTER=1 ;;
         h) SHOWHELP=1 ;;
         \?) echo "Error: could not parse options."; exit 1 ;;
     esac
