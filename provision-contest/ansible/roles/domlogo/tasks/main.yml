@@ -7,32 +7,52 @@
     pkg:
       - python3-tk
 
-- name: Install domlogo
+- name: Install domlogo and showhost
   copy:
-    src: domlogo.py
+    src: "{{ item }}.py"
     dest: "{{ DJ_DIR }}"
     owner: domjudge
     group: domjudge
     mode: 0755
+  loop:
+    - domlogo
+    - showhost
 
-- name: Install domlogo env
+- name: Install domlogo and showhost env
   synchronize:
     src: lib
     dest: /home/domjudge/.local/
     owner: false
     use_ssh_args: true
 
+- name: Fix ownership of domlogo and showhost env
+  file:
+    path: "/home/domjudge/.local/lib/python3.8"
+    recurse: true
+    owner: domjudge
+    group: domjudge
+
 - name: Install domlogo images
   synchronize:
-    src: images
-    dest: "{{ DJ_DIR }}"
+    src: images/
+    dest: "{{ DJ_DIR }}/domlogo-files/"
     owner: false
     use_ssh_args: true
 
+- name: Fix ownership of domlogo images
+  file:
+    path: "{{ DJ_DIR }}/domlogo-files"
+    recurse: true
+    owner: domjudge
+    group: domjudge
+
 - name: Add autostart shortcuts
   template:
-    src: domjudgelogo.desktop.j2
-    dest: /home/domjudge/.config/autostart/domjudgelogo.desktop
+    src: "{{ item }}.desktop.j2"
+    dest: "/home/domjudge/.config/autostart/{{ item }}.desktop"
     owner: domjudge
     group: domjudge
     mode: 0755
+  loop:
+    - domjudgelogo
+    - showhost

@@ -23,7 +23,7 @@ previous_column = [
 layout = [
     [sg.Column(current_column), sg.VerticalSeparator(), sg.Column(previous_column)],
 ]
-window = sg.Window('DOMlogo', layout, location=(1000,0), keep_on_top=True)
+window = sg.Window('DOMlogo', layout, location=(600,0), keep_on_top=True, no_titlebar=True)
 
 with open('etc/restapi.secret', 'r') as secrets:
     while True:
@@ -50,13 +50,14 @@ with open(latest_logfile, 'r') as logfile:
     results = []
     last_seen, needs_update = (None, None)
     while True:
-        event, values = window.read(timeout=30)
-        if event == sg.WIN_CLOSED:
-            break
+        if needs_update is None:
+            event, values = window.read(timeout=1)
+            if event == sg.WIN_CLOSED:
+                break
         line = logfile.readline()
         # Sleep here for a tiny amount of time to avoid using too much CPU.
         if len(line) == 0 and needs_update is None:
-            time.sleep(0.01)
+            time.sleep(0.1)
         needs_update = None
         if 'Working directory:' in line:
             token = line.strip().split('/')
