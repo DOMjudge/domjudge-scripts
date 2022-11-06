@@ -29,6 +29,13 @@ GRAPHICAL: false
 # server.
 WF_RESTRICTED_NETWORK: false
 
+# Static IP address configuration. Uses the ansible_host variable as the static
+# IP address. Only configured if STATIC_IP_ENABLED is true.
+STATIC_IP_ENABLED: false
+STATIC_IP_NETMASK: 255.255.252.0
+STATIC_IP_GATEWAY: 172.29.0.1
+STATIC_IP_INTERFACE: enp1s0
+
 # Additional entries for the /etc/hosts file.
 HOSTS:
     cds:      10.3.3.207

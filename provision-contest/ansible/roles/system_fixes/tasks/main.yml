@@ -42,3 +42,9 @@
     mode: 0755
   notify: Update dconf
   when: GRAPHICAL
+
+- name: Configure static IP address
+  template:
+    src: static_ip.j2
+    dest: /etc/network/interfaces.d/{{ STATIC_IP_INTERFACE }}
+  when: STATIC_IP_ENABLED
