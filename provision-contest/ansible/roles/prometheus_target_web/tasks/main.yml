@@ -20,7 +20,7 @@
 # The exporter from this is currently not in deb sources
 # so we need to download this from GitHub see the README in files
 - name: Install PHP-fpm exporter binary
-  when: FPM
+  when: FPM and false
   ansible.builtin.unarchive:
     src: https://github.com/hipages/php-fpm_exporter/releases/download/v2.0.4/php-fpm_exporter_2.0.4_linux_amd64.tar.gz
     dest: /usr/bin/
@@ -31,7 +31,7 @@
   notify: Restart php-exporter
 
 - name: Export PHP-FPM metrics
-  when: FPM
+  when: FPM and false
   synchronize:
     src: php-fpm-exporter.service
     dest: /etc/systemd/system/php-fpm-exporter.service
