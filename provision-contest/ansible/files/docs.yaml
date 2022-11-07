@@ -3,18 +3,16 @@
 
 # This file should contain an array with items to show.
 
+
 - name: DOMjudge Team Guide
-  link: ../docs/DOMJudge.Team-Manual.WF2021.pdf
+  link: ../docs/WFDhaka-domjudge-team-manual.pdf
   icon: fas fa-users
 - name: Judging Notes
-  link: ../docs/2020-21.JudgingNotes.A4.pdf
+  link: ../docs/2021Dhaka.JudgingNotes.A4.pdf
   icon: fas fa-gavel
 - name: Judging Notes Addendum
-  link: ../docs/2020-21.JudgingNotes.Addendum.A4.pdf
+  link: ../docs/2021Dhaka.JudgingNotesAddendum.A4.pdf
   icon: fas fa-plus
 - name: Tech Notes
-  link: ../docs/2020-21.TechNotes.A4.pdf
+  link: ../docs/2021Dhaka.TechNotes.A4.pdf
   icon: fas fa-cog
-- name: Mumble Notes
-  link: ../docs/2020-21.MumbleNotes.A4.pdf
-  icon: fas fa-headset
