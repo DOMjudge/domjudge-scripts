@@ -30,6 +30,8 @@
       tags: domjudge_checkout
     - role: domjudge_build
       tags: domjudge_build
+      vars:
+        DOMSERVER: https://localhost
     - role: domserver
       tags: domserver
     - role: judgedaemon
