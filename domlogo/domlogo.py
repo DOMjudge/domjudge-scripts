@@ -36,12 +36,6 @@ with open('etc/restapi.secret', 'r') as secrets:
         break
 print(f'Using {api_url} as endpoint.')
 
-contests = requests.get(f'{api_url}/contests', auth=(user,passwd)).json()
-latest_contest = sorted(contests, key=lambda c: c['end_time'])[-1]
-cid = latest_contest['id']
-api_url = f'{api_url}/contests/{cid}'
-print(f'Contest is {cid}.')
-
 latest_logfile = max(glob.glob('output/log/judge.*-2.log'), key=os.path.getctime)
 print(f'Checking logfile {latest_logfile}')
 with open(latest_logfile, 'r') as logfile:
