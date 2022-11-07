@@ -22,6 +22,7 @@
     version: "{{ DJ_BRANCH }}"
     accept_hostkey: true
     update: true
+    force: "{{ DJ_FORCE_UPDATE }}"
   register: git_working_copy
 
 - name: Check composer dependencies present

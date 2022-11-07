@@ -1,5 +1,7 @@
 DJ_DIR: /home/domjudge/domjudge-checkout
 
+DJ_FORCE_UPDATE: false
+
 DOMSERVER_URL: https://localhost
 
 PHP_FPM_MAX_CHILDREN: 5

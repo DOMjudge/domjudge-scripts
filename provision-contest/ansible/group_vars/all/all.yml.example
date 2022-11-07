@@ -4,6 +4,9 @@ DJ_DIR: /opt/domjudge
 # Branch to checkout and use.
 DJ_BRANCH: main
 
+# Whether to force-pull changes to the checkout, overwriting any local changes.
+DJ_FORCE_UPDATE: true
+
 # Server VLAN IP prefix.
 SERVER_IP_PREFIX: 10.3.3
 
