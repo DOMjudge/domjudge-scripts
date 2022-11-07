@@ -1,4 +1,4 @@
 [Desktop Entry]
 Name=domjudgelogo
 Type=Application
-Exec=bash -c "sleep 10 && cd {{ DJ_DIR }} && python3 ./domlogo.py 1>/home/domjudge/logo.out 2>/home/domjudge/logo.err"
+Exec=bash -c "sleep 10 && cd {{ DJ_DIR }} && while true; do python3 ./domlogo.py 1>>/home/domjudge/logo.out 2>>/home/domjudge/logo.err; sleep 2; done"
