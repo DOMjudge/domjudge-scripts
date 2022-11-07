@@ -5,7 +5,7 @@
   apt:
     state: present
     pkg:
-      - prometheus-mysqld-exporter
+      - prometheus-nginx-exporter
   notify: Restart nginx-exporter
 
 - name: Expose MariaDB metrics
@@ -20,7 +20,7 @@
 # The exporter from this is currently not in deb sources
 # so we need to download this from GitHub see the README in files
 - name: Install PHP-fpm exporter binary
-  when: FPM and false
+  when: FPM and not WF_RESTRICTED_NETWORK
   ansible.builtin.unarchive:
     src: https://github.com/hipages/php-fpm_exporter/releases/download/v2.0.4/php-fpm_exporter_2.0.4_linux_amd64.tar.gz
     dest: /usr/bin/
@@ -30,8 +30,26 @@
       - README.md
   notify: Restart php-exporter
 
+- name: Install PHP-fpm exporter binary (local cache)
+  when: FPM and WF_RESTRICTED_NETWORK
+  block:
+    - name: Copy local php-fpm deb to monitoring host
+      copy:
+        src: php-fpm.tar.gz
+        dest: /srv/php-fpm.tar.gz
+
+    - name: Install local archive on remote
+      ansible.builtin.unarchive:
+        src: /srv/php-fpm.tar.gz
+        dest: /usr/bin/
+        remote_src: true
+        exclude:
+          - LICENSE
+          - README.md
+      notify: Restart php-exporter
+
 - name: Export PHP-FPM metrics
-  when: FPM and false
+  when: FPM
   synchronize:
     src: php-fpm-exporter.service
     dest: /etc/systemd/system/php-fpm-exporter.service

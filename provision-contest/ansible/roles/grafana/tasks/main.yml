@@ -64,10 +64,25 @@
 
 ## Setup grafana
 - name: Install grafana
+  when: not WF_RESTRICTED_NETWORK
   apt:
     deb: https://dl.grafana.com/enterprise/release/grafana-enterprise_8.4.6_amd64.deb
     state: present
   notify: Restart grafana
+
+- name: Install grafana from local deb
+  when: WF_RESTRICTED_NETWORK
+  block:
+    - name: Copy local grafana deb to monitoring host
+      copy:
+        src: grafana.deb
+        dest: /srv/grafana.deb
+
+    - name: Install local archive on remote
+      apt:
+        deb: /srv/grafana.deb
+        state: present
+      notify: Restart grafana
 
 - name: Configure grafana
   synchronize:
