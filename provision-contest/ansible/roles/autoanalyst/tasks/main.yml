@@ -1,0 +1,199 @@
+---
+- name: Create the analyst user
+  user:
+    name: analyst
+    groups: [sudo]
+    state: present
+    shell: /bin/bash
+
+- name: Check if autoanalyst repository exists
+  stat:
+    path: /home/analyst/autoanalyst
+  register: repo_directory
+
+- name: Clone the autoanalyst repository
+  become_user: analyst
+  git:
+    repo: 'https://github.com/icpc-live/autoanalyst.git'
+    dest: /home/analyst/autoanalyst
+  when: not repo_directory.stat.exists
+
+- name: Create directories
+  become_user: analyst
+  file:
+    path: /home/analyst//{{ item }}
+    state: directory
+  with_items:
+    - githomes
+    - backup
+    - history
+    - autoanalyst/output
+
+- name: Install necessary packages
+  apt:
+    name:
+      - git
+      - gitk
+      - gitweb
+      - apache2-utils
+      - mariadb-server
+      - mariadb-client
+      - php-cli
+      - ntp
+      - rsync
+      - make
+      - curl
+      - python-yaml
+      - openjdk-8-jdk
+      - openjdk-8-jre
+      - python-httplib2
+      - python3-mysqldb
+      - maven
+
+- name: Check if configuration exists
+  stat:
+    path: /home/analyst/autoanalyst/config.yaml
+  register: config_file
+
+- name: Create initial configuration
+  become_user: analyst
+  copy:
+    src: /home/analyst/autoanalyst/config.yaml.template
+    dest: /home/analyst/autoanalyst/config.yaml
+  when: not config_file.stat.exists
+
+- name: Create initial configuration
+  become_user: analyst
+  replace:
+    path: /home/analyst/autoanalyst/config.yaml
+    regexp: /home/icpclive
+    replace: /home/analyst
+  when: not config_file.stat.exists
+
+- name: Configure CCS baseurl
+  become_user: analyst
+  replace:
+    path: /home/analyst/autoanalyst/config.yaml
+    after: 'CCS:'
+    regexp: 'baseurl:.*'
+    replace: 'baseurl: "https://domjudge/"'
+    before: 'CDS:'
+  when: not config_file.stat.exists
+
+- name: Configure CCS submissionurl
+  become_user: analyst
+  replace:
+    path: /home/analyst/autoanalyst/config.yaml
+    after: 'CCS:'
+    regexp: 'submissionurl:.*'
+    replace: 'submissionurl: "jury/submissions/by-external-id/@ID@"'
+    before: 'CDS:'
+  when: not config_file.stat.exists
+
+- name: Configure CDS baseurl
+  become_user: analyst
+  replace:
+    path: /home/analyst/autoanalyst/config.yaml
+    after: 'CDS:'
+    regexp: 'baseurl:.*'
+    replace: 'baseurl: "https://cds/api/contests"'
+    before: 'teambackup:'
+  when: not config_file.stat.exists
+
+- name: Configure CDS user
+  become_user: analyst
+  replace:
+    path: /home/analyst/autoanalyst/config.yaml
+    after: 'CDS:'
+    regexp: 'user:.*'
+    replace: 'user: analytics'
+    before: 'teambackup:'
+  when: not config_file.stat.exists
+
+- name: Configure CDS user
+  become_user: analyst
+  replace:
+    path: /home/analyst/autoanalyst/config.yaml
+    after: 'CDS:'
+    regexp: 'userfull:.*'
+    replace: 'userfull: analyticsplus'
+    before: 'teambackup:'
+  when: not config_file.stat.exists
+
+- name: Configure database user
+  become_user: analyst
+  replace:
+    path: /home/analyst/autoanalyst/config.yaml
+    after: 'database:'
+    regexp: 'user:.*'
+    replace: 'user: icat'
+    before: 'timezone:'
+  when: not config_file.stat.exists
+
+- name: Enable file publisher
+  become_user: analyst
+  replace:
+    path: /home/analyst/autoanalyst/config.yaml
+    after: '# File publisher'
+    regexp: 'enable:.*'
+    replace: 'enable: true'
+    before: 'targetDirectory:'
+  when: not config_file.stat.exists
+
+- name: Generate database password
+  set_fact:
+      database_pass: '{{ lookup("password", "/dev/null length=15 chars=ascii_letters") }}'
+
+- name: Configure database password
+  become_user: analyst
+  replace:
+    path: /home/analyst/autoanalyst/config.yaml
+    after: 'database:'
+    regexp: 'password:.*'
+    replace: 'password: {{ database_pass }}'
+    before: 'teambackup:'
+  when: not config_file.stat.exists
+
+- name: Configure timezone
+  become_user: analyst
+  lineinfile:
+    path: /home/analyst/autoanalyst/config.yaml
+    regexp: '^timezone:'
+    line: 'timezone: Asia/Dhaka'
+  when: not config_file.stat.exists
+
+- name: Create database user
+  pause:
+    prompt: "mysql> CREATE USER 'icat'@'localhost' IDENTIFIED BY '{{ database_pass }}';"
+
+- name: Create database
+  pause:
+    prompt: "mysql> CREATE DATABASE icat;"
+
+- name: Grant database user privileges
+  pause:
+    prompt: "mysql> GRANT ALL PRIVILEGES ON icat.* TO 'icat'@'localhost';"
+
+- name: Populate database
+  pause:
+    prompt: "mysql -u icat --password={{ database_pass }} -h 127.0.0.1 < /home/analyst/autoanalyst/create_icat_instance.sql"
+
+- name: Create the nginx configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/autoanalyst.conf
+  notify: Reload nginx
+
+- name: Create the nginx configuration
+  file:
+    src: /etc/nginx/sites-available/autoanalyst.conf
+    dest: /etc/nginx/sites-enabled/autoanalyst.conf
+    state: link
+  notify: Reload nginx
+
+- name: Build the Katalyzer
+  become_user: analyst
+  command: mvn package
+  args:
+    chdir: /home/analyst/autoanalyst/katalyze
+    creates: /home/analyst/autoanalyst/katalyze/target

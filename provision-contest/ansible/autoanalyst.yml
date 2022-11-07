@@ -1,0 +1,9 @@
+---
+# This playbook installs the ICPC AutoAnalyst
+
+- name: Setup autoanalyst
+  hosts: autoanalyst
+  become: true
+  roles:
+    - role: autoanalyst
+      tags: autoanalyst

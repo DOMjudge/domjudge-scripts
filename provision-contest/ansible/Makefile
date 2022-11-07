@@ -7,6 +7,7 @@ default:
 	@echo " - make grafana"
 	@echo " - make cds"
 	@echo " - make scoreboard"
+	@echo " - make autoanalyst"
 
 LIBVENDORTGZ=roles/domjudge_checkout/files/lib-vendor.tgz
 SSHKEY=roles/ssh/files/id_ed25519
@@ -27,7 +28,7 @@ $(LIBVENDOR): $(LIBVENDORTGZ)
 	-cd roles/domjudge_checkout/files && tar xzf $(notdir $<)
 endif
 
-ROLES=domserver judgehost admin grafana cds scoreboard mgmt
+ROLES=domserver judgehost admin grafana cds scoreboard mgmt autoanalyst
 $(ROLES): %: %.yml hosts group_vars/all/secret.yml $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
 	ansible-playbook -i hosts $<
 
