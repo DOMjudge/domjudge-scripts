@@ -55,6 +55,8 @@
           - git-gui
           - makepasswd
           - mmv
+          - ansible
+          - xkcdpass
 
     - name: Enable developer mode
       lineinfile:
