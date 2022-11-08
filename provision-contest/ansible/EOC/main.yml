@@ -98,6 +98,7 @@
           when: other_available
 
         - name: Does Dj == other for scoreboard
+          when: other_available
           block:
           - name: Check for differences
             shell: "{{ contestutil_loc }} ScoreboardUtil /tmp/scoreboard.dj.json /tmp/scoreboard.other.json"
