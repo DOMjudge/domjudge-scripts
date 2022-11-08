@@ -5,7 +5,7 @@ global:
 scrape_configs:
   - job_name: 'grafana'
     static_configs:
-      - targets: ['localhost:443']
+      - targets: ['localhost:8443']
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
