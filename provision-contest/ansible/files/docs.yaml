@@ -10,9 +10,6 @@
 - name: Judging Notes
   link: ../docs/2021Dhaka.JudgingNotes.A4.pdf
   icon: fas fa-gavel
-- name: Judging Notes Addendum
-  link: ../docs/2021Dhaka.JudgingNotesAddendum.A4.pdf
-  icon: fas fa-plus
 - name: Tech Notes
   link: ../docs/2021Dhaka.TechNotes.A4.pdf
   icon: fas fa-cog
