@@ -7,4 +7,7 @@ then
 	exit 1
 fi
 
-sudo mysqldump --opt --skip-lock-tables domjudge | pv | gzip > "/home/domjudge/db-dumps/${1}.sql.gz"
+DIR="~/db-dumps/"
+mkdir -p $DIR
+
+sudo mysqldump --opt --skip-lock-tables domjudge | pv | gzip -9 > "$DIR/${1}_`date +%FT%T`.sql.gz"
