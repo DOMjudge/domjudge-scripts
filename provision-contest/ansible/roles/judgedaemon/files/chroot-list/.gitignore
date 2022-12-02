@@ -1,0 +1,4 @@
+*.list
+*.list.gpg
+*.list.asc
+*.list.arm
