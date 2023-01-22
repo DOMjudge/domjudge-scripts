@@ -36,7 +36,7 @@ needs.</p>
     <a href="http://socalcontest.org/">SOCAL</a> (since 2013),
     <a href="http://org.coloradomesa.edu/~wmacevoy/rmrc/2014/">RMRC</a> (since 2014),
     <a href="http://www.sppregional.org/">South Pacific Regional</a></li>
-<li>ICPC <a href="https://worldfinals.icpc.global/">World Finals</a> (since 2012, in 2018 and 2019 as main system)</li>
+<li>ICPC <a href="https://worldfinals.icpc.global/">World Finals</a> (since 2012, and since 2018 as main system)</li>
 </ul>
 
 <p>DOMjudge has also been adapted for use in numerous online contests, as
@@ -54,7 +54,7 @@ If you are using (an adapted version of) DOMjudge, we would be glad to hear abou
 <p>The following is required to run DOMjudge:</p>
 <ul>
 <li>At least one machine running Linux, with root access</li>
-<li>Apache (or Nginx) web server with PHP &gt;= 7.1.3 and
+<li>Apache (or Nginx) web server with PHP &gt;= 7.4.0 and
     PHP command line interface</li>
 <li>MySQL or MariaDB database server version 5.5.3 or newer</li>
 <li>Compilers for the languages you want to support</li>

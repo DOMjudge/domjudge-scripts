@@ -23,7 +23,7 @@
     and testing commands while working on an ICPC-style problem. Ideally one should
     never have to manually run any compilation or testing command themselves.<br>
     The <a href="https://github.com/Kattis/problemtools">Kattis Problem Tool</a> is
-    another collection of tools to createproblem packages. DOMjudge is able to
+    another collection of tools to create problem packages. DOMjudge is able to
     import this format.
 </p>
 
@@ -45,8 +45,9 @@
 <h3>ICPC Tools</h3>
 
 <p> <a href="https://tools.icpc.global/">ICPC Tools</a> is a set of (free to use)
-    tools that can work with a CLICS compatible API, like DOMjudge provides. It has a
-    scoreboard display and resolver, balloons utility and various other presentation tools.</p>
+    tools that can work with a <a href="https://ccs-specs.icpc.io/draft/contest_api">
+    CLICS compatible API</a>, like DOMjudge provides. It has a scoreboard display and
+    resolver, balloons utility and various other presentation tools.</p>
 
 <h3>DOMjura</h3>
 

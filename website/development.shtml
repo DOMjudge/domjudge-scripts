@@ -1,12 +1,12 @@
 <!--#set var="dj_page_title" value="Development" --><!--#include virtual="/header.shtml" -->
 
 <p>DOMjudge is open source, free software and has an active development
-community with contributors from around the world. Question, suggestion
+community with contributors from around the world. Question, suggestion,
 bug or patch? All those are most welcome via the channels below.</p>
 
 <h2>Source code</h2>
 
-<p>The DOMjudge sources are maintained 
+<p>The DOMjudge sources are maintained
 <a href="https://github.com/DOMjudge/">on GitHub</a>.
 You can get the <a href="https://github.com/DOMjudge/domjudge">main repository</a>
 with the following command:
