@@ -14,6 +14,14 @@
     - webfonts
     - flags
 
+- name: Grant www-data permisions to domjudge homedir
+  acl:
+    path: /home/domjudge
+    entity: www-data
+    etype: user
+    permissions: rwx
+    state: present
+
 - name: Download required assets
   get_url:
     url: "{{ DOMSERVER_URL }}/{{ item }}"
