@@ -1,2 +1,2 @@
-grafana_port: 8443
+grafana_port: 9443
 loki: false
