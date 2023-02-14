@@ -45,6 +45,11 @@ lockdown:
 lockdown-force:
 	ansible-playbook -i hosts emergency.yml --tags full_lockdown,force_lockdown
 
+ansible-master:
+	for book in $(ROLES) ; do \
+		ansible-playbook -i hosts $$book.yml --tags install_master ; \
+	done
+
 admin: $(SSL_LOCALHOST_FILES)
 grafana: $(SSL_GRAFANA_FILES)
 domserver: $(SSL_DOMSERVER_FILES)
