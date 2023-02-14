@@ -1,6 +1,13 @@
 ---
 # These tasks configure a MySQL server for master/master replication
 
+- name: Install master dependency for ipaddr jinja filter
+  delegate_to: localhost
+  apt:
+    state: present
+    pkg:
+      - python3-netaddr
+
 - name: Install replication helper packages
   apt:
     state: present
