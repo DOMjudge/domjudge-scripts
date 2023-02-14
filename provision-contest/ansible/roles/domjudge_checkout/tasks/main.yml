@@ -25,25 +25,28 @@
     force: "{{ DJ_FORCE_UPDATE }}"
   register: git_working_copy
 
-- name: Check composer dependencies present
-  become: false
-  delegate_to: localhost
-  stat:
-    path: roles/domjudge_checkout/files/lib/vendor
-  register: libvendor
-  check_mode: no
+- name: Install composer dependencies
+  when: WF_RESTRICTED_NETWORK
+  block:
+    - name: Check composer dependencies present
+      become: false
+      delegate_to: localhost
+      stat:
+        path: roles/domjudge_checkout/files/lib/vendor
+      register: libvendor
+      check_mode: no
 
-- name: Copy in composer dependencies (if they exist locally)
-  synchronize:
-    src: files/lib/vendor/
-    dest: "{{ DJ_DIR }}/lib/vendor/"
-    owner: false
-    use_ssh_args: true
-  when: libvendor.stat.exists
+    - name: Copy in composer dependencies (if they exist locally)
+      synchronize:
+        src: files/lib/vendor/
+        dest: "{{ DJ_DIR }}/lib/vendor/"
+        owner: false
+        use_ssh_args: true
+      when: libvendor.stat.exists
 
-- name: Fix ownership of lib/vendor
-  file:
-    path: "{{ DJ_DIR }}/lib/vendor"
-    recurse: true
-    owner: domjudge
-    group: domjudge
+    - name: Fix ownership of lib/vendor
+      file:
+        path: "{{ DJ_DIR }}/lib/vendor"
+        recurse: true
+        owner: domjudge
+        group: domjudge
