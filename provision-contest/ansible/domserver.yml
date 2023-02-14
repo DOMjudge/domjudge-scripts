@@ -1,6 +1,17 @@
 ---
 # This playbook installs the DOMjudge server(s)
 
+- name: Install master dependency for ipaddr jinja filter
+  hosts: localhost
+  tasks:
+    - name: Install for debian family
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+      tags: install_master,never
+      apt:
+        state: present
+        pkg:
+          - python3-netaddr
+
 - name: Setup domserver
   hosts: domserver
   vars:
