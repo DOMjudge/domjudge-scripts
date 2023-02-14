@@ -90,8 +90,8 @@ if [ $(id -un) != 'root' ]; then
     exit 1
 fi
 
-if ip addr | grep '{{DOMSERVER_IP}}' >/dev/null 2>&1 ; then
-    echo "Error: this host '$(hostname)' has the primary IP '{{DOMSERVER_IP}}'."
+if ip addr | grep '{{ DOMSERVER_IP }}' >/dev/null 2>&1 ; then
+    echo "Error: this host '$(hostname)' has the primary IP '{{ DOMSERVER_IP }}'."
     usage
     exit 1
 fi
@@ -181,9 +181,9 @@ service mysql start
 
 echo "Starting replication locally..."
 mysql -e "
-CHANGE MASTER TO MASTER_HOST='{{SERVER_IP_PREFIX}}.${PRIMARY_SERVER_ID}',
+CHANGE MASTER TO MASTER_HOST='{{ SERVER_IP_PREFIX }}.${PRIMARY_SERVER_ID}',
                  MASTER_USER='replication',
-                 MASTER_PASSWORD='{{REPLICATION_PASSWORD}}',
+                 MASTER_PASSWORD='{{ REPLICATION_PASSWORD }}',
                  MASTER_LOG_FILE='${PRIMARY_BINLOG}',
                  MASTER_LOG_POS=${PRIMARY_LOGPOS};
 START SLAVE;"
@@ -217,9 +217,9 @@ OUR_LOGPOS=$(get_field 'Position' "$OUR_STATUS")
 if [ "$SETUP_MASTER_MASTER" -eq 1 ]; then
     echo "Starting replication on $PRIMARY..."
     ssh "$PRIMARY" "mysql -e '
-    CHANGE MASTER TO MASTER_HOST=\"{{SERVER_IP_PREFIX}}.${OUR_SERVER_ID}\",
+    CHANGE MASTER TO MASTER_HOST=\"{{ SERVER_IP_PREFIX }}.${OUR_SERVER_ID}\",
                     MASTER_USER=\"replication\",
-                    MASTER_PASSWORD=\"{{REPLICATION_PASSWORD}}\",
+                    MASTER_PASSWORD=\"{{ REPLICATION_PASSWORD }}\",
                     MASTER_LOG_FILE=\"${OUR_BINLOG}\",
                     MASTER_LOG_POS=${OUR_LOGPOS};
     START SLAVE;'"
