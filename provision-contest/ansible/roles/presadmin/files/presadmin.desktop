@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=presadmin
+Type=Application
+Exec=/usr/local/bin/presadmin

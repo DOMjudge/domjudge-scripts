@@ -51,6 +51,9 @@ domjudge-cds ansible_host=10.2.2.228
 [presclient]
 presclient1 ansible_host=10.2.2.230
 
+[presadmin]
+presadmin ansible_host=10.2.2.231
+
 [scoreboard]
 domjudge-scoreboard ansible_host=10.2.2.229
 

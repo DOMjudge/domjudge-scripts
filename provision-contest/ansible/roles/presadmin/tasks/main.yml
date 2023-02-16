@@ -1,0 +1,56 @@
+---
+# These tasks configure the presentation admin
+
+- name: Get the presentation admin release
+  uri:
+    url: https://api.github.com/repos/icpctools/icpctools/releases?per_page=1
+    method: GET
+    return_content: true
+    status_code: 200
+    body_format: json
+  register: latest_pres_admin_release_array
+  check_mode: no
+
+- name: Set pres admin latest version
+  set_fact:
+    pres_admin_version: "{{ latest_pres_admin_release_array.json[0].name | replace('v', '') }}"
+
+- name: Set pres admin minor version
+  set_fact:
+    pres_admin_version_minor: "{{ pres_admin_version | regex_replace('\\.\\d+$', '') }}"
+
+- name: Create presentation admin directory
+  file:
+    path: /home/domjudge/presadmin
+    state: directory
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+
+- name: Download and unpack presentation admin
+  unarchive:
+    src: https://github.com/icpctools/icpctools/releases/download/v{{ pres_admin_version }}/presentationAdmin-{{ pres_admin_version }}.zip
+    dest: /home/domjudge/presadmin
+    remote_src: true
+    owner: domjudge
+    group: domjudge
+
+- name: Find the presentation admin user
+  set_fact:
+    presentation_admin_account: "{{ CDS_ACCOUNTS | selectattr('username', '==', 'presAdmin') }}"
+
+- name: Add presentation admin script
+  template:
+    src: presadmin.j2
+    dest: /usr/local/bin/presadmin
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+
+- name: Add presentation admin autostart
+  copy:
+    src: presadmin.desktop
+    dest: /home/domjudge/.config/autostart/presadmin.desktop
+    owner: domjudge
+    group: domjudge
+    mode: 0755
