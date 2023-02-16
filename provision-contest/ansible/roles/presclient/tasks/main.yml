@@ -1,0 +1,56 @@
+---
+# These tasks configure the presentation clients
+
+- name: Get the presentation client release
+  uri:
+    url: https://api.github.com/repos/icpctools/icpctools/releases?per_page=1
+    method: GET
+    return_content: true
+    status_code: 200
+    body_format: json
+  register: latest_pres_client_release_array
+  check_mode: no
+
+- name: Set pres client latest version
+  set_fact:
+    pres_client_version: "{{ latest_pres_client_release_array.json[0].name | replace('v', '') }}"
+
+- name: Set pres client minor version
+  set_fact:
+    pres_client_version_minor: "{{ pres_client_version | regex_replace('\\.\\d+$', '') }}"
+
+- name: Create presentation client directory
+  file:
+    path: /home/domjudge/presclient
+    state: directory
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+
+- name: Download and unpack presentation client
+  unarchive:
+    src: https://github.com/icpctools/icpctools/releases/download/v{{ pres_client_version }}/presentations-{{ pres_client_version }}.zip
+    dest: /home/domjudge/presclient
+    remote_src: true
+    owner: domjudge
+    group: domjudge
+
+- name: Find the presentation user
+  set_fact:
+    presentation_account: "{{ CDS_ACCOUNTS | selectattr('username', '==', 'presentation') }}"
+
+- name: Add presentation client script
+  template:
+    src: presclient.j2
+    dest: /usr/local/bin/presclient
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+
+- name: Add presentation client autostart
+  copy:
+    src: presclient.desktop
+    dest: /home/domjudge/.config/autostart/presclient.desktop
+    owner: domjudge
+    group: domjudge
+    mode: 0755
