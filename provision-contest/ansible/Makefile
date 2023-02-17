@@ -34,6 +34,10 @@ ROLES=domserver judgehost admin grafana cds presclient presadmin scoreboard mgmt
 $(ROLES): %: %.yml hosts group_vars/all/secret.yml $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
 	ansible-playbook -i hosts $<
 
+FAILED_ROLES=$(addprefix failed-,$(ROLES))
+$(FAILED_ROLES): failed-%: %.yml %.retry
+	ansible-playbook -i hosts --limit @$*.retry $<
+
 CODEONLY_ROLES=$(addprefix codeonly-,domserver judgehost admin)
 $(CODEONLY_ROLES): codeonly-%:
 	ansible-playbook -i hosts --tags pretask,domjudge_build $*.yml
@@ -83,4 +87,4 @@ distclean: clean
 	rm -f $(SSL_CDS_FILES)
 	rm -f $(SSL_GRAFANA_FILES)
 
-.PHONY: default clean distclean $(ROLES) $(CODEONLY_ROLES) powerloss lockdown lockdown-force
+.PHONY: default clean distclean $(ROLES) $(FAILED_ROLES) $(CODEONLY_ROLES) powerloss lockdown lockdown-force
