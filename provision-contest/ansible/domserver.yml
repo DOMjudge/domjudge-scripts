@@ -90,6 +90,7 @@
         etype: user
         permissions: rwx
         state: present
+        recursive: true
       loop:
         - teams
         - affiliations
