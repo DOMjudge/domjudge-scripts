@@ -54,7 +54,7 @@ The packages are built and tested on Debian <em>stable</em>, but also on newer v
 
 <p>To install these packages, add our
 <a href="/repokey.asc">repository GPG key</a> directly to APT with</p>
-<pre>curl -o - https://www.domjudge.org/repokey.asc | sudo apt-key add -</pre>
+<pre>curl -o - https://www.domjudge.org/repokey.asc | sudo tee /etc/apt/trusted.gpg.d/domjudge.org.asc</pre>
 <p>or first check our signatures on the key for authenticity.
 Then add the following lines to <code>/etc/apt/sources.list</code>:</p>
 <pre>
