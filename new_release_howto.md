@@ -4,6 +4,8 @@ on the account `domjudge@vm-domjudge`):
 
  1. Test everything. (duh...)
  1. Commit the correct version number in the `ChangeLog` and `README` files.
+ 1. Discuss if the current second to last minor version will now be EOL.
+ 1. Update https://github.com/DOMjudge/domjudge/security/policy to support 2 minor versions, including     the one now being released.
  1. Change the constants `webapp/src/Controller/API/GeneralInfoController.php`
     to point to the correct CCS API version.
  1. `export TAG=x.y.z`
@@ -43,5 +45,5 @@ on the account `domjudge@vm-domjudge`):
     do this).
  1. Put debian packages in `/srv/http/domjudge/debian/mini-dinstall/incoming`
     and run as domjudge@domjudge: `mini-dinstall -b`
- 1. Send an email to `domjudge-announce@domjudge.org`.
+ 1. Send an email to `domjudge-announce@domjudge.org`, announcing the new version and state which versions are supported.
  1. Add the released branch to the dependabot.yml (https://github.com/DOMjudge/domjudge/blob/main/.github/dependabot.yml)
