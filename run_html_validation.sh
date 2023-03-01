@@ -18,14 +18,6 @@ LIVEURLPREFIX="https://${USER:+$USER:$PASS@}www.domjudge.org/domjudge/"
 VNUCHECKER=~/vnu_html_checker/vnu.jar
 
 [ "$DEBUG" ] && set -x
-quiet()
-{
-	if [ "$DEBUG" ]; then
-		"$@"
-	else
-		"$@" > /dev/null 2>&1
-	fi
-}
 
 TEMPDIR=$(mktemp -d /tmp/dj_html_validate-XXXXXX)
 
