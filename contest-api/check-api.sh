@@ -140,17 +140,11 @@ while getopts 'a:Cc:dehj:npt:q' OPT ; do
 		t) FEED_TIMEOUT="$OPTARG" ;;
 		q) QUIET=1 ;;
 		:)
-			error "option '$OPTARG' requires an argument."
-			exit 1
-			;;
+			error "option '$OPTARG' requires an argument." ;;
 		?)
-			error "unknown option '$OPTARG'."
-			exit 1
-			;;
+			error "unknown option '$OPTARG'." ;;
 		*)
-			error "unknown error reading option '$OPT', value '$OPTARG'."
-			exit 1
-			;;
+			error "unknown error reading option '$OPT', value '$OPTARG'." ;;
 	esac
 done
 shift $((OPTIND-1))
@@ -161,7 +155,6 @@ API_URL="$1"
 
 if [ -z "$API_URL" ]; then
 	error "API URL argument expected."
-	exit 1
 fi
 
 TMP=$(mktemp -d)
