@@ -30,6 +30,7 @@ on the account `domjudge@vm-domjudge`):
  1. On the server the tarball will be built, signed and published.
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
     repository under `website/` and run `make install` as domjudge@domjudge
+ 1. Remove unsupported versions from the `versions.json` in the next step.
  1. If this is a new major or minor version, update the release documentation
     under `/srv/http/domjudge/docs/manual` by adding a new version to the
     file `versions.json` and updating the redirect destination in `index.html`.
