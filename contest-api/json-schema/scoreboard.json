@@ -72,5 +72,5 @@
 			}
 		}
 	},
-	"required": ["event_id", "time", "contest_time", "state", "rows"]
+	"required": ["time", "contest_time", "state", "rows"]
 }
