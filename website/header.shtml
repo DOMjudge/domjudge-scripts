@@ -1,7 +1,7 @@
-<!--#set    var="dj_current_branch_version"  value="8.1.3"
---><!--#set var="dj_current_branch_date"     value="19 September 2022"
---><!--#set var="dj_previous_branch_version" value="8.0.1"
---><!--#set var="dj_previous_branch_date"    value="11 July 2022"
+<!--#set    var="dj_current_branch_version"  value="8.2.0"
+--><!--#set var="dj_current_branch_date"     value="6 March 2023"
+--><!--#set var="dj_previous_branch_version" value="8.1.4"
+--><!--#set var="dj_previous_branch_date"    value="5 March 2023"
 --><!--#set var="dj_rc_branch_version"       value="6.0.0RC1"
 --><!--#set var="dj_rc_branch_date"          value="30 July 2018"--><!DOCTYPE html>
 <html lang="en">
