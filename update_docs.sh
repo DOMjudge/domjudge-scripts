@@ -5,6 +5,14 @@ JSON="${WEBSERVER_PATH}/versions.json"
 
 TMPDIR=$(mktemp -d -t 'update_docs-XXXXXX')
 DOC_REPO="$TMPDIR/domjudge"
+
+cleanup()
+{
+    rm -rf "$TMPDIR"
+}
+
+trap cleanup EXIT
+
 git clone https://github.com/DOMjudge/domjudge.git "$DOC_REPO"
 
 for version in $(jq -r -c '.[]' < "${JSON}") ; do
@@ -26,5 +34,3 @@ for version in $(jq -r -c '.[]' < "${JSON}") ; do
 		cp -r doc/manual/build/html/* "${WEBSERVER_PATH}/${version}/"
 	)
 done
-
-rm -rf "$TMPDIR"
