@@ -49,7 +49,7 @@
   </div>
 
   <div>
-    <a href="download" class="btn btn-info">Download <span class="badge bg-light text-bg-light"><!--#echo var="dj_current_branch_version" --></span></a>
+    <a href="download" class="btn btn-info">Download <span class="badge text-bg-light"><!--#echo var="dj_current_branch_version" --></span></a>
   </div>
   </div>
   </nav>
