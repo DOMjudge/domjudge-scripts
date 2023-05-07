@@ -1,7 +1,8 @@
 <!--#set var="dj_page_title" value="Programming Contest Jury System" --><!--#include virtual="/header.shtml" -->
 
-<div class="jumbotron">
-  <div class="container">
+<div class="container mt-3 pe-5">
+  <div class="p-3 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-4">
     <h1 class="display-5">DOMjudge</h1>
 
     <p class="lead">DOMjudge is an automated system to run programming contests, like the
@@ -11,8 +12,10 @@
     system to plug in languages and has a feature-rich interface for the judges.
     The system has been used in many live contests and is free, open source
     software that you can adapt to your needs.</p>
-  <p><a class="btn btn-primary" href="about" role="button">Learn more &raquo;</a></p>
-</div>
+
+    <p><a class="btn btn-primary" href="about" role="button">Learn more &raquo;</a></p>
+    </div>
+  </div>
 </div>
 
 

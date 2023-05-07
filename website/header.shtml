@@ -19,6 +19,7 @@
 
 <header>
   <nav class="navbar navbar-expand-md navbar-light fixed-top">
+  <div class="container-fluid">
   <a class="navbar-brand hidden-sm-down" href="./">DOMjudge</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuDefault" aria-controls="menuDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -48,13 +49,14 @@
   </div>
 
   <div>
-    <a href="download" class="btn btn-info">Download <span class="badge badge-light"><!--#echo var="dj_current_branch_version" --></span></a>
+    <a href="download" class="btn btn-info">Download <span class="badge bg-light text-dark"><!--#echo var="dj_current_branch_version" --></span></a>
+  </div>
   </div>
   </nav>
 </header>
 
 <img src="DOMjudgelogo.svg" alt="DOMjudge logo"
-	width="80" height="169" id="domjudgeLogo" class="float-right d-none d-md-block">
+	width="80" height="169" id="domjudgeLogo" class="float-end d-none d-md-block">
 
 <main class="container">
 

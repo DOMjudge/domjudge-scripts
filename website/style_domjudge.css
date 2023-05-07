@@ -14,3 +14,7 @@ kbd {
   color: inherit;
   background-color: transparent;
 }
+
+a {
+  text-decoration: none;
+}
