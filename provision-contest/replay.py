@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 
+import argparse
 from halo import Halo
 import json
-from pprint import pprint
 from zipfile import ZipFile
 from datetime import datetime
+from datetime import timedelta
 import time
 import sys
 import random
 import requests
-import re
 import logging
 
 logging.basicConfig(
@@ -18,13 +18,22 @@ logging.basicConfig(
         format='%(asctime)s - \x1b[34;1m%(message)s\x1b[0m',
 )
 
-if len(sys.argv) == 1 or len(sys.argv) > 4:
-    print(f'Usage: {sys.argv[0]} <contest-api-url> [<contest> [<submissionid>]')
-    sys.exit(-1)
+parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description='Replay a contest.')
 
-api_url = sys.argv[1]
-if len(sys.argv) >= 3:
-    contest = sys.argv[2]
+parser.add_argument('api_url', help='Contest API URL.')
+parser.add_argument('-c', '--contest', help='''submit for contest with ID CONTEST.
+    Mandatory when more than one contest is active.''')
+parser.add_argument('-s', '--submissionid', help='submission to start at.')
+parser.add_argument('-r', '--no_remap_teams', help='do not remap team ID\'s to team ID\'s of contest from API.', action='store_true')
+parser.add_argument('-i', '--internal_data_source', help='The API uses an internal API source.', action='store_true')
+
+args = parser.parse_args()
+
+api_url = args.api_url
+if args.contest:
+    contest = args.contest
 else:
     contests = requests.get(f'{api_url}/contests').json()
     if len(contests) == 1:
@@ -51,14 +60,28 @@ while not contest_data['start_time']:
     contest_data = requests.get(f'{api_url}/contests/{contest}').json()
 
 contest_start = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z').timestamp()
+contest_start_obj = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z')
 contest_duration = (datetime.strptime(contest_data['duration'], '%H:%M:%S.000') - datetime(1900, 1, 1)).total_seconds()
+
+if not args.no_remap_teams:
+    # Get the teams from the contest
+    team_data = requests.get(f'{api_url}/contests/{contest}/teams').json()
+    team_ids = [team['id'] for team in team_data if not team['hidden']]
+
+    if not team_ids:
+        print('Contest has no teams, can\'t submit')
+        sys.exit(-1)
+
+    logging.info(f'Remapping teams to {len(team_ids)} teams from API')
+else:
+    logging.info('Keeping original teams')
 
 now = time.time()
 orig_contest_duration = 5 * 60 * 60
 
 first_submission_time = 0
-if len(sys.argv) == 4:
-    skip_to_submission = int(sys.argv[3])
+if args.submissionid:
+    skip_to_submission = args.submissionid
     submissions = submissions[skip_to_submission:]
     logging.info(f'Skipped to submission {skip_to_submission}, {len(submissions)} remaining.')
     first_submission_time = (datetime.strptime(submissions[0]['contest_time'][:-4], '%H:%M:%S') - datetime(1900, 1, 1)).total_seconds()
@@ -76,25 +99,15 @@ else:
     simulation_speed = orig_contest_duration/contest_duration
 logging.info(f'Simulation speed: {simulation_speed}')
 
-# problems.json is necessary to map from problem id to label.
-problems = json.load(open('problems.json'))
-summary = ', '.join([p['label'] for p in problems])
-logging.info(f'Loaded {len(problems)} problems ({summary}).')
+if args.internal_data_source:
+    # problems.json is necessary to map from problem id to label.
+    problems = json.load(open('problems.json'))
+    summary = ', '.join([p['label'] for p in problems])
+    logging.info(f'Loaded {len(problems)} problems ({summary}).')
 
-# We will submit under different user accounts, parse all teams out them.
-accounts_tsv = open('accounts.tsv')
-accounts = dict()
-num_teams = 0
-for line in accounts_tsv:
-    credentials = line.rstrip('\n').split('\t')
-    if credentials[0] != 'team':
-        continue
-    num_teams += 1
-    accounts[num_teams] = (credentials[2], credentials[3])
-
-problem_to_label = dict()
-for problem in problems:
-    problem_to_label[problem['id']] = problem['label']
+    problem_to_label = dict()
+    for problem in problems:
+        problem_to_label[problem['id']] = problem['label']
 
 team_problem_team_map = dict()
 
@@ -122,16 +135,18 @@ for submission in submissions:
     # all the time.
     team_id = submission['team_id']
     problem_id = submission['problem_id']
-    # TODO: make this configurable or detect it.
-    # With internal data source: 
-    # problem_label = problem_to_label[problem_id]
-    # With external data source:
-    problem_label = problem_id
-    if team_id not in team_problem_team_map:
-        team_problem_team_map[team_id] = dict()
-    if problem_label not in team_problem_team_map[team_id]:
-        team_problem_team_map[team_id][problem_label] = random.randint(1, num_teams)
-    team_id = team_problem_team_map[team_id][problem_label]
+    if args.internal_data_source:
+        problem_label = problem_to_label[problem_id]
+    else:
+        problem_label = problem_id
+    if not args.no_remap_teams:
+        if team_id not in team_problem_team_map:
+            team_problem_team_map[team_id] = dict()
+        if problem_label not in team_problem_team_map[team_id]:
+            team_problem_team_map[team_id][problem_label] = random.choice(team_ids)
+        team_id = team_problem_team_map[team_id][problem_label]
+    else:
+        team_id = submission['team_id']
 
     files = []
     problem_zip = ZipFile(submission['id'] + ".zip")
@@ -139,20 +154,23 @@ for submission in submissions:
         file_tuple = ('code[]', (name, problem_zip.read(name), 'text/plain'))
         files.insert(len(files), file_tuple)
     first_filename = files[0][1][0]
-    username = accounts[team_id][0]
     # We don't allow python2 anymore, let's rewrite it as python3 and try our
     # best.
     language_id = submission['language_id']
     if language_id == 'python2':
         language_id = 'python3'
-    data = {'problem_id': problem_label, 'language_id': language_id}
+
+    data = {
+        'problem_id': problem_label,
+        'language_id': language_id,
+        'team_id': team_id
+    }
     if 'entry_point' in submission:
         data['entry_point'] = submission['entry_point']
-    logging.info(f'Submitting problem {problem_label} ({first_filename}) on behalf of user {username}.')
+    logging.info(f'Submitting problem {problem_label} ({first_filename}) on behalf of team {team_id}.')
     r = requests.post(
             submissions_api_url,
             data = data,
-            auth = accounts[team_id],
             files = files,
     ) 
     if r.status_code == 200:
