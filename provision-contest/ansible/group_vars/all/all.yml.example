@@ -89,3 +89,7 @@ STATIC_SCOREBOARD_HOSTNAME: scoreboard
 STATIC_SCOREBOARD_SSL_CERT: /etc/ssl/certs/scoreboard.crt
 STATIC_SCOREBOARD_SSL_KEY: /etc/ssl/private/scoreboard.key
 
+# Block access to the CDS for IPs other than these
+#CDS_IP_FILTER:
+#  - 127.0.0.1-127.0.0.1
+#  - 192.168.0.0-192.168.255.255

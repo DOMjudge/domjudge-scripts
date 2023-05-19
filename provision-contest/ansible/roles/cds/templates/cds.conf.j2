@@ -1,4 +1,15 @@
 # nginx configuration for the CDS
+
+{% if CDS_IP_FILTER is defined %}
+geo $network {
+    ranges;
+    default            BLOCK;
+{% for range in CDS_IP_FILTER %}
+    {{ range }}        ALLOW;
+{% endfor %}
+}
+{% endif %}
+
 server {
 	listen {{ CDS_PORT }};
 	listen [::]:{{ CDS_PORT }};
@@ -26,7 +37,13 @@ server {
 		proxy_set_header X-Forwarded-Proto https;
 		proxy_set_header Host $host;
 
-		proxy_pass https://localhost:8443;
+		{% if CDS_IP_FILTER is defined %}
+        if ( $network = ALLOW) {
+            proxy_pass https://localhost:8443;
+        }
+        {% else %}
+            proxy_pass https://localhost:8443;
+        {% endif %}
 
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
