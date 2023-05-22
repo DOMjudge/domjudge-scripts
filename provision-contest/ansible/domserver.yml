@@ -94,6 +94,7 @@
       loop:
         - teams
         - affiliations
+        - banners
 
     - name: Add documentation in DOMjudge team interface
       copy:
