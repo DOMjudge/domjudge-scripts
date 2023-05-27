@@ -6,7 +6,7 @@ baseurl="https://domjudge/api/contests"
 
 mkdir -p "$where"
 
-for endpoint in judgement-types languages problems groups organizations teams state submissions judgements runs clarifications scoreboard; do
+for endpoint in judgement-types languages problems groups organizations teams state submissions judgements runs clarifications scoreboard awards; do
 	http GET "$baseurl/$contest/$endpoint" | python -mjson.tool > "$where/${endpoint}.json"
 done
 endpoint=contest
