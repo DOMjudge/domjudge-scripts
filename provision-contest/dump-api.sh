@@ -12,4 +12,4 @@ done
 endpoint=contest
 http GET "$baseurl/$contest" | python -mjson.tool > "$where/${endpoint}.json"
 endpoint=event-feed
-http GET "$baseurl/$contest/${endpoint}?stream=0" > "$where/${endpoint}.json"
+http GET "$baseurl/$contest/${endpoint}?stream=0" > "$where/${endpoint}.ndjson"
