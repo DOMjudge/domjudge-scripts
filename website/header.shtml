@@ -1,5 +1,5 @@
-<!--#set    var="dj_current_branch_version"  value="8.2.0"
---><!--#set var="dj_current_branch_date"     value="6 March 2023"
+<!--#set    var="dj_current_branch_version"  value="8.2.1"
+--><!--#set var="dj_current_branch_date"     value="2 June 2023"
 --><!--#set var="dj_previous_branch_version" value="8.1.4"
 --><!--#set var="dj_previous_branch_date"    value="5 March 2023"
 --><!--#set var="dj_rc_branch_version"       value="6.0.0RC1"
