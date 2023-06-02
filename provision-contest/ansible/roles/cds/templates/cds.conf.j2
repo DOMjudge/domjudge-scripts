@@ -16,7 +16,7 @@ server {
 
 	server_name {{CDS_HOSTNAME}};
 
-	return 301 https://$host$request_uri;
+	return 301 https://$host$request_uri:{{ CDS_PORT_SECURE }};
 }
 
 server {
