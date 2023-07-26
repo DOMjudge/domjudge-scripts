@@ -42,6 +42,7 @@ on the account `domjudge@vm-domjudge`):
     `Run pipeline`, make sure to click the *play* button next to `release-DOMjudge`
     to actually build and push the Docker images. You can view the progress by
     clicking on the job.
+ 1. Update https://gitlab.com/DOMjudge/domjudge-packaging/-/pipeline\_schedules to the latest version.
  1. Build Debian packages (or make someone do this).
  1. Put debian packages in `/srv/http/domjudge/debian/mini-dinstall/incoming`
     and run as domjudge@domjudge: `mini-dinstall -b`
