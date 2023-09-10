@@ -1,5 +1,9 @@
 #!/bin/sh
 
+create_database_dump () {
+	sudo mysqldump --opt --skip-lock-tables domjudge | pv | gzip > "/home/domjudge/db-dumps/${1}.sql.gz"
+}
+
 if [ -z "$1" ]
 then
 	echo "Usage dump-db [name]"
@@ -7,4 +11,20 @@ then
 	exit 1
 fi
 
-sudo mysqldump --opt --skip-lock-tables domjudge | pv | gzip > "/home/domjudge/db-dumps/${1}.sql.gz"
+if [ -f "/home/domjudge/db-dumps/${1}.sql.gz" ]; then
+	while true; do
+		read -p "Overwrite existing database dump (y/N)? " yn
+			case $yn in
+				[Yy]* ) create_database_dump $1; exit 0;
+				''|[Nn]* ) break;;
+			esac
+	done
+else
+	create_database_dump $1
+fi
+
+read -p "Provide prefix or say 'no' to abort. Format: [prefix]-$1 " prefix
+case $prefix in
+	''|[Nn]o|[Nn] ) exit 2; break;;
+	* ) create_database_dump ${prefix}-${1}; break;;
+esac
