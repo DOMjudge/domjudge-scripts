@@ -1,18 +1,44 @@
 #!/bin/sh
 
-if [ -z "$1" ]
-then
-	echo "Usage load-db [name]"
-	echo ".sql.gz will be appended"
-	exit 1
+DIR="/home/domjudge/db-dumps"
+choice=""
+if [ -z "$1" ]; then
+        set -- $(ls $DIR)
+        echo $@
+        ind=0
+        for i in $@; do
+                echo "${ind}) $i"
+                : $((ind+=1))
+        done
+        while true; do
+                read -p "Which database should be loaded? " db
+                ind=0
+                for i in $@; do
+                        if [ "$ind" = "$db" ]; then
+                                choice="$i"
+                                break
+                        fi
+                        : $((ind+=1))
+                done
+                if [ -n "$choice" ]; then
+                        break
+                fi
+        done
+else
+        if [ "$1"="-h" ]
+        then
+                echo "Usage load-db [name]"
+                echo ".sql.gz will be appended"
+                exit 1
+        fi
+        choice="${1}.tar.gz"
 fi
-
-FILE="/home/domjudge/db-dumps/${1}.sql.gz"
+FILE="$DIR/${choice}"
 
 if [ ! -f "${FILE}" ]
 then
-	echo "Error. File ${FILE} not found"
-	exit 1
+        echo "Error. File ${FILE} not found"
+        exit 1
 fi
 
 pv "${FILE}" | gunzip | sudo mysql domjudge
