@@ -5,7 +5,7 @@ shopt -s extglob
 
 declare -A core_ids
 
-# shellcheck disable SC2012
+# shellcheck disable=SC2012
 for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
 	[[ $(basename $cpu) =~ ^cpu[0-9]+$ ]] || continue
 
