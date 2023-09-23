@@ -7,7 +7,7 @@
     pkg:
       - python3-tk
 
-- name: Install domlogo and showhost
+- name: Install domlogo
   copy:
     src: "{{ item }}.py"
     dest: "{{ DJ_DIR }}"
@@ -16,16 +16,15 @@
     mode: 0755
   loop:
     - domlogo
-    - showhost
 
-- name: Install domlogo and showhost env
+- name: Install domlogo
   synchronize:
     src: lib
     dest: /home/domjudge/.local/
     owner: false
     use_ssh_args: true
 
-- name: Fix ownership of domlogo and showhost env
+- name: Fix ownership of domlogo env
   file:
     path: "/home/domjudge/.local/lib/python3.8"
     recurse: true
@@ -55,4 +54,3 @@
     mode: 0755
   loop:
     - domjudgelogo
-    - showhost
