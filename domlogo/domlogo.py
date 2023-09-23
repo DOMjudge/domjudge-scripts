@@ -6,8 +6,21 @@ import os
 import requests
 import re
 import time
+import platform
+import yaml
 
 font = ('Roboto', 14)
+mono_font = ('Liberation Mono', 32)
+host = platform.node()
+host_bg_color = 'black'
+
+config_file = 'domlogo-files/config.yaml'
+if os.path.isfile(config_file) and os.access(config_file, os.R_OK):
+    with open(config_file, 'r') as f:
+        config = yaml.safe_load(f)
+        if 'host-bg-color' in config:
+            host_bg_color = config['host-bg-color']
+
 team_image = sg.Image(filename='domlogo-files/photos/idle.png')
 metadata_text = sg.Text('No submissions in queue.', font=font)
 results_text = sg.Text('', font=font)
@@ -21,9 +34,10 @@ previous_column = [
     [sg.Image(filename=c[0]), sg.Text(c[1], font=font), sg.Canvas(size=(10,50))] for c in cache
 ]
 layout = [
+    [sg.Push(), sg.Text(f'{host}', font=mono_font, background_color=host_bg_color), sg.Push()],
     [sg.Column(current_column), sg.VerticalSeparator(), sg.Column(previous_column)],
 ]
-window = sg.Window('DOMlogo', layout, location=(600,0), keep_on_top=True, no_titlebar=True)
+window = sg.Window('DOMlogo', layout, location=(600,50), keep_on_top=True, no_titlebar=True)
 
 with open('etc/restapi.secret', 'r') as secrets:
     while True:
