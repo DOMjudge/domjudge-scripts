@@ -22,7 +22,7 @@ for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
 	fi
 
 	# Disable all but one thread on each core.
-	core_id=$(cat $cpu/topology/core_id)
+	core_id=$(cat $cpu/topology/core_id $cpu/topology/physical_package_id)
 	if [[ ${core_ids[$core_id]:-} ]]; then
 		echo 0 > $cpu/online
 	else
