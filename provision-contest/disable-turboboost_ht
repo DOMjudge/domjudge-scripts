@@ -21,8 +21,14 @@ for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
 		chmod a-w $cpu/cpufreq/scaling_governor
 	fi
 
-	# Disable all but one thread on each core.
-	core_id=$(cat $cpu/topology/core_id $cpu/topology/physical_package_id)
+	# Disable all but one thread on each core. Both core_id and physical_package_id are
+	# numbers it must be ensured that for the following examples are seen as distinct:
+	#  - core_id=1,  physical_package=11
+	#  - core_id=11, physycal_package=1
+	# Simple concatenation would result in the string '111' for both cores. Though `cat`
+	# adds a newline after each file, we do not want to rely on `cat` to always add this
+	# 'delimiter'.
+	core_id=$(cat $cpu/topology/core_id | tr -d '\n')'-'$(cat $cpu/topology/physical_package_id | tr -d '\n')
 	if [[ ${core_ids[$core_id]:-} ]]; then
 		echo 0 > $cpu/online
 	else
