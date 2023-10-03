@@ -1,20 +1,17 @@
-# Generating logos from a Contest Package
+# Preparing DOMlogo
 
-```bash
-for team in $(cat ~/wf2021/contests/finals/teams.json | jq -r '.[].id'); do
-    echo $team
-    ORG_ID=$(cat ~/wf2021/contests/finals/teams.json | jq -r ".[] | select(.id == \"$team\") | .organization_id")
-    convert ~/wf2021/contests/finals/organizations/$ORG_ID/logo.png -resize 64x64 -background none -gravity center -extent 64x64 $team.png
-done
+First, create the following files:
+- `images/logos/DOMjudge.png`, a 64x64 DOMjudge logo with transparent background.
+- `images/photos/crew.png`, an image with a width of 1024 (and any height) to show for teams without a photo.
+- `images/photos/idle.png`, an image with a width of 1024 (and any height) to show when the judgedaemon is idle.
+
+Next, add the needed Python dependencies to the `lib` folder, within a folder called `python3.8`. You can copy this
+folder from a local machine and it should contain the `PySimpleGUI` and `requests` Python packages.
+
+Optionally you can create a file `images/config.yaml` with something like:
+
+```yaml
+host-bg-color: '#013370'
 ```
 
-# Generating photos from a Contest package
-
-```bash
-for team in $(cat ~/wf2021/contests/finals/teams.json | jq -r '.[].id'); do
-    echo $team
-    ORG_ID=$(cat ~/wf2021/contests/finals/teams.json | jq -r ".[] | select(.id == \"$team\") | .organization_id")
-    TEAM_NAME=$(cat ~/wf2021/contests/finals/teams.json | jq -r ".[] | select(.id == \"$team\") | .display_name")
-    convert ~/wf2021/contests/finals/teams/$team/photo.jpg -fill white -undercolor '#00000080' -gravity south -font 'Ubuntu' -pointsize 30 -annotate +5+5 " $TEAM_NAME " ~/wf2021/contests/finals/organizations/$ORG_ID/logo.160x160.png -gravity northeast -composite -resize 1024x1024 $team.png
-done
-```
+DOMlogo will use the DOMjudge API to download logos and photos for all teams, so no further configuration should be needed.

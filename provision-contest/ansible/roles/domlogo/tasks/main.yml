@@ -1,11 +1,12 @@
 ---
 # These tasks install domlogo
 
-- name: Install python3 modules for domlogo
+- name: Install python3 modules and imagemagick for domlogo
   apt:
     state: present
     pkg:
       - python3-tk
+      - imagemagick
 
 - name: Install domlogo
   copy:
@@ -15,7 +16,7 @@
     group: domjudge
     mode: 0755
 
-- name: Install domlogo
+- name: Install domlogo Python libraries
   synchronize:
     src: lib
     dest: /home/domjudge/.local/
