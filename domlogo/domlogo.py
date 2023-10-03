@@ -1,4 +1,5 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+import subprocess
 
 import PySimpleGUI as sg
 import glob
@@ -7,7 +8,31 @@ import requests
 import re
 import time
 import platform
+import shlex
 import yaml
+
+
+def download_image(image_type: str, entity_id: str, file: dict):
+    href = file['href']
+    filename = file['filename']
+    photo_head = requests.head(f'{api_url}/{href}', auth=(user, passwd))
+    etag = photo_head.headers['ETag']
+    etag_file = f'domlogo-files/{image_type}s/{entity_id}.etag.txt'
+    temp_file = f'domlogo-files/{image_type}s/temp-{entity_id}-{filename}'
+    existing_etag = None
+    if os.path.isfile(etag_file):
+        with open(etag_file) as f:
+            existing_etag = f.readline().strip()
+
+    if existing_etag != etag:
+        print(f'Downloading and converting {image_type} for entity with ID {entity_id}...')
+        with open(temp_file, 'wb') as f:
+            f.write(requests.get(f'{api_url}/{href}', auth=(user, passwd)).content)
+
+        return True, temp_file, etag_file, etag
+
+    return False, None, None, None
+
 
 font = ('Roboto', 14)
 mono_font = ('Liberation Mono', 32)
@@ -50,6 +75,73 @@ with open('etc/restapi.secret', 'r') as secrets:
         break
 print(f'Using {api_url} as endpoint.')
 
+print('Loading teams and organizations from API')
+teams = {team['id']: team for team in requests.get(f'{api_url}/teams', auth=(user, passwd)).json()}
+for team_id in teams:
+    if 'display_name' not in teams[team_id]:
+        teams[team_id]['display_name'] = teams[team_id]['name']
+organizations = {org['id']: org for org in requests.get(f'{api_url}/organizations', auth=(user, passwd)).json()}
+
+print('Downloading any new or changed logos and photos...')
+for organization in organizations.values():
+    if 'logo' in organization:
+        organization_id = organization['id']
+        logo = organization['logo'][0]
+        downloaded, downloaded_to, etag_file, etag = download_image('logo', organization_id, logo)
+        if downloaded_to:
+            # Convert to both 64x64 (for sidebar) and 160x160 (for overlay over photo)
+            downloaded_to_escaped = shlex.quote(downloaded_to)
+            target = shlex.quote(f'domlogo-files/logos/{organization_id}.png')
+            command = f'convert {downloaded_to_escaped} -resize 64x64 -background none -gravity center -extent 64x64 {target}'
+            os.system(command)
+
+            target = shlex.quote(f'domlogo-files/logos/{organization_id}.160.png')
+            command = f'convert {downloaded_to_escaped} -resize 160x160 -background none -gravity center -extent 160x160 {target}'
+            os.system(command)
+
+            with open(etag_file, 'w') as f:
+                f.write(etag)
+
+            os.unlink(downloaded_to)
+
+for team in teams.values():
+    if 'photo' in team and team['display_name'] != 'DOMjudge':
+        team_id = team['id']
+        photo = team['photo'][0]
+        downloaded, downloaded_to, etag_file, etag = download_image('photo', team_id, photo)
+        if downloaded_to:
+            # First convert to a good known size because adding the annotation and logo assumes this
+            intermediate_target = f'domlogo-files/photos/{team_id}-intermediate.png'
+            command = f'convert {downloaded_to} -resize 1024x1024 -gravity center {intermediate_target}'
+            os.system(command)
+
+            # Now add logo and team name. We use subprocess.run here to escape the team name
+            target = f'domlogo-files/photos/{team_id}.png'
+            organization_id = team['organization_id']
+            logo_file = f'domlogo-files/logos/{organization_id}.png'
+            command = [
+                'convert',
+                intermediate_target,
+                '-fill', 'white',
+                '-undercolor', '#00000080',
+                '-gravity', 'south',
+                '-font', 'Ubuntu',
+                '-pointsize', '30',
+                '-annotate', '+5+5', f' {team["display_name"]} ',
+                logo_file,
+                '-gravity', 'northeast',
+                '-composite',
+                target
+            ]
+
+            subprocess.run(command)
+
+            with open(etag_file, 'w') as f:
+                f.write(etag)
+
+            os.unlink(downloaded_to)
+            os.unlink(intermediate_target)
+
 latest_logfile = max(glob.glob('output/log/judge.*-2.log'), key=os.path.getctime)
 print(f'Checking logfile {latest_logfile}')
 with open(latest_logfile, 'r') as logfile:
@@ -79,7 +171,7 @@ with open(latest_logfile, 'r') as logfile:
                 team_id = submission_data['team_id']
                 last_seen = (submission_id, judging_id, team_id)
                 new_filename = f'domlogo-files/photos/{team_id}.png'
-                if not team_id.isdigit():
+                if not os.path.isfile(new_filename):
                     new_filename = f'domlogo-files/photos/crew.png'
                 team_image.update(filename=new_filename)
                 metadata_text.update(f's{submission_id} / {submission_data["problem_id"]} / {submission_data["language_id"]}')
@@ -108,9 +200,16 @@ with open(latest_logfile, 'r') as logfile:
                 color = 'DeepSkyBlue'
             for i in range(len(cache)-1):
                 cache[i] = cache[i+1]
-            if not tid.isdigit():
-                tid = 'DOMjudge'
-            cache[-1] = (f'domlogo-files/logos/{tid}.png', f's{sid}/j{jid}\n{verdict}', color, jid)
+            organization_id = None
+            if tid in teams:
+                organization_id = teams[tid]['organization_id']
+            organization_logo = 'domlogo-files/logos/DOMjudge.png'
+            # Organization ID is null for internal teams so explicitly check for it
+            if organization_id:
+                potential_organization_logo = f'domlogo-files/logos/{organization_id}.png'
+                if os.path.isfile(potential_organization_logo):
+                    organization_logo = potential_organization_logo
+            cache[-1] = (organization_logo, f's{sid}/j{jid}\n{verdict}', color, jid)
             for i in range(len(cache)):
                 previous_column[i][0].update(filename=cache[i][0])
                 previous_column[i][1].update(cache[i][1])
