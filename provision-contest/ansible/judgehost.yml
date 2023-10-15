@@ -59,24 +59,21 @@
       when: service_file.stat.exists
       tags: pretask
   tasks:
-    - name: Add autostart shortcuts
-      template:
-        src: files/{{ item }}.desktop
-        dest: /home/domjudge/.config/autostart/
-        owner: domjudge
-        group: domjudge
-        mode: 0755
-      loop:
-        - rotate
+    - name: Create graphical autostart entries
       when: GRAPHICAL
-
-    - name: Add autostart shortcuts from template
-      template:
-        src: files/{{ item }}.desktop.j2
-        dest: /home/domjudge/.config/autostart/{{ item }}.desktop
-        owner: domjudge
-        group: domjudge
-        mode: 0755
-      loop:
-        - taillog
-      when: GRAPHICAL
+      block:
+        - name: Add autostart shortcuts
+          template:
+            src: files/rotate.desktop
+            dest: /home/domjudge/.config/autostart/
+            owner: domjudge
+            group: domjudge
+            mode: 0755
+    
+        - name: Add autostart shortcuts from template
+          template:
+            src: files/taillog.desktop.j2
+            dest: /home/domjudge/.config/autostart/taillog.desktop
+            owner: domjudge
+            group: domjudge
+            mode: 0755
