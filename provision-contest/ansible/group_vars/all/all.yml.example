@@ -10,8 +10,8 @@ DJ_FORCE_UPDATE: true
 # Server VLAN IP prefix.
 SERVER_IP_PREFIX: 10.3.3
 
-# IP address of the admin machine used as ansible and git server.
-MAIN_ADMIN_IP: "{{SERVER_IP_PREFIX}}.223"
+# IP address of the git server.
+LOCAL_GIT_IP: "{{SERVER_IP_PREFIX}}.207"
 
 # URL and IP of domserver from judgehosts. A hostname 'domserver' with
 # DOMSERVER_IP will be added to the judgehost /etc/hosts file.
@@ -62,7 +62,7 @@ PHP_POST_MAX_SIZE: 256M
 PHP_MAX_FILE_UPLOADS: 101
 
 # Git repo URL
-DJ_GIT_HOST: "{{MAIN_ADMIN_IP}}"
+DJ_GIT_HOST: "{{LOCAL_GIT_IP}}"
 DJ_GIT_REPO: "https://github.com/domjudge/domjudge.git"
 DJ_GIT_REPO_RESTRICTED: "domjudge@{{DJ_GIT_HOST}}:domjudge"
 DJ_GIT_REPO_SCRIPTS: "https://github.com/domjudge/domjudge-scripts.git"
