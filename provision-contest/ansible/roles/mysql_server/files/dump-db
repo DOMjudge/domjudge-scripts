@@ -15,7 +15,7 @@ if [ -f "/home/domjudge/db-dumps/${1}.sql.gz" ]; then
 	while true; do
 		read -p "Overwrite existing database dump (y/N)? " yn
 			case $yn in
-				[Yy]* ) create_database_dump $1; exit 0;
+				[Yy]* ) create_database_dump $1; exit 0;;
 				''|[Nn]* ) break;;
 			esac
 	done
