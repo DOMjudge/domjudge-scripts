@@ -34,6 +34,7 @@
     - css/bootstrap.min.css
     - css/fontawesome-all.min.css
     - js/jquery.min.js
+    - js/jquery.debounce.min.js
     - js/bootstrap.bundle.min.js
     - js/domjudge.js
     - style_domjudge.css
