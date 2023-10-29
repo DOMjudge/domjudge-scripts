@@ -1,11 +1,8 @@
-github_ssh_user:
-  - meisterT
-  - nickygerritsen
-  - thijskh
-  - tuupke
-  - ubergeek42
-  - vmcj
+#github_ssh_user:
+#  - github_user
+#
+#ssh_public_keys:
+#  - "ssh-ed25519 AAAABCDEFGHIJKLMNOPQRSTUVWXYZBCDEFGHIJKLMNOPQRSTUVWXYZBCDEFGHIJKLMNO user@machine"
 
-ssh_public_keys:
-  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICd/P3Mu0X0hE9yc+k4cU/eT67S4F4E8Lmxk4yYDM8qL jaap@diamond"
-  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINrtJzsraIV4SFFkeu5HtxwRZKBOwn2dL/g1CJhaCwJs jaap@tiger"
+github_ssh_user: []
+ssh_public_keys: []
