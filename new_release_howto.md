@@ -33,8 +33,8 @@ on the account `domjudge@vm-domjudge`):
  1. Remove unsupported versions from the `versions.json` in the next step.
  1. If this is a new major or minor version, update the release documentation
     under `/srv/http/domjudge/docs/manual` by adding a new version to the
-    file `versions.json` and updating the redirect destination in `index.html`.
-    The documentation is regenerated once every hour.
+    file `versions.json` and updating the redirect destination in `index.html`
+    and `team.html`. The documentation is regenerated once every hour.
  1. Bump the Docker images by starting a new pipeline
     [here](https://gitlab.com/DOMjudge/domjudge-packaging/-/pipelines/new) and
     setting `DOMJUDGE_VERSION` to the version to release. Set `DOMJUDGE_LATEST`

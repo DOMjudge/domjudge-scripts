@@ -5,9 +5,8 @@
 <dl>
 <dt><a href="docs/manual/index.html">DOMjudge manual</a></dt>
 <dd>The complete reference for those setting up and running the DOMjudge system as well as the jury.</dd>
-<dt><a href="docs/team-manual.pdf">Team manual</a></dt>
-<dd>Concise manual for participating teams. Only available in Portable
-Document Format (PDF).</dd>
+<dt><a href="docs/manual/team.html">Team manual</a></dt>
+<dd>Concise manual for participating teams. Available also as PDF in the DOMjudge tarball.</dd>
 </dl>
 
 <h2>API documentation</h2>
