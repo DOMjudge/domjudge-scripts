@@ -27,6 +27,14 @@
     import this format.
 </p>
 
+<h3>Polygon2DOMjudge</h3>
+
+<p><a href="https://github.com/cn-xcpc-tools/Polygon2DOMjudge">Polygon2DOMjudge</a>
+    is a tool that converts problem packages exported from the
+    <a href="https://polygon.codeforces.com/">Codeforces Polygon Platform</a>
+    into the <a href="https://icpc.io/problem-package-format/">DOMjudge Problem Package</a> format.
+</p>
+
 <h2>Contest as a service</h2>
 
 <h3>Cloudcontest</h3>
