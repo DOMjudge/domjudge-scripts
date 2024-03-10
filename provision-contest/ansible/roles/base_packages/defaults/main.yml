@@ -20,6 +20,7 @@ INSTALLED_PACKAGES:
   - make
   - zip
   - unzip
+  - composer
   - php-cli
   - php-gd
   - php-curl
