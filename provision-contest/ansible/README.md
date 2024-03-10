@@ -24,7 +24,11 @@ to prevent duplication.
 Global and group variables are stored under `group_vars`. The file
 `group_vars/all/secret.yml.example` should be copied to
 `group_vars/all/secret.yml` and then all variables should be set
-and/or modified as required.
+and/or modified as required. The script `generate_passwords.py` can be used
+to prefill some of those passwords with a xkcd style password. In `secret.yml.example`
+the passwords can be listed as either `{some-password}` or `some-password` the `{}` is *not*
+required but only used as anchor for the script, so adding the `{}` would make it part of the
+password.
 
 There are a few places where additional files should/can be added:
 * SSH public/private keys under `roles/ssh/files/`.
