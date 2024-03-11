@@ -9,13 +9,11 @@
 
 - name: Install domlogo
   copy:
-    src: "{{ item }}.py"
+    src: domlogo.py
     dest: "{{ DJ_DIR }}"
     owner: domjudge
     group: domjudge
     mode: 0755
-  loop:
-    - domlogo
 
 - name: Install domlogo
   synchronize:
@@ -47,10 +45,8 @@
 
 - name: Add autostart shortcuts
   template:
-    src: "{{ item }}.desktop.j2"
-    dest: "/home/domjudge/.config/autostart/{{ item }}.desktop"
+    src: "domjudgelogo.desktop.j2"
+    dest: "/home/domjudge/.config/autostart/domjudgelogo.desktop"
     owner: domjudge
     group: domjudge
     mode: 0755
-  loop:
-    - domjudgelogo
