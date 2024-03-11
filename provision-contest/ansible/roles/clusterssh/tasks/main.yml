@@ -28,9 +28,19 @@
     mode: 0644
   loop:
     - domserver
+    - emergency
     - judgehost
     - admin
     - cds
     - grafana
     - scoreboard
     - mgmt
+
+- name: Create clusterssh config groups
+  become: true
+  become_user: domjudge
+  lineinfile:
+    dest: /home/domjudge/.clusterssh/clusters
+    regexp: '^all-domservers'
+    line: "all-domservers {{ (groups['domserver'] + groups['emergency']) | join(' ') }}"
+    mode: 0644
