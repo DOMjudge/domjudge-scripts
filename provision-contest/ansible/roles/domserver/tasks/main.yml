@@ -34,10 +34,7 @@
 - name: Install required packages
   apt:
     state: present
-    pkg:
-      - nginx
-      - php-fpm
-      - php-intl
+    pkg: "{{ DOMSERVER_PACKAGES }}"
 
 - name: Set PHP timezone for FPM
   lineinfile:
@@ -51,9 +48,7 @@
   command: phpenmod {{ item }}
   args:
     creates: "/etc/php/{{ php_version.stdout }}/fpm/conf.d/20-{{ item }}.ini"
-  loop:
-    - zip
-    - intl
+  loop: "{{ DOMSERVER_PACKAGES | map('regex_search', 'php-') | select() }}"
   notify: Restart PHP FPM
 
 - name: Add domjudge nginx conf
