@@ -1,0 +1,4 @@
+DOMSERVER_PACKAGES:
+  - nginx
+  - php-fpm
+  - php-intl
