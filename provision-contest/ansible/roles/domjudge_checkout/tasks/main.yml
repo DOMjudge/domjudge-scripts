@@ -9,6 +9,14 @@
     group: domjudge
     mode: 0755
 
+- name: Create ansible tmp directory
+  file:
+    path: /home/domjudge/.ansible/tmp
+    state: directory
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+
 - name: Update repo URL based on network
   set_fact:
     dj_git_repo: "{{ DJ_GIT_REPO_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO }}"
