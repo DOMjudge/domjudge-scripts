@@ -13,7 +13,15 @@ This ansible code can deploy four different types of machines:
 * judgehost: machines running one judgedaemon each. We use as many as
   necessary and depending on machines available. These should be
   identical to each other and preferably also to the team machines.
-* grafana: TODO
+* scoreboard: for some contests (different from the world finals) we
+  use a mirror of the scoreboard to not overload the server with
+  requests from viewers.
+* cds: machine which hosts the [CDS](https://tools.icpc.global/cds/), if you use
+  this you should also look at the `presclient` & `presadmin` playbooks to setup
+  machines which can present those presentations.
+* grafana: monitoring machine to observe the performance of both the DOMjudge instance
+  and the webservers, optionally we monitor the participant machines in case of suspected
+  hardware issues (loose PSU, CPU performance etc.)
 
 ## Code organization
 
