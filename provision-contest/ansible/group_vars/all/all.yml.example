@@ -67,6 +67,7 @@ DJ_GIT_REPO: "https://github.com/domjudge/domjudge.git"
 DJ_GIT_REPO_RESTRICTED: "domjudge@{{DJ_GIT_HOST}}:domjudge"
 DJ_GIT_REPO_SCRIPTS: "https://github.com/domjudge/domjudge-scripts.git"
 DJ_GIT_REPO_SCRIPTS_RESTRICTED: "domjudge@{{DJ_GIT_HOST}}:domjudge-scripts-bare"
+CONTEST_REPO: "wf2021"
 
 PHPSTORM_VERSION: 2022.2
 PHPSTORM_FULL_VERSION: 222.4345.15
