@@ -43,7 +43,9 @@ domjudge-ccsadmin4 ansible_host=10.3.3.226
 domjudge-ccsadmin5 ansible_host=10.3.3.227
 
 [grafana]
-domjudge-prometheus ansible_host=10.3.3.223
+# During the WFs we use one of the ccsadmin machines
+# Doesn't matter which (admin) machine but should not be 1 as that runs ansible
+domjudge-ccsadmin2 ansible_host=10.3.3.225
 
 [cds]
 domjudge-cds ansible_host=10.2.2.228
