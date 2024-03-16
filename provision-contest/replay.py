@@ -26,16 +26,18 @@ parser.add_argument('api_url', help='Contest API URL.')
 parser.add_argument('-c', '--contest', help='''submit for contest with ID CONTEST.
     Mandatory when more than one contest is active.''')
 parser.add_argument('-s', '--submissionid', help='submission to start at.')
+parser.add_argument('--insecure', help='do not verify SSL certificate', action='store_true')
 parser.add_argument('-r', '--no_remap_teams', help='do not remap team ID\'s to team ID\'s of contest from API.', action='store_true')
 parser.add_argument('-i', '--internal_data_source', help='The API uses an internal API source.', action='store_true')
 
 args = parser.parse_args()
 
 api_url = args.api_url
+verify = not args.insecure
 if args.contest:
     contest = args.contest
 else:
-    contests = requests.get(f'{api_url}/contests').json()
+    contests = requests.get(f'{api_url}/contests', verify=verify).json()
     if len(contests) == 1:
         contest = contests[0]['id']
     else:
@@ -49,7 +51,7 @@ else:
 submissions = json.load(open('submissions.json'))
 logging.info(f'Loaded {len(submissions)} submissions.')
 
-contest_data = requests.get(f'{api_url}/contests/{contest}').json()
+contest_data = requests.get(f'{api_url}/contests/{contest}', verify=verify).json()
 while not contest_data['start_time']:
     logging.info(f'Start time unknown - contest delayed.')
     time_diff = 30
@@ -57,7 +59,7 @@ while not contest_data['start_time']:
     spinner.start()
     time.sleep(time_diff)
     spinner.stop()
-    contest_data = requests.get(f'{api_url}/contests/{contest}').json()
+    contest_data = requests.get(f'{api_url}/contests/{contest}', verify=verify).json()
 
 contest_start = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z').timestamp()
 contest_start_obj = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z')
@@ -65,7 +67,7 @@ contest_duration = (datetime.strptime(contest_data['duration'], '%H:%M:%S.000') 
 
 if not args.no_remap_teams:
     # Get the teams from the contest
-    team_data = requests.get(f'{api_url}/contests/{contest}/teams').json()
+    team_data = requests.get(f'{api_url}/contests/{contest}/teams', verify=verify).json()
     team_ids = [team['id'] for team in team_data if not team['hidden']]
 
     if not team_ids:
@@ -172,6 +174,7 @@ for submission in submissions:
             submissions_api_url,
             data = data,
             files = files,
+            verify = verify,
     ) 
     if r.status_code == 200:
         sid = r.json()['id']
