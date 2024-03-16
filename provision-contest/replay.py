@@ -6,6 +6,7 @@ import json
 from zipfile import ZipFile
 from datetime import datetime
 from datetime import timedelta
+from itertools import dropwhile
 import time
 import sys
 import random
@@ -84,7 +85,7 @@ orig_contest_duration = 5 * 60 * 60
 first_submission_time = 0
 if args.submissionid:
     skip_to_submission = args.submissionid
-    submissions = submissions[skip_to_submission:]
+    submissions = list(dropwhile(lambda s: s['id'] != skip_to_submission, submissions))
     logging.info(f'Skipped to submission {skip_to_submission}, {len(submissions)} remaining.')
     first_submission_time = (datetime.strptime(submissions[0]['contest_time'][:-4], '%H:%M:%S') - datetime(1900, 1, 1)).total_seconds()
     orig_contest_duration -= first_submission_time
@@ -115,6 +116,8 @@ team_problem_team_map = dict()
 
 submissions_api_url = f'{api_url}/contests/{contest}/submissions'
 for submission in submissions:
+    if not submission['id']:
+        continue
     times = submission['contest_time'].split(':')
     orig_submission_time = int(times[0])*3600 + int(times[1])*60 + float(times[2])
     new_submission_time = orig_submission_time/simulation_speed
