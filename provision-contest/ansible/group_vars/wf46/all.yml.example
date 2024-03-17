@@ -1,0 +1,4 @@
+# URL and IP of domserver from judgehosts. A hostname 'domserver' with
+# DOMSERVER_IP will be added to the judgehost /etc/hosts file.
+DOMSERVER: https://domserver-wf46
+DOMSERVER_IP: "{{SERVER_IP_PREFIX}}.215"

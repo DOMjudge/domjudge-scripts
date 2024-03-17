@@ -2,7 +2,7 @@
 DJ_DIR: /opt/domjudge
 
 # Branch to checkout and use.
-DJ_BRANCH: wfluxor
+DJ_BRANCH: wfonline
 
 # Whether to force-pull changes to the checkout, overwriting any local changes.
 DJ_FORCE_UPDATE: true
@@ -21,15 +21,15 @@ DOMSERVER_SSL_CERT: /etc/ssl/certs/domserver.crt
 DOMSERVER_SSL_KEY: /etc/ssl/private/domserver.key
 
 # Set this to true when you are using the ICPC World Finals Contest Image
-ICPC_IMAGE: true
+ICPC_IMAGE: false
 
 # Set this to true when you are using a graphical desktop
-GRAPHICAL: true
+GRAPHICAL: false
 
 # Set this when on the blue network at the World Finals where no
 # internet access is available and "packages" must be used as APT repo
 # server.
-WF_RESTRICTED_NETWORK: true
+WF_RESTRICTED_NETWORK: false
 WF_GREEN: false
 
 # Static IP address configuration. Uses the ansible_host variable as the static
