@@ -8,4 +8,4 @@ log-bin = /var/log/mysql/mysql-bin.log
 binlog_do_db = domjudge
 
 # Host specific replication configuration
-server_id = {{ ansible_default_ipv4.address | ipaddr('int') }}
+server_id = {{ replication_interface_ip_address | ipaddr('int') }}
