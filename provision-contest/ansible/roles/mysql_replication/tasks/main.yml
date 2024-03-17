@@ -13,6 +13,14 @@
     regexp: '^bind-address\s*='
     replace: '#bind-address ='
 
+- name: Set the replication interface variable
+  set_fact:
+    replication_interface: "{{ REPLICATION_INTERFACE|default(ansible_default_ipv4.interface) }}"
+
+- name: Set the variable for the IP address of the replication interface
+  set_fact:
+    replication_interface_ip_address: "{{ vars['ansible_' + replication_interface]['ipv4']['address'] }}"
+
 - name: Add mysql config snippet for replication
   template:
     src: mysql.replication.cnf.j2

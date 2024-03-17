@@ -181,7 +181,7 @@ service mysql start
 
 echo "Starting replication locally..."
 mysql -e "
-CHANGE MASTER TO MASTER_HOST='{{ SERVER_IP_PREFIX }}.${PRIMARY_SERVER_ID}',
+CHANGE MASTER TO MASTER_HOST='${PRIMARY}',
                  MASTER_USER='replication',
                  MASTER_PASSWORD='{{ REPLICATION_PASSWORD }}',
                  MASTER_LOG_FILE='${PRIMARY_BINLOG}',
@@ -217,7 +217,7 @@ OUR_LOGPOS=$(get_field 'Position' "$OUR_STATUS")
 if [ "$SETUP_MASTER_MASTER" -eq 1 ]; then
     echo "Starting replication on $PRIMARY..."
     ssh "$PRIMARY" "mysql -e '
-    CHANGE MASTER TO MASTER_HOST=\"{{ SERVER_IP_PREFIX }}.${OUR_SERVER_ID}\",
+    CHANGE MASTER TO MASTER_HOST=\"{{ replication_interface_ip_address }}\",
                     MASTER_USER=\"replication\",
                     MASTER_PASSWORD=\"{{ REPLICATION_PASSWORD }}\",
                     MASTER_LOG_FILE=\"${OUR_BINLOG}\",
