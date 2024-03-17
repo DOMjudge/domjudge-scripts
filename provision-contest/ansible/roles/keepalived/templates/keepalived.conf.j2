@@ -1,6 +1,6 @@
 vrrp_instance lb_ipv4 {
 	state MASTER
-	interface {{ ansible_facts['default_ipv4']['interface'] }}
+	interface {{ KEEPALIVED_INTERFACE|default(ansible_facts['default_ipv4']['interface']) }}
 	use_vmac
 	virtual_router_id 32
 	priority {{KEEPALIVED_PRIORITY}}
