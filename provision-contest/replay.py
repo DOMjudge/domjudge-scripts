@@ -30,6 +30,7 @@ parser.add_argument('-s', '--submissionid', help='submission to start at.')
 parser.add_argument('--insecure', help='do not verify SSL certificate', action='store_true')
 parser.add_argument('-r', '--no_remap_teams', help='do not remap team ID\'s to team ID\'s of contest from API.', action='store_true')
 parser.add_argument('-i', '--internal_data_source', help='The API uses an internal API source.', action='store_true')
+parser.add_argument('-f', '--simulation_speed', help='Speed up replay speed by this factor.')
 
 args = parser.parse_args()
 
@@ -100,6 +101,8 @@ else:
     logging.info('Contest will be started at '
             + time.strftime('%X %x %Z', time.localtime(contest_start)) + '.')
     simulation_speed = orig_contest_duration/contest_duration
+if args.simulation_speed:
+    simulation_speed = float(args.simulation_speed)
 logging.info(f'Simulation speed: {simulation_speed}')
 
 if args.internal_data_source:
@@ -119,12 +122,15 @@ for submission in submissions:
     if not submission['id']:
         continue
     times = submission['contest_time'].split(':')
-    orig_submission_time = int(times[0])*3600 + int(times[1])*60 + float(times[2])
+    hours = int(times[0])
+    minutes = int(times[1])
+    seconds = float(times[2])
+    orig_submission_time = hours*3600 + minutes*60 + seconds
     new_submission_time = orig_submission_time/simulation_speed
     time_from_start = time.time() - contest_start
     time_diff = new_submission_time - time_from_start
     if time_diff > 0:
-        logging.info(f'Waiting for simulated contest time of {times[0]}:{times[1]}:{times[2]}.')
+        logging.info(f'Waiting for simulated contest time of {hours}:{minutes:02}:{seconds:06.3f}.')
         spinner = Halo(spinner='dots', text=f'Sleeping for ~{str(round(time_diff,2))}s')
         spinner.start()
         while time_diff > 1:
