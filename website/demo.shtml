@@ -35,6 +35,8 @@ Log in with username and password <em>jury</em> or username and password <em>adm
 There are no judgehosts running, so things like rejudging do not have much effect.
 Team source code and testdata in/output has been replaced with a placeholder, so the source formatting
 and testdata diff functionality is not useful.</dd>
+<dt><a href="demoweb/api/doc/">API documentation</a></dt>
+<dd>Documentation on how to use DOMjudge from scripts. This is used by our submit client and the <code>configure-domjudge</code> &amp; <code>import-contest</code> scripts. Also useful if you want to use only parts of DOMjudge, for example as you use your own custom scoreboard or another submission method. Some of the <a href="tools">tools</a> also work via this API.</dd>
 </dl>
 
 <p>The data in the system is reset to a known good state every night, so feel
