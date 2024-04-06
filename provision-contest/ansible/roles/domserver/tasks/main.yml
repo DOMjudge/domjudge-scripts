@@ -112,3 +112,14 @@
   loop:
     - nginx
     - php{{ php_version.stdout }}-fpm
+
+- name: Send errors to Sentry
+  lineinfile:
+    regexp: '^SENTRY_DSN='
+    state: present
+    line: "SENTRY_DSN={{ SENTRY_DSN | default('') }}"
+    dest: "{{ DJ_DIR }}/webapp/.env.local"
+    create: true
+    mode: 0664
+    group: domjudge
+    owner: domjudge
