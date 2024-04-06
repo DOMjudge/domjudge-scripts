@@ -27,6 +27,9 @@ ICPC_IMAGE: false
 # Set this to true when you are using a graphical desktop
 GRAPHICAL: false
 
+# Set this to true when you use an (ICPC) AWS machine
+AWS: true
+
 # Set this when on the blue network at the World Finals where no
 # internet access is available and "packages" must be used as APT repo
 # server.

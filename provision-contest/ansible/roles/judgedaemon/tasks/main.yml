@@ -54,6 +54,21 @@
     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
     line: "GRUB_CMDLINE_LINUX_DEFAULT=\"{{ procline }}\""
 
+- name: Pre-generate the kernel flags for ansible usage (specific AWS)
+  # AWS machines overwrite the variable from the last step in another file
+  # console: https://tldp.org/HOWTO/Remote-Serial-Console-HOWTO/configure-kernel.html
+  # nvme_core: https://docs.aws.amazon.com/ebs/latest/userguide/nvme-ebs-volumes.html#timeout-nvme-ebs-volumes
+  when: AWS
+  set_fact:
+    procline_aws: "console=tty1 console=ttyS0 nvme_core.io_timeout=4294967295 {{ procline }}"
+
+- name: Add cgroup kernel parameters for AWS machines
+  when: AWS
+  lineinfile:
+    dest: /etc/default/grub.d/50-cloudimg-settings.cfg
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+    line: "GRUB_CMDLINE_LINUX_DEFAULT=\"{{ procline_aws }}\""
+
 - name: Check cgroup kernel parameters
   command: cat /proc/cmdline
   register: kernel_cmdline
