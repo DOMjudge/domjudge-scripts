@@ -83,7 +83,7 @@
         use_ssh_args: true
       notify: Clear application cache
 
-    - name: Grant www-data permisions to image folders
+    - name: Grant www-data permissions to image folders
       acl:
         path: "{{ DJ_DIR }}/webapp/public/images/{{ item }}"
         entity: www-data
