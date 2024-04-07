@@ -29,6 +29,7 @@ parser.add_argument('-c', '--contest', help='''submit for contest with ID CONTES
 parser.add_argument('-s', '--submissionid', help='submission to start at.')
 parser.add_argument('--insecure', help='do not verify SSL certificate', action='store_true')
 parser.add_argument('-r', '--no_remap_teams', help='do not remap team ID\'s to team ID\'s of contest from API.', action='store_true')
+parser.add_argument('-I', '--ignore_teamids', help='Completely randomize teamids during replay, not storing any mapping.', action='store_true')
 parser.add_argument('-i', '--internal_data_source', help='The API uses an internal API source.', action='store_true')
 parser.add_argument('-f', '--simulation_speed', help='Speed up replay speed by this factor.')
 
@@ -53,7 +54,23 @@ else:
 submissions = json.load(open('submissions.json'))
 logging.info(f'Loaded {len(submissions)} submissions.')
 
+problem_data = requests.get(f'{api_url}/contests/{contest}/problems', verify=verify).json()
+known_problem_ids = set([p['id'] for p in problem_data])
+used_problem_ids = set([s['problem_id'] for s in submissions])
+unknown_problem_ids = used_problem_ids.difference(known_problem_ids)
+if unknown_problem_ids:
+    if len(unknown_problem_ids) == len(used_problem_ids):
+        logging.critical('None of the used problem IDs is known.')
+        sys.exit(-1)
+    logging.error(f'Some problem IDs are used but not known: {unknown_problem_ids}')
+
 contest_data = requests.get(f'{api_url}/contests/{contest}', verify=verify).json()
+if 'code' in contest_data and 'message' in contest_data and contest_data['code'] != 200:
+    code = contest_data['code']
+    msg = contest_data['message']
+    logging.critical(f'Failed to retrieve contest, HTTP status code: {code}, message: {msg}')
+    sys.exit(-1)
+
 while not contest_data['start_time']:
     logging.info(f'Start time unknown - contest delayed.')
     time_diff = 30
@@ -67,18 +84,22 @@ contest_start = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S
 contest_start_obj = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z')
 contest_duration = (datetime.strptime(contest_data['duration'], '%H:%M:%S.000') - datetime(1900, 1, 1)).total_seconds()
 
-if not args.no_remap_teams:
+if args.no_remap_teams:
+    if args.ignore_teamids:
+        logging.critical('Cannot specify --no_remap_teams and --ignore_teamids at the same time.')
+        sys.exit(-1)
+
+    logging.info('Keeping original team IDs.')
+else:
     # Get the teams from the contest
     team_data = requests.get(f'{api_url}/contests/{contest}/teams', verify=verify).json()
     team_ids = [team['id'] for team in team_data if not team['hidden']]
 
     if not team_ids:
-        print('Contest has no teams, can\'t submit')
+        logging.critical('Contest has no teams, can\'t submit.')
         sys.exit(-1)
 
-    logging.info(f'Remapping teams to {len(team_ids)} teams from API')
-else:
-    logging.info('Keeping original teams')
+    logging.info(f'Remapping teams to {len(team_ids)} teams from API.')
 
 now = time.time()
 orig_contest_duration = 5 * 60 * 60
@@ -151,11 +172,14 @@ for submission in submissions:
     else:
         problem_label = problem_id
     if not args.no_remap_teams:
-        if team_id not in team_problem_team_map:
-            team_problem_team_map[team_id] = dict()
-        if problem_label not in team_problem_team_map[team_id]:
-            team_problem_team_map[team_id][problem_label] = random.choice(team_ids)
-        team_id = team_problem_team_map[team_id][problem_label]
+        if args.ignore_teamids:
+            team_id = random.choice(team_ids)
+        else:
+            if team_id not in team_problem_team_map:
+                team_problem_team_map[team_id] = dict()
+            if problem_label not in team_problem_team_map[team_id]:
+                team_problem_team_map[team_id][problem_label] = random.choice(team_ids)
+            team_id = team_problem_team_map[team_id][problem_label]
     else:
         team_id = submission['team_id']
 
