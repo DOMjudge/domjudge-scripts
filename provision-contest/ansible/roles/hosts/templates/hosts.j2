@@ -8,7 +8,9 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
+{% if DOMSERVER_IP is defined %}
 {{ DOMSERVER_IP }}             domjudge domserver
+{% endif %}
 {% for item in groups['all'] %}
 {% if hostvars[item].ansible_host is defined %}
 {{ hostvars[item].ansible_host }}              {{ item }}
