@@ -142,3 +142,11 @@
         recurse: true
         owner: domjudge
         group: domjudge
+
+    - name: Grant www-data permissions to user homedir (needed for web browser)
+      acl:
+        path: "/home/domjudge"
+        entity: www-data
+        etype: user
+        permissions: rwx
+        state: present
