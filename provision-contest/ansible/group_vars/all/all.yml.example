@@ -55,7 +55,7 @@ HOSTS:
     domjudge-laptop: 10.3.3.200
     pc2:             10.3.3.241
 
-TIMEZONE: "Asia/Dhaka"
+TIMEZONE: "Europe/Amsterdam"
 
 PHP_FPM_MAX_CHILDREN: 400
 PHP_FPM_MAX_REQUESTS: 500
