@@ -1,0 +1,5 @@
+{% for group in groups %}
+{% if groups[group] %}
+{{ group | replace('emergency', 'emergencie') }}{% if group != 'all' %}s{% endif %} {{ groups[group] | join(' ') }}
+{% endif %}
+{% endfor %}

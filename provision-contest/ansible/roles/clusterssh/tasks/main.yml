@@ -7,40 +7,10 @@
     pkg:
       - clusterssh
 
-- name: Create clusterssh 'all' config group
+- name: Create clusterssh clusters file
   become: true
   become_user: domjudge
-  lineinfile:
+  template:
+    src: clusters.j2
     dest: /home/domjudge/.clusterssh/clusters
-    regexp: '^all'
-    line: "all {{ groups['all'] | join(' ') }}"
-    create: true
-    mode: 0644
-
-- name: Create clusterssh config groups
-  become: true
-  become_user: domjudge
-  lineinfile:
-    dest: /home/domjudge/.clusterssh/clusters
-    regexp: '^{{ item }}s'
-    line: "{{ item }}s {{ groups[item] | join(' ') }}"
-    create: true
-    mode: 0644
-  loop:
-    - domserver
-    - emergency
-    - judgehost
-    - admin
-    - cds
-    - grafana
-    - scoreboard
-    - mgmt
-
-- name: Create clusterssh config groups
-  become: true
-  become_user: domjudge
-  lineinfile:
-    dest: /home/domjudge/.clusterssh/clusters
-    regexp: '^all-domservers'
-    line: "all-domservers {{ (groups['domserver'] + groups['emergency']) | join(' ') }}"
     mode: 0644
