@@ -2,3 +2,5 @@ DOMSERVER_PACKAGES:
   - nginx
   - php-fpm
   - php-intl
+  - texlive-latex-recommended
+  - texlive-latex-extra
