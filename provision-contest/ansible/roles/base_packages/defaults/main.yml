@@ -36,8 +36,6 @@ INSTALLED_PACKAGES:
   - libjsoncpp-dev
   - libmagic-dev
   - debootstrap
-  - texlive-latex-recommended
-  - texlive-latex-extra
   - apache2-utils
   - tig
   - bat
