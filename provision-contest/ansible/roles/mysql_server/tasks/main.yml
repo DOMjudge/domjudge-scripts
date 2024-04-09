@@ -62,13 +62,18 @@
     - db-dumps
     - bin
 
-- name: Copy database dump/load scripts
+- name: Copy database load script
   copy:
-    src: "{{ item }}"
-    dest: /home/domjudge/bin/{{ item }}
+    src: load-db
+    dest: /home/domjudge/bin/load-db
     owner: domjudge
     group: domjudge
     mode: 0755
-  loop:
-    - load-db
-    - dump-db
+
+- name: Copy modified database dump script
+  template:
+    src: dump-db.j2
+    dest: /home/domjudge/bin/dump-db
+    owner: domjudge
+    group: domjudge
+    mode: 0755

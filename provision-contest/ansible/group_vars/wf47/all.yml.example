@@ -2,3 +2,5 @@
 # DOMSERVER_IP will be added to the judgehost /etc/hosts file.
 DOMSERVER: https://domjudge-wf47
 DOMSERVER_IP: "{{SERVER_IP_PREFIX}}.218"
+
+DB_DUMP_PREFIX: 47

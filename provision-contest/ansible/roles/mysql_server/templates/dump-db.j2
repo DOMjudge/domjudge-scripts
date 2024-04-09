@@ -1,7 +1,7 @@
 #!/bin/sh
 
 create_database_dump () {
-	sudo mysqldump --opt --skip-lock-tables domjudge | pv | gzip > "/home/domjudge/db-dumps/${1}.sql.gz"
+	sudo mysqldump --opt --skip-lock-tables domjudge | pv | gzip > "/home/domjudge/db-dumps/{{ DB_DUMP_PREFIX }}-${1}.sql.gz"
 }
 
 if [ -z "$1" ]
@@ -11,12 +11,12 @@ then
 	exit 1
 fi
 
-if [ -f "/home/domjudge/db-dumps/${1}.sql.gz" ]; then
+if [ -f "/home/domjudge/db-dumps/{{ DB_DUMP_PREFIX }}-${1}.sql.gz" ]; then
 	while true; do
 		read -p "Overwrite existing database dump (y/N)? " yn
 			case $yn in
-				[Yy]* ) break ;;
-				''|[Nn]* ) exit 0;;
+				[Yy]* ) break;;
+				''|[Nn]* ) exit 2;;
 			esac
 	done
 fi

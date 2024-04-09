@@ -8,3 +8,5 @@ PHP_FPM_MAX_CHILDREN: 5
 
 DOMSERVER_SSL_CERT: /etc/ssl/certs/localhost.crt
 DOMSERVER_SSL_KEY: /etc/ssl/private/localhost.key
+
+DB_DUMP_PREFIX: admin
