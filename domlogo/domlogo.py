@@ -10,6 +10,29 @@ import time
 import platform
 import shlex
 import yaml
+from PIL import Image, ImageDraw, ImageFont
+
+
+def generate_placeholder(text: str, path: str, background_color, width: int, height: int):
+    image = Image.new("RGB", (width, height), background_color)
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 72)
+    text_bbox = draw.textbbox((0, 0), text, font=font)
+    text_width = text_bbox[2] - text_bbox[0]
+    text_height = text_bbox[3] - text_bbox[1]
+    text_x = (width - text_width) / 2
+    text_y = (height - text_height) / 2
+    draw.text((text_x, text_y), text, fill=(255,255,255), font=font)
+
+    # Add some hint how to replace the image.
+    small_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 16)
+    placeholder_text = f'(Replace this placeholder image at {path})'
+    text_bbox = draw.textbbox((0, 0), placeholder_text, font=small_font)
+    text_width = text_bbox[2] - text_bbox[0]
+    text_x = (width - text_width) / 2
+    text_y = text_y + 1.4*text_height
+    draw.text((text_x, text_y), placeholder_text, fill=(195,196,199), font=small_font)
+    image.save(path)
 
 
 def download_image(image_type: str, entity_id: str, file: dict):
@@ -26,6 +49,7 @@ def download_image(image_type: str, entity_id: str, file: dict):
 
     if existing_etag != etag:
         print(f'Downloading and converting {image_type} for entity with ID {entity_id}...')
+        os.makedirs(os.path.dirname(temp_file), exist_ok=True)
         with open(temp_file, 'wb') as f:
             f.write(requests.get(f'{api_url}/{href}', auth=(user, passwd)).content)
 
@@ -38,6 +62,11 @@ font = ('Roboto', 14)
 mono_font = ('Liberation Mono', 32)
 host = platform.node()
 host_bg_color = 'black'
+
+idle_image = 'domlogo-files/photos/idle.png'
+if not os.path.isfile(idle_image):
+    os.makedirs(os.path.dirname(idle_image), exist_ok=True)
+    generate_placeholder('judgehost idle', idle_image, (10,75,120), 1024, 768)
 
 config_file = 'domlogo-files/config.yaml'
 if os.path.isfile(config_file) and os.access(config_file, os.R_OK):
@@ -172,7 +201,7 @@ with open(latest_logfile, 'r') as logfile:
                 last_seen = (submission_id, judging_id, team_id)
                 new_filename = f'domlogo-files/photos/{team_id}.png'
                 if not os.path.isfile(new_filename):
-                    new_filename = f'domlogo-files/photos/crew.png'
+                    generate_placeholder(f'team {team_id}', new_filename, (137,28,28), 1024, 768)
                 team_image.update(filename=new_filename)
                 metadata_text.update(f's{submission_id} / {submission_data["problem_id"]} / {submission_data["language_id"]}')
                 results_text.update('Busy compiling.')
