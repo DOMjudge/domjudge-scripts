@@ -71,12 +71,15 @@
     dest: /etc/nginx/sites-enabled/nginx-status.conf
   notify: Restart nginx
 
+# In the future add: --web.config /etc/prometheus/prometheus-authentication.yml"'
+# see: https://github.com/nginxinc/nginx-prometheus-exporter
+# The version at the WFLuxor in the repository is not new enough
 - name: Prometheus nginx exporter
   lineinfile:
     dest: /etc/default/prometheus-nginx-exporter
     state: present
     regexp: '^ARGS=""'
-    line: 'ARGS="--nginx.scrape-uri=http://localhost:8787/basic_status --web.config /etc/prometheus/prometheus-authentication.yml"'
+    line: 'ARGS="-nginx.scrape-uri=http://localhost:8787/basic_status"'
   notify: Restart nginx-exporter
 
 - name: Create storage dir for exporter settings
