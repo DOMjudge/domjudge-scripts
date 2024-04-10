@@ -15,6 +15,8 @@ LIBVENDORTGZ=roles/domjudge_checkout/files/lib-vendor.tgz
 SSHKEY=roles/ssh/files/id_ed25519
 SSL_DOMSERVER=roles/ssl/files/domserver
 SSL_DOMSERVER_FILES=$(addprefix $(SSL_DOMSERVER),.key .crt)
+SSL_NODEEXPORT=roles/prometheus_target_all/files/node_exporter
+SSL_NODEEXPORT_FILES=$(addprefix $(SSL_NODEEXPORT),.key .crt)
 SSL_LOCALHOST=roles/ssl/files/localhost
 SSL_LOCALHOST_FILES=$(addprefix $(SSL_LOCALHOST),.key .crt)
 SSL_CDS=roles/ssl/files/cds
@@ -57,9 +59,12 @@ ansible-master:
 	done
 
 admin: $(SSL_LOCALHOST_FILES)
-grafana: $(SSL_GRAFANA_FILES)
-domserver: $(SSL_DOMSERVER_FILES)
-cds: $(SSL_CDS_FILES)
+grafana: $(SSL_GRAFANA_FILES) $(SSL_NODEEXPORT)
+domserver: $(SSL_DOMSERVER_FILES) $(SSL_NODEEXPORT)
+judgehost: $(SSL_NODEEXPORT)
+cds: $(SSL_CDS_FILES) $(SSL_NODEEXPORT)
+scoreboard: $(SSL_NODEEXPORT)
+mgmt: $(SSL_NODEEXPORT)
 
 $(SSHKEY) $(SSHKEY).pub:
 	ssh-keygen -t ed25519 -f $(SSHKEY) -P ''
@@ -68,6 +73,9 @@ $(SSL_DOMSERVER_FILES):
 	openssl req -x509 -nodes -newkey rsa:4096 -subj "/O=DOMjudge/CN=domjudge" \
         -addext "subjectAltName = DNS:wf46-domjudge,DNS:wf47-domjudge,DNS:analyst" \
 		-sha256 -days 365 -keyout $(SSL_DOMSERVER).key -out $(SSL_DOMSERVER).crt
+$(SSL_NODEEXPORT_FILES):
+	openssl req -x509 -nodes -newkey rsa:4096 -subj "/O=DOMjudge/CN=metricexporter" \
+		-sha256 -days 365 -keyout $(SSL_NODEEXPORT).key -out $(SSL_NODEEXPORT).crt
 $(SSL_LOCALHOST_FILES):
 	openssl req -x509 -nodes -newkey rsa:4096 -subj "/O=DOMjudge/CN=localhost" \
 		-sha256 -days 365 -keyout $(SSL_LOCALHOST).key -out $(SSL_LOCALHOST).crt
@@ -84,6 +92,7 @@ clean:
 distclean: clean
 	rm -f $(SSHKEY) $(SSHKEY).pub
 	rm -f $(SSL_DOMSERVER_FILES)
+	rm -f $(SSL_NODEEXPORT)
 	rm -f $(SSL_LOCALHOST_FILES)
 	rm -f $(SSL_CDS_FILES)
 	rm -f $(SSL_GRAFANA_FILES)
