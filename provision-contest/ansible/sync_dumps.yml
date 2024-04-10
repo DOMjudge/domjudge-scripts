@@ -1,0 +1,31 @@
+---
+- hosts: domserver
+  tasks:
+    - name: Create directory to collect backups
+      file:
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+        path: "/srv/db-dumps"
+
+    - name: Download dumps to ansible machine
+      synchronize:
+        mode: pull
+        src: "/home/domjudge/db-dumps/"
+        dest: "/srv/db-dumps/"
+
+- hosts: admin
+  tasks:
+    - name: Create directory to collect backups
+      file:
+        state: directory
+        owner: domjudge
+        group: domjudge
+        mode: 0755
+        path: "/home/domjudge/db-dumps-backup"
+
+    - name: Download dumps to admin machines
+      synchronize:
+        dest: "/home/domjudge/db-dumps-backup/"
+        src: "/srv/db-dumps/"
