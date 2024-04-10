@@ -7,9 +7,18 @@ then
 	exit 1
 fi
 
-FILE="/home/domjudge/db-dumps/${1}.sql.gz"
+FILEHOME="/home/domjudge/db-dumps/${1}.sql.gz"
+FILEBACKUP="/home/domjudge/db-dumps-backup/${1}.sql.gz"
 
-if [ ! -f "${FILE}" ]
+if [ -f "${FILEHOME}" ]
+then
+	FILE="${FILEHOME}"
+elif [ -f "${FILEBACKUP}" ]
+then
+	FILE="${FILEBACKUP}"
+fi
+
+if [ -z "${FILE++}" ] || [ ! -f "${FILE}" ]
 then
 	echo "Error. File ${FILE} not found"
 	exit 1
