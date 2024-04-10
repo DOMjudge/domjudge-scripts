@@ -8,6 +8,14 @@
       - clusterssh
 
 - name: Create clusterssh clusters file
+  file:
+    state: directory
+    owner: domjudge
+    group: domjudge
+    path: /home/domjudge/.clusterssh
+    mode: 0755
+
+- name: Create clusterssh clusters file
   become: true
   become_user: domjudge
   template:
