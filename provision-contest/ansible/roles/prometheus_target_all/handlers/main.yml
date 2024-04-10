@@ -5,3 +5,9 @@
     enabled: true
     state: restarted
     daemon_reload: true
+
+- name: Restart node-exporter
+  service:
+    name: prometheus-node-exporter
+    enabled: true
+    state: restarted

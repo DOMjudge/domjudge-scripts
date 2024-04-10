@@ -6,3 +6,43 @@
     state: present
     pkg:
       - prometheus-node-exporter
+
+- name: Collect prometheus settings
+  file:
+    path: /etc/prometheus
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: Install SSL server certificates
+  copy:
+    src: "node_exporter.{{ item }}"
+    dest: "/etc/prometheus/node_exporter.{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - crt
+    - key
+
+- name: Get HTPassword
+  delegate_to: localhost
+  shell: "echo {{ PROMETHEUS_PASS }} | htpasswd -inBC 10 \"\" | tr -d ':\n'"
+  register: htpassd_shell
+
+- name: Set certificate to encrypt node_exporter traffic
+  template:
+    owner: prometheus
+    group: prometheus
+    mode: 0644
+    src: web.yml.j2
+    dest: /etc/prometheus/prometheus-authentication.yml
+
+- name: Scrape with TLS encryption
+  lineinfile:
+    dest: /etc/default/prometheus-node-exporter
+    state: present
+    regexp: '^ARGS=""'
+    line: 'ARGS="--web.config /etc/prometheus/prometheus-authentication.yml"'
+  notify: Restart node-exporter

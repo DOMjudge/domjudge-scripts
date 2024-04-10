@@ -16,6 +16,14 @@
       - prometheus-mysqld-exporter
   notify: Restart mysqld-exporter
 
+- name: Scrape mysql exporter with TLS encryption
+  lineinfile:
+     dest: /etc/default/prometheus-mysqld-exporter
+    state: present
+    regexp: '^ARGS=""'
+    line: 'ARGS="--web.config /etc/prometheus/prometheus-authentication.yml"'
+   notify: Restart mysqld-exporter
+
 # Gather PHP-FPM statistics
 # The exporter from this is currently not in deb sources
 # so we need to download this from GitHub see the README in files
@@ -68,7 +76,7 @@
     dest: /etc/default/prometheus-nginx-exporter
     state: present
     regexp: '^ARGS=""'
-    line: 'ARGS="-nginx.scrape-uri=http://localhost:8787/basic_status"'
+    line: 'ARGS="--nginx.scrape-uri=http://localhost:8787/basic_status --web.config /etc/prometheus/prometheus-authentication.yml"'
   notify: Restart nginx-exporter
 
 - name: Create storage dir for exporter settings

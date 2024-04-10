@@ -1,0 +1,5 @@
+# Role dependencies
+---
+dependencies:
+  - role: prometheus_target_all
+    tags: prometheus_target_all
