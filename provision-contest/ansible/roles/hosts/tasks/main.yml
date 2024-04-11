@@ -6,6 +6,7 @@
     name: "{{ inventory_hostname }}"
 
 - name: Set new hosts file
+  when: HOSTS_DNS
   template:
     src: hosts.j2
     dest: /etc/hosts

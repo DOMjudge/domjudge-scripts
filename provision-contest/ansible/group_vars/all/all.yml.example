@@ -34,6 +34,7 @@ AWS: true
 # server.
 WF_RESTRICTED_NETWORK: true
 WF_GREEN: false
+HOSTS_DNS: false
 
 # Static IP address configuration. Uses the ansible_host variable as the static
 # IP address. Only configured if STATIC_IP_ENABLED is true.

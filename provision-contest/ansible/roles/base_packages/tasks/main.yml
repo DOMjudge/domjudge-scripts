@@ -16,6 +16,7 @@
     notify: Run apt update
 
   - name: Add packages to hosts file
+    when: HOSTS_DNS
     lineinfile:
       dest: /etc/hosts
       line: "{{ HOSTS['packages'] }} packages"

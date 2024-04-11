@@ -10,5 +10,6 @@ DOMSERVER_IP: "{{SERVER_IP_PREFIX}}.240"
 # internet access is available and "packages" must be used as APT repo
 # server.
 WF_GREEN: true
+HOSTS_DNS: true
 
 DB_DUMP_PREFIX: analyst
