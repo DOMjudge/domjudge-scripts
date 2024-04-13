@@ -5,7 +5,7 @@ First, create the following files:
 - `images/photos/crew.png`, an image with a width of 1024 (and any height) to show for teams without a photo.
 - `images/photos/idle.png`, an image with a width of 1024 (and any height) to show when the judgedaemon is idle.
 
-Next, add the needed Python dependencies to the `lib` folder, within a folder called `python3.8`. You can copy this
+Next, add the needed Python dependencies to the `lib` folder, within a folder called `python3.10`. You can copy this
 folder from a local machine and it should contain the `PySimpleGUI` and `requests` Python packages.
 
 Optionally you can create a file `images/config.yaml` with something like:

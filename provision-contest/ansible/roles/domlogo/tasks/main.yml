@@ -25,7 +25,7 @@
 
 - name: Fix ownership of domlogo env
   file:
-    path: "/home/domjudge/.local/lib/python3.8"
+    path: "/home/domjudge/.local/lib/python3.10"
     recurse: true
     owner: domjudge
     group: domjudge
