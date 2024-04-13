@@ -4,50 +4,47 @@ REMOVED_PACKAGES:
 
 INSTALLED_PACKAGES:
   - ack
+  - acl
+  - apache2-utils
+  - autoconf
+  - automake
+  - bat
+  - bats
+  - bsdmainutils
+  - composer
+  - curl
+  - debootstrap
+  - default-jdk-headless
+  - efibootmgr
+  - fontconfig
+  - g++
+  - gcc
   - git
   - htop
   - httpie
-  - ncdu
-  - pv
-  - screen
-  - autoconf
-  - automake
-  - efibootmgr
-  - curl
-  - gcc
-  - g++
-  - default-jdk-headless
-  - make
-  - zip
-  - unzip
-  - composer
-  - php-cli
-  - php-gd
-  - php-curl
-  - php-mysql
-  - php-json
-  - php-xml
-  - php-zip
-  - php-mbstring
-  - php-intl
-  - bsdmainutils
+  - jq
+  - latexmk
   - libcgroup-dev
   - libcurl4-gnutls-dev
   - libjsoncpp-dev
   - libmagic-dev
-  - debootstrap
-  - apache2-utils
-  - tig
-  - bat
-  - jq
-  - python3-sphinx
-  - autoconf
-  - automake
-  - bats
+  - make
+  - ncdu
+  - php-cli
+  - php-curl
+  - php-gd
+  - php-intl
+  - php-json
+  - php-mbstring
+  - php-mysql
+  - php-xml
+  - php-zip
+  - pv
   - python3-sphinx
   - python3-sphinx-rtd-theme
-  - rst2pdf
-  - fontconfig
   - python3-yaml
-  - latexmk
-  - acl
+  - rst2pdf
+  - screen
+  - tig
+  - unzip
+  - zip
