@@ -65,5 +65,11 @@
         line: 'DNS=8.8.8.8'
       notify: Reboot the machine
 
+- name: Enable etckeeper autocommits every hour
+  file:
+    src: /etc/cron.daily/etckeeper
+    dest: /etc/cron.hourly/etckeeper
+    state: link
+
 - name: Flush handlers
   meta: flush_handlers
