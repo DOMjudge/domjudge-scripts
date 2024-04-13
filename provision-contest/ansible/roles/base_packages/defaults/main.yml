@@ -20,6 +20,8 @@ INSTALLED_PACKAGES:
   - g++
   - gcc
   - git
+  - git-gui
+  - gitk
   - htop
   - httpie
   - jq
