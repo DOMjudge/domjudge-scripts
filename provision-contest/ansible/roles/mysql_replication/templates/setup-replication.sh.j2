@@ -126,9 +126,9 @@ get_field()
 check_status()
 {
     local sql_info="$(printf '%s\n' "$@")"
-    [ $(get_field 'Seconds_Behind_Master' "$sql_info") = '0' ] || return 1
-    [ $(get_field 'Slave_SQL_Running' "$sql_info") = 'Yes' ] || return 1
-    [ $(get_field 'Last_SQL_Errno' "$sql_info") = '0' ] || return 1
+    [ "$(get_field 'Seconds_Behind_Master' "$sql_info")" = '0' ] || return 1
+    [ "$(get_field 'Slave_SQL_Running' "$sql_info")" = 'Yes' ] || return 1
+    [ "$(get_field 'Last_SQL_Errno' "$sql_info")" = '0' ] || return 1
     return 0
 }
 
