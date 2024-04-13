@@ -105,6 +105,14 @@
         owner: root
       notify: Clear application cache
 
+    - name: Add log viewing helper script
+      copy:
+        src: files/nicelog
+        dest: /home/domjudge/bin
+        owner: domjudge
+        group: domjudge
+        mode: 0755
+
     - name: Add autostart shortcuts
       copy:
         src: files/{{ item }}.desktop
