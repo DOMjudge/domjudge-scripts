@@ -1,5 +1,10 @@
+# This file is managed by ansible, so any changes you make here will
+# get overwritten in the next ansible run. If you want to make local
+# changes, do this in the following include snippet.
+Include ~/.ssh/config-local
+
 # Defaults used if no other host definitions apply.
 # Add more host specific settings above here.
 Host *
-     NoHostAuthenticationForLocalhost yes
-     ForwardAgent yes
+	NoHostAuthenticationForLocalhost yes
+	ForwardAgent yes
