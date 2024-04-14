@@ -23,6 +23,25 @@
 - name: Update grub
   command: update-grub
 
-- name: Reboot
+- name: Get judgedaemon PID
+  pids:
+    name: judgedaemon
+  register: judgedaemon_pids
+  listen: Reboot
+
+- name: Signal judgedaemon to shut down
+  command: kill -SIGHUP "{{ item }}"
+  with_items: "{{ judgedaemon_pids.pids }}"
+  listen: Reboot
+
+- name: Wait for judgedaemon to finish
+  wait_for:
+    path: "/proc/{{ item }}/status
+    state: absent
+  with_items: "{{ judgedaemon_pids.pids }}"
+  listen: Reboot
+
+- name: Reboot finally
   reboot:
     search_paths: ['/lib/molly-guard', '/sbin']
+  listen: Reboot
