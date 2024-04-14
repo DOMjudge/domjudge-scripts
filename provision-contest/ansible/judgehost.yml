@@ -51,7 +51,7 @@
       check_mode: no
       tags: pretask
 
-    - name: Disable all cores
+    - name: Stop judgedaemon service(s)
       service:
         name: "{{ item }}"
         state: stopped
@@ -69,7 +69,7 @@
             owner: domjudge
             group: domjudge
             mode: 0755
-    
+
         - name: Add autostart shortcuts from template
           template:
             src: files/taillog.desktop.j2
