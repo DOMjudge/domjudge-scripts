@@ -4,43 +4,114 @@ ansible_python_interpreter=/usr/bin/python3
 
 # When moving clients for ad-hoc actions:
 # move them to their own group to keep hosts files on deployed machines in sync.
-
-[domserver]
-domjudge-primary     ansible_host=10.3.3.216 KEEPALIVED_PRIORITY=100 EFI_ORDER='0\,1\,3\,4'
-domjudge-backup      ansible_host=10.3.3.217 KEEPALIVED_PRIORITY=99 EFI_ORDER='0\,1\,3\,4'
+[ad-hoc-group]
+# untargetted-domserver ansible_host=10.1.1.1
 
 [domserver:children]
-emergency
+wf46-domserver
+wf47-domserver
+analyst-domserver
+online-domserver
 
-[emergency]
-domjudge-laptop      ansible_host=10.3.3.218
+[wf46-domserver]
+domjudge-wf46-primary   ansible_host=10.3.3.216
+domjudge-wf46-secondary ansible_host=10.3.3.217
 
-[judgehost]
-domjudge-judgehost1  ansible_host=10.2.2.192
-domjudge-judgehost2  ansible_host=10.2.2.193
-domjudge-judgehost3  ansible_host=10.2.2.194
-domjudge-judgehost4  ansible_host=10.2.2.195
-domjudge-judgehost5  ansible_host=10.2.2.196
-domjudge-judgehost6  ansible_host=10.2.2.197
-domjudge-judgehost7  ansible_host=10.2.2.198
-domjudge-judgehost8  ansible_host=10.2.2.199
-domjudge-judgehost9  ansible_host=10.2.2.200
-domjudge-judgehost10 ansible_host=10.2.2.201
-domjudge-judgehost11 ansible_host=10.2.2.202
-domjudge-judgehost12 ansible_host=10.2.2.203
-domjudge-judgehost13 ansible_host=10.2.2.204
-domjudge-judgehost14 ansible_host=10.2.2.205
-domjudge-judgehost15 ansible_host=10.2.2.206
-domjudge-judgehost16 ansible_host=10.2.2.207
-domjudge-judgehost17 ansible_host=10.2.2.208
-domjudge-judgehost18 ansible_host=10.2.2.209
+[wf46-domserver:children]
+wf46-emergency
+
+[wf46-emergency]
+wf46-emerg  ansible_host=10.3.3.240
+
+[wf47-domserver]
+domjudge-wf47-primary   ansible_host=10.3.3.219
+domjudge-wf47-secondary ansible_host=10.3.3.220
+
+[wf47-domserver:children]
+wf47-emergency
+
+[wf47-emergency]
+wf47-emerg  ansible_host=10.3.3.241
+
+[analyst-domserver]
+domjudge-analyst    ansible_host=172.29.1.240
+
+[online-domserver]
+domjudge-aws ansible_host=0.0.0.0
+
+[judgehost:children]
+wf46-judgehost
+wf47-judgehost
+analyst-judgehost
+online-judgehost
+
+[wf46-judgehost]
+domjudge-judge-wf46-1  ansible_host=10.2.2.192
+domjudge-judge-wf46-2  ansible_host=10.2.2.193
+domjudge-judge-wf46-3  ansible_host=10.2.2.194
+domjudge-judge-wf46-4  ansible_host=10.2.2.195
+domjudge-judge-wf46-5  ansible_host=10.2.2.196
+domjudge-judge-wf46-6  ansible_host=10.2.2.197
+domjudge-judge-wf46-7  ansible_host=10.2.2.198
+domjudge-judge-wf46-8  ansible_host=10.2.2.199
+domjudge-judge-wf46-9  ansible_host=10.2.2.200
+domjudge-judge-wf46-10 ansible_host=10.2.2.201
+domjudge-judge-wf46-11 ansible_host=10.2.2.202
+domjudge-judge-wf46-12 ansible_host=10.2.2.203
+domjudge-judge-wf46-13 ansible_host=10.2.2.204
+domjudge-judge-wf46-14 ansible_host=10.2.2.205
+domjudge-judge-wf46-15 ansible_host=10.2.2.206
+domjudge-judge-wf46-16 ansible_host=10.2.2.207
+
+[wf47-judgehost]
+domjudge-judge-wf47-17 ansible_host=10.2.2.208
+domjudge-judge-wf47-18 ansible_host=10.2.2.209
+domjudge-judge-wf47-19 ansible_host=10.2.2.210
+domjudge-judge-wf47-20 ansible_host=10.2.2.211
+domjudge-judge-wf47-21 ansible_host=10.2.2.212
+domjudge-judge-wf47-22 ansible_host=10.2.2.213
+domjudge-judge-wf47-23 ansible_host=10.2.2.214
+domjudge-judge-wf47-24 ansible_host=10.2.2.215
+domjudge-judge-wf47-25 ansible_host=10.2.2.216
+domjudge-judge-wf47-26 ansible_host=10.2.2.217
+domjudge-judge-wf47-27 ansible_host=10.2.2.218
+domjudge-judge-wf47-28 ansible_host=10.2.2.219
+domjudge-judge-wf47-29 ansible_host=10.2.2.220
+domjudge-judge-wf47-30 ansible_host=10.2.2.221
+domjudge-judge-wf47-31 ansible_host=10.2.2.222
+domjudge-judge-wf47-32 ansible_host=10.2.2.223
+
+[analyst-judgehost]
+analyst-judge1  ansible_host=172.29.1.221
+analyst-judge2  ansible_host=172.29.1.222
+analyst-judge3  ansible_host=172.29.1.223
+analyst-judge4  ansible_host=172.29.1.224
+analyst-judge5  ansible_host=172.29.1.225
+analyst-judge6  ansible_host=172.29.1.226
+analyst-judge7  ansible_host=172.29.1.227
+analyst-judge8  ansible_host=172.29.1.228
+analyst-judge9  ansible_host=172.29.1.229
+# These are the reserved ccsadmins in green
+#analyst-judge10 ansible_host=172.29.1.216
+#analyst-judge11 ansible_host=172.29.1.217
+#analyst-judge12 ansible_host=172.29.1.218
+
+[online-judgehost]
+domjudge-aws ansible_host=0.0.0.0
 
 [admin]
-domjudge-ccsadmin1 ansible_host=10.3.3.223
-domjudge-ccsadmin2 ansible_host=10.3.3.224
-domjudge-ccsadmin3 ansible_host=10.3.3.225
-domjudge-ccsadmin4 ansible_host=10.3.3.226
-domjudge-ccsadmin5 ansible_host=10.3.3.227
+domjudge-ccsadmin1 ansible_host=10.3.3.224
+domjudge-ccsadmin2 ansible_host=10.3.3.225
+domjudge-ccsadmin3 ansible_host=10.3.3.226
+domjudge-ccsadmin4 ansible_host=10.3.3.227
+domjudge-ccsadmin5 ansible_host=10.3.3.228
+domjudge-ccsadmin6 ansible_host=10.3.3.229
+domjudge-ccsadmin7 ansible_host=10.3.3.230
+domjudge-ccsadmin9 ansible_host=10.3.3.231
+# These are the reserved ccsadmins in green, also in judgehost group
+#green-ccsadmin1 ansible_host=172.29.1.216
+#green-cssadmin2 ansible_host=172.29.1.217
+#green-cssadmin3 ansible_host=172.29.1.218
 
 [grafana]
 # During the WFs we use one of the ccsadmin machines
