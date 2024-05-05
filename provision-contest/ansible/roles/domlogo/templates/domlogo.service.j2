@@ -8,7 +8,7 @@ Type=simple
 Environment=REQUESTS_CA_BUNDLE=/usr/local/share/ca-certificates/domserver.crt
 Environment=DISPLAY=:0
 WorkingDirectory={{ DJ_DIR }}
-ExecStart=/usr/bin/python3 ./domlogo.py
+ExecStart=domlogo.py
 User=domjudge
 
 Restart=always
