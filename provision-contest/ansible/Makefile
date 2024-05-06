@@ -59,12 +59,12 @@ ansible-master:
 	done
 
 admin: $(SSL_LOCALHOST_FILES)
-grafana: $(SSL_GRAFANA_FILES) $(SSL_NODEEXPORT)
-domserver: $(SSL_DOMSERVER_FILES) $(SSL_NODEEXPORT)
-judgehost: $(SSL_NODEEXPORT)
-cds: $(SSL_CDS_FILES) $(SSL_NODEEXPORT)
-scoreboard: $(SSL_NODEEXPORT)
-mgmt: $(SSL_NODEEXPORT)
+grafana: $(SSL_GRAFANA_FILES) $(SSL_NODEEXPORT_FILES)
+domserver: $(SSL_DOMSERVER_FILES) $(SSL_NODEEXPORT_FILES)
+judgehost: $(SSL_NODEEXPORT_FILES)
+cds: $(SSL_CDS_FILES) $(SSL_NODEEXPORT_FILES)
+scoreboard: $(SSL_NODEEXPORT_FILES)
+mgmt: $(SSL_NODEEXPORT_FILES)
 
 $(SSHKEY) $(SSHKEY).pub:
 	ssh-keygen -t ed25519 -f $(SSHKEY) -P ''
@@ -92,7 +92,7 @@ clean:
 distclean: clean
 	rm -f $(SSHKEY) $(SSHKEY).pub
 	rm -f $(SSL_DOMSERVER_FILES)
-	rm -f $(SSL_NODEEXPORT)
+	rm -f $(SSL_NODEEXPORT_FILES)
 	rm -f $(SSL_LOCALHOST_FILES)
 	rm -f $(SSL_CDS_FILES)
 	rm -f $(SSL_GRAFANA_FILES)
