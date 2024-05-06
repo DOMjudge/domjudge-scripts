@@ -1,11 +1,12 @@
 ---
 # These tasks install keepalived with IP failover
 
-- name: Install keepalived
+- name: Install keepalived and beep (for alerting)
   apt:
     state: present
     pkg:
       - keepalived
+      - beep
 
 - name: Configure keepalived for domjudge IP failover
   template:

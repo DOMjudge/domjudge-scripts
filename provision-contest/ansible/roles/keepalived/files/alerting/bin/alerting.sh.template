@@ -1,7 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
+# Try a couple of different notification methods.
+
+notify-send -u critical -t 60000 "Alert: keepalived status changed at $(date '+%T') !"
+
+amixer -c 0 set Master 100%
 amixer -c 1 set Master 100%
 
 for i in 1 2 3 4 5 6 7 8 9 10 ; do
     aplay /usr/share/sounds/sound-icons/pipe.wav
 done
+
+beep -f  500 -l 400 -d 100 -r 4
+beep -f 1000 -l 400 -d 100 -r 4
+beep -f  500 -l 200 -d 100 -r 6
