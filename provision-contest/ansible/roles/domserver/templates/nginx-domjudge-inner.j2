@@ -18,7 +18,7 @@ location / {
 	location /api/ {
 		try_files $uri @domjudgeFrontApi;
 		error_log /var/log/nginx/domjudge-api.log;
-		access_log /var/log/nginx/domjudge-api.log;
+		access_log /var/log/nginx/domjudge-api.log dj_access;
 	}
 }
 
@@ -52,7 +52,7 @@ location @domjudgeFrontApi {
 
 	# Use a separate log file for the API
 	error_log /var/log/nginx/domjudge-api.log;
-	access_log /var/log/nginx/domjudge-api.log;
+	access_log /var/log/nginx/domjudge-api.log dj_access;
 }
 
 # The X-Frame-Options header defends against so-called 'clickjacking' attacks.
@@ -66,4 +66,4 @@ add_header X-Content-Type-Options "nosniff";
 add_header X-XSS-Protection "1; mode=block";
 
 error_log /var/log/nginx/domjudge.log;
-access_log /var/log/nginx/domjudge.log;
+access_log /var/log/nginx/domjudge.log dj_access;
