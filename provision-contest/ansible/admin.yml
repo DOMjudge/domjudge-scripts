@@ -51,11 +51,12 @@
       apt:
         state: present
         pkg:
-          - gitk
+          - ansible
           - git-gui
+          - gitk
           - makepasswd
           - mmv
-          - ansible
+          - python3-pdfkit
           - xkcdpass
 
     - name: Enable developer mode
