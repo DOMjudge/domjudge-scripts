@@ -11,6 +11,7 @@ vrrp_instance lb_ipv4 {
 		auth_type PASS
 		auth_pass {{REPLICATION_PASSWORD}}
 	}
+	script_user domjudge domjudge
 	notify_backup /home/domjudge/bin/trigger_alert.sh
 	notify_master /home/domjudge/bin/trigger_alert.sh
 	notify_fault /home/domjudge/bin/trigger_alert.sh
