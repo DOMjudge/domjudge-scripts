@@ -51,7 +51,7 @@
       check_mode: no
       tags: pretask
 
-    - name: Stop judgedaemon service(s)
+    - name: Stop judgedaemon service(s) on every possible core
       service:
         name: "{{ item }}"
         state: stopped
