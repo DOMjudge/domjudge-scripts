@@ -27,6 +27,9 @@ location @domjudgeFront {
 	fastcgi_pass domjudge;
 	include fastcgi_params;
 	fastcgi_param SERVER_NAME $host;
+	fastcgi_read_timeout 600;
+	fastcgi_send_timeout 600;
+	
 	fastcgi_param SCRIPT_FILENAME $domjudgeRoot/index.php;
 	fastcgi_param SCRIPT_NAME $prefix/index.php;
 	fastcgi_param REQUEST_URI $prefix$uri?$args;
