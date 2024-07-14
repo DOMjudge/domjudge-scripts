@@ -19,7 +19,7 @@ make QUIET=1 maintainer-clean
 make QUIET=1 MAINT_CXFLAGS='-g -O2 -Wall -fPIE -Wformat -Wformat-security' \
 	inplace-conf >/dev/null 2>&1 || true
 make QUIET=1 inplace-install docs >/dev/null 2>&1
-composer auto-scripts >/dev/null 2>&1
+(cd webapp && composer auto-scripts >/dev/null 2>&1)
 
 # Reset database to known good state:
 mysql $MYSQLOPTS "$DBNAME" < domjudge_demo_remove.sql
