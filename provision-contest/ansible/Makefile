@@ -11,7 +11,7 @@ default:
 	@echo " - make scoreboard"
 	@echo " - make autoanalyst"
 
-LIBVENDORTGZ=roles/domjudge_checkout/files/lib-vendor.tgz
+VENDORTGZ=roles/domjudge_checkout/files/vendor.tgz
 SSHKEY=roles/ssh/files/id_ed25519
 SSL_DOMSERVER=roles/ssl/files/domserver
 SSL_DOMSERVER_FILES=$(addprefix $(SSL_DOMSERVER),.key .crt)
@@ -24,16 +24,16 @@ SSL_CDS_FILES=$(addprefix $(SSL_CDS),.key .crt)
 SSL_GRAFANA=roles/grafana/files/ssl
 SSL_GRAFANA_FILES=$(addprefix $(SSL_GRAFANA),.key .crt)
 
-ifeq ($(wildcard $(LIBVENDORTGZ)),)
-LIBVENDOR=
+ifeq ($(wildcard $(VENDORTGZ)),)
+VENDOR=
 else
-LIBVENDOR=roles/domjudge_checkout/files/lib/vendor
-$(LIBVENDOR): $(LIBVENDORTGZ)
-	-cd roles/domjudge_checkout/files && tar xzf $(notdir $<)
+VENDOR=roles/domjudge_checkout/files/webapp/vendor
+$(VENDOR): $(VENDORTGZ)
+	-cd roles/domjudge_checkout/files/webapp && tar xzf ../$(notdir $<)
 endif
 
 ROLES=domserver judgehost admin grafana cds presclient presadmin scoreboard mgmt autoanalyst
-$(ROLES): %: %.yml hosts group_vars/all/secret.yml $(LIBVENDOR) $(SSHKEY) $(SSHKEY).pub
+$(ROLES): %: %.yml hosts group_vars/all/secret.yml $(VENDOR) $(SSHKEY) $(SSHKEY).pub
 	ansible-playbook -i hosts $<
 
 FAILED_ROLES=$(addprefix failed-,$(ROLES))
@@ -87,7 +87,7 @@ $(SSL_GRAFANA_FILES):
 		-sha256 -days 365 -keyout $(SSL_GRAFANA).key -out $(SSL_GRAFANA).crt
 
 clean:
-	rm -rf $(LIBVENDOR)
+	rm -rf $(VENDOR)
 
 distclean: clean
 	rm -f $(SSHKEY) $(SSHKEY).pub
