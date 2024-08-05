@@ -28,8 +28,17 @@
 
 - name: Get HTPassword
   delegate_to: localhost
+  become: false
   shell: "echo {{ PROMETHEUS_PASS }} | htpasswd -inBC 10 \"\" | tr -d ':\n'"
   register: htpassd_shell
+
+- name: Store HTPassword for nginx wrapper
+  copy:
+    content: "prometheus:{{ htpassd_shell.stdout }}"
+    dest: /etc/prometheus/.htpasswd
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Set certificate to encrypt node_exporter traffic
   template:
