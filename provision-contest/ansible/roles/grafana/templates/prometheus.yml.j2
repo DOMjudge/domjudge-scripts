@@ -5,11 +5,17 @@ global:
 scrape_configs:
   - job_name: 'grafana'
     static_configs:
-      - targets: ['localhost:{{ grafana_port }}']
+      - targets: ['localhost:3000']
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
   - job_name: 'db'
+    basic_auth:
+      username: "prometheus"
+      password: "{{ PROMETHEUS_PASS }}"
+    tls_config:
+      insecure_skip_verify: true
+    scheme: https
     static_configs:
       - targets:
 {% for host in groups["domserver"] %}
@@ -137,6 +143,12 @@ scrape_configs:
         - {{ hostvars[host].ansible_host }}:9113
 {% endfor %}
   - job_name: 'web_fpm_domserver'
+    basic_auth:
+      username: "prometheus"
+      password: "{{ PROMETHEUS_PASS }}"
+    tls_config:
+      insecure_skip_verify: true
+    scheme: https
     static_configs:
       - targets:
 {% for host in groups["domserver"] %}

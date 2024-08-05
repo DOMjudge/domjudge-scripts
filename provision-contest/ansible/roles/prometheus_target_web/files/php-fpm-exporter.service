@@ -4,7 +4,7 @@ Documentation=https://github.com/hipages/php-fpm_exporter
 [Service]
 User=www-data
 Restart=always
-ExecStart=/usr/bin/php-fpm_exporter server --phpfpm.fix-process-count --phpfpm.scrape-uri unix:///var/run/php-fpm-domjudge.sock;/fpm_status
+ExecStart=/usr/bin/php-fpm_exporter server --web.listen-address :19253 --phpfpm.fix-process-count --phpfpm.scrape-uri unix:///var/run/php-fpm-domjudge.sock;/fpm_status
 ExecReload=/bin/kill -HUP $MAINPID
 TimeoutStopSec=20s
 SendSIGKILL=no
