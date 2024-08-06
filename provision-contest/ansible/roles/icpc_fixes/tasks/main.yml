@@ -12,3 +12,24 @@
 - name: Re-order PXEboot
   command: efibootmgr -o {{ EFI_ORDER }}
   when: EFI_ORDER is defined
+
+- name: IPv6 nginx fixes
+  block:
+    - name: Create nginx directory before installation
+      file:
+        path: /etc/{{ item }}
+        state: directory
+        mode: '0755'
+        group: root
+        owner: root
+      loop:
+        - nginx
+        - nginx/sites-enabled
+
+    - name: Create nginx default without IPv6 listener
+      copy:
+        dest: /etc/nginx/sites-enabled/default
+        mode: '0644'
+        group: root
+        owner: root
+        content: ""
