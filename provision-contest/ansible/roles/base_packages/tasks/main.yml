@@ -12,7 +12,7 @@
       - sources.list
       - sources.list.d/mono.list
       - sources.list.d/vscode.list
-      - sources.list.d/pypy-ubuntu-ppa-buster.list
+      - sources.list.d/pypy-ubuntu-ppa-jammy.list
     notify: Run apt update
 
   - name: Add packages to hosts file
