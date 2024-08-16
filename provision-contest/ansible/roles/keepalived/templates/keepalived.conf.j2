@@ -1,15 +1,15 @@
 vrrp_instance lb_ipv4 {
 	state MASTER
-	interface {{ KEEPALIVED_INTERFACE|default(ansible_facts['default_ipv4']['interface']) }}
+	interface {{ REPLICATION_INTERFACE|default(ansible_facts['default_ipv4']['interface']) }}
 	use_vmac
 	virtual_router_id 32
-	priority {{KEEPALIVED_PRIORITY}}
+	priority {{ KEEPALIVED_PRIORITY }}
 	virtual_ipaddress {
-		{{DOMSERVER_IP}}
+		{{ DOMSERVER_IP }}
 	}
 	authentication {
 		auth_type PASS
-		auth_pass {{REPLICATION_PASSWORD}}
+		auth_pass {{ REPLICATION_PASSWORD }}
 	}
 	script_user domjudge domjudge
 	notify_backup /home/domjudge/bin/trigger_alert.sh
