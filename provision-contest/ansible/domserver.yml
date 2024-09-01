@@ -13,7 +13,7 @@
           - python3-netaddr
 
 - name: Setup domserver
-  hosts: domserver
+  hosts: domserver,online-domserver
   vars:
     host_type: domserver
   become: true
