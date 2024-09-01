@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import subprocess
 
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 import glob
 import os
 import requests
