@@ -9,41 +9,84 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
-  - job_name: 'db'
-    basic_auth:
-      username: "prometheus"
-      password: "{{ PROMETHEUS_PASS }}"
-    tls_config:
-      insecure_skip_verify: true
-    scheme: https
-    static_configs:
-      - targets:
-{% for host in groups["domserver"] %}
-        - {{ hostvars[host].ansible_host }}:9104
-{% endfor %}
-  - job_name: node_domserver
-    basic_auth:
-      username: "prometheus"
-      password: "{{ PROMETHEUS_PASS }}"
-    tls_config:
-      insecure_skip_verify: true
-    scheme: https
-    static_configs:
-      - targets:
-{% for host in groups["domserver"] %}
-        - {{ hostvars[host].ansible_host }}:9100
-{% endfor %}
+{% for group_prefix in GROUP_PREFIXES %}
+{% if groups[group_prefix+"judgehost"][0] is defined %}
   - job_name: node_judgehost
     basic_auth:
       username: "prometheus"
-      password: "{{ PROMETHEUS_PASS }}"
+      password: "{{ hostvars[groups[group_prefix+"judgehost"][0]]['PROMETHEUS_PASS'] }}"
     tls_config:
       insecure_skip_verify: true
     scheme: https
     static_configs:
       - targets:
-{% for host in groups["judgehost"] %}
+{% for host in groups[group_prefix+"judgehost"] %}
         - {{ hostvars[host].ansible_host }}:9100
+{% endfor %}
+{% endif %}
+{% if groups["domserver"][0] is defined %}
+  - job_name: {{ group_prefix ~ domjudge }}
+    basic_auth:
+      username: admin
+      password: {{ ADMIN_PASSWORD }}
+    metrics_path: /api/v4/metrics/prometheus
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+      - targets:
+{% for host in groups[group_prefix+"domserver"] %}
+        - {{ hostvars[host].ansible_host }}
+{% endfor %}
+  - job_name: {{ group_prefix ~ 'db' }}
+    basic_auth:
+      username: "prometheus"
+      password: "{{ hostvars[groups[group_prefix+"domserver"][0]]['PROMETHEUS_PASS'] }}"
+    tls_config:
+      insecure_skip_verify: true
+    scheme: https
+    static_configs:
+      - targets:
+{% for host in groups[group_prefix+"domserver"] %}
+        - {{ hostvars[host].ansible_host }}:9104
+{% endfor %}
+  - job_name: {{ group_prefix ~ 'node_domserver' }}
+    basic_auth:
+      username: "prometheus"
+      password: "{{ hostvars[groups[group_prefix+"domserver"][0]]['PROMETHEUS_PASS'] }}"
+    tls_config:
+      insecure_skip_verify: true
+    scheme: https
+    static_configs:
+      - targets:
+{% for host in groups["domserver"] %}
+        - {{ hostvars[host].ansible_host }}:9100
+{% endfor %}
+  - job_name: {{ group_prefix ~ 'web_nginx_domserver' }}
+    basic_auth:
+      username: "prometheus"
+      password: "{{ hostvars[groups[group_prefix+"domserver"][0]]['PROMETHEUS_PASS'] }}"
+    tls_config:
+      insecure_skip_verify: true
+    scheme: https
+    static_configs:
+      - targets:
+{% for host in groups[group_prefix+"domserver"] %}
+        - {{ hostvars[host].ansible_host }}:9113
+{% endfor %}
+  - job_name: {{ group_prefix ~ 'web_fpm_domserver' }}
+    basic_auth:
+      username: "prometheus"
+      password: "{{ hostvars[groups[group_prefix+"domserver"][0]]['PROMETHEUS_PASS'] }}"
+    tls_config:
+      insecure_skip_verify: true
+    scheme: https
+    static_configs:
+      - targets:
+{% for host in groups[group_prefix+"domserver"] %}
+        - {{ hostvars[host].ansible_host }}:9253
+{% endfor %}
+{% endif %}
 {% endfor %}
   - job_name: node_grafana
     basic_auth:
@@ -93,19 +136,6 @@ scrape_configs:
 {% for host in groups["cds"] %}
         - {{ hostvars[host].ansible_host }}:9100
 {% endfor %}
-  - job_name: domjudge
-    basic_auth:
-      username: admin
-      password: {{ ADMIN_PASSWORD }}
-    metrics_path: /api/v4/metrics/prometheus
-    scheme: https
-    tls_config:
-      insecure_skip_verify: true
-    static_configs:
-      - targets:
-{% for host in groups["domserver"] %}
-        - {{ hostvars[host].ansible_host }}
-{% endfor %}
   - job_name: 'web_nginx_cds'
     basic_auth:
       username: "prometheus"
@@ -129,28 +159,4 @@ scrape_configs:
       - targets:
 {% for host in groups["scoreboard"] %}
         - {{ hostvars[host].ansible_host }}:9113
-{% endfor %}
-  - job_name: 'web_nginx_domserver'
-    basic_auth:
-      username: "prometheus"
-      password: "{{ PROMETHEUS_PASS }}"
-    tls_config:
-      insecure_skip_verify: true
-    scheme: https
-    static_configs:
-      - targets:
-{% for host in groups["domserver"] %}
-        - {{ hostvars[host].ansible_host }}:9113
-{% endfor %}
-  - job_name: 'web_fpm_domserver'
-    basic_auth:
-      username: "prometheus"
-      password: "{{ PROMETHEUS_PASS }}"
-    tls_config:
-      insecure_skip_verify: true
-    scheme: https
-    static_configs:
-      - targets:
-{% for host in groups["domserver"] %}
-        - {{ hostvars[host].ansible_host }}:9253
 {% endfor %}
