@@ -48,3 +48,14 @@ datasources:
     version: 1
     # <bool> allow users to edit datasources from the UI.
     editable: true
+{% if loki is defined and loki %}
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://localhost:3100
+    jsonData:
+      timeout: 60
+      maxLines: 1000
+      httpHeaderName1: Connection
+      httpHeaderName2: Upgrade
+{% endif %}

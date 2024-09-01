@@ -55,3 +55,57 @@
     regexp: '^ARGS=""'
     line: 'ARGS="--web.config /etc/prometheus/prometheus-authentication.yml"'
   notify: Restart node-exporter
+
+# Setup promtail which sends our logs
+- name: Setup promtail to ship logs to loki (and grafana)
+  when: prom
+  block:
+    - name: Install promtail
+      unarchive:
+        src: promtail-linux-amd64.zip
+        dest: /usr/bin/
+        remote_src: false
+        owner: domjudge
+        group: domjudge
+      when: ICPC_IMAGE
+
+    - name: Install promtail
+      unarchive:
+        src: https://github.com/grafana/loki/releases/download/v3.0.1/promtail-linux-amd64.zip
+        dest: /usr/bin/
+        remote_src: true
+        owner: domjudge
+        group: domjudge
+      when: not ICPC_IMAGE
+    
+    - name: Dir for promtail settings
+      file:
+        state: directory
+        path: /etc/promtail
+        owner: root
+        group: root
+        mode: 0755
+    
+    - name: Set promtail settings
+      template:
+        src: promtail-local-config.yml.j2
+        dest: /etc/promtail/promtail-local-config.yml
+        owner: root
+        group: root
+        mode: 0644
+      notify: Restart promtail
+    
+    - name: Setup promtail systemd
+      copy:
+        src: promtail.service
+        dest: /etc/systemd/system/
+        mode: 0655
+        owner: root
+        group: root
+      notify: Restart promtail
+    
+    - name: Start promtail service
+      service:
+        name: promtail
+        state: started
+        enabled: true

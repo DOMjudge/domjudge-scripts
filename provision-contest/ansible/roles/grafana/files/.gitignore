@@ -1,2 +1,3 @@
 /ssl.*
 /grafana.deb
+/loki-linux-amd64.zip
