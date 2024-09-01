@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/promtail-linux-amd64 --config.file /etc/promtail/promtail-local-config.yaml
+ExecStart=/usr/bin/promtail-linux-amd64 --config.file /etc/promtail/promtail-local-config.yml
 
 [Install]
 WantedBy=multi-user.target

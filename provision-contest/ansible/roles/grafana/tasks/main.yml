@@ -19,48 +19,56 @@
   notify: Restart prometheus
 
 # Setup loki which gathers our logs
-- name: Install loki
-  unarchive:
-    src: https://github.com/grafana/loki/releases/download/v2.5.0/loki-linux-amd64.zip
-    dest: /usr/bin/
-    remote_src: true
-    owner: domjudge
-    group: domjudge
+- name: Setup loki
   when: loki
+  block:
+    - name: Install loki
+      unarchive:
+        src: loki-linux-amd64.zip
+        dest: /usr/bin/
+        remote_src: false
+        owner: domjudge
+        group: domjudge
+      when: ICPC_IMAGE
 
-- name: Dir for loki settings
-  file:
-    state: directory
-    path: /etc/grafana/loki/
-    owner: root
-    group: root
-    mode: 0755
-  when: loki
-
-- name: Set loki settings
-  copy:
-    src: loki-local-config.yaml
-    dest: /etc/grafana/loki/
-    owner: root
-    group: root
-    mode: 0644
-  when: loki
-  notify: Restart loki
-
-- name: Setup loki systemd
-  copy:
-    src: loki.service
-    dest: /etc/systemd/system/
-    mode: 0655
-  when: loki
-  notify: Restart loki
-
-- name: Start loki service
-  service:
-    name: loki
-    state: started
-    enabled: true
-  when: loki
+    - name: Install loki
+      unarchive:
+        src: https://github.com/grafana/loki/releases/download/v2.5.0/loki-linux-amd64.zip
+        dest: /usr/bin/
+        remote_src: true
+        owner: domjudge
+        group: domjudge
+      when: not ICPC_IMAGE
+    
+    - name: Dir for loki settings
+      file:
+        state: directory
+        path: /etc/grafana/loki/
+        owner: root
+        group: root
+        mode: 0755
+    
+    - name: Set loki settings
+      copy:
+        src: loki-local-config.yaml
+        dest: /etc/grafana/loki/
+        owner: root
+        group: root
+        mode: 0644
+      notify: Restart loki
+    
+    - name: Setup loki systemd
+      copy:
+        src: loki.service
+        dest: /etc/systemd/system/
+        mode: 0655
+      notify: Restart loki
+    
+    - name: Start loki service
+      service:
+        name: loki
+        state: started
+        enabled: true
 
 ## Setup grafana
 - name: Install grafana
@@ -91,8 +99,8 @@
   notify: Restart grafana
 
 - name: Set up grafana datasources
-  synchronize:
-    src: files/grafana/datasources.yml
+  template:
+    src: datasources.yml.j2
     dest: /etc/grafana/provisioning/datasources/default.yml
   notify: Restart grafana
 
