@@ -42,8 +42,6 @@
 
 - name: Update cache if this is our first run
   apt:
-    upgrade: true
-    update_cache: true
     cache_valid_time: 3600
 
 - name: Flush handlers
