@@ -43,6 +43,7 @@ There are a few places where additional files should/can be added:
 * SSL certificates and keys under `roles/ssl/files/`.
 * Machine/group specific local packages under `roles/base_packages/files/install-*/`.
 * Judgehost chroot local packages under `roles/judgedaemon/files/install-chroot/`.
+* The vendor dependencies under `roles/domjudge_checkout/files/vendor.tgz`.
 
 ## TODO
 
