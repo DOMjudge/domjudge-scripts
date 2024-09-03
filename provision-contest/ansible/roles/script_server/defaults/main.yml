@@ -1,43 +1,55 @@
 ---
-script_server_url: https://github.com/bugy/script-server/releases/download/1.18.0/script-server.zip
-script_server_port: 5000
-
-script_server_admin_users: &admin_users
-  # hostnames or ips
-  - backup
-  - 127.0.0.1
-
-# ansible hostgroups to ignore
-script_server_ignored_groups:
-  - 'all'
-  - 'ungrouped'
-  - 'contestants'
-  - 'contestants_wf46'
-  - 'contestants_wf47'
-
+SCRIPT_SERVER_PORT: 5000
 
 script_server_commands:
-  - name: run-lastminute
-    description: Runs the ansible playbook lastminute.yml
-    group: ansible # for organization in script-server
-    allowed_users:
-      - backup # or 10.3.3.210 (the ansible template will resolve names to IPs)
+  - name: make-invocations
+    description: Run the make targets as last years
+    parameters:
+      - name: make_pattern
+        type: multiselect
+        separator: ' '
+        values: 
+          - admin
+          - domserver
+          - judgehost
+          - grafana
+          - cds
     content: |
-      #!/usr/bin/bash
-      echo "hello world $HOSTPATTERN"
+      #!/bin/bash
+      set -euxo pipefail
+      if [ "$make_pattern" = "" ]; then
+        exit 1
+      fi
+      cd /home/domjudge/domjudge-scripts-checkout/provision-contest/ansible
+      for make_single in $make_pattern; do
+        make "$make_single"
+      done
+  - name: ansible-admin
+    description: (Re)configure the (other) admin machines
+    content: |
+      #!/bin/bash
+      set -euxo pipefail
+      if [ "$host_pattern" = "" ]; then
+        exit 1
+      fi
+      if [ "$tag_pattern" != "" ]; then
+        tag="--tags $tag_pattern"
+      fi
+      cd /home/domjudge/domjudge-scripts-checkout/provision-contest/ansible
+      ansible-playbook --limit $host_pattern ${tag:-} admin.yml
     parameters:
       - name: host_pattern
         # pass_as: env_variable # this is default
         # env_var: host_pattern # default is same as name
-        type: list
-        values:
-          - all
-          - backup
-          - packages
-          - scoreboard
-          - cds
+        type: multiselect
+        values: "{{ groups['admin'] }}"
+        default: "{{ groups['admin'] | difference(['domjudge-ccsadmin2']) }}"
+      - name: tag_pattern
+        type: "multiselect"
+        values: ["reboot"]
+        default: []
 
 script_server_command_defaults:
   output_format: terminal
   # scheduling: # Don't allow scheduling, the ui for it is not good...
-    # enabled: false
+  # enabled: false

@@ -9,6 +9,7 @@ ansible_python_interpreter=/usr/bin/python3
 domserver
 judgehost
 grafana
+scriptserver
 admin
 
 [online:children]
@@ -69,6 +70,11 @@ domjudge-ccsadmin5 ansible_host=10.3.3.228
 # During the WFs we use one of the ccsadmin machines
 # Doesn't matter which (admin) machine but should not be 1 as that runs ansible
 domjudge-ccsadmin2 ansible_host=10.3.3.225
+
+[scriptserver]
+# During the WFs we use one of the ccsadmin machines
+# Doesn't matter which (admin) machine but in the past we used 1 as that runs ansible
+domjudge-ccsadmin1 ansible_host=10.3.3.224
 
 [analyst-domserver]
 # Discuss if we can have this host dualhomed in blue to make management easier.\
