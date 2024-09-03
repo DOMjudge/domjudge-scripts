@@ -1,35 +1,51 @@
 ---
 - name: Install script-server dependencies
-  ansible.builtin.package:
-    pkg: "{{ item }}"
+  apt:
+    name:
+      - python3-tornado
+      - apache2-utils # for htpasswd auth
     state: present
-  loop:
-    - python3-tornado
-    - apache2-utils # for htpasswd auth
 
 - name: Create directory for script-server to live
-  ansible.builtin.file:
+  file:
     path: /opt/script-server
     mode: "0755"
     owner: root
     group: root
     state: directory
 
-- name: Download script-server
-  ansible.builtin.unarchive:
-    src: "{{ script_server_url }}"
+- name: Install script-server
+  when: ICPC_IMAGE
+  unarchive:
+    src: "https://github.com/bugy/script-server/releases/download/1.18.0/script-server.zip"
+ 
+  name: Install script-server
+  when: ICPC_IMAGE
+  unarchive:
+    src: "script-server.zip"
     dest: /opt/script-server
-    remote_src: "{{ true if script_server_url.startswith('http') else false }}"
+    remote_src: false
+    creates: /opt/script-server/launcher.py
+
+- name: Install script-server
+  when: not ICPC_IMAGE
+  unarchive:
+    src: "https://github.com/bugy/script-server/releases/download/1.18.0/script-server.zip"
+    dest: /opt/script-server
+    remote_src: true
     creates: /opt/script-server/launcher.py
 
 - name: Configure the server
-  ansible.builtin.template:
+  template:
     src: conf.json.j2
     dest: /opt/script-server/conf/conf.json
     mode: "0644"
+    owner: root
+    group: root
 
 - name: Create systemd service for script-server
-  ansible.builtin.copy:
+  notify: Restart script-server
+  copy:
     mode: "0644"
     dest: /etc/systemd/system/script-server.service
     content: |
@@ -46,16 +62,9 @@
 
       [Install]
       WantedBy=multi-user.target
-  notify: Restart script-server
-
-- name: Start + enable script-server
-  ansible.builtin.service:
-    name: script-server
-    state: started
-    enabled: true
 
 - name: Ensure required directories exist
-  ansible.builtin.file:
+  file:
     state: directory
     mode: "0755"
     path: /opt/script-server/conf/{{ item }}
@@ -64,7 +73,7 @@
     - runners
 
 - name: Create scripts
-  ansible.builtin.copy:
+  copy:
     content: "{{ item.content }}"
     dest: /opt/script-server/conf/scripts/{{ item.name }}
     mode: "0755"
@@ -72,7 +81,14 @@
 
 - name: Create script config definitions
   ansible.builtin.template:
-    src: command_template.yaml.j2
-    dest: /opt/script-server/conf/runners/{{ item.name }}.yaml
+    src: command_template.yml.j2
+    dest: /opt/script-server/conf/runners/{{ item.name }}.yml
     mode: "0644"
   with_items: "{{ script_server_commands }}"
+
+- name: Start + enable script-server
+  service:
+    name: script-server
+    state: started
+    enabled: true
+
