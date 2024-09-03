@@ -1,0 +1,46 @@
+{
+    "title": "sysops script server",
+    "port": {{ script_server_port }},
+    "access": {
+        "trusted_ips": [
+            {% for group in groups if group not in script_server_ignored_groups %}
+            {%- for host in groups[group] -%}
+            "{{ hostvars[host].ansible_host}}",
+            {% endfor %}
+            {%- endfor -%}
+
+            {% for u in script_server_admin_users %}"{{ lookup('ip', u)}}", {% endfor %}"127.0.0.1"
+        ],
+        "allowed_users": [
+            {% for group in groups if group not in script_server_ignored_groups %}
+            {%- for host in groups[group] -%}
+            "{{ hostvars[host].ansible_host}}",
+            {% endfor -%}
+            {%- endfor -%}
+            "127.0.0.1"
+        ],
+        "admin_users": [{% for u in script_server_admin_users %}"{{ lookup('ip', u)}}", {% endfor %}"127.0.0.1"],
+        "groups": {
+            {% for group in groups if group not in script_server_ignored_groups -%}
+            "{{group}}": [
+                {% for host in groups[group] -%}
+                "{{ hostvars[host].ansible_host}}" {{ ", " if not loop.last else "" }}
+                {% endfor -%}
+            ],
+            {% endfor -%}
+            "all": [
+                {% for group in groups if group not in script_server_ignored_groups -%}
+                "{{ group }}",
+                {% endfor -%}
+                "@admin_users"
+            ]
+        }
+    },
+    "logging": {
+        "execution_file": "$DATE-$ID.log",
+        "execution_date_format": "%y-%m-%d_%H-%M"
+    },
+    "security": {
+        "xsrf_protection": "token"
+    }
+}

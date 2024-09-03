@@ -1,0 +1,78 @@
+---
+- name: Install script-server dependencies
+  ansible.builtin.package:
+    pkg: "{{ item }}"
+    state: present
+  loop:
+    - python3-tornado
+    - apache2-utils # for htpasswd auth
+
+- name: Create directory for script-server to live
+  ansible.builtin.file:
+    path: /opt/script-server
+    mode: "0755"
+    owner: root
+    group: root
+    state: directory
+
+- name: Download script-server
+  ansible.builtin.unarchive:
+    src: "{{ script_server_url }}"
+    dest: /opt/script-server
+    remote_src: "{{ true if script_server_url.startswith('http') else false }}"
+    creates: /opt/script-server/launcher.py
+
+- name: Configure the server
+  ansible.builtin.template:
+    src: conf.json.j2
+    dest: /opt/script-server/conf/conf.json
+    mode: "0644"
+
+- name: Create systemd service for script-server
+  ansible.builtin.copy:
+    mode: "0644"
+    dest: /etc/systemd/system/script-server.service
+    content: |
+      [Unit]
+      Description=Script Server
+      After=network.target
+      StartLimitIntervalSec=0
+
+      [Service]
+      Type=simple
+      Restart=always
+      RestartSec=1
+      ExecStart=/usr/bin/python3 /opt/script-server/launcher.py
+
+      [Install]
+      WantedBy=multi-user.target
+  notify: Restart script-server
+
+- name: Start + enable script-server
+  ansible.builtin.service:
+    name: script-server
+    state: started
+    enabled: true
+
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    state: directory
+    mode: "0755"
+    path: /opt/script-server/conf/{{ item }}
+  loop:
+    - scripts
+    - runners
+
+- name: Create scripts
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: /opt/script-server/conf/scripts/{{ item.name }}
+    mode: "0755"
+  with_items: "{{ script_server_commands }}"
+
+- name: Create script config definitions
+  ansible.builtin.template:
+    src: command_template.yaml.j2
+    dest: /opt/script-server/conf/runners/{{ item.name }}.yaml
+    mode: "0644"
+  with_items: "{{ script_server_commands }}"
