@@ -1,0 +1,43 @@
+---
+script_server_url: https://github.com/bugy/script-server/releases/download/1.18.0/script-server.zip
+script_server_port: 5000
+
+script_server_admin_users: &admin_users
+  # hostnames or ips
+  - backup
+  - 127.0.0.1
+
+# ansible hostgroups to ignore
+script_server_ignored_groups:
+  - 'all'
+  - 'ungrouped'
+  - 'contestants'
+  - 'contestants_wf46'
+  - 'contestants_wf47'
+
+
+script_server_commands:
+  - name: run-lastminute
+    description: Runs the ansible playbook lastminute.yml
+    group: ansible # for organization in script-server
+    allowed_users:
+      - backup # or 10.3.3.210 (the ansible template will resolve names to IPs)
+    content: |
+      #!/usr/bin/bash
+      echo "hello world $HOSTPATTERN"
+    parameters:
+      - name: host_pattern
+        # pass_as: env_variable # this is default
+        # env_var: host_pattern # default is same as name
+        type: list
+        values:
+          - all
+          - backup
+          - packages
+          - scoreboard
+          - cds
+
+script_server_command_defaults:
+  output_format: terminal
+  # scheduling: # Don't allow scheduling, the ui for it is not good...
+    # enabled: false

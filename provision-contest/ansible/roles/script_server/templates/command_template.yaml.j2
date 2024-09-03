@@ -1,0 +1,42 @@
+---
+{% set _unused_content = item.pop('content') %}
+{% set parameters = item.pop('parameters') %}
+{% set admin_users = item.pop('admin_users', []) + script_server_admin_users %}
+{% set allowed_users = item.pop('allowed_users', []) %}
+{# set admin_users = (admin_users if ( admin_users | type_debug == "list" ) else [admin_users]) #}
+{# set allowed_users = (allowed_users if ( allowed_users | type_debug == "list" ) else [allowed_users]) #}
+{{
+  script_server_command_defaults |
+  combine(item) |
+  to_nice_yaml
+}}
+{% if admin_users %}
+admin_users:
+{% for u in admin_users %}
+  - {{ lookup('ip', u) }}
+{% endfor %}
+{% endif %}
+{% if allowed_users %}
+allowed_users:
+{% for u in (allowed_users + admin_users) %}
+  - {{ lookup('ip', u) }}
+{% endfor %}
+{% endif %}
+
+{% if parameters %}
+parameters:
+{% for param in parameters %}
+  - name: {{ param.name }}
+    pass_as: {{ param.pass_as | default('env_variable') }}
+{% if param.pass_as|default('env_variable') == 'env_variable' %}
+    env_var: {{ param.env_var | default(param.name) }}
+{% endif %}
+{% for k,v in param.items() if k not in ['pass_as','env_var','name'] %}
+    {{ k}}: {{ v|to_json }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+
+# assume default path for the script file
+script_path: conf/scripts/{{ item.name }}
