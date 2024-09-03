@@ -1,8 +1,8 @@
 ---
 {% set _unused_content = item.pop('content') %}
-{% set parameters = item.pop('parameters') %}
-{% set admin_users = item.pop('admin_users', []) + script_server_admin_users %}
-{% set allowed_users = item.pop('allowed_users', []) %}
+{% set parameters = item.pop('parameters', []) %}
+{% set admin_users = groups['admin'] %}
+{% set allowed_users = groups['onprem'] %}
 {# set admin_users = (admin_users if ( admin_users | type_debug == "list" ) else [admin_users]) #}
 {# set allowed_users = (allowed_users if ( allowed_users | type_debug == "list" ) else [allowed_users]) #}
 {{
@@ -10,16 +10,19 @@
   combine(item) |
   to_nice_yaml
 }}
+
 {% if admin_users %}
 admin_users:
+  - 127.0.0.1
 {% for u in admin_users %}
-  - {{ lookup('ip', u) }}
+  - {{ hostvars[u].ansible_host }}
 {% endfor %}
 {% endif %}
 {% if allowed_users %}
-allowed_users:
-{% for u in (allowed_users + admin_users) %}
-  - {{ lookup('ip', u) }}
+skipped_allowed_users:
+  - 127.0.0.1
+{% for u in (allowed_users + admin_users)|unique %}
+  - {{ hostvars[u].ansible_host }}
 {% endfor %}
 {% endif %}
 
@@ -36,7 +39,6 @@ parameters:
 {% endfor %}
 {% endfor %}
 {% endif %}
-
 
 # assume default path for the script file
 script_path: conf/scripts/{{ item.name }}

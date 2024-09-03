@@ -17,11 +17,6 @@
 - name: Install script-server
   when: ICPC_IMAGE
   unarchive:
-    src: "https://github.com/bugy/script-server/releases/download/1.18.0/script-server.zip"
- 
-  name: Install script-server
-  when: ICPC_IMAGE
-  unarchive:
     src: "script-server.zip"
     dest: /opt/script-server
     remote_src: false
@@ -82,7 +77,7 @@
 - name: Create script config definitions
   ansible.builtin.template:
     src: command_template.yml.j2
-    dest: /opt/script-server/conf/runners/{{ item.name }}.yml
+    dest: /opt/script-server/conf/runners/{{ item.name }}.yaml
     mode: "0644"
   with_items: "{{ script_server_commands }}"
 
