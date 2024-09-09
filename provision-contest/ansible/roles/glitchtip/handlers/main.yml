@@ -1,0 +1,5 @@
+---
+- name: Restart Glitchtip
+  community.docker.docker_compose_v2:
+    project_src: /opt/glitchtip
+    state: restarted
