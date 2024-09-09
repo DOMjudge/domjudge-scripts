@@ -1,0 +1,24 @@
+---
+- name: Add Docker GPG apt Key
+  apt_key:
+    data: "{{ lookup('ansible.builtin.file', 'docker.asc') }}"
+    state: present
+
+- name: Add Docker Repository
+  when: not WF_RESTRICTED_NETWORK
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+
+- name: Install Docker and dependencies
+  apt:
+    state: present
+    install_recommends: false
+    pkg:
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-ce
+      - docker-ce-cli
+      - docker-compose-plugin
+      - python3-pip
+      - python3-docker
