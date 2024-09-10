@@ -24,3 +24,9 @@
 - name: Install Docker module for Python
   pip:
     name: docker
+
+- name: Load container archives
+  include_tasks: load-container.yml
+  with_filetree:
+    - files/containers-{{ host_type }}/
+  when: item.state == 'file' and (item.path | splitext | last) == ".tar"

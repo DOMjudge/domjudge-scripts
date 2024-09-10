@@ -10,7 +10,7 @@
     src: templates/docker-compose.yaml.j2
     dest: /opt/glitchtip/docker-compose.yaml
 
-- name: Deploy Glitchtip compose stack
+- name: Deploy GlitchTip compose stack
   community.docker.docker_compose_v2:
     project_src: /opt/glitchtip
     files:

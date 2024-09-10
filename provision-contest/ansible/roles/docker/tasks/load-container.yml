@@ -1,0 +1,33 @@
+---
+- block:
+  - name: Check for existing container
+    community.docker.docker_image_info:
+      name: "{{ img_name }}"
+    register: result
+
+  - block:
+    - name: Create temp container directory
+      file:
+        path: /tmp/dj_ansible
+        state: directory
+        owner: root
+        group: root
+        mode: 0700
+
+    - name: Transfer container archive
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ img_path }}"
+        owner: root
+        group: root
+        mode: 0700
+
+    - name: Import container from archive
+      community.docker.docker_image:
+        name: "{{ img_name }}"
+        load_path: "{{ img_path }}"
+        source: load
+    when: not result.images
+  vars:
+    img_name: "{{ item.path | splitext | first }}"
+    img_path: "/tmp/dj_ansible/{{ item.path | basename }}"
