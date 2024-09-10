@@ -25,6 +25,11 @@
   pip:
     name: docker
 
+- name: Remove executable bit from "/usr/local/bin/runc"
+  file:
+    dest: /usr/local/bin/runc
+    mode: -x
+
 - name: Load container archives
   include_tasks: load-container.yml
   with_filetree:
