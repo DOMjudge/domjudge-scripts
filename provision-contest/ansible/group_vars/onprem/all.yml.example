@@ -2,7 +2,7 @@
 DJ_DIR: /opt/domjudge
 
 # Branch to checkout and use.
-DJ_BRANCH: main
+DJ_BRANCH: wfastana
 
 # Whether to force-pull changes to the checkout, overwriting any local changes.
 DJ_FORCE_UPDATE: true
@@ -11,7 +11,7 @@ DJ_FORCE_UPDATE: true
 SERVER_IP_PREFIX: 10.3.3
 
 # IP address of the git server.
-LOCAL_GIT_IP: "{{SERVER_IP_PREFIX}}.207"
+LOCAL_GIT_IP: "{{SERVER_IP_PREFIX}}.209"
 
 # URL and IP of domserver from judgehosts. A hostname 'domserver' with
 # DOMSERVER_IP will be added to the judgehost /etc/hosts file.
@@ -22,18 +22,18 @@ DOMSERVER_SSL_CERT: /etc/ssl/certs/domserver.crt
 DOMSERVER_SSL_KEY: /etc/ssl/private/domserver.key
 
 # Set this to true when you are using the ICPC World Finals Contest Image
-ICPC_IMAGE: false
+ICPC_IMAGE: true
 
 # Set this to true when you are using a graphical desktop
-GRAPHICAL: false
+GRAPHICAL: true
 
 # Set this to true when you use an (ICPC) AWS machine
-AWS: true
+AWS: false
 
 # Set this when on the blue network at the World Finals where no
 # internet access is available and "packages" must be used as APT repo
 # server.
-WF_RESTRICTED_NETWORK: false
+WF_RESTRICTED_NETWORK: true
 WF_GREEN: false
 
 # Static IP address configuration. Uses the ansible_host variable as the static
@@ -55,7 +55,7 @@ HOSTS:
     domjudge-laptop: 10.3.3.200
     pc2:             10.3.3.241
 
-TIMEZONE: "Europe/Amsterdam"
+TIMEZONE: "Asia/Almaty"
 
 PHP_FPM_MAX_CHILDREN: 400
 PHP_FPM_MAX_REQUESTS: 500
@@ -70,30 +70,9 @@ DJ_GIT_REPO: "https://github.com/domjudge/domjudge.git"
 DJ_GIT_REPO_RESTRICTED: "domjudge@{{DJ_GIT_HOST}}:domjudge"
 DJ_GIT_REPO_SCRIPTS: "https://github.com/domjudge/domjudge-scripts.git"
 DJ_GIT_REPO_SCRIPTS_RESTRICTED: "domjudge@{{DJ_GIT_HOST}}:domjudge-scripts-bare"
-CONTEST_REPO: "wf2021"
+CONTEST_REPO: "wfastana"
 
 PHPSTORM_VERSION: 2022.2
 PHPSTORM_FULL_VERSION: 222.4345.15
 
 GRAFANA_MONITORING: false
-
-# Hostname of the CDS. If set, will add an nginx in front of the CDS
-# If not set, will only expose CDS directly
-CDS_HOSTNAME: cds
-CDS_PORT: 80
-CDS_PORT_SECURE: 443
-
-#  CDS SSL cert and key. Only needed when CDS_HOSTNAME is set
-CDS_SSL_CERT: /etc/ssl/certs/cds.crt
-CDS_SSL_KEY: /etc/ssl/private/cds.key
-
-# Hostname of the static scoreboard
-STATIC_SCOREBOARD_HOSTNAME: scoreboard
-
-STATIC_SCOREBOARD_SSL_CERT: /etc/ssl/certs/scoreboard.crt
-STATIC_SCOREBOARD_SSL_KEY: /etc/ssl/private/scoreboard.key
-
-# Block access to the CDS for IPs other than these
-#CDS_IP_FILTER:
-#  - 127.0.0.1-127.0.0.1
-#  - 192.168.0.0-192.168.255.255
