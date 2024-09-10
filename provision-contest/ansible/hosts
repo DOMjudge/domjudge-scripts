@@ -58,11 +58,11 @@ green-judgehost2     ansible_host=172.29.1.222
 green-judgehost3     ansible_host=172.29.1.223   
 
 [admin]
-domjudge-ccsadmin1 ansible_host=10.3.3.223
-domjudge-ccsadmin2 ansible_host=10.3.3.224
-domjudge-ccsadmin3 ansible_host=10.3.3.225
-domjudge-ccsadmin4 ansible_host=10.3.3.226
-domjudge-ccsadmin5 ansible_host=10.3.3.227
+domjudge-ccsadmin1 ansible_host=10.3.3.224
+domjudge-ccsadmin2 ansible_host=10.3.3.225
+domjudge-ccsadmin3 ansible_host=10.3.3.226
+domjudge-ccsadmin4 ansible_host=10.3.3.227
+domjudge-ccsadmin5 ansible_host=10.3.3.228
 
 [grafana]
 # During the WFs we use one of the ccsadmin machines
