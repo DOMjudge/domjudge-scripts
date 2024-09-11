@@ -29,7 +29,7 @@ domjudge-backup      ansible_host=10.3.3.217   KEEPALIVED_PRIORITY=99
 emergency
 
 [emergency]
-domjudge-laptop      ansible_host=10.3.3.241
+domjudge-laptop      ansible_host=10.3.3.199
 
 [judgehost:children]
 analyst-judgehost
