@@ -3,10 +3,10 @@
 x-environment:
   &default-environment
   DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
-  SECRET_KEY: {{GLITCHTIP_SECRET}}
-  PORT: {{glitchtip_port}}
+  SECRET_KEY: {{ GLITCHTIP_SECRET }}
+  PORT: {{ GLITCHTIP_PORT}}
   EMAIL_URL: consolemail://
-  GLITCHTIP_DOMAIN: http://glitchtip:{{glitchtip_port}}
+  GLITCHTIP_DOMAIN: http://glitchtip:{{ GLITCHTIP_PORT }}
   DEFAULT_FROM_EMAIL: email@glitchtip
   CELERY_WORKER_AUTOSCALE: "1,1"
   CELERY_WORKER_MAX_TASKS_PER_CHILD: "1000"
@@ -31,7 +31,7 @@ services:
     image: glitchtip/glitchtip:v4.1.3
     depends_on: *default-depends_on
     ports:
-      - {{glitchtip_port}}:{{glitchtip_port}}
+      - {{ GLITCHTIP_PORT }}:{{ GLITCHTIP_PORT }}
     environment: *default-environment
     restart: unless-stopped
     volumes: 

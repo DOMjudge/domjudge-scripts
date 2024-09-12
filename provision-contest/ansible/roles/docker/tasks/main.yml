@@ -20,10 +20,7 @@
       - docker-ce-cli
       - docker-compose-plugin
       - python3-pip
-
-- name: Install Docker module for Python
-  pip:
-    name: docker
+      - python3-docker
 
 - name: Remove executable bit from "/usr/local/bin/runc"
   file:
