@@ -72,16 +72,14 @@
 
     - name: Download offline repos
       when: WF_RESTRICTED_NETWORK
+      become: true
+      become_user: domjudge
       block:
         - name: Create working copy of the domjudge-scripts repo
-          become: true
-          become_user: domjudge
           # We use a different directory here to have one single 'upstream' and not have issues with it
           git: repo={{ dj_git_repo_scripts }} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
 
         - name: Create working copy of the contest repo
-          become: true
-          become_user: domjudge
           git: repo=git@cds:{{ CONTEST_REPO }} dest=/home/domjudge/{{ CONTEST_REPO }} version=master accept_hostkey=yes update=no
 
     - name: Copy custom CSS file for admin machines
