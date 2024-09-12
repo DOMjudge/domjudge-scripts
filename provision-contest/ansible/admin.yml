@@ -80,7 +80,8 @@
           git: repo={{ dj_git_repo_scripts }} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
 
         - name: Create working copy of the contest repo
-          git: repo=git@cds:{{ CONTEST_REPO }} dest=/home/domjudge/{{ CONTEST_REPO }} version=master accept_hostkey=yes update=no
+          ignore_errors: true
+          git: repo=git@packages:{{ CONTEST_REPO }} dest=/home/domjudge/{{ CONTEST_REPO }} version=master accept_hostkey=yes update=no
 
     - name: Copy custom CSS file for admin machines
       copy:
