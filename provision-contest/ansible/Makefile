@@ -34,28 +34,28 @@ endif
 
 ROLES=domserver judgehost admin grafana cds presclient presadmin scoreboard mgmt autoanalyst
 $(ROLES): %: %.yml hosts group_vars/all/secret.yml $(VENDOR) $(SSHKEY) $(SSHKEY).pub
-	ansible-playbook -i hosts $<
+	ansible-playbook $<
 
 FAILED_ROLES=$(addprefix failed-,$(ROLES))
 $(FAILED_ROLES): failed-%: %.yml %.retry
-	ansible-playbook -i hosts --limit @$*.retry $<
+	ansible-playbook --limit @$*.retry $<
 
 CODEONLY_ROLES=$(addprefix codeonly-,domserver judgehost admin)
 $(CODEONLY_ROLES): codeonly-%:
-	ansible-playbook -i hosts --tags pretask,domjudge_build $*.yml
+	ansible-playbook --tags pretask,domjudge_build $*.yml
 
 powerloss:
-	ansible-playbook -i hosts emergency.yml --tags powerloss
+	ansible-playbook emergency.yml --tags powerloss
 
 lockdown:
-	ansible-playbook -i hosts emergency.yml --tags full_lockdown
+	ansible-playbook emergency.yml --tags full_lockdown
 
 lockdown-force:
-	ansible-playbook -i hosts emergency.yml --tags full_lockdown,force_lockdown
+	ansible-playbook emergency.yml --tags full_lockdown,force_lockdown
 
 ansible-master:
 	for book in $(ROLES) ; do \
-		ansible-playbook -i hosts $$book.yml --tags install_master ; \
+		ansible-playbook $$book.yml --tags install_master ; \
 	done
 
 admin: $(SSL_LOCALHOST_FILES)
