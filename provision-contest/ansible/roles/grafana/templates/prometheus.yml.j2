@@ -25,7 +25,7 @@ scrape_configs:
 {% endfor %}
 {% endif %}
 {% if groups[group_prefix+"domserver"][0] is defined %}
-  - job_name: {{ group_prefix ~ 'domjudge' }}
+  - job_name: {{ group_prefix ~ 'domserver' }}
     basic_auth:
       username: admin
       password: {{ ADMIN_PASSWORD }}
