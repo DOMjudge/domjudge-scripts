@@ -70,19 +70,6 @@
       set_fact:
         dj_git_repo_scripts: "{{ DJ_GIT_REPO_SCRIPTS_RESTRICTED if WF_RESTRICTED_NETWORK else DJ_GIT_REPO_SCRIPTS }}"
 
-    - name: Download offline repos
-      when: WF_RESTRICTED_NETWORK
-      become: true
-      become_user: domjudge
-      block:
-        - name: Create working copy of the domjudge-scripts repo
-          # We use a different directory here to have one single 'upstream' and not have issues with it
-          git: repo={{ dj_git_repo_scripts }} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
-
-        - name: Create working copy of the contest repo
-          ignore_errors: true
-          git: repo=git@packages:{{ CONTEST_REPO }} dest=/home/domjudge/{{ CONTEST_REPO }} version=master accept_hostkey=yes update=no
-
     - name: Copy custom CSS file for admin machines
       copy:
         src: admin-machine.css
@@ -150,3 +137,17 @@
         etype: user
         permissions: rwx
         state: present
+
+    - name: Download offline repos
+      when: WF_RESTRICTED_NETWORK
+      become: true
+      become_user: domjudge
+      block:
+        - name: Create working copy of the domjudge-scripts repo
+          # We use a different directory here to have one single 'upstream' and not have issues with it
+          git: repo={{ dj_git_repo_scripts }} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
+
+        - name: Create working copy of the contest repo
+          ignore_errors: true
+          git: repo=git@packages:{{ CONTEST_REPO }} dest=/home/domjudge/{{ CONTEST_REPO }} version=master accept_hostkey=yes update=no
+
