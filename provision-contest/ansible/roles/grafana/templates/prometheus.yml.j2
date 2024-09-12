@@ -24,8 +24,8 @@ scrape_configs:
         - {{ hostvars[host].ansible_host }}:9100
 {% endfor %}
 {% endif %}
-{% if groups["domserver"][0] is defined %}
-  - job_name: {{ group_prefix ~ domjudge }}
+{% if groups[group_prefix+"domserver"][0] is defined %}
+  - job_name: {{ group_prefix ~ 'domjudge' }}
     basic_auth:
       username: admin
       password: {{ ADMIN_PASSWORD }}
