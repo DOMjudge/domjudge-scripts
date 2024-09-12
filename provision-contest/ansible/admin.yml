@@ -52,6 +52,7 @@
         state: present
         pkg:
           - ansible
+          - ansible-lint
           - git-gui
           - gitk
           - makepasswd
