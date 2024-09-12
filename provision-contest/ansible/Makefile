@@ -29,7 +29,7 @@ VENDOR=
 else
 VENDOR=roles/domjudge_checkout/files/webapp/vendor
 $(VENDOR): $(VENDORTGZ)
-	-cd roles/domjudge_checkout/files/webapp && tar xzf ../$(notdir $<)
+	-mkdir -p roles/domjudge_checkout/files/webapp && cd roles/domjudge_checkout/files/webapp && tar xzf ../$(notdir $<)
 endif
 
 ROLES=domserver judgehost admin grafana cds presclient presadmin scoreboard mgmt autoanalyst
