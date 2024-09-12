@@ -22,3 +22,21 @@
     src: clusters.j2
     dest: /home/domjudge/.clusterssh/clusters
     mode: 0644
+
+- name: Install tmux-cssh
+  when: not WF_RESTRICTED_NETWORK
+  get_url:
+    url: https://raw.githubusercontent.com/peikk0/tmux-cssh/master/tmux-cssh
+    dest: /usr/local/bin/tmux-cssh
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Install tmux-cssh
+  when: WF_RESTRICTED_NETWORK
+  copy:
+    src: tmux-cssh
+    dest: /usr/local/bin/tmux-cssh
+    mode: 0755
+    owner: root
+    group: root
