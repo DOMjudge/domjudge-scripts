@@ -1,0 +1,3 @@
+#!/usr/bin/sh
+
+tmux-cssh {% for host in groups[item.group] %}{{ host }} {% endfor %}
