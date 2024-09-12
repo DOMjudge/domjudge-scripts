@@ -143,6 +143,22 @@
       become: true
       become_user: domjudge
       block:
+        - name: Add ccsadmin remote
+          git_config:
+            name: "remote.{{ item.remote }}.url"
+            value: "{{ item.url }}"
+            scope: local
+            repo: /home/domjudge/domjudge-checkout
+          loop:
+            - remote: origin
+              url: ansible@10.3.3.224:domjudge
+            - remote: github
+              url: git@github.com:DOMjudge/domjudge.git
+            - remote: sysops
+              url: domjudge@packages:domjudge.git
+            - remote: initial
+              url: ansible@domjudge-ccsadmin1:domjudge.git
+
         - name: Create working copy of the domjudge-scripts repo
           # We use a different directory here to have one single 'upstream' and not have issues with it
           git: repo={{ dj_git_repo_scripts }} dest=/home/domjudge/domjudge-scripts-checkout version=main accept_hostkey=yes update=no
