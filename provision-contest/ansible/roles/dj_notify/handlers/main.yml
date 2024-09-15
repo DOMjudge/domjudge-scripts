@@ -1,0 +1,7 @@
+---
+- name: Restart dj_notify
+  systemd:
+    name: dj_notify
+    enabled: true
+    state: restarted
+    daemon_reload: true

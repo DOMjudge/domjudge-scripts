@@ -150,6 +150,26 @@
     body_format: json
   loop: "{{ ['setup-phase'] + groups['domserver'] }}"
 
+- name: Create project dj_notify webhook
+  when: glitchtip_proj.json | community.general.json_query("[?name=='{{ item }}']") == []
+  ansible.builtin.uri:
+    method: POST
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/projects/domjudge/{{ item }}/alerts/"
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+    body:
+      name: "dj_notify"
+      alertRecipients:
+        - recipientType: "webhook"
+          url: "http://{{ GLITCHTIP_WEBHOOK_DOMAIN }}:9999/"
+      timespanMinutes: 1
+      quantity: 1
+      uptime: true
+    body_format: json
+  loop: "{{ ['setup-phase'] + groups['domserver'] }}"
+
 - name: Check for existing monitors
   ansible.builtin.uri:
     method: GET
