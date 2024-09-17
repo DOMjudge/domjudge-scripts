@@ -102,6 +102,10 @@
   notify:
     - Enable and restart tune_cpu
 
+- name: Enable and restart tune_cpu (flushing as this should always happen even if we fail further)
+  # We need a daemon-reload, so we loose idempotency if we start the service in the next block
+  ansible.builtin.meta: flush_handlers
+
 - name: Copy judgedaemon related systemd unit files
   copy:
     remote_src: true
