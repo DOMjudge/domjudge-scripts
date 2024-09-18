@@ -1,0 +1,30 @@
+---
+- name: Fetch the project id
+  ansible.builtin.uri:
+    method: GET
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/teams/domjudge/DOMjudge/projects/"
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+  register: glitchtip_proj
+- name: Store JSON query in a fact due to escaping problems in the string below
+  set_fact:
+    TEMP_QUERY0: "[?name=='{{ item }}'].id"
+- name: Create an DOMjudge uptime monitor for the project
+  ansible.builtin.uri:
+    method: POST
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/organizations/domjudge/monitors/"
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+    body:
+      expectedBody: ""
+      expectedStatus: 200
+      timeout: 5
+      interval: 2
+      monitorType: "GET"
+      url: "https://{{ hostvars[item].ansible_host }}/public"
+      name: "{{ item }}"
+      project_id: "{{ glitchtip_proj.json | community.general.json_query(TEMP_QUERY0) | first }}"
+    body_format: json

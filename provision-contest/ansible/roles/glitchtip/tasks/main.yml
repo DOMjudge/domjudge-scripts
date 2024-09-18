@@ -1,6 +1,5 @@
 ---
 - name: Create directories
-  become_user: root
   file:
     path: /opt/glitchtip
     state: directory
@@ -15,3 +14,152 @@
     project_src: /opt/glitchtip
     files:
     - docker-compose.yaml
+
+- name: Assume we don't have an account if we didn't specify the token
+  when: not GLITCHTIP_TOKEN
+  block:
+    - name: Wait for stable GlitchTip migrations
+      ansible.builtin.wait_for:
+        timeout: 10
+
+    - name: Fetch CSRF from login page
+      ansible.builtin.uri:
+        method: GET
+        return_content: yes
+        url: "http://localhost:{{ GLITCHTIP_PORT }}/api/docs"
+      register: glitchtip_csrf
+
+    - name: Register DOMjudge account
+      ansible.builtin.uri:
+        method: POST
+        return_content: yes
+        url: "http://localhost:{{ GLITCHTIP_PORT }}/_allauth/browser/v1/auth/signup"
+        status_code: 200
+        headers:
+          Cookie: "{{ glitchtip_csrf.cookies_string }}"
+          X-CSRFTOKEN: "{{ glitchtip_csrf.cookies_string | regex_search('csrftoken=([a-zA-Z0-9]+)', '\\1') | first }}"
+        body:
+          email: "team@domjudge.org"
+          password: "{{ GLITCHTIP_PASSWORD }}"
+        body_format: json
+      register: glitchtip_register
+
+    - name: Create API token
+      ansible.builtin.uri:
+        method: POST
+        return_content: yes
+        url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/api-tokens/"
+        status_code: 201
+        headers:
+          Cookie: "{{ glitchtip_register.cookies_string }}"
+          X-CSRFTOKEN: "{{ glitchtip_register.cookies_string | regex_search('csrftoken=([a-zA-Z0-9]+)', '\\1') | first }}"
+        body:
+          label: "ansible"
+          scopes: [
+            "project:read",
+            "project:write",
+            "project:admin",
+            "project:releases",
+            "team:read",
+            "team:write",
+            "team:admin",
+            "event:read",
+            "event:write",
+            "event:admin",
+            "org:read",
+            "org:write",
+            "org:admin",
+            "member:read",
+            "member:write",
+            "member:admin"
+          ]
+        body_format: json
+      register: glitchtip_token
+
+    - name: Set API token
+      ansible.builtin.set_fact:
+        GLITCHTIP_TOKEN: "{{ glitchtip_token.json.token }}"
+
+- name: Check for existing organizations
+  ansible.builtin.uri:
+    method: GET
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/organizations/"
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+  register: glitchtip_org
+
+- name: Create DOMjudge organization
+  when: glitchtip_org.json | community.general.json_query("[?name=='DOMjudge']") == []
+  ansible.builtin.uri:
+    method: POST
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/organizations/"
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+    body:
+      name: "DOMjudge"
+    body_format: json
+  register: glitchtip_org
+
+- name: Check for existing teams
+  ansible.builtin.uri:
+    method: GET
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/organizations/domjudge/teams/"
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+  register: glitchtip_team
+
+- name: Create DOMjudge team
+  when: glitchtip_team.json | community.general.json_query("[?slug=='DOMjudge']") == []
+  ansible.builtin.uri:
+    method: POST
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/organizations/domjudge/teams/"
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+    body:
+      slug: "DOMjudge"
+    body_format: json
+  register: glitchtip_team
+
+- name: Check for existing projects
+  ansible.builtin.uri:
+    method: GET
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/teams/domjudge/DOMjudge/projects/"
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+  register: glitchtip_proj
+
+- name: Create DOMjudge projects
+  when: glitchtip_proj.json | community.general.json_query("[?name=='{{ item }}']") == []
+  ansible.builtin.uri:
+    method: POST
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/teams/domjudge/DOMjudge/projects/"
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+    body:
+      name: "{{ item }}"
+      platform: "php-symfony"
+    body_format: json
+  loop: "{{ ['setup-phase'] + groups['domserver'] }}"
+
+- name: Check for existing monitors
+  ansible.builtin.uri:
+    method: GET
+    return_content: yes
+    url: "http://localhost:{{ GLITCHTIP_PORT }}/api/0/organizations/domjudge/monitors/"
+    headers:
+      Authorization: "Bearer {{ GLITCHTIP_TOKEN }}"
+  register: glitchtip_mon
+
+- name: Create DOMjudge monitors
+  when: glitchtip_mon.json | community.general.json_query("[?name=='{{ item }}']") == []
+  loop: "{{ groups['domserver'] }}"
+  include_tasks: create-monitor.yml
