@@ -44,6 +44,7 @@ There are a few places where additional files should/can be added:
 * Machine/group specific local packages under `roles/base_packages/files/install-*/`.
 * Judgehost chroot local packages under `roles/judgedaemon/files/install-chroot/`.
 * The vendor dependencies under `roles/domjudge_checkout/files/vendor.tgz`.
+* Machine/group specific docker containers under `roles/docker/files/containers-*/`.
 
 ## TODO
 
