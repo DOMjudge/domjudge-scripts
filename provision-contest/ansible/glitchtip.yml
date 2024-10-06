@@ -1,0 +1,21 @@
+---
+- hosts: glitchtip
+  vars:
+    host_type: glitchtip
+  become: true
+  handlers:
+    - include_tasks: handlers.yml
+  roles:
+    - role: base_packages
+      tags: base_packages
+    - role: icpc_fixes
+      tags: icpc_fixes
+      when: ICPC_IMAGE
+    - role: system_fixes
+      tags: system_fixes
+    - role: hosts
+      tags: hosts
+    - role: docker
+      tags: docker
+    - role: glitchtip
+      tags: glitchtip
