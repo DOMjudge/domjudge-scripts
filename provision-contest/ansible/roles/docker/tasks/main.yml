@@ -23,6 +23,15 @@
       - python3-pip
       - python3-docker
 
+# The `runc` script interferes with running Docker containers.
+# Mark it as not executable such that containers can run normally.
+# If the machine does need the `runc` in the image, a custom fix has to be applied.
+- name: Remove executable bit from "/usr/local/bin/runc"
+  when: ICPC_IMAGE
+  file:
+    dest: /usr/local/bin/runc
+    mode: -x
+
 - name: Load container archives
   include_tasks: load-container.yml
   with_filetree:
