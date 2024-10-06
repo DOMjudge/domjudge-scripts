@@ -1,0 +1,17 @@
+---
+- name: Create directories
+  become_user: root
+  file:
+    path: /opt/glitchtip
+    state: directory
+
+- name: Create compose file
+  template:
+    src: templates/docker-compose.yaml.j2
+    dest: /opt/glitchtip/docker-compose.yaml
+
+- name: Deploy GlitchTip compose stack
+  community.docker.docker_compose_v2:
+    project_src: /opt/glitchtip
+    files:
+    - docker-compose.yaml
