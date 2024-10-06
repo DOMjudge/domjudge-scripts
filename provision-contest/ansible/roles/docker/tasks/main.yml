@@ -22,3 +22,9 @@
       - docker-compose-plugin
       - python3-pip
       - python3-docker
+
+- name: Load container archives
+  include_tasks: load-container.yml
+  with_filetree:
+    - files/containers-{{ host_type }}/
+  when: item.state == 'file' and (item.path | splitext | last) == ".tar"
