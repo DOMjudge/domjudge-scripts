@@ -61,7 +61,12 @@ domjudge-ccsadmin5 ansible_host=10.3.3.227
 [grafana]
 # During the WFs we use one of the ccsadmin machines
 # Doesn't matter which (admin) machine but should not be 1 as that runs ansible
-domjudge-ccsadmin2 ansible_host=10.3.3.225
+domjudge-ccsadmin2 ansible_host=10.3.3.224
+
+[glitchtip]
+# During the WFs we use one of the ccsadmin machines
+# Doesn't matter which (admin) machine but should not be 1 as that runs ansible
+domjudge-ccsadmin3 ansible_host=10.3.3.225
 
 [cds]
 domjudge-cds ansible_host=10.2.2.228
