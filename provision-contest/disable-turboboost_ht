@@ -14,11 +14,22 @@ for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
     if [ -f $cpu/cpufreq/scaling_governor ]; then
         chmod u+w $cpu/cpufreq/scaling_governor
     fi
+    for boundary in min max; do
+        if [ -f $cpu/cpufreq/scaling_${boundary}_freq ]; then
+            chmod u+w $cpu/cpufreq/scaling_${boundary}_freq
+        fi
+    done
 
     # Set governor to performance and do not allow changes later on.
     if [ -f $cpu/cpufreq/scaling_governor ]; then
         echo performance > $cpu/cpufreq/scaling_governor
         chmod a-w $cpu/cpufreq/scaling_governor
+    fi
+
+    # Hardware maximum performance.
+    if [ -f $cpu/cpufreq/scaling_min_freq ] && [ -f $cpu/cpufreq/scaling_max_freq ]; then
+        cp $cpu/cpufreq/scaling_{max,min}_freq
+        chmod a-w $cpu/cpufreq/scaling_{max,min}_freq
     fi
 
     # Disable all but one thread on each core. Both core_id and physical_package_id are
