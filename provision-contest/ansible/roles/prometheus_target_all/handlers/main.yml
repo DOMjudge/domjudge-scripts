@@ -1,4 +1,10 @@
 ---
+- name: Restart rsyslog
+  service:
+    name: rsyslog
+    enabled: true
+    state: restarted
+
 - name: Restart promtail
   service:
     name: promtail

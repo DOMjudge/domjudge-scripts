@@ -95,6 +95,15 @@
         mode: 0644
       notify: Restart promtail
     
+    - name: Setup promtail push
+      copy:
+        src: 71-push.conf
+        dest: /etc/rsyslog.d/
+        mode: 0655
+        owner: root
+        group: root
+      notify: Restart rsyslog
+
     - name: Setup promtail systemd
       copy:
         src: promtail.service
