@@ -1,0 +1,17 @@
+---
+# These tasks install the DOMjudge Notify script
+
+- name: Install dj_notify
+  copy:
+    src: "dj_notify.py"
+    dest: "/home/domjudge/bin/dj_notify.py"
+    owner: domjudge
+    group: domjudge
+    mode: 0755
+  notify: Restart dj_notify
+
+- name: Copy dj_notify systemd unit file
+  template:
+    src: "dj_notify.service.j2"
+    dest: "/etc/systemd/system/dj_notify.service"
+  notify: Restart dj_notify

@@ -1,0 +1,39 @@
+---
+- name: Add Docker GPG apt Key
+  apt_key:
+    data: "{{ lookup('ansible.builtin.file', 'docker.asc') }}"
+    state: present
+
+- name: Add Docker Repository
+  when: not WF_RESTRICTED_NETWORK
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+
+- name: Install Docker and dependencies
+  apt:
+    state: present
+    install_recommends: false
+    pkg:
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-ce
+      - docker-ce-cli
+      - docker-compose-plugin
+      - python3-pip
+      - python3-docker
+
+# The `runc` script interferes with running Docker containers.
+# Mark it as not executable such that containers can run normally.
+# If the machine does need the `runc` in the image, a custom fix has to be applied.
+- name: Remove executable bit from "/usr/local/bin/runc"
+  when: ICPC_IMAGE
+  file:
+    dest: /usr/local/bin/runc
+    mode: -x
+
+- name: Load container archives
+  include_tasks: load-container.yml
+  with_filetree:
+    - files/containers-{{ host_type }}/
+  when: item.state == 'file' and (item.path | splitext | last) == ".tar"
