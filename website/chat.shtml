@@ -11,10 +11,42 @@
     <a href="https://join.slack.com/t/domjudge-org/shared_invite/zt-e5utmok0-zFuCBXKlKQndUVfcCOyNJQ" target="_blank">
     this link to sign up</a>.
 </p>
+
+<h3>Netiquette</h3>
 <p>
-    Once you have joined the Slack workspace, feel free to ask any DOMjudge-related
-    questions you might have. Please do note that it may sometimes take a bit longer
-    than a few minutes to get a response, partly because people might be in different timezones.
-</p>
+    Once you have joined the Slack workspace, feel free to ask any
+    DOMjudge-related questions you might have. Please do take some
+    common internet etiquette in consideration:
+<p>
+<dl>
+    <dt>Don't demand (quick) answers</dt>
+    <dd>
+        We're all volunteers doing this in our free time. Although we
+        do our best to respond to questions, people may not always be
+        available due to timezone differences or simply other reasons.
+    </dd>
+
+    <dt>Ask questions in public channels</dt>
+    <dd>
+        Do not ask questions privately, unless you're invited to or
+        you know that that person knows the answer and this is not
+        relevant to others.
+    </dd>
+
+    <dt>Provide clear details</dt>
+    <dd>
+        When you run into a problem or error, provide as detailed as
+        possible how you got there and any exact errors you got. The
+        more details you provide, the better and quicker we can help.
+    </dd>
+
+    <dt>Prefer text over screenshots</dt>
+    <dd>
+        When possible, copy\&amp;paste error messages, configuration
+        data, etc. as <code>code quoted text</code> instead of
+        screenshots. This makes it easier to read on any device and
+        copy&amp;paste.
+    </dd>
+</ul>
 
 <!--#include virtual="/footer.shtml" -->
