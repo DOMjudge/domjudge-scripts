@@ -42,7 +42,7 @@
 
     <dt>Prefer text over screenshots</dt>
     <dd>
-        When possible, copy\&amp;paste error messages, configuration
+        When possible, copy&amp;paste error messages, configuration
         data, etc. as <code>code quoted text</code> instead of
         screenshots. This makes it easier to read on any device and
         copy&amp;paste.
