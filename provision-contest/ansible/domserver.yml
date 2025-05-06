@@ -59,7 +59,7 @@
       tags: prometheus_target_all
       when: GRAFANA_MONITORING
   handlers:
-    - include: handlers.yml
+    - import_tasks: handlers.yml
   tasks:
     - name: Install domserver required packages
       apt:

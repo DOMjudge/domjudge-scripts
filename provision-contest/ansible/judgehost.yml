@@ -39,7 +39,7 @@
       tags: prometheus_target_all
       when: GRAFANA_MONITORING
   handlers:
-    - include: handlers.yml
+    - import_tasks: handlers.yml
   pre_tasks:
     - name: Check if the service is already available
       stat:

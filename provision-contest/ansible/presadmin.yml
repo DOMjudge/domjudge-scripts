@@ -8,7 +8,7 @@
     GRAPHICAL: true
   become: true
   handlers:
-    - include: handlers.yml
+    - import_tasks: handlers.yml
   roles:
     - role: base_packages
       tags: base_packages
