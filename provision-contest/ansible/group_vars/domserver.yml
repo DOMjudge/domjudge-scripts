@@ -1,0 +1,2 @@
+# If set, configure the real_ip_from header in NGINX to trust a proxy
+# FRONT_REVERSE_PROXY: 192.168.0.1
