@@ -1,6 +1,11 @@
 ---
 # These tasks configure the CDS
 
+- name: Install OpenJDK17
+  apt:
+    name:
+      - openjdk-17-jre
+
 - name: Get the CDS release
   uri:
     url: https://api.github.com/repos/icpctools/icpctools/releases?per_page=1
