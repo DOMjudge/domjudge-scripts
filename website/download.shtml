@@ -45,26 +45,6 @@ See the <a href="https://hub.docker.com/r/domjudge/domserver/">Docker Hub
 repository for the DOMserver</a> to get started.
 </p>
 
-<h3>Debian Packages</h3>
-
-<p>There are <a href="https://www.debian.org">Debian</a> packages
-available for the amd64 architecture; other architectures might be buildable
-from the source packages.
-The packages are built and tested on Debian <em>stable</em>, but also on newer versions and the various versions of Ubuntu.</p>
-
-<p>To install these packages, add our
-<a href="/repokey.asc">repository GPG key</a> directly to APT with</p>
-<pre>curl -o - https://www.domjudge.org/repokey.asc | sudo tee /etc/apt/trusted.gpg.d/domjudge.org.asc</pre>
-<p>or first check our signatures on the key for authenticity.
-Then add the following lines to <code>/etc/apt/sources.list</code>:</p>
-<pre>
-deb     https://domjudge.org/debian unstable/
-deb-src https://domjudge.org/debian unstable/
-</pre>
-<p>Note the slash following <code>unstable</code> and the missing
-section(s) <code>main contrib non-free</code>.
-</p>
-
 <h3>Other downloads</h3>
 
 <p>The <a href="/snapshot/">snapshot directory</a> contains nightly builds,
