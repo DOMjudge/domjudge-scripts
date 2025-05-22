@@ -1,2 +1,0 @@
-[org/compiz/profiles/gnome-flashback/plugins/core]
-active-plugins=['core', 'composite', 'opengl', 'compiztoolbox', 'decor', 'gnomecompat', 'grid', 'imgpng', 'mousepoll', 'move', 'place', 'regex', 'resize', 'session', 'snap', 'vpswitch', 'wall', 'animation', 'commands', 'expo', 'ezoom', 'fade', 'scale', 'switcher']
