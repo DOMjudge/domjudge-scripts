@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=domlogo
+Type=Application
+Exec=env REQUESTS_CA_BUNDLE=/usr/local/share/ca-certificates/domserver.crt bash -c "sleep 3; cd {{ DJ_DIR }}; python3 ./domlogo.py"
