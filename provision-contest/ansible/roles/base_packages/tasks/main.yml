@@ -5,14 +5,15 @@
   block:
   - name: Replace pc2.ecs.baylor.edu by packages in apt sources
     replace:
-      dest: "/etc/apt/{{ item }}"
+      dest: "/etc/apt/sources.list.d/{{ item }}"
       regexp: 'sysopspackages\.icpc\.global'
       replace: 'packages'
     loop:
-      - sources.list
-      - sources.list.d/mono.list
-      - sources.list.d/vscode.list
-      - sources.list.d/pypy-ubuntu-ppa-jammy.list
+      - ubuntu.sources
+      - vscode.sources
+      - firefox.sources
+      - sysopspackagesicpcglobal.sources
+      - jetbrains.sources
     notify: Run apt update
 
   - name: Add packages to hosts file
