@@ -36,7 +36,7 @@
 - name: Create chroot
   shell: "set -o pipefail &&
           {{ DJ_DIR }}/misc-tools/dj_make_chroot -y -H
-            -i icpc-kotlinc,openjdk-17-jdk-headless
+            -i openjdk-21-jdk-headless
             -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\"
             -s \"$(ls /tmp/dj_ansible/chroot-list/*.list 2>/dev/null | tr '\n' ',')\"
             2>&1 | tee /tmp/dj_make_chroot.log;
