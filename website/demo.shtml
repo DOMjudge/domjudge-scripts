@@ -27,8 +27,10 @@ populated with data from a live contest.</p>
 <dt><a href="demoweb/public/">Public interface</a></dt>
 <dd>Shows the scoreboard and the problemset.</dd>
 <dt><a href="demoweb/team/">Team interface</a></dt>
-<dd>Shows your submissions, submission details, clarifications, the problemset and the scoreboard. Log in with username and password <em>team</em>.
-As this is a demo, you can't actually submit solutions.</dd>
+<dd>Shows your submissions, submission details, clarifications, the
+problemset and the scoreboard. Log in with username and password <em>team</em>.
+You can submit solutions through the web interface, but as this is a demo,
+these will not get judged. The submit client is also not available.</dd>
 <dt><a href="demoweb/jury/">Jury/admin interface</a></dt>
 <dd>The full set of options available to judges and administrators.
 Log in with username and password <em>jury</em> or username and password <em>admin</em> respectively. The admin interface is a superset of the jury interface with additional options to configure the contests.
@@ -37,6 +39,16 @@ Team source code and testdata in/output has been replaced with a placeholder, so
 and testdata diff functionality is not useful.</dd>
 <dt><a href="demoweb/api/doc/">API documentation</a></dt>
 <dd>Documentation on how to use DOMjudge from scripts. This is used by our submit client and the <code>configure-domjudge</code> &amp; <code>import-contest</code> scripts. Also useful if you want to use only parts of DOMjudge, for example as you use your own custom scoreboard or another submission method. Some of the <a href="tools">tools</a> also work via this API.</dd>
+<dt><a href="demoweb/api/">Contest API</a></dt>
+<dd>The contest API itself, which adheres to the <a href="https://ccs-specs.icpc.io/draft/contest_api">Contest API specification</a>.
+Note that we do not implement all optional details of the API, some
+new specifications from the draft version may be work in progress.
+We also have some private additions; additional properties in
+endpoints specified by the standard can be disabled by passing the URL
+parameter <kbd>strict=1</kbd>.
+Various endpoints are available (or provide full access) only with
+admin credentials, which have to be provided via HTTP basic auth;
+username and password are <em>admin</em>.</dd>
 </dl>
 
 <p>The data in the system is reset to a known good state every night, so feel
