@@ -14,6 +14,14 @@ disable_cpu () {
 
 store_isolcpus_fact="/var/tmp/isolcpus"
 
+# Learn all efficency cores if they exist
+cpu_list=()
+if [ -f /sys/devices/cpu_atom/cpus ]; then
+  range="$(cat /sys/devices/cpu_atom/cpus)"
+  IFS='-' read -r start end <<< "$range"
+  cpu_list=($(eval echo {$start..$end}))
+fi
+
 # shellcheck disable=SC2012
 for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
     [[ $(basename $cpu) =~ ^cpu[0-9]+$ ]] || continue
@@ -49,6 +57,20 @@ for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
     # adds a newline after each file, we do not want to rely on `cat` to always add this
     # 'delimiter'.
     core_id=$(cat $cpu/topology/core_id | tr -d '\n')'-'$(cat $cpu/topology/physical_package_id | tr -d '\n')
+
+    # Disable all efficiency cores
+    found=0
+    for efficiency_core in "${cpu_list[@]}"; do
+      if [[ "$cpu" == "/sys/devices/system/cpu/cpu$efficiency_core" ]]; then
+        disable_cpu $cpu
+        found=1
+        break
+      fi
+    done
+    if [ "$found" -eq "1" ]; then
+      continue
+    fi
+
     if [[ ${core_ids[$core_id]:-} ]]; then
         disable_cpu $cpu
     else
