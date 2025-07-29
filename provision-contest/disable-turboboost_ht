@@ -63,6 +63,8 @@ fi
 
 DIR_INTEL=/sys/devices/system/cpu/intel_pstate
 DIR_AMD=/sys/devices/system/cpu/cpufreq
+# Same for some ARM CPUs
+FILE_AMD=$DIR_AMD/boost
 if [ -d $DIR_INTEL ]; then
     # now disable turbo boost
     FILE=$DIR_INTEL/no_turbo
@@ -75,11 +77,10 @@ if [ -d $DIR_INTEL ]; then
     # increase freq from powersaving to normal, but don't overclock
     echo 100 > $DIR_INTEL/min_perf_pct
     echo 100 > $DIR_INTEL/max_perf_pct
-elif [ -d $DIR_AMD ]; then
+elif [ -f $FILE_AMD ]; then
     # now disable boosting
-    FILE=$DIR_AMD/boost
-    echo -n 0 > $FILE || echo "Could not write to '$FILE', ignoring for now..."
-    if [ $(cat $FILE) -ne 0 ]; then
+    echo -n 0 > $FILE_AMD || echo "Could not write to '$FILE_AMD', ignoring for now..."
+    if [ $(cat $FILE_AMD) -ne 0 ]; then
         echo "Error: turboboost still enabled!"
         exit 1
     fi
