@@ -12,6 +12,8 @@ disable_cpu () {
   disabled_cores+=("${cpu##*/}")
 }
 
+store_isolcpus_fact="/var/tmp/isolcpus"
+
 # shellcheck disable=SC2012
 for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
     [[ $(basename $cpu) =~ ^cpu[0-9]+$ ]] || continue
@@ -53,6 +55,11 @@ for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
         core_ids[$core_id]=1
     fi
 done
+
+if [ -n "${store_isolcpus_fact}" ]; then
+  csv_string=$(IFS=, ; echo "${disabled_cores[*]}")
+  echo "$csv_string" > "$store_isolcpus_fact"
+fi
 
 DIR_INTEL=/sys/devices/system/cpu/intel_pstate
 DIR_AMD=/sys/devices/system/cpu/cpufreq
