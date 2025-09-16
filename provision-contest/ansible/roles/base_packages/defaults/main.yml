@@ -42,6 +42,7 @@ INSTALLED_PACKAGES:
   - php-mysql
   - php-xml
   - php-zip
+  - php-bcmath
   - pv
   - python3-sphinx
   - python3-sphinx-rtd-theme
