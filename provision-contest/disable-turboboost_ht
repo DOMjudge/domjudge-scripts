@@ -19,6 +19,7 @@ cpu_list=()
 if [ -f /sys/devices/cpu_atom/cpus ]; then
   range="$(cat /sys/devices/cpu_atom/cpus)"
   IFS='-' read -r start end <<< "$range"
+  # shellcheck disable=SC2207,SC2175
   cpu_list=($(eval echo {$start..$end}))
 fi
 
