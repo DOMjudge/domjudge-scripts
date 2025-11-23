@@ -35,6 +35,8 @@ on the account `domjudge@vm-domjudge`):
     under `/srv/http/domjudge/docs/manual` by adding a new version to the
     file `versions.json` and updating the redirect destination in `index.html`
     and `team.html`. The documentation is regenerated once every hour.
+ 1. Add the new version to the dependabot configuration
+    [here](https://github.com/DOMjudge/domjudge/blob/main/.github/dependabot.yml).
  1. Bump the Docker images by starting a new pipeline
     [here](https://gitlab.com/DOMjudge/domjudge-packaging/-/pipelines/new) and
     setting `DOMJUDGE_VERSION` to the version to release. Set `DOMJUDGE_LATEST`
