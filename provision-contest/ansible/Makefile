@@ -33,7 +33,7 @@ $(VENDOR): $(VENDORTGZ)
 endif
 
 ROLES=domserver judgehost admin grafana cds presclient presadmin scoreboard mgmt autoanalyst
-$(ROLES): %: %.yml hosts group_vars/all/secret.yml $(VENDOR) $(SSHKEY) $(SSHKEY).pub
+$(ROLES): %: %.yml hosts group_vars/onprem/secret.yml $(VENDOR) $(SSHKEY) $(SSHKEY).pub
 	ansible-playbook -i hosts $<
 
 FAILED_ROLES=$(addprefix failed-,$(ROLES))
