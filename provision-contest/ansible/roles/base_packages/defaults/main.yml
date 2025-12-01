@@ -3,6 +3,7 @@ REMOVED_PACKAGES:
   - ntp
 
 INSTALLED_PACKAGES:
+  - yarnpkg
   - ack
   - acl
   - apache2-utils
@@ -24,6 +25,7 @@ INSTALLED_PACKAGES:
   - git-gui
   - gitk
   - htop
+  - btop
   - httpie
   - jq
   - latexmk
@@ -53,3 +55,9 @@ INSTALLED_PACKAGES:
   - tree
   - unzip
   - zip
+
+GRAPHICAL_INSTALLED_PACKAGES:
+  - dconf-cli
+  - python3-psutil
+  - gnome-terminal
+  - fonts-noto-color-emoji
