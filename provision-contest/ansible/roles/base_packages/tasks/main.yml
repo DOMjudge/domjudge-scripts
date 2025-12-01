@@ -57,6 +57,12 @@
     state: present
     pkg: "{{ INSTALLED_PACKAGES }}"
 
+- name: Install common required/useful graphical packages
+  apt:
+    state: present
+    pkg: "{{ GRAPHICAL_INSTALLED_PACKAGES }}"
+  when: GRAPHICAL
+
 - name: Install local DEB packages
   include_tasks: install-local-package.yml
   with_fileglob:
