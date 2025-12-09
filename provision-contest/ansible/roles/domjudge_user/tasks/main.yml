@@ -24,21 +24,23 @@
 
 - name: Setup autologin on desktop installs
   block:
-    - name: Enable GDM autologin
+    - name: Enable lightdm autologin
       lineinfile:
-        path: /etc/gdm3/custom.conf
-        regexp: 'AutomaticLoginEnable'
-        line: 'AutomaticLoginEnable=true'
+        path: /etc/lightdm/lightdm.conf
+        regexp: 'autologin-timeout'
+        line: 'autologin-timeout=0'
         create: true
         mode: 0644
-      notify: Restart gdm
+      notify: Restart lightdm
 
     - name: Automatically login domjudge user
       lineinfile:
-        path: /etc/gdm3/custom.conf
-        regexp: 'AutomaticLogin\s*='
-        line: 'AutomaticLogin=domjudge'
-      notify: Restart gdm
+        path: /etc/lightdm/lightdm.conf
+        regexp: 'autologin-user'
+        line: 'autologin-user=domjudge'
+        create: true
+        mode: 0644
+      notify: Restart lightdm
 
     - name: Make sure autostart directory exists
       file:
