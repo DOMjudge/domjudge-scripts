@@ -42,7 +42,7 @@
 - name: Create chroot
   shell: "set -o pipefail &&
           {{ DJ_DIR }}/misc-tools/dj_make_chroot -y -H
-            -i openjdk-21-jdk-headless
+            -i openjdk-21-jdk-headless,gcc-14,g++-14
             -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\"
             -s \"$(ls /tmp/dj_ansible/chroot-list/*.list 2>/dev/null | tr '\n' ',')\"
             2>&1 | tee /tmp/dj_make_chroot.log;
@@ -55,6 +55,11 @@
   args:
     executable: /bin/bash
     creates: "/chroot/domjudge"
+
+- name: Set GCC/G++ 14 as default in chroot
+  shell: |
+    chroot /chroot/domjudge /usr/bin/update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100
+    chroot /chroot/domjudge /usr/bin/update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
 
 - name: ICPC Kotlin setup in chroot
   when: ICPC_IMAGE
@@ -75,6 +80,29 @@
       loop:
         - kotlin
         - kotlinc
+
+- name: Kotlin setup in chroot
+  when: not ICPC_IMAGE
+  block:
+    - name: Download and extract Kotlin compiler to chroot
+      ansible.builtin.unarchive:
+        src: https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+        dest: /chroot/domjudge/usr/lib/
+        remote_src: true
+
+    - name: Create kotlin symlinks in chroot
+      ansible.builtin.file:
+        src: /usr/lib/kotlinc/bin/{{ item }}
+        dest: /chroot/domjudge/usr/local/bin/{{ item }}
+        state: link
+        force: true
+        follow: false
+      loop:
+        - kapt
+        - kotlin
+        - kotlinc
+        - kotlinc-js
+        - kotlinc-jvm
 
 - name: Pre-generate the kernel flags for ansible usage
   set_fact:
