@@ -4,6 +4,7 @@ on the account `domjudge@vm-domjudge`):
 
  1. Test everything. (duh...)
  1. Commit the correct version number in the `ChangeLog` and `README` files.
+ 1. Change the default installation method in configure.ac to tarball.
  1. Discuss if the current second to last minor version will now be EOL.
  1. Update https://github.com/DOMjudge/domjudge/security/policy to support 2 minor versions, including     the one now being released.
  1. Change the constants `webapp/src/Controller/API/GeneralInfoController.php`
@@ -27,6 +28,7 @@ on the account `domjudge@vm-domjudge`):
     git checkout main
     ```
  1. Update files above to `{version+1}DEV` and commit.
+ 1. Change the default installation method in configure.ac back to git.
  1. On the server the tarball will be built, signed and published.
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
     repository under `website/` and run `make install` as domjudge@domjudge
