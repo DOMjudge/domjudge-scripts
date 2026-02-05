@@ -91,7 +91,8 @@ while not contest_data['start_time']:
     contest_data = requests.get(f'{api_url}/contests/{contest}', verify=verify).json()
 
 contest_start = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z').timestamp()
-contest_duration = (datetime.strptime(contest_data['duration'], '%H:%M:%S.000') - datetime(1900, 1, 1)).total_seconds()
+duration_parts = contest_data['duration'].split(':')
+contest_duration = int(duration_parts[0]) * 3600 + int(duration_parts[1]) * 60 + float(duration_parts[2])
 
 if args.no_remap_teams:
     if args.ignore_teamids:
