@@ -3,6 +3,7 @@
 import argparse
 from halo import Halo
 import json
+import os
 from zipfile import ZipFile
 from datetime import datetime
 from datetime import timedelta
@@ -32,6 +33,7 @@ parser.add_argument('-r', '--no_remap_teams', help='do not remap team ID\'s to t
 parser.add_argument('-I', '--ignore_teamids', help='Completely randomize teamids during replay, not storing any mapping.', action='store_true')
 parser.add_argument('-i', '--internal_data_source', help='The API uses an internal API source.', action='store_true')
 parser.add_argument('-f', '--simulation_speed', help='Speed up replay speed by this factor.')
+parser.add_argument('-z', '--flatten_zips', help='Flatten directory hierarchy in submission ZIPs', action='store_true')
 
 args = parser.parse_args()
 
@@ -186,7 +188,12 @@ for submission in submissions:
     files = []
     problem_zip = ZipFile(submission['id'] + ".zip")
     for name in problem_zip.namelist():
-        file_tuple = ('code[]', (name, problem_zip.read(name), 'text/plain'))
+        if args.flatten_zips:
+            if name.endswith('/'):
+                continue
+            file_tuple = ('code[]', (os.path.basename(name), problem_zip.read(name), 'text/plain'))
+        else:
+            file_tuple = ('code[]', (name, problem_zip.read(name), 'text/plain'))
         files.insert(len(files), file_tuple)
     first_filename = files[0][1][0]
     # We don't allow python2 anymore, let's rewrite it as python3 and try our
