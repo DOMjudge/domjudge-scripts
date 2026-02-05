@@ -6,7 +6,6 @@ import json
 import os
 from zipfile import ZipFile
 from datetime import datetime
-from datetime import timedelta
 from itertools import dropwhile
 import time
 import sys
@@ -92,7 +91,6 @@ while not contest_data['start_time']:
     contest_data = requests.get(f'{api_url}/contests/{contest}', verify=verify).json()
 
 contest_start = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z').timestamp()
-contest_start_obj = datetime.strptime(contest_data['start_time'], '%Y-%m-%dT%H:%M:%S%z')
 contest_duration = (datetime.strptime(contest_data['duration'], '%H:%M:%S.000') - datetime(1900, 1, 1)).total_seconds()
 
 if args.no_remap_teams:
