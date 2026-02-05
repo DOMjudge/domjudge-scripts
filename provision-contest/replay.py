@@ -32,7 +32,7 @@ parser.add_argument('--insecure', help='do not verify SSL certificate', action='
 parser.add_argument('-r', '--no_remap_teams', help='do not remap team ID\'s to team ID\'s of contest from API.', action='store_true')
 parser.add_argument('-I', '--ignore_teamids', help='Completely randomize teamids during replay, not storing any mapping.', action='store_true')
 parser.add_argument('-i', '--internal_data_source', help='The API uses an internal API source.', action='store_true')
-parser.add_argument('-f', '--simulation_speed', help='Speed up replay speed by this factor.')
+parser.add_argument('-f', '--simulation_speed', help='Speed up replay speed by this factor. Use 0 to not sleep at all.')
 parser.add_argument('-z', '--flatten_zips', help='Flatten directory hierarchy in submission ZIPs', action='store_true')
 
 args = parser.parse_args()
@@ -149,21 +149,22 @@ for submission in submissions:
     minutes = int(times[1])
     seconds = float(times[2])
     orig_submission_time = hours*3600 + minutes*60 + seconds
-    new_submission_time = orig_submission_time/simulation_speed
-    time_from_start = time.time() - contest_start
-    time_diff = new_submission_time - time_from_start
-    if time_diff > 0:
-        logging.info(f'Waiting for simulated contest time of {hours}:{minutes:02}:{seconds:06.3f}.')
-        spinner = Halo(spinner='dots', text=f'Sleeping for ~{str(round(time_diff,2))}s')
-        spinner.start()
-        while time_diff > 1:
-            time.sleep(1)
-            time_from_start = time.time() - contest_start
-            time_diff = new_submission_time - time_from_start
-            spinner.text = f'Sleeping for ~{str(round(time_diff,2))}s'
+    if simulation_speed != 0:
+        new_submission_time = orig_submission_time/simulation_speed
+        time_from_start = time.time() - contest_start
+        time_diff = new_submission_time - time_from_start
         if time_diff > 0:
-            time.sleep(time_diff)
-        spinner.stop()
+            logging.info(f'Waiting for simulated contest time of {hours}:{minutes:02}:{seconds:06.3f}.')
+            spinner = Halo(spinner='dots', text=f'Sleeping for ~{str(round(time_diff,2))}s')
+            spinner.start()
+            while time_diff > 1:
+                time.sleep(1)
+                time_from_start = time.time() - contest_start
+                time_diff = new_submission_time - time_from_start
+                spinner.text = f'Sleeping for ~{str(round(time_diff,2))}s'
+            if time_diff > 0:
+                time.sleep(time_diff)
+            spinner.stop()
 
     # Make sure that for a given team/problem combination we pick the same team
     # all the time.
