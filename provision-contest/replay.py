@@ -119,6 +119,9 @@ first_submission_time = 0
 if args.submissionid:
     skip_to_submission = args.submissionid
     submissions = list(dropwhile(lambda s: s['id'] != skip_to_submission, submissions))
+    if not submissions:
+        logging.critical(f'Submission {skip_to_submission} not found.')
+        sys.exit(-1)
     logging.info(f'Skipped to submission {skip_to_submission}, {len(submissions)} remaining.')
     first_submission_time = (datetime.strptime(submissions[0]['contest_time'][:-4], '%H:%M:%S') - datetime(1900, 1, 1)).total_seconds()
     orig_contest_duration -= first_submission_time
