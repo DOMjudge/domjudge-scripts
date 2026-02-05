@@ -34,6 +34,8 @@ parser.add_argument('-I', '--ignore_teamids', help='Completely randomize teamids
 parser.add_argument('-i', '--internal_data_source', help='The API uses an internal API source.', action='store_true')
 parser.add_argument('-f', '--simulation_speed', help='Speed up replay speed by this factor. Use 0 to not sleep at all.')
 parser.add_argument('-z', '--flatten_zips', help='Flatten directory hierarchy in submission ZIPs', action='store_true')
+parser.add_argument('-p', '--problem_id', nargs='+', help='Only submit submissions for these problem ID(s).')
+parser.add_argument('-t', '--team_id', nargs='+', help='Only submit submissions for these team ID(s).')
 
 args = parser.parse_args()
 
@@ -55,6 +57,13 @@ else:
 # submissions) are going to be batch-submitted right away.
 submissions = json.load(open('submissions.json'))
 logging.info(f'Loaded {len(submissions)} submissions.')
+
+if args.problem_id:
+    submissions = [s for s in submissions if s['problem_id'] in args.problem_id]
+    logging.info(f'Filtered to {len(submissions)} submissions for problem(s) {", ".join(args.problem_id)}.')
+if args.team_id:
+    submissions = [s for s in submissions if s['team_id'] in args.team_id]
+    logging.info(f'Filtered to {len(submissions)} submissions for team(s) {", ".join(args.team_id)}.')
 
 problem_data = requests.get(f'{api_url}/contests/{contest}/problems', verify=verify).json()
 known_problem_ids = set([p['id'] for p in problem_data])
