@@ -23,6 +23,20 @@
     enabled: false
     state: started
 
+- name: Set kernel ARP parameters required by keepalived
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_file: /etc/sysctl.d/30-keepalived.conf
+    state: present
+  loop:
+    - { key: "net.ipv4.conf.all.arp_ignore",   value: "1" }
+    - { key: "net.ipv4.conf.all.arp_announce", value: "1" }
+    - { key: "net.ipv4.conf.all.arp_filter",   value: "0" }
+    - { key: "net.ipv4.conf.vrrp/{{ CLUSTER_ID }}.arp_filter",   value: "0" }
+    - { key: "net.ipv4.conf.vrrp/{{ CLUSTER_ID }}.accept_local", value: "1" }
+    - { key: "net.ipv4.conf.vrrp/{{ CLUSTER_ID }}.rp_filter",    value: "0" }
+
 - name: Install keepalived alert trigger code
   copy:
     src: alerting/
