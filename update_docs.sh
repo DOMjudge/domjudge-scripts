@@ -34,3 +34,10 @@ for version in $(jq -r -c '.[]' < "${JSON}") ; do
 		cp -r doc/manual/build/html/* "${WEBSERVER_PATH}/${version}/"
 	)
 done
+
+# Use versionswitcher from main branch which has several fixes
+for version in $(jq -r -c '.[]' < "${JSON}") ; do
+	if [ "$version" != "main" ]; then
+		cp "${WEBSERVER_PATH}/main/_static/js/versionswitcher.js" "${WEBSERVER_PATH}/${version}/_static/js/versionswitcher.js"
+	fi
+done
