@@ -15,6 +15,11 @@
     name: domjudge-run
     state: present
 
+- name: Remove temp package directory
+  file:
+    path: /tmp/dj_ansible
+    state: absent
+
 - name: Create temp package directory
   file:
     path: /tmp/dj_ansible
@@ -39,22 +44,45 @@
     creates: /tmp/pc2packages.gpg
   when: ICPC_IMAGE
 
+- name: Check if chroot exists
+  stat:
+    path: /chroot/domjudge
+  register: chroot_stat
+
 - name: Create chroot
-  shell: "set -o pipefail &&
-          {{ DJ_DIR }}/misc-tools/dj_make_chroot -y -H
-            -i openjdk-21-jdk-headless,gcc-14,g++-14
-            -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\"
-            -s \"$(ls /tmp/dj_ansible/chroot-list/*.list 2>/dev/null | tr '\n' ',')\"
-            2>&1 | tee /tmp/dj_make_chroot.log;
-          grep '^Done building chroot in' /tmp/dj_make_chroot.log"
-  environment:
-    DEBMIRROR: "{%- if WF_RESTRICTED_NETWORK and ICPC_IMAGE -%}https://packages/ubuntu/noble
-                {%- elif ICPC_IMAGE -%}https://sysopspackages.icpc.global/ubuntu/noble
-                {%- else -%}
-                {%- endif -%}"
-  args:
-    executable: /bin/bash
-    creates: "/chroot/domjudge"
+  when: not chroot_stat.stat.exists
+  block:
+    - name: Temporarily hide unwanted apt sources from host
+      shell: |
+        for f in /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list \
+                 /etc/apt/sources.list.d/ppa_mozillateam_ppa_noble.list \
+                 /etc/apt/sources.list.d/vscode.sources; do
+          [ -f "$f" ] && mv "$f" "$f.disabled"
+        done
+      args:
+        executable: /bin/bash
+
+    - name: Run dj_make_chroot
+      shell: "set -o pipefail &&
+              {{ DJ_DIR }}/misc-tools/dj_make_chroot -y -H
+                -i openjdk-21-jdk-headless,gcc-14,g++-14,python3
+                -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\"
+                -s \"$(ls /tmp/dj_ansible/chroot-list/*.list 2>/dev/null | tr '\n' ',')\"
+                2>&1 | tee /tmp/dj_make_chroot.log;
+              grep '^Done building chroot in' /tmp/dj_make_chroot.log"
+      environment: "{{ {'DEBMIRROR': chroot_debmirror} if chroot_debmirror else {} }}"
+      vars:
+        chroot_debmirror: "{% if WF_RESTRICTED_NETWORK and ICPC_IMAGE %}https://packages/ubuntu/noble{% elif ICPC_IMAGE %}https://sysopspackages.icpc.global/ubuntu/noble{% endif %}"
+      args:
+        executable: /bin/bash
+
+    - name: Restore hidden apt sources on host
+      shell: |
+        for f in /etc/apt/sources.list.d/*.disabled; do
+          [ -f "$f" ] && mv "$f" "${f%.disabled}"
+        done
+      args:
+        executable: /bin/bash
 
 - name: Set GCC/G++ 14 as default in chroot
   shell: |
