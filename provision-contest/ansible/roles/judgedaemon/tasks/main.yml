@@ -65,7 +65,7 @@
     - name: Run dj_make_chroot
       shell: "set -o pipefail &&
               {{ DJ_DIR }}/misc-tools/dj_make_chroot -y -H
-                -i openjdk-21-jdk-headless,gcc-14,g++-14,python3
+                -i openjdk-21-jdk-headless,gcc-14,g++-14,python3 -k /tmp/pc2packages.gpg
                 -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\"
                 -s \"$(ls /tmp/dj_ansible/chroot-list/*.list 2>/dev/null | tr '\n' ',')\"
                 2>&1 | tee /tmp/dj_make_chroot.log;
@@ -108,6 +108,25 @@
       loop:
         - kotlin
         - kotlinc
+
+- name: ICPC pypy3 in setup in chroot
+  when: ICPC_IMAGE
+  block:
+    - name: Sync pypy3 to chroot
+      ansible.posix.synchronize:
+        src: /opt/pypy3.11-v7.3.18-linux64/
+        dest: /chroot/domjudge/usr/lib/pypy3/
+      delegate_to: "{{ inventory_hostname }}"
+
+    - name: Create pypy3 symlinks in chroot
+      ansible.builtin.file:
+        src: /usr/lib/pypy3/bin/{{ item }}
+        dest: /chroot/domjudge/usr/local/bin/{{ item }}
+        state: link
+        force: true
+        follow: false
+      loop:
+        - pypy3
 
 - name: Kotlin setup in chroot
   when: not ICPC_IMAGE
