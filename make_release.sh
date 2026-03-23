@@ -62,6 +62,7 @@ fi
 
 # Add released tag for revision information:
 sed -i 's/PUBLISHED =.*/PUBLISHED = release/' paths.mk.in
+sed -i "s/INSTALL_METHOD\s*=.*/INSTALL_METHOD    = tarball/" paths.mk.in
 
 make QUIET=1 dist
 

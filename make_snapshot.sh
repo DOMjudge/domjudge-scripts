@@ -39,6 +39,7 @@ git clone -q --no-checkout --depth 1 "$GITURL" dj-clone
 
 # Add released tag for revision information:
 sed -i "s/PUBLISHED =.*/PUBLISHED = $(date +%Y-%m-%d)/" "$DJDIR/paths.mk.in"
+sed -i "s/INSTALL_METHOD\s*=.*/INSTALL_METHOD    = snapshot/" "$DJDIR/paths.mk.in"
 
 quiet make -C $DJDIR dist
 tar -cf $DJDIR.tar $DJDIR
