@@ -71,7 +71,7 @@ $(SSHKEY) $(SSHKEY).pub:
 
 $(SSL_DOMSERVER_FILES):
 	openssl req -x509 -nodes -newkey rsa:4096 -subj "/O=DOMjudge/CN=domjudge" \
-        -addext "subjectAltName = DNS:wf46-domjudge,DNS:wf47-domjudge,DNS:analyst" \
+        -addext "subjectAltName = DNS:domjudge" \
 		-sha256 -days 365 -keyout $(SSL_DOMSERVER).key -out $(SSL_DOMSERVER).crt
 $(SSL_NODEEXPORT_FILES):
 	openssl req -x509 -nodes -newkey rsa:4096 -subj "/O=DOMjudge/CN=metricexporter" \
