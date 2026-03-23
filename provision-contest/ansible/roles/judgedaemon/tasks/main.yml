@@ -33,26 +33,52 @@
     src: chroot-list
     dest: /tmp/dj_ansible/
 
+- name: Convert ASC key to GPG format for debootstrap
+  shell: gpg --dearmor < /etc/apt/trusted.gpg.d/pc2packages.asc > /tmp/pc2packages.gpg
+  args:
+    creates: /tmp/pc2packages.gpg
+  when: ICPC_IMAGE
+
 - name: Create chroot
   shell: "set -o pipefail &&
           {{ DJ_DIR }}/misc-tools/dj_make_chroot -y -H
-            -i icpc-kotlinc,openjdk-17-jdk-headless
+            -i openjdk-21-jdk-headless
             -l \"$(ls /tmp/dj_ansible/install-chroot/*.deb 2>/dev/null | tr '\n' ',')\"
             -s \"$(ls /tmp/dj_ansible/chroot-list/*.list 2>/dev/null | tr '\n' ',')\"
             2>&1 | tee /tmp/dj_make_chroot.log;
           grep '^Done building chroot in' /tmp/dj_make_chroot.log"
   environment:
-    DEBMIRROR: "{%- if WF_RESTRICTED_NETWORK and ICPC_IMAGE -%}https://packages/ubuntu
-                {%- elif ICPC_IMAGE -%}https://sysopspackages.icpc.global/ubuntu
+    DEBMIRROR: "{%- if WF_RESTRICTED_NETWORK and ICPC_IMAGE -%}https://packages/ubuntu/noble
+                {%- elif ICPC_IMAGE -%}https://sysopspackages.icpc.global/ubuntu/noble
                 {%- else -%}
                 {%- endif -%}"
   args:
     executable: /bin/bash
     creates: "/chroot/domjudge"
 
+- name: ICPC Kotlin setup in chroot
+  when: ICPC_IMAGE
+  block:
+    - name: Sync kotlinc to chroot
+      ansible.posix.synchronize:
+        src: /opt/kotlinc/
+        dest: /chroot/domjudge/usr/lib/kotlinc/
+      delegate_to: "{{ inventory_hostname }}"
+
+    - name: Create kotlin symlinks in chroot
+      ansible.builtin.file:
+        src: /usr/lib/kotlinc/bin/{{ item }}
+        dest: /chroot/domjudge/usr/local/bin/{{ item }}
+        state: link
+        force: true
+        follow: false
+      loop:
+        - kotlin
+        - kotlinc
+
 - name: Pre-generate the kernel flags for ansible usage
   set_fact:
-    procline: "apparmor=0 systemd.unified_cgroup_hierarchy=0 cgroup_enable=memory swapaccount=1 isolcpus={{ cpucore | join(',') }}"
+    procline: "apparmor=0 cgroup_enable=memory swapaccount=1 isolcpus={{ cpucore | join(',') }}"
 
 - name: Add cgroup kernel parameters
   lineinfile:

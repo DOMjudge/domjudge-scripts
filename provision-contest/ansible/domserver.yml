@@ -121,7 +121,7 @@
         group: domjudge
         mode: 0755
       loop:
-        - htop
+        - btop
         - taillog-domserver-nginx-error
       when: GRAPHICAL
 
