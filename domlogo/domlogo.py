@@ -171,7 +171,12 @@ for team in teams.values():
             os.unlink(downloaded_to)
             os.unlink(intermediate_target)
 
-latest_logfile = max(glob.glob('output/log/judge.*-2.log'), key=os.path.getctime)
+logfiles = glob.glob('output/log/judge.*-2.log')
+if not logfiles:
+    print('No judge log files found in output/log/judge.*-2.log')
+    window.close()
+    exit(1)
+latest_logfile = max(logfiles, key=os.path.getmtime)
 print(f'Checking logfile {latest_logfile}')
 with open(latest_logfile, 'r') as logfile:
     # Seeks to the end of the file.
