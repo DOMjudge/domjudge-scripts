@@ -8,7 +8,6 @@ import requests
 import re
 import time
 import platform
-import shlex
 import yaml
 from PIL import Image, ImageDraw, ImageFont
 
@@ -119,14 +118,11 @@ for organization in organizations.values():
         downloaded, downloaded_to, etag_file, etag = download_image('logo', organization_id, logo)
         if downloaded_to:
             # Convert to both 64x64 (for sidebar) and 160x160 (for overlay over photo)
-            downloaded_to_escaped = shlex.quote(downloaded_to)
-            target = shlex.quote(f'domlogo-files/logos/{organization_id}.png')
-            command = f'convert {downloaded_to_escaped} -resize 64x64 -background none -gravity center -extent 64x64 {target}'
-            os.system(command)
+            target = f'domlogo-files/logos/{organization_id}.png'
+            subprocess.run(['convert', downloaded_to, '-resize', '64x64', '-background', 'none', '-gravity', 'center', '-extent', '64x64', target])
 
-            target = shlex.quote(f'domlogo-files/logos/{organization_id}.160.png')
-            command = f'convert {downloaded_to_escaped} -resize 160x160 -background none -gravity center -extent 160x160 {target}'
-            os.system(command)
+            target = f'domlogo-files/logos/{organization_id}.160.png'
+            subprocess.run(['convert', downloaded_to, '-resize', '160x160', '-background', 'none', '-gravity', 'center', '-extent', '160x160', target])
 
             with open(etag_file, 'w') as f:
                 f.write(etag)
@@ -141,8 +137,8 @@ for team in teams.values():
         if downloaded_to:
             # First convert to a good known size because adding the annotation and logo assumes this
             intermediate_target = f'domlogo-files/photos/{team_id}-intermediate.png'
-            command = f'convert {downloaded_to} -resize 1024x1024 -gravity center {intermediate_target}'
-            os.system(command)
+            command = ['convert', downloaded_to, '-resize', '1024x1024', '-gravity', 'center', intermediate_target]
+            subprocess.run(command)
 
             # Now add logo and team name. We use subprocess.run here to escape the team name
             target = f'domlogo-files/photos/{team_id}.png'
