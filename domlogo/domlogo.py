@@ -215,8 +215,16 @@ with open(latest_logfile, 'r') as logfile:
         elif ' Compilation: ' in line:
             results_text.update(line.split('💻')[1:])
         elif ', result: ' in line:
-            result = line.split(', result: ')[-1].strip()
-            results.append('✔' if result == 'correct' else '✘')
+            result_part = line.split(', result: ')[-1].strip()
+            # Parse optional score suffix: "correct, score: 75.5"
+            score_match = re.match(r'(\S+?)(?:, score: (.+))?$', result_part)
+            result = score_match.group(1) if score_match else result_part
+            score = score_match.group(2) if score_match else None
+            if result == 'correct':
+                marker = f'✔{score}' if score else '✔'
+            else:
+                marker = f'✘{score}' if score else '✘'
+            results.append(marker)
             results_text.update('\n'.join(re.findall(
                 '.{1,78}', ' '.join(results))))
         if needs_update:
