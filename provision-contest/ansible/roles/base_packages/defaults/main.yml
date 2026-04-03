@@ -48,6 +48,7 @@ INSTALLED_PACKAGES:
   - python3-sphinx-rtd-theme
   - python3-yaml
   - rst2pdf
+  - rsync
   - screen
   - tig
   - tree
