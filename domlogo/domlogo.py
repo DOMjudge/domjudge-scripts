@@ -8,7 +8,6 @@ import requests
 import re
 import time
 import platform
-import shlex
 import yaml
 from PIL import Image, ImageDraw, ImageFont
 
@@ -119,14 +118,11 @@ for organization in organizations.values():
         downloaded, downloaded_to, etag_file, etag = download_image('logo', organization_id, logo)
         if downloaded_to:
             # Convert to both 64x64 (for sidebar) and 160x160 (for overlay over photo)
-            downloaded_to_escaped = shlex.quote(downloaded_to)
-            target = shlex.quote(f'domlogo-files/logos/{organization_id}.png')
-            command = f'convert {downloaded_to_escaped} -resize 64x64 -background none -gravity center -extent 64x64 {target}'
-            os.system(command)
+            target = f'domlogo-files/logos/{organization_id}.png'
+            subprocess.run(['convert', downloaded_to, '-resize', '64x64', '-background', 'none', '-gravity', 'center', '-extent', '64x64', target])
 
-            target = shlex.quote(f'domlogo-files/logos/{organization_id}.160.png')
-            command = f'convert {downloaded_to_escaped} -resize 160x160 -background none -gravity center -extent 160x160 {target}'
-            os.system(command)
+            target = f'domlogo-files/logos/{organization_id}.160.png'
+            subprocess.run(['convert', downloaded_to, '-resize', '160x160', '-background', 'none', '-gravity', 'center', '-extent', '160x160', target])
 
             with open(etag_file, 'w') as f:
                 f.write(etag)
@@ -141,8 +137,8 @@ for team in teams.values():
         if downloaded_to:
             # First convert to a good known size because adding the annotation and logo assumes this
             intermediate_target = f'domlogo-files/photos/{team_id}-intermediate.png'
-            command = f'convert {downloaded_to} -resize 1024x1024 -gravity center {intermediate_target}'
-            os.system(command)
+            command = ['convert', downloaded_to, '-resize', '1024x1024', '-gravity', 'center', intermediate_target]
+            subprocess.run(command)
 
             # Now add logo and team name. We use subprocess.run here to escape the team name
             target = f'domlogo-files/photos/{team_id}.png'
@@ -171,7 +167,12 @@ for team in teams.values():
             os.unlink(downloaded_to)
             os.unlink(intermediate_target)
 
-latest_logfile = max(glob.glob('output/log/judge.*-2.log'), key=os.path.getctime)
+logfiles = glob.glob('output/log/judge.*-2.log')
+if not logfiles:
+    print('No judge log files found in output/log/judge.*-2.log')
+    window.close()
+    exit(1)
+latest_logfile = max(logfiles, key=os.path.getmtime)
 print(f'Checking logfile {latest_logfile}')
 with open(latest_logfile, 'r') as logfile:
     # Seeks to the end of the file.
@@ -214,8 +215,16 @@ with open(latest_logfile, 'r') as logfile:
         elif ' Compilation: ' in line:
             results_text.update(line.split('💻')[1:])
         elif ', result: ' in line:
-            result = line.split(', result: ')[-1].strip()
-            results.append('✔' if result == 'correct' else '✘')
+            result_part = line.split(', result: ')[-1].strip()
+            # Parse optional score suffix: "correct, score: 75.5"
+            score_match = re.match(r'(\S+?)(?:, score: (.+))?$', result_part)
+            result = score_match.group(1) if score_match else result_part
+            score = score_match.group(2) if score_match else None
+            if result == 'correct':
+                marker = f'✔{score}' if score else '✔'
+            else:
+                marker = f'✘{score}' if score else '✘'
+            results.append(marker)
             results_text.update('\n'.join(re.findall(
                 '.{1,78}', ' '.join(results))))
         if needs_update:
