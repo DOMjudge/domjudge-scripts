@@ -7,7 +7,7 @@
 set -e
 
 MYSQLOPTS=''
-DBNAME='domjudge_demo2018'
+DBNAME='domjudge_demo2025'
 
 cd ~/demoweb
 
@@ -23,7 +23,7 @@ make QUIET=1 inplace-install docs >/dev/null 2>&1
 
 # Reset database to known good state:
 mysql $MYSQLOPTS "$DBNAME" < domjudge_demo_remove.sql
-mysql $MYSQLOPTS "$DBNAME" < domjudge_demo.sql
+mysql $MYSQLOPTS "$DBNAME" < domjudge_demo25.sql
 
 # Upgrade the database to the latest structure
 ./sql/dj_setup_database -q upgrade
