@@ -22,7 +22,13 @@
   loop_control:
     loop_var: user_item
 
+- name: Detect display manager
+  shell: basename $(cat /etc/X11/default-display-manager 2>/dev/null || systemctl get-default 2>/dev/null | grep -oP '^\w+-dm' || echo "unknown")
+  register: detected_dm
+  changed_when: false
+
 - name: Setup autologin on desktop installs
+  when: GRAPHICAL
   block:
     - name: Enable GDM autologin
       lineinfile:
@@ -32,13 +38,26 @@
         create: true
         mode: 0644
       notify: Restart gdm
+      when: detected_dm.stdout == 'gdm3' or detected_dm.stdout == 'gdm'
 
-    - name: Automatically login domjudge user
+    - name: Automatically login domjudge user (GDM)
       lineinfile:
         path: /etc/gdm3/custom.conf
         regexp: 'AutomaticLogin\s*='
         line: 'AutomaticLogin=domjudge'
       notify: Restart gdm
+      when: detected_dm.stdout == 'gdm3' or detected_dm.stdout == 'gdm'
+
+    - name: Enable LightDM autologin
+      lineinfile:
+        path: /etc/lightdm/lightdm.conf
+        regexp: 'autologin-user='
+        line: 'autologin-user=domjudge'
+        insertafter: '\[Seat:\*\]'
+        create: true
+        mode: 0644
+      notify: Restart lightdm
+      when: detected_dm.stdout == 'lightdm'
 
     - name: Make sure autostart directory exists
       file:
@@ -47,4 +66,60 @@
         owner: domjudge
         group: domjudge
         mode: 0755
-  when: GRAPHICAL
+
+    - name: Get default GNOME Terminal profile
+      command: dconf read /org/gnome/terminal/legacy/profiles:/default
+      register: terminal_profile
+      changed_when: false
+      become: true
+      become_user: domjudge
+    
+    - name: Get default GNOME Terminal profile
+      command: dconf read /org/gnome/terminal/legacy/profiles:/default
+      register: terminal_profile
+      changed_when: false
+      failed_when: false
+      become: true
+      become_user: domjudge
+    
+    - name: Generate profile UUID
+      set_fact:
+        profile_uuid: "{{ 'domjudge-terminal' | to_uuid }}"
+      when: terminal_profile.stdout == ''
+    
+    - name: Use existing profile UUID
+      set_fact:
+        profile_uuid: "{{ terminal_profile.stdout | replace(\"'\", '') }}"
+      when: terminal_profile.stdout != ''
+    
+    - name: Set default profile
+      community.general.dconf:
+        key: /org/gnome/terminal/legacy/profiles:/default
+        value: "'{{ profile_uuid }}'"
+      become: true
+      become_user: domjudge
+      when: terminal_profile.stdout == ''
+    
+    - name: Add profile to list
+      community.general.dconf:
+        key: /org/gnome/terminal/legacy/profiles:/list
+        value: "['{{ profile_uuid }}']"
+      become: true
+      become_user: domjudge
+      when: terminal_profile.stdout == ''
+    
+    - name: Configure GNOME Terminal colors
+      community.general.dconf:
+        key: "/org/gnome/terminal/legacy/profiles:/:{{ profile_uuid }}/{{ item.key }}"
+        value: "{{ item.value }}"
+      loop:
+        - key: background-color
+          value: "'rgb(0,43,54)'"
+        - key: foreground-color
+          value: "'rgb(131,148,150)'"
+        - key: use-theme-colors
+          value: "false"
+        - key: visible-name
+          value: "'Default'"
+      become: true
+      become_user: domjudge

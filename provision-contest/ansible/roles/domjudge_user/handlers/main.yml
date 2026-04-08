@@ -4,3 +4,9 @@
     name: gdm3
     enabled: true
     state: restarted
+
+- name: Restart lightdm
+  service:
+    name: lightdm
+    enabled: true
+    state: restarted
