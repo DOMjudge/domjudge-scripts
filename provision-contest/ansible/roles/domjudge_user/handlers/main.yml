@@ -1,6 +1,6 @@
 ---
-- name: Restart gdm
+- name: Restart lightdm
   service:
-    name: gdm3
+    name: lightdm
     enabled: true
     state: restarted
