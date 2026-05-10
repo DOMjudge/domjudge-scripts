@@ -8,6 +8,12 @@
 
 set -e
 
+cleanup() {
+       [ "$DEBUG" ] || rm -rf "$TEMPDIR"
+}
+
+trap cleanup EXIT INT TERM QUIT
+
 #DEBUG=1
 
 PUBDIR=~/public_html/snapshot
@@ -53,6 +59,6 @@ if [ -n "$PUBDIR" ]; then
 	cd /
 fi
 
-[ "$DEBUG" ] || rm -rf "$TEMPDIR"
+cleanup
 
 exit 0
