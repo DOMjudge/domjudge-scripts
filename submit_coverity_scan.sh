@@ -78,6 +78,15 @@ fi
 
 export PATH="$PATH:$COVTOOL/bin"
 
+cleanup()
+{
+  rm -f "$TMP"
+
+  if [ -n "$GITURL" ] && [ -z "$DEBUG" ]; then
+	  rm -rf "$TEMPDIR"
+  fi
+}
+
 git_dirty()
 {
 	git diff --quiet --exit-code || printf '*'
@@ -99,6 +108,8 @@ quietfilter()
 		cat
 	fi
 }
+
+trap cleanup EXIT INT TERM QUIT
 
 if [ -n "$GITURL" ]; then
 	TEMPDIR=$(mktemp -d /tmp/cov-scan-XXXXXX)
@@ -153,10 +164,6 @@ curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
 
 [ -n "$QUIET" ] || grep -vE '^[[:space:]]*$' "$TMP"
 
-rm -f "$TMP"
-
-if [ -n "$GITURL" ] && [ -z "$DEBUG" ]; then
-	rm -rf "$TEMPDIR"
-fi
+cleanup
 
 exit 0
