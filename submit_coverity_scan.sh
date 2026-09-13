@@ -80,7 +80,9 @@ export PATH="$PATH:$COVTOOL/bin"
 
 cleanup()
 {
-  rm -f "$TMP"
+  if [ ! -z "${TMP+x}" ]; then
+	  rm -f "$TMP"
+	fi
 
   if [ -n "$GITURL" ] && [ -z "$DEBUG" ]; then
 	  rm -rf "$TEMPDIR"
