@@ -25,7 +25,7 @@
 
 - name: Fix ownership of domlogo env
   file:
-    path: "/home/domjudge/.local/lib/python3.10"
+    path: "/home/domjudge/.local/lib/python3.12"
     recurse: true
     owner: domjudge
     group: domjudge
@@ -46,11 +46,8 @@
 
 - name: Copy domlogo systemd unit file
   template:
-    src: "domlogo.service.j2"
-    dest: "/etc/systemd/system/domlogo.service"
-
-- name: Enable and start domlogo
-  systemd:
-    name: domlogo
-    enabled: true
-    state: started
+    src: "domlogo.desktop.j2"
+    dest: "/home/domjudge/.config/autostart/domlogo.desktop"
+    owner: domjudge
+    group: domjudge
+    mode: 0755

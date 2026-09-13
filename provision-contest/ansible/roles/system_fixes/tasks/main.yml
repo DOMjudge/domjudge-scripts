@@ -33,16 +33,6 @@
         fi
       fi
 
-- name: Force enable alt-tab for switching windows
-  copy:
-    src: dconf/
-    dest: /etc/dconf/
-    owner: root
-    group: root
-    mode: 0755
-  notify: Update dconf
-  when: GRAPHICAL
-
 - name: Configure network for static IP address
   when: STATIC_IP_ENABLED
   block:
