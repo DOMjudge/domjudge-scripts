@@ -31,6 +31,24 @@
   command: "{{ DJ_DIR }}/bin/dj_setup_database -s -u root bare-install"
   when: "'failed' in db_status.stdout"
 
+- name: Install the NGINX directories before nginx exists for the next step
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - '/etc/nginx'
+    - '/etc/nginx/sites-enabled'
+
+- name: Drop the default nginx site before installation as we don't have IPv6
+  copy:
+    content: "#empty"
+    owner: root
+    group: root
+    dest: /etc/nginx/sites-enabled/default
+
 - name: Install required packages
   apt:
     state: present
