@@ -13,6 +13,19 @@
   command: efibootmgr -o {{ EFI_ORDER }}
   when: EFI_ORDER is defined
 
+# The VS Code extension gallery container binds 127.0.0.5:443, which blocks nginx.
+- name: Check for VS Code gallery service
+  stat:
+    path: /etc/systemd/system/container-vscgallery.service
+  register: vscgallery_service
+
+- name: Disable VS Code gallery service
+  systemd:
+    name: container-vscgallery
+    state: stopped
+    enabled: false
+  when: vscgallery_service.stat.exists
+
 - name: IPv6 nginx fixes
   block:
     - name: Create nginx directory before installation
