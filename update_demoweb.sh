@@ -17,6 +17,7 @@ git pull -q --rebase --autostash >/dev/null 2>&1
 # Rebuild in-place to also make configuration updates visible:
 make QUIET=1 maintainer-clean
 make QUIET=1 MAINT_CXFLAGS='-g -O2 -Wall -fPIE -Wformat -Wformat-security' \
+	CONFIGURE_FLAGS='--with-baseurl=https://www.domjudge.org/demoweb/' \
 	inplace-conf >/dev/null 2>&1 || true
 make QUIET=1 inplace-install docs >/dev/null 2>&1
 (cd webapp && composer auto-scripts >/dev/null 2>&1)
