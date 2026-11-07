@@ -8,86 +8,102 @@
 
 <h2>Creating problemsets</h2>
 
-<h3>Checktestdata</h3>
-
-<p> <a href="checktestdata">checktestdata</a> is a program to syntactically verify
+<dl>
+<dt>Checktestdata</dt>
+<dd>
+    <a href="checktestdata">checktestdata</a> is a program to syntactically verify
     testdata according to a grammar file. It also supports generating testdata based
     on a specification.
-</p>
+</dd>
 
-<h3>BAPCtools & Problemtools</h3>
+<dt><a href="https://github.com/RagnarGrootKoerkamp/BAPCtools">BAPCtools</a> &amp;
+    <a href="https://github.com/Kattis/problemtools">Kattis problemtools</a></dt>
+<dd>
+    are similar tools that help creating and developing problems following the
+    <a href="https://www.kattis.com/problem-package-format/">problem package format</a>,
+    which DOMjudge can import (but not supporting all options).
+    The aim of these tools is to run all necessary compilation, validation,
+    and testing commands while working on an ICPC-style problem.
+    This helps enforce consistency and quality of problems.
+    BAPCtools is currently the more feature-rich and actively maintained of the two.
+</dd>
 
-<p> <a href="https://github.com/RagnarGrootKoerkamp/BAPCtools">BAPCtools</a>
-    helps creating and developing problems following the ICPC problem package
-    format. The aim of this tool is to run all necessary compilation, validation,
-    and testing commands while working on an ICPC-style problem. Ideally one should
-    never have to manually run any compilation or testing command themselves.<br>
-    The <a href="https://github.com/Kattis/problemtools">Kattis Problem Tool</a> is
-    another collection of tools to create problem packages. DOMjudge is able to
-    import this format.
-</p>
-
-<h3>Polygon2DOMjudge</h3>
-
-<p><a href="https://github.com/cn-xcpc-tools/Polygon2DOMjudge">Polygon2DOMjudge</a>
+<dt><a href="https://github.com/cn-xcpc-tools/Polygon2DOMjudge">Polygon2DOMjudge</a></dt>
+<dd>
     is a tool that converts problem packages exported from the
     <a href="https://polygon.codeforces.com/">Codeforces Polygon Platform</a>
     into the <a href="https://icpc.io/problem-package-format/">DOMjudge Problem Package</a> format.
-</p>
+</dd>
+</dl>
 
 <h2>Contest as a service</h2>
 
-<h3>Cloudcontest</h3>
-
-<p> DOMjudge is free to download and run yourself. Do you prefer a hosted
+<dl>
+<dt>Cloudcontest</dt>
+<dd>
+    DOMjudge is free to download and run yourself. Do you prefer a hosted
     installation of DOMjudge, take a look at
     <a href="https://cloudcontest.org">cloudcontest.org</a>. They offer a fully
     online hosted contest that your teams can access over the internet.
-    It's also possible to run the server in the cloud and your judgehosts
+    It is also possible to run the server in the cloud and your judgehosts
     locally.
-</p>
-
+</dd>
+</dl>
 
 <h2>Scoreboard resolvers and other contest tools</h2>
 
-<h3>ICPC Tools</h3>
-
-<p> <a href="https://tools.icpc.global/">ICPC Tools</a> is a set of (free to use)
+<dl>
+<dt>ICPC Tools</dt>
+<dd>
+    <a href="https://tools.icpc.global/">ICPC Tools</a> is a set of (free to use)
     tools that can work with a <a href="https://ccs-specs.icpc.io/draft/contest_api">
     CLICS compatible API</a>, like DOMjudge provides. It has a scoreboard display and
-    resolver, balloons utility and various other presentation tools.</p>
+    resolver, balloons utility and various other presentation tools.
+</dd>
 
-<h3>DOMjura</h3>
+<dt><a href="https://github.com/DOMjudge/DOMjura">DOMjura</a></dt>
+<dd>
+    (DOMjudge Results Application) is a scoreboard resolver, which can
+    read the DOMjudge API after a contest and present the results.
+    <em>This is currently unmaintained.</em>
+</dd>
 
-<p> <a href="https://github.com/DOMjudge/DOMjura">DOMjura</a> (DOMjudge Results Application)
-    is a scoreboard resolver, which can read the DOMjudge API after a contest and present
-    the results.
+<dt><a href="https://github.com/TPolzer/Carnifex">Carnifex</a></dt>
+<dd>
+    presents a live scoreboard and is a scoreboard resolver. It has a
+    server component where various display clients can connect to.
+    <em>This is currently unmaintained.</em>
+</dd>
+
+<dt><a href="https://github.com/GEHACK/lightdm-qt5-greeter-ccs-api">LightDM CCS autologin</a></dt>
+<dd>
+    makes it possible to automatically log in to team machines when
+    the contest starts in DOMjudge. This is useful to keep problem
+    data secret and to make sharing credentials easier on the organizer.
+</dd>
+
+<h2>DOMjudge for teaching</h2>
+
+<p>
+    DOMjudge is focused on being a contest system for short-running
+    contests. Some people use DOMjudge for teaching and long-running
+    contests. We are happy to include features useful for such other
+    scenarios in DOMjudge when they do not complicate the UI and code
+    too much. Since not everything will make it into our releases, we
+    link here to some extensions to help with this use case.
 </p>
 
-<h3>Carnifex</h3>
-
-<p> <a href="https://github.com/TPolzer/Carnifex">Carnifex</a> presents a live scoreboard
-    and is a scoreboard resolver. It has a server component where various display clients
-    can connect to.
-</p>
-
-<h3>Autologin for team machines</h3>
-
-<p> <a href="https://github.com/GEHACK/lightdm-qt5-greeter-ccs-api">LightDM CCS autologin</a> makes
-    it possible to automatically log in to team machines when the contest starts in DOMjudge. This
-    is useful to keep problem data secret and to make sharing credentials easier on the organizer.
-</p>
-
-<h3>DOMjudge for teaching</h3>
-
-<p> DOMjudge is mostly focused on being a contest system for short running contests. Some people use the
-automatic judging for teaching. When possible we can incorporate such extensions to provide easier access
-through the API and UI with feature requests. Since not everything will make it into our releases, we link here to
-some extensions to help with this use case.
-<ul>
-<li><a href="https://github.com/ioi/isolate">Isolate</a> this is an alternative to our judgedaemon with chroot.</li>
-<li><a href="https://tobias.meggendorfer.de/domtutor.html">DOMtutor</a></li>
-</ul>
-</p>
+<dl>
+<dt><a href="https://github.com/ioi/isolate">Isolate</a></dt>
+<dd>
+    is an alternative to <kbd>runguard</kbd> from DOMjudge for
+    creating a sandbox to run submissions in.
+</dd>
+<dt><a href="https://tobias.meggendorfer.de/domtutor.html">DOMtutor</a></dt>
+<dd>
+    provides a set of scripts to make it easier to use DOMjudge in a
+    teaching setting.
+</dd>
+</dl>
 
 <!--#include virtual="/footer.shtml" -->
