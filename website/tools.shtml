@@ -9,11 +9,11 @@
 <h2>Creating problemsets</h2>
 
 <dl>
-<dt>Checktestdata</dt>
+<dt><a href="checktestdata">Checktestdata</a></dt>
 <dd>
-    <a href="checktestdata">checktestdata</a> is a program to syntactically verify
-    testdata according to a grammar file. It also supports generating testdata based
-    on a specification.
+    is a program to syntactically verify testdata according to a
+    grammar file. It also supports generating testdata based on a
+    specification.
 </dd>
 
 <dt><a href="https://github.com/RagnarGrootKoerkamp/BAPCtools">BAPCtools</a> &amp;
@@ -53,11 +53,11 @@
 <h2>Scoreboard resolvers and other contest tools</h2>
 
 <dl>
-<dt>ICPC Tools</dt>
+<dt><a href="https://tools.icpc.global/">ICPC Tools</a></dt>
 <dd>
-    <a href="https://tools.icpc.global/">ICPC Tools</a> is a set of (free to use)
-    tools that can work with a <a href="https://ccs-specs.icpc.io/draft/contest_api">
-    CLICS compatible API</a>, like DOMjudge provides. It has a scoreboard display and
+    is a set of (free to use) tools that can work with a
+    <a href="https://ccs-specs.icpc.io/">CLICS compatible API</a>,
+    like DOMjudge provides. It has a scoreboard display and
     resolver, balloons utility and various other presentation tools.
 </dd>
 
