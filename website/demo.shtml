@@ -40,7 +40,8 @@ and testdata diff functionality is not useful.</dd>
 <dt><a href="demoweb/api/doc/">API documentation</a></dt>
 <dd>Documentation on how to use DOMjudge from scripts. This is used by our submit client and the <code>configure-domjudge</code> &amp; <code>import-contest</code> scripts. Also useful if you want to use only parts of DOMjudge, for example as you use your own custom scoreboard or another submission method. Some of the <a href="tools">tools</a> also work via this API.</dd>
 <dt><a href="demoweb/api/">Contest API</a></dt>
-<dd>The contest API itself, which adheres to the <a href="https://ccs-specs.icpc.io/draft/contest_api">Contest API specification</a>.
+<dd>The contest API itself, which adheres to the
+<a href="https://ccs-specs.icpc.io/">Contest API specification</a>.
 Note that we do not implement all optional details of the API, some
 new specifications from the draft version may be work in progress.
 We also have some private additions; additional properties in
