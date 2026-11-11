@@ -118,7 +118,7 @@ PHP compilation units \([3-9][0-9]%\)|
 ^[[:space:]]*$|
 ^\*+$|
 ^\|[0-9-]+\|$|
-^\[WARNING\] (Path .* looks like an idir\.|No source file matches in filesystem capture search directory:|Filesystem capture was enabled but yielded no source file matches\.)|
+^\[WARNING\] (Path .* looks like an idir\.|Recoverable errors were encountered)|
 For more details, please look at:|
 /cov-int/build-log\.txt|
 ^Attempting to detect unconfigured compilers in build' | tr -d '\n')
