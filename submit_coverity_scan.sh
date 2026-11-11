@@ -145,7 +145,7 @@ if [ -n "$NEWERTHAN" ]; then
 	fi
 fi
 
-COVOPTS='--dir cov-int --fs-capture-search ./'
+COVOPTS='--dir cov-int'
 # shellcheck disable=SC2086
 cov-build $COVOPTS make $QUIETMAKE coverity-build 2>&1 | quietfilter
 
