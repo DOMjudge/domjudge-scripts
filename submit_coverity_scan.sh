@@ -78,13 +78,16 @@ fi
 
 export PATH="$PATH:$COVTOOL/bin"
 
+OUTPUT=''
+
 cleanup()
 {
-  rm -f "$TMP"
-
-  if [ -n "$GITURL" ] && [ -z "$DEBUG" ]; then
-	  rm -rf "$TEMPDIR"
-  fi
+	if [ -n "$OUTPUT" ] && [ -z "$DEBUG" ]; then
+		rm -f "$OUTPUT"
+	fi
+	if [ -n "$GITURL" ] && [ -z "$DEBUG" ]; then
+		rm -rf "$TEMPDIR"
+	fi
 }
 
 git_dirty()
@@ -171,15 +174,15 @@ tar caf "$ARCHIVE" cov-int
 
 [ -n "$QUIET" ] || echo "Submitting '$VERSION' '$DESC'"
 
-TMP=$(mktemp --tmpdir curl-cov-submit-XXXXXX.html)
+OUTPUT=$(mktemp --tmpdir curl-cov-submit-XXXXXX.html)
 
 ${DEBUG:+echo} \
 curl --form token="$TOKEN" --form email="$EMAIL" --form file=@"$ARCHIVE" \
      --form version="$VERSION" --form description="$VERSION - $DESC" \
-     -o "$TMP" ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT" 2>&1 \
+     -o "$OUTPUT" ${QUIET:+-s} https://scan.coverity.com/builds?project="$PROJECT" 2>&1 \
 	| quietfilter
 
-[ -n "$QUIET" ] || grep -vE '^[[:space:]]*$' "$TMP"
+[ -n "$QUIET" ] || grep -vE '^[[:space:]]*$' "$OUTPUT"
 
 cleanup
 
