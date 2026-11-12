@@ -105,7 +105,7 @@ git_commit()
 
 quietfilter()
 {
-	local regex=$(printf '%s' '
+	regex=$(printf '%s' '
 ^Coverity Build Capture|
 ^Internal version numbers:|
 compilation units \(100%\)|
