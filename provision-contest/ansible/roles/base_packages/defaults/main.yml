@@ -35,6 +35,8 @@ INSTALLED_PACKAGES:
   - libmagic-dev
   - make
   - ncdu
+  - nodejs 
+  - npm
   - php-cli
   - php-curl
   - php-gd
@@ -55,6 +57,7 @@ INSTALLED_PACKAGES:
   - tig
   - tree
   - unzip
+  - yarnpkg
   - zip
 
 GRAPHICAL_INSTALLED_PACKAGES:
