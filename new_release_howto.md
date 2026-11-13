@@ -14,14 +14,14 @@ computer, but absolute paths refer to those on the account
  1. Create a release version `$TAG` in Git with `$TAG` the version number
     x.y.z:
     ```sh
-        git tag -s -m "Tag release version $TAG." $TAG
+    git tag -s -m "Tag release version $TAG." $TAG
     ```
     See `git tag --help` for more details on how to tag with(out) a
     GPG signature.
  1. Push everything to the central Git repository (including the
     release tags, since these are not pushed by default):
 	```sh
-        git push origin ${TAG%.?} refs/tags/$TAG
+    git push origin ${TAG%.?} refs/tags/$TAG
     ```
  1. If releasing from the main branch, create a new version branch:
     ```{sh}
@@ -56,7 +56,7 @@ computer, but absolute paths refer to those on the account
  1. Put the Debian packages in `/srv/http/domjudge/debian/mini-dinstall/incoming`
     and run as `domjudge@domjudge.org`:
 	```sh
-	    mini-dinstall -b
+	mini-dinstall -b
     ```
  1. Send an email to `domjudge-announce@domjudge.org`, announcing the
     new version and state which versions are supported.
