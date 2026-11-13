@@ -1,60 +1,51 @@
 #!/bin/bash
 set -eu -o pipefail
 
-. ~/.tagrelease
-
-main=main
+# Contains secret $SLACK_URL for posting notifications
+. ~/.slack_url.secret
 
 RELEASE_DIR="/srv/http/domjudge/releases"
+TAGS_CACHE_DIR="/tmp/release_tags_processed"
+RELEASE_REGEX="[0-9]+\.[0-9]+\.[0-9]+((RC|rc)[0-9])?"
 
-notify_channel () {
-    # Local debug
-    echo "$1"
-    # When cron is run often one should have time to
-    # fix the issue.
-    if [ ! -f "/tmp/$2" ]; then
-        # Write to syslog on server
-        logger "$1"
-        DATA='{"text":"'"$1"'"}'
-        # Notify DOMjudge Slack channel (github-notifications)
-        # SLACK_URL should be exported in the .bashrc (it should be secret)
-        curl -X POST -H 'Content-type: application/json' --data "$DATA" "$SLACK_URL"
-        touch "/tmp/$2"
+notify_channel ()
+{
+    local MSG="$1"
+    # Write to syslog on server
+    logger "$1"
+    # Notify DOMjudge Slack channel (github-notifications)
+    curl -X POST -H 'Content-type: application/json' --data '{"text":"'"$1"'"}' "$SLACK_URL"
+}
+
+process_tag ()
+{
+    local TAG="$1"
+    local TARBALL="domjudge-$TAG.tar.gz"
+    if [ -f "$TAGS_CACHE_DIR/$TAG" ] || [ -f "$RELEASE_DIR/$TARBALL" ]; then
+        # Already (being) processed
+        return 0
+    fi
+    touch "$TAGS_CACHE_DIR/$TAG"
+    if [[ $TAG =~ ^$RELEASE_REGEX$ ]]; then
+        # To find the signer key of a earlier tag:
+        # gpg --search 780355B5EA6BFC8235A99C4B56F61A79401DAC04
+        # And if one trusts the internet to be correct
+        # gpg --recv-keys 780355B5EA6BFC8235A99C4B56F61A79401DAC04
+        if git verify-tag "$TAG" ; then
+            (cd $RELEASE_DIR && ~/domjudge-scripts/make_release.sh "$TAG")
+            notify_channel "Tarball finished ($TAG).\nURL: https://www.domjudge.org/releases/$TARBALL"
+        else
+            notify_channel "Untrusted tag ($TAG)"
+        fi
     fi
 }
 
-process_tag () {
-    TAG="$1"
-    NUMB="[0-9]+"
-    DOT="\."
-    RELEASE="$NUMB$DOT$NUMB$DOT$NUMB"
-    OPTRC="((RC|rc)[0-9])?"
-    if [[ $TAG =~ ^$RELEASE$OPTRC$ ]]; then
-       # TODO: check if the file already exists
-       if [ -f "$RELEASE_DIR/domjudge-$TAG.tar.gz" ]; then
-           # Tag is already handled
-           return 0
-       fi
-       # To find the signer key of a earlier tag:
-       # gpg --search 780355B5EA6BFC8235A99C4B56F61A79401DAC04
-       # And if one trusts the internet to be correct
-       # gpg --recv-keys 780355B5EA6BFC8235A99C4B56F61A79401DAC04
-       if git verify-tag "$TAG" ; then
-           # At this point the tarball should already be locally tested
-           ~/domjudge-scripts/make_release.sh "$TAG"
-           mv domjudge-"$TAG".* $RELEASE_DIR/
-           notify_channel "Tarball finished ($TAG).\nURL: https://www.domjudge.org/releases/domjudge-$TAG.tar.gz" "$TAG"
-       else
-           notify_channel "Untrusted tag ($TAG)" "$TAG"
-       fi
-    fi
-}
+mkdir -p "$TAGS_CACHE_DIR"
 
-# Reset to main branch
-cd ~domjudge/git/domjudge
-git checkout $main
+# For `git tag` and `git verify-tag` commands to work:
+cd ~/git/mirror/domjudge.git
 
+git tag | \
 while read -r tag; do
     process_tag "$tag"
-done <<< "$(git tag)"
-
+done
