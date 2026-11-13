@@ -37,11 +37,11 @@ computer, but absolute paths refer to those on the account
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
     repository under `website/` and run `make install` from
 	`~/domjudge-scripts/website` on `domjudge.org`.
- 1. Remove unsupported versions from the `versions.json` in the next step.
  1. If this is a new major or minor version, update the release documentation
-    under `/srv/http/domjudge/docs/manual` by adding a new version to the
-    file `versions.json` and updating the redirect destination in `index.html`
-    and `team.html`. The documentation is regenerated once every hour.
+    under `/srv/http/domjudge/docs/manual` by adding a new version to
+    the file `versions.json` and remove any unsupported versions.
+    Update the redirect destination in `index.html` and `team.html`.
+    The documentation is regenerated once every hour.
  1. If this is a new major or minor version, add the new version to
     `.github/dependabot.yml`.
  1. Bump the Docker images by starting a new pipeline
