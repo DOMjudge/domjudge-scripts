@@ -3,13 +3,7 @@
 # Script to create a DOMjudge release package. Release file is
 # generated in the current directory.
 
-CI_USAGE=${CI+x}
-if [ -z "$CI_USAGE" ]; then
-    set -e
-else
-    set -eux
-    export PS4='(${0}:): - [$?] $ '
-fi
+set -e
 
 GITURL="https://github.com/DOMjudge/domjudge.git"
 
@@ -19,16 +13,9 @@ if [ -z "$1" ]; then
     echo "Error: missing required release tag argument."
     exit 1
 fi
-
-if [ -n "$CI_USAGE" ]; then
-    set +x
-fi
 TAG="$1" ; shift
-if [ -n "$CI_USAGE" ]; then
-    set -x
-fi
 
-if [ -n "${1+x}" ]; then
+if [ -n "$1" ]; then
     GITURL="$1" ; shift
 fi
 
@@ -54,10 +41,6 @@ CHLOG_VERSION="$(echo "$CHLOG" | sed -r 's/^Version ([0-9\.]+) .*$/\1/')"
 if [ "$VERSION" != "$CHLOG_VERSION" ]; then
     echo "WARNING: version strings in README* and ChangeLog differ:"
     echo "'$VERSION' != '$CHLOG_VERSION'"
-    if [ ! -t 1 ] && [ -z ${CI+x} ] ; then
-        # In the cronjob this would be reason to not release
-        exit 1
-    fi
 fi
 
 # Add released tag for revision information:
