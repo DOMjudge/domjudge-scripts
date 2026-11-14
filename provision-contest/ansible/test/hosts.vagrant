@@ -1,0 +1,18 @@
+# generated-by: provision-contest/ansible/test (linked as ../hosts by bootstrap.sh)
+# Test inventory, also read by the Vagrantfile to define the VMs: one
+# domserver and one judgehost, no keepalived or replication.
+[all:vars]
+ansible_user=root
+ansible_python_interpreter=/usr/bin/python3
+ansible_ssh_private_key_file=roles/ssh/files/id_ed25519
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+[onprem:children]
+domserver
+judgehost
+
+[domserver]
+domjudge-primary     ansible_host=10.3.3.216
+
+[judgehost]
+domjudge-judgehost1  ansible_host=10.2.2.192
