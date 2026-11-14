@@ -15,29 +15,44 @@
     name: domjudge-run
     state: present
 
-- name: Create temp package directory
-  file:
-    path: /tmp/dj_ansible
-    state: directory
-    owner: root
-    group: root
-    mode: 0700
+- name: Check if the chroot exists
+  stat:
+    path: /chroot/domjudge
+    get_attributes: false
+    get_checksum: false
+    get_mime: false
+  register: chroot_dir
+  check_mode: no
 
-- name: Copy chroot DEB packages to install
-  synchronize:
-    src: install-chroot
-    dest: /tmp/dj_ansible/
+# Only needed to build the chroot. /tmp does not survive the reboot further
+# down, so copying these on every run would report a change each time.
+- name: Prepare packages for the chroot
+  when: not chroot_dir.stat.exists
+  block:
+    - name: Create temp package directory
+      file:
+        path: /tmp/dj_ansible
+        state: directory
+        owner: root
+        group: root
+        mode: 0700
 
-- name: Copy chroot-list to install
-  synchronize:
-    src: chroot-list
-    dest: /tmp/dj_ansible/
+    - name: Copy chroot DEB packages to install
+      synchronize:
+        src: install-chroot
+        dest: /tmp/dj_ansible/
+
+    - name: Copy chroot-list to install
+      synchronize:
+        src: chroot-list
+        dest: /tmp/dj_ansible/
 
 - name: Convert ASC key to GPG format for debootstrap
   shell: gpg --dearmor < /etc/apt/trusted.gpg.d/pc2packages.asc > /tmp/pc2packages.gpg
   args:
     creates: /tmp/pc2packages.gpg
-  when: ICPC_IMAGE
+  # Only needed to build the chroot, see above.
+  when: ICPC_IMAGE and not chroot_dir.stat.exists
 
 - name: Create chroot
   shell: "set -o pipefail &&
