@@ -26,7 +26,20 @@
     enabled: false
   when: vscgallery_service.stat.exists
 
+- name: Check if nginx is installed
+  stat:
+    path: /usr/sbin/nginx
+    get_attributes: false
+    get_checksum: false
+    get_mime: false
+  register: nginx_binary
+  check_mode: no
+
+# Only needed before the installation, to keep its default site (with an IPv6
+# listener) from being enabled. Afterwards the domserver role removes the file
+# again, so creating it on every run would make the two roles undo each other.
 - name: IPv6 nginx fixes
+  when: not nginx_binary.stat.exists
   block:
     - name: Create nginx directory before installation
       file:
