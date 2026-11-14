@@ -12,9 +12,9 @@ notify_channel ()
 {
     local MSG="$1"
     # Write to syslog on server
-    logger "$1"
+    logger "$MSG"
     # Notify DOMjudge Slack channel (github-notifications)
-    curl -X POST -H 'Content-type: application/json' --data '{"text":"'"$1"'"}' "$SLACK_URL"
+    curl -X POST -H 'Content-type: application/json' --data '{"text":"'"$MSG"'"}' "$SLACK_URL"
 }
 
 process_tag ()
