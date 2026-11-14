@@ -5,7 +5,9 @@
   template:
     src: dbpasswords.secret.j2
     dest: "{{ DJ_DIR }}/etc/dbpasswords.secret"
-    mode: 0644
+    # Group bits are the ACL mask set by 'make inplace-postinstall-permissions';
+    # any other mode would be reset and changed back on every run.
+    mode: 0674
     group: root
     owner: root
   notify: Fix permissions on domjudge inplace-install
@@ -14,7 +16,9 @@
   template:
     src: initial_admin_password.secret.j2
     dest: "{{ DJ_DIR }}/etc/initial_admin_password.secret"
-    mode: 0644
+    # Group bits are the ACL mask set by 'make inplace-postinstall-permissions';
+    # any other mode would be reset and changed back on every run.
+    mode: 0674
     group: domjudge
     owner: domjudge
   notify: Fix permissions on domjudge inplace-install
@@ -120,6 +124,8 @@
     line: "SENTRY_DSN={{ SENTRY_DSN | default('') }}"
     dest: "{{ DJ_DIR }}/webapp/.env.local"
     create: true
-    mode: 0664
+    # Group bits are the ACL mask set by 'make inplace-postinstall-permissions';
+    # any other mode would be reset and changed back on every run.
+    mode: 0674
     group: domjudge
     owner: domjudge
