@@ -27,12 +27,25 @@
   become: true
   become_user: domjudge
   command: make inplace-install
+  register: dj_built
   args:
     chdir: "{{ DJ_DIR }}"
   notify:
     - Fix permissions on domjudge inplace-install
     - Fix composer autoload
-  when: (git_working_copy is defined and git_working_copy.changed) or dj_configured.changed or not judgedaemon_binary.stat.exists
+  # Compare revisions rather than using .changed: with a forced update the git
+  # task also reports 'changed' when it only reverted local modifications.
+  when: (git_working_copy is defined and git_working_copy.before != git_working_copy.after) or dj_configured.changed or not judgedaemon_binary.stat.exists
+
+# The build rewrites this tracked file; revert it to keep the working copy
+# clean, otherwise the next (forced) git update reports a change again.
+- name: Revert yarn.lock modified by the build
+  become: true
+  become_user: domjudge
+  command: git checkout -- webapp/yarn.lock
+  args:
+    chdir: "{{ DJ_DIR }}"
+  when: dj_built is changed
 
 - name: Copy domjudge-sudoers file
   copy:
