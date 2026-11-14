@@ -21,11 +21,15 @@
     src: lib
     dest: /home/domjudge/.local/
     owner: false
+    # The ownership tasks below change the group; don't reset it on every run.
+    group: false
     use_ssh_args: true
 
+# Not a specific python3.X directory: that version is outdated, and creating a
+# directory inside lib/ changes its mtime, which the sync above then resets.
 - name: Fix ownership of domlogo env
   file:
-    path: "/home/domjudge/.local/lib/python3.10"
+    path: "/home/domjudge/.local"
     recurse: true
     owner: domjudge
     group: domjudge
@@ -35,6 +39,8 @@
     src: images/
     dest: "{{ DJ_DIR }}/domlogo-files/"
     owner: false
+    # The ownership tasks below change the group; don't reset it on every run.
+    group: false
     use_ssh_args: true
 
 - name: Fix ownership of domlogo images
