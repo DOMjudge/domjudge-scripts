@@ -48,7 +48,8 @@
   command: phpenmod {{ item }}
   args:
     creates: "/etc/php/{{ php_version.stdout }}/fpm/conf.d/20-{{ item }}.ini"
-  loop: "{{ DOMSERVER_PACKAGES | map('regex_search', 'php-') | select() }}"
+  # php-foo packages provide the module foo (php-fpm is not a module).
+  loop: "{{ DOMSERVER_PACKAGES | select('match', '^php-') | map('regex_replace', '^php-', '') | reject('equalto', 'fpm') | list }}"
   notify: Restart PHP FPM
 
 - name: Add domjudge nginx conf
