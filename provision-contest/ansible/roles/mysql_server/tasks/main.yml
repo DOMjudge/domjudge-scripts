@@ -32,7 +32,7 @@
     mode: 0644
     group: root
     owner: root
-  notify: Restart mysql
+  register: mysql_systemd_override
 
 - name: Add mysql config snippet to increase limits
   copy:
@@ -41,9 +41,21 @@
     mode: 0644
     owner: root
     group: root
-  notify: Restart mysql
+  register: mysql_config_snippet
 
-- name: Make sure mysql is restarted
+# Not a handler: mysql_replication depends on this role and is listed with a
+# 'when' that is false without a replication password. The handler of that
+# conditional instance is then the one that is used, and it is skipped, so the
+# server kept running with its defaults (16M max_allowed_packet).
+- name: Restart mysql to apply the new configuration
+  systemd:
+    name: mysql
+    enabled: true
+    state: restarted
+    daemon_reload: true
+  when: mysql_systemd_override is changed or mysql_config_snippet is changed
+
+- name: Run pending handlers
   meta: flush_handlers
 
 - name: Make sure mysql runs
