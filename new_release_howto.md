@@ -10,30 +10,33 @@ computer, but absolute paths refer to those on the account
  1. When releasing a new major or minor version, change the constants
     `CCS_SPEC_API_{VERSION,URL}` in `webapp/src/Controller/API/GeneralInfoController.php`
 	to point to the correct CCS API version.
- 1. `export TAG=x.y.z`
- 1. Create a release version `$TAG` in Git with `$TAG` the version number
-    x.y.z:
+ 1. Declare the new tag (to be used in further commands):
+    ```sh
+	export TAG=x.y.z
+	export BRANCH=${TAG%.?}
+	```
+ 1. Create a release version `$TAG`:
     ```sh
     git tag -s -m "Tag release version $TAG." $TAG
     ```
     See `git tag --help` for more details on how to tag with(out) a
     GPG signature.
+ 1. If releasing from the main branch, create a new version branch:
+    ```sh
+    git checkout -b $BRANCH
+    git push --set-upstream origin $BRANCH
+    git checkout main
+    ```
  1. Push everything to the central Git repository (including the
     release tags, since these are not pushed by default):
 	```sh
-    git push origin ${TAG%.?} refs/tags/$TAG
+    git push origin $BRANCH refs/tags/$TAG
     ```
- 1. If releasing from the main branch, create a new version branch:
-    ```{sh}
-    git checkout -b x.y
-    git push --set-upstream origin x.y
-    git checkout main
-    ```
+    This triggers a release tarball to be built and published on
+    `domjudge.org`: the cronjob `cron_tag_release.sh` picks up new
+    tags and calls `make_release.sh` to publish the tarball in
+    `/srv/http/domjudge/releases` together with a checksum file.
  1. Update `ChangeLog` and `README` to `{version+1}DEV` and commit.
- 1. On the `domjudge.org` server the tarball will be built and published:
-    the cronjob `cron_tag_release.sh` picks up new tags and calls
-	`make_release.sh` to publish the tarball in `/srv/http/domjudge/releases`
-	with a checksum file.
  1. Update the DOMjudge homepage: commit changes in the `domjudge-scripts`
     repository under `website/` and run `make install` from
 	`~/domjudge-scripts/website` on `domjudge.org`.
