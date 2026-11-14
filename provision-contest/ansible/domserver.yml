@@ -80,6 +80,8 @@
         src: files/domjudge-public/
         dest: "{{ DJ_DIR }}/webapp/public"
         owner: false
+        # Permissions on the target are altered by ACLs; don't compare them.
+        perms: false
         use_ssh_args: true
       notify: Clear application cache
 
@@ -100,7 +102,9 @@
       copy:
         src: files/docs.yaml
         dest: "{{ DJ_DIR }}/etc/"
-        mode: 0644
+        # Group bits are the ACL mask set by 'make inplace-postinstall-permissions';
+        # any other mode would be reset and changed back on every run.
+        mode: 0674
         group: root
         owner: root
       notify: Clear application cache
