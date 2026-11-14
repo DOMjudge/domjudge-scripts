@@ -7,7 +7,9 @@
     state: directory
     owner: domjudge
     group: domjudge
-    mode: 0755
+    # 'make inplace-postinstall-permissions' sets an ACL mask of rwx, which
+    # shows up as these group bits; a different mode would flip every run.
+    mode: 0775
 
 - name: Create ansible tmp directory
   file:
