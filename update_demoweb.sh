@@ -14,6 +14,9 @@ cd ~/demoweb
 # Update the code:
 git pull -q --rebase --autostash >/dev/null 2>&1
 
+# Force remove some paths that may contain files owned by www-data:
+rm -rf output/submissions webapp/var/cache/prod
+
 # Rebuild in-place to also make configuration updates visible:
 make QUIET=1 maintainer-clean
 make QUIET=1 MAINT_CXFLAGS='-g -O2 -Wall -fPIE -Wformat -Wformat-security' \
