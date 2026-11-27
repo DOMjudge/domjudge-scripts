@@ -74,6 +74,7 @@ check "domserver: php-fpm runs with its configuration" domserver "$fpm_config"
 check "domserver: DB configured"     domserver '/opt/domjudge/bin/dj_setup_database -s -u root status'
 check "domserver: API over HTTPS"    domserver "$api https://domjudge/api/info"
 check "domserver: dev mode disabled" domserver 'f=/opt/domjudge/webapp/.env.local; test -f $f && ! grep -q "^APP_ENV=dev" $f'
+check "traditional sudo is default"  'domserver:judgehost' 'sudo --version | grep -q "^Sudo version "'
 
 check "judgehost: cores isolated, cgroup memory" judgehost '[ -n "$(cat /sys/devices/system/cpu/isolated)" ] && grep -q cgroup_enable=memory /proc/cmdline'
 check "judgehost: chroot built"              judgehost 'test -d /chroot/domjudge/usr'

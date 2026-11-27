@@ -71,5 +71,21 @@
     dest: /etc/cron.hourly/etckeeper
     state: link
 
+- name: Check if traditional sudo.ws binary exists
+  stat:
+    path: /usr/bin/sudo.ws
+    get_attributes: false
+    get_checksum: false
+    get_mime: false
+  register: sudo_ws_binary
+  check_mode: no
+
+- name: Use traditional sudo instead of sudo-rs
+  community.general.alternatives:
+    name: sudo
+    path: /usr/bin/sudo.ws
+    state: selected
+  when: sudo_ws_binary.stat.exists
+
 - name: Flush handlers
   meta: flush_handlers
