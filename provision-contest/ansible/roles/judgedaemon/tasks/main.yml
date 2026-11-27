@@ -96,7 +96,7 @@
 
 - name: Pre-generate the kernel flags for ansible usage
   set_fact:
-    procline: "apparmor=0 cgroup_enable=memory swapaccount=1 isolcpus={{ cpucore | join(',') }}"
+    procline: "apparmor=0 cgroup_enable=memory swapaccount=1 isolcpus=managed_irq,domain,{{ cpucore | join(',') }}"
 
 - name: Add cgroup kernel parameters
   lineinfile:
