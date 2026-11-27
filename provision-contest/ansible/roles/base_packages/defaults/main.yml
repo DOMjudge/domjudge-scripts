@@ -52,6 +52,7 @@ INSTALLED_PACKAGES:
   - rst2pdf
   - rsync
   - screen
+  - sudo
   - tig
   - tree
   - unzip
