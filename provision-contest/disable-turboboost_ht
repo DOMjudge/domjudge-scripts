@@ -3,32 +3,66 @@ set -eu -o pipefail
 
 shopt -s extglob
 
-declare -A core_ids
-declare -a disabled_cores
+# Maximum exit latency (in microseconds) of C-states that are left enabled.
+max_cstate_latency=5
 
-disable_cpu () {
-  cpu="$1"
-  echo 0 > $cpu/online
-  disabled_cores+=("${cpu##*/}")
+errors=0
+error () {
+    echo "Error: $*" >&2
+    errors=1
 }
 
-store_isolcpus_fact="/var/tmp/isolcpus"
+# Expand a kernel cpulist (e.g. "0-3,8,10-11") into a space separated list.
+expand_cpulist () {
+    local list="$1" part start end
+    local -a parts
+    IFS=',' read -ra parts <<< "$list"
+    for part in "${parts[@]}"; do
+        [ -n "$part" ] || continue
+        IFS='-' read -r start end <<< "$part"
+        seq "$start" "${end:-$start}"
+    done
+}
 
-# Learn all efficency cores if they exist
-cpu_list=()
-if [ -f /sys/devices/cpu_atom/cpus ]; then
-  range="$(cat /sys/devices/cpu_atom/cpus)"
-  IFS='-' read -r start end <<< "$range"
-  # shellcheck disable=SC2207,SC2175
-  cpu_list=($(eval echo {$start..$end}))
+# Disable SMT, taking offline all hyperthreading sibling cores but one.
+SMT_CONTROL=/sys/devices/system/cpu/smt/control
+if [ -f $SMT_CONTROL ]; then
+    case "$(cat $SMT_CONTROL)" in
+        on)           echo off > $SMT_CONTROL ;;
+        off|forceoff) ;;
+        notsupported) echo "SMT not supported by this CPU, nothing to disable." ;;
+        *)            echo "Warning: SMT control state '$(cat $SMT_CONTROL)', not changing it." ;;
+    esac
+else
+    echo "Warning: '$SMT_CONTROL' not found, could not disable SMT."
 fi
 
-# shellcheck disable=SC2012
-for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
-    [[ $(basename $cpu) =~ ^cpu[0-9]+$ ]] || continue
+isolated="$(cat /sys/devices/system/cpu/isolated)"
+if [ -z "$isolated" ]; then
+    echo "Warning: no isolated cores found, check the 'isolcpus' kernel parameter."
+fi
+ecores=()
+if [ -f /sys/devices/cpu_atom/cpus ]; then
+    mapfile -t ecores < <(expand_cpulist "$(cat /sys/devices/cpu_atom/cpus)")
+fi
+
+# Only tune the isolated cores, as those are used for judging.
+for core in $(expand_cpulist "$isolated"); do
+    cpu=/sys/devices/system/cpu/cpu$core
+
+    # Check that the isolated cores are online and are not efficiency cores.
+    # cpu0 often has no 'online' file since it cannot be taken offline.
+    if [ -f $cpu/online ] && [ "$(cat $cpu/online)" -ne 1 ]; then
+        error "isolated core $core is offline (is it an SMT sibling?)"
+        continue
+    fi
+    for ecore in "${ecores[@]}"; do
+        if [ "$core" -eq "$ecore" ]; then
+            error "isolated core $core is an efficiency core"
+        fi
+    done
 
     # Reenable stuff in case we are rerunning this script.
-    [ -f $cpu/online ] && echo 1 > $cpu/online
     if [ -f $cpu/cpufreq/scaling_governor ]; then
         chmod u+w $cpu/cpufreq/scaling_governor
     fi
@@ -50,39 +84,16 @@ for cpu in $(ls -1d /sys/devices/system/cpu/cpu* | sort --version-sort) ; do
         chmod a-w $cpu/cpufreq/scaling_{max,min}_freq
     fi
 
-    # Disable all but one thread on each core per socket. Both core_id and physical_package_id
-    # are numbers so it must be ensured that for the following examples are seen as distinct:
-    #  - core_id=1,  physical_package=11
-    #  - core_id=11, physical_package=1
-    # Simple concatenation would result in the string '111' for both cores. Though `cat`
-    # adds a newline after each file, we do not want to rely on `cat` to always add this
-    # 'delimiter'.
-    core_id=$(cat $cpu/topology/core_id | tr -d '\n')'-'$(cat $cpu/topology/physical_package_id | tr -d '\n')
-
-    # Disable all efficiency cores
-    found=0
-    for efficiency_core in "${cpu_list[@]}"; do
-      if [[ "$cpu" == "/sys/devices/system/cpu/cpu$efficiency_core" ]]; then
-        disable_cpu $cpu
-        found=1
-        break
-      fi
+    # Disable C-states with a too high exit latency, (re)enable the others.
+    for state in $cpu/cpuidle/state*; do
+        if [ ! -f $state/latency ] || [ ! -f $state/disable ]; then continue; fi
+        if [ "$(cat $state/latency)" -gt "$max_cstate_latency" ]; then
+            echo 1 > $state/disable
+        else
+            echo 0 > $state/disable
+        fi
     done
-    if [ "$found" -eq "1" ]; then
-      continue
-    fi
-
-    if [[ ${core_ids[$core_id]:-} ]]; then
-        disable_cpu $cpu
-    else
-        core_ids[$core_id]=1
-    fi
 done
-
-if [ -n "${store_isolcpus_fact}" ]; then
-  csv_string=$(IFS=, ; echo "${disabled_cores[*]}")
-  echo "$csv_string" > "$store_isolcpus_fact"
-fi
 
 DIR_INTEL=/sys/devices/system/cpu/intel_pstate
 DIR_AMD=/sys/devices/system/cpu/cpufreq
@@ -110,3 +121,5 @@ elif [ -f $FILE_AMD ]; then
 else
     echo "Warning: kernel (turbo) boost config not found in '$DIR_INTEL' or '$DIR_AMD'."
 fi
+
+[ "$errors" -eq 0 ] || exit 1
