@@ -1,6 +1,8 @@
 [Unit]
 Description=Tune CPU cores: disable turboboost, downclocking, etc.
-Before=domjudge-judgedaemon.target
+# Tune before the judgedaemons start. We cannot order against the template
+# domjudge-judgedaemon@.service, but its instances are After=create-cgroups.
+Before=create-cgroups.service
 
 [Service]
 Type=oneshot
@@ -10,3 +12,5 @@ ExecStartPre=/bin/sleep 10
 
 [Install]
 WantedBy=multi-user.target
+# Do not judge on an untuned machine.
+RequiredBy=create-cgroups.service
